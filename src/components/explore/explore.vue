@@ -2,13 +2,14 @@
   <!--发现组件-->
   <div id="explore">
     <section>
+
       <div class="weui-cells">
         <router-link to="/explore/moments" class="weui-cell weui-cell_access" tag="div" v-on:click.native="momentNewMsg=false">
           <div class="weui-cell__hd">
-            <img src="../../assets/images/find_icon-circle.png" >
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png" >
           </div>
           <div class="weui-cell__bd" style="line-height: 28px;">
-            朋友圈
+            圈子
           </div>
           <div class="weui-cell__ft">
             <div class="home__notice" v-show="momentNewMsg">
@@ -18,58 +19,79 @@
           </div>
         </router-link>
       </div>
+
       <div class="weui-cells">
         <div class="weui-cell weui-cell_access" id="scanCell">
           <div class="weui-cell__hd">
-           <img src="../../assets/images/find_icon-qrcode.png" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
           </div>
           <div class="weui-cell__bd">
-            扫一扫
+            待办
           </div>
         </div>
-        <div class="weui-cell weui-cell_access">
+        <div class="weui-cell weui-cell_access" id="scanCell">
           <div class="weui-cell__hd">
-            <img src="../../assets/images/find_icon-shake.png">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
           </div>
           <div class="weui-cell__bd">
-            摇一摇
+            已办
           </div>
         </div>
       </div>
-      <!--<div class="weui-cells">
-        <div class="weui-cell weui-cell_access">
+
+      <div class="weui-cells">
+        <div class="weui-cell weui-cell_access" id="scanCell">
           <div class="weui-cell__hd">
-            <i class="home__icon-nearby___3PPpY home__icon___2XgfG"></i>
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
           </div>
           <div class="weui-cell__bd">
-            附近的人
+            公告
           </div>
         </div>
-        <div class="weui-cell weui-cell_access">
+        <div class="weui-cell weui-cell_access" id="scanCell">
           <div class="weui-cell__hd">
-            <i class="home__icon-box___3tn0U home__icon___2XgfG"></i>
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
           </div>
           <div class="weui-cell__bd">
-            漂流瓶
+            网盘
           </div>
         </div>
-      </div>-->
+      </div>
+
+      <div class="weui-cells">
+        <div class="weui-cell weui-cell_access" id="scanCell">
+          <div class="weui-cell__hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiejing.png" >
+          </div>
+          <div class="weui-cell__bd">
+            应用
+          </div>
+        </div>
+      </div>
 
       <div class="weui-cells">
         <a href="http://wq.jd.com" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="../../assets/images/find_icon-shopping.png">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png">
           </div>
           <div class="weui-cell__bd">
-            购物
+            搜索
           </div>
         </a>
         <div class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="../../assets/images/find_icon-moregame.png">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png">
           </div>
           <div class="weui-cell__bd">
-            游戏
+            日历
+          </div>
+        </div>
+        <div class="weui-cell weui-cell_access">
+          <div class="weui-cell__hd">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png">
+          </div>
+          <div class="weui-cell__bd">
+            天气
           </div>
         </div>
       </div>

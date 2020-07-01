@@ -10,22 +10,53 @@
           <div class="weui-cell__bd">
             <h4 class="self-nickname">阿荡</h4>
 
-            <p class="self-wxid">微信号: zhaohd</p>
+            <p class="self-wxid">账号: zhaohd</p>
           </div>
           <div class="weui-cell__ft">
             <img src="../../assets/images/chat-info-qr.png">
           </div>
         </router-link>
       </div>
+
       <div class="weui-cells">
         <router-link to="/self/album" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-my-album.png">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
           </div>
           <div class="weui-cell__bd">
-            <p>相册</p>
+            <p>打卡</p>
           </div>
         </router-link>
+        <router-link to="/self/album" class="weui-cell weui-cell_access">
+          <div class="weui-cell__hd">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
+          </div>
+          <div class="weui-cell__bd">
+            <p>签到</p>
+          </div>
+        </router-link>
+      </div>
+
+      <div class="weui-cells">
+        <router-link to="/self/album" class="weui-cell weui-cell_access">
+          <div class="weui-cell__hd">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+          </div>
+          <div class="weui-cell__bd">
+            <p>请假</p>
+          </div>
+        </router-link>
+        <router-link to="/self/album" class="weui-cell weui-cell_access">
+          <div class="weui-cell__hd">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png">
+          </div>
+          <div class="weui-cell__bd">
+            <p>外出</p>
+          </div>
+        </router-link>
+      </div>
+
+      <div class="weui-cells">
         <router-link to="/self/album" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-my-favorites.png">
@@ -34,33 +65,8 @@
             <p>收藏</p>
           </div>
         </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-my-bank-card.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>钱包</p>
-          </div>
-        </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_my-card-package-icon.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>卡券</p>
-          </div>
-        </router-link>
       </div>
-      <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="../../assets/images/me_more-expression.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>表情</p>
-          </div>
-        </router-link>
-      </div>
+
       <div class="weui-cells">
         <router-link to="/self/settings" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">

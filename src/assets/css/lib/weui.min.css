@@ -521,7 +521,8 @@ input.weui-btn_plain-primary {
 .weui-cell__bd {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
-    flex: 1
+    flex: 1;
+    font-size: 16px;
 }
 
 .weui-cell__ft {
