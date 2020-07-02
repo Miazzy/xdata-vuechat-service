@@ -13,7 +13,7 @@ const state = {
     newMsgCount: 0, //新消息数量
     allContacts: contact.contacts, //所有联系人
     OfficialAccounts: OfficialAccounts, //所有关注的应用号
-    currentPageName: "微信", //用于在wx-header组件中显示当前页标题
+    currentPageName: "沟通", //用于在wx-header组件中显示当前页标题
     //backPageName: "", //用于在返回按钮出 显示前一页名字 已遗弃
     headerStatus: true, //显示（true）/隐藏（false）wx-header组件
     tipsStatus: false, //控制首页右上角菜单的显示(true)/隐藏(false)

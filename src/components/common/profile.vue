@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div class="weui-cells">
+        <div class="weui-cells" style="display:none;">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
                     <p>LinkedIn帐号</p>

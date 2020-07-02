@@ -19,7 +19,7 @@
       </div>
 
       <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
           </div>
@@ -27,7 +27,7 @@
             <p>打卡</p>
           </div>
         </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
           </div>
@@ -38,7 +38,7 @@
       </div>
 
       <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
           </div>
@@ -46,7 +46,7 @@
             <p>请假</p>
           </div>
         </router-link>
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png">
           </div>
@@ -57,7 +57,7 @@
       </div>
 
       <div class="weui-cells">
-        <router-link to="/self/album" class="weui-cell weui-cell_access">
+        <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-my-favorites.png">
           </div>

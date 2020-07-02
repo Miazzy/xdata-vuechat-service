@@ -21,9 +21,6 @@
           <span class="iconfont icon-tips-add-friend"></span>
           <div>添加朋友</div>
         </router-link>
-        <li> <span class="iconfont icon-tips-fukuan"></span>
-          <div>搜索</div>
-        </li>
         <li> <span class="iconfont icon-tips-saoyisao"></span>
           <div>扫码</div>
         </li>

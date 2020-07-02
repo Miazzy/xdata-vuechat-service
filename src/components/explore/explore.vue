@@ -3,7 +3,7 @@
   <div id="explore">
     <section>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="display:none;">
         <router-link to="/explore/moments" class="weui-cell weui-cell_access" tag="div" v-on:click.native="momentNewMsg=false">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png" >
@@ -70,7 +70,7 @@
       </div>
 
       <div class="weui-cells">
-        <a href="http://wq.jd.com" class="weui-cell weui-cell_access">
+        <a class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png">
           </div>

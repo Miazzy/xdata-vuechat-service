@@ -7,7 +7,7 @@
             </div>
             <div class="center">
                 <router-link to="/" tag="div" class="iconfont icon-return-arrow">
-                    <span>微信</span>
+                    <span>沟通</span>
                 </router-link>
                 <span>{{pageName}}</span>
                 <span class="parentheses" v-show='$route.query.group_num&&$route.query.group_num!=1'>{{$route.query.group_num}}</span>
@@ -98,7 +98,7 @@
                         recordingVoice = document.querySelector('.recording-voice'),
                         recordingCancel = document.querySelector('.recording-cancel'),
                         startTx, startTy;
-                    
+
                     element.addEventListener('touchstart', function(e) {
                         // 用bind时，vue还没插入到dom,故dom获取为 undefine，用 inserted 代替 bind,也可以开个0秒的定时器
                         element.className = "chat-say say-active"
@@ -152,7 +152,7 @@
                             touches = e.touches[0];
                         startTx = touches.clientX
                         startTy = touches.clientY
-                        
+
                         clearTimeout(this.timer)
                         this.timer = setTimeout(()=>{
                             // 控制菜单的位置

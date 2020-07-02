@@ -1,7 +1,7 @@
-# 一款基于Vue2.0高仿微信App的单页应用
+# 一款基于Vue2.0的App的单页应用
 ## 概述
 
-利用Vue2.0模仿微信app，努力做到以假乱真的效果。个人独立开发，源码中有详细的注释，为新手提供许多有用的提示信息。项目的第一期接近尾声，后期会增加 **仿3DTouch**、**登陆**、**注册**、**emoji表情内嵌**、**通讯录检索**、~~**圈子图片预览**~~(已添加)等功能，让它更接近微信App的用户交互体验。
+利用Vue2.0的App，努力做到以假乱真的效果。个人独立开发，源码中有详细的注释，为新手提供许多有用的提示信息。项目的第一期接近尾声，后期会增加 **仿3DTouch**、**登陆**、**注册**、**emoji表情内嵌**、**通讯录检索**、~~**圈子图片预览**~~(已添加)等功能，让它更接近微信App的用户交互体验。
 
 项目地址 `https://github.com/zhaohaodang/vue-WeChat`
 
@@ -14,7 +14,7 @@
 
 ![https://sinacloud.net/vue-wechat/images/demo-qrcode-github.png](https://sinacloud.net/vue-wechat/images/demo-qrcode-github.png)
 
-测试机为iPhone 6s，在微信内置浏览器以及Safari、Chrome浏览器中运行良好。
+测试机为iPhone 6s，在内置浏览器以及Safari、Chrome浏览器中运行良好。
 
 
 
@@ -40,7 +40,7 @@
 
 **微信列表的滑动交互**
 
-![微信列表的滑动交互](./src/assets/images/gif/msg-operate.gif)
+![列表的滑动交互](./src/assets/images/gif/msg-operate.gif)
 
 **搜素组件的动画效果**
 

@@ -18,7 +18,7 @@
         mixins: [window.mixin],
         data() {
             return {
-                "pageName": "微信"
+                "pageName": "沟通"
             }
         }
     }
