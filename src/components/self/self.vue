@@ -18,7 +18,7 @@
         </router-link>
         <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
+            <img src="../../assets/images/me_my-card-package-icon.png">
           </div>
           <div class="weui-cell__bd">
             <p>我的名片</p>
@@ -30,7 +30,7 @@
 
         <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
+            <img src="../../assets/images/me_more-my-bank-card.png">
           </div>
           <div class="weui-cell__bd">
             <p>我的文件</p>
@@ -46,7 +46,7 @@
         </router-link>
       </div>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="margin-bottom:30px;">
         <router-link to="/self/settings" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-setting.png">
@@ -56,6 +56,15 @@
           </div>
         </router-link>
       </div>
+
+      <div class="weui-cells" style="">
+        <router-link to="/self/settings" class="weui-cell weui-cell_access">
+          <div class="weui-cell__bd" style="text-align:center;">
+            <p style="color:red;margin-top:5px;margin-bottom:5px;">注销并退出</p>
+          </div>
+        </router-link>
+      </div>
+
     </div>
   </div>
   </div>

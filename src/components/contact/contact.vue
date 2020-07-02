@@ -11,7 +11,7 @@
                 <router-link to="/contact/group-list" class="weui-cell">
                     <div class="weui-cell_hd"> <img class="img-obj-cover" src="../../assets/images/contact_top-addgroup.png"> </div>
                     <div class="weui-cell_bd weui-cell_primary">
-                        <p>群聊</p>
+                        <p>我的群组</p>
                     </div>
                 </router-link>
                 <router-link to="/contact/tags" class="weui-cell" style="display:none;">
