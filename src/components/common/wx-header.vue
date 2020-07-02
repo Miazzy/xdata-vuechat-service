@@ -13,26 +13,29 @@
       <span class="iconfont icon-chat-friends" v-show="$route.path==='/wechat/dialogue'"></span>
       <!-- 更多图标的菜单 附带过渡效果-->
       <ul class="tips-menu" :class="[$store.state.tipsStatus?'tips-open':'tips-close']" v-on:click="$store.commit('toggleTipsStatus', -1)">
-        <li> 
+        <li>
           <span class="iconfont icon-tips-xiaoxi"></span>
           <div>发起群聊</div>
         </li>
-        <router-link tag="li" to="/wehchat/add-friend"> 
+        <router-link tag="li" to="/wehchat/add-friend">
           <span class="iconfont icon-tips-add-friend"></span>
           <div>添加朋友</div>
         </router-link>
+        <li> <span class="iconfont icon-tips-fukuan"></span>
+          <div>搜索</div>
+        </li>
         <li> <span class="iconfont icon-tips-saoyisao"></span>
-          <div>扫一扫</div>
+          <div>扫码</div>
         </li>
         <li> <span class="iconfont icon-tips-fukuan"></span>
-          <div>收付款</div>
+          <div>签到</div>
         </li>
       </ul>
       <!--<div class="tips-masker" v-show="tips_isOpen"></div>-->
     </div>
     <div class="center">
       <!-- <transition name="fade">
-          <div class="iconfont icon-return-arrow" style="left: 10px;position: absolute;font-size: 16px;" v-on:click="goBack" v-show="$route.path.split('/').length>2"><span>{{$store.state.backPageName}}</span></div> 
+          <div class="iconfont icon-return-arrow" style="left: 10px;position: absolute;font-size: 16px;" v-on:click="goBack" v-show="$route.path.split('/').length>2"><span>{{$store.state.backPageName}}</span></div>
       </transition>-->
       <!--显示当前页的名字-->
       <span>{{$store.state.currentPageName}}</span>
