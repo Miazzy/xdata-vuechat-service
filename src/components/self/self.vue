@@ -58,7 +58,7 @@
       </div>
 
       <div class="weui-cells" style="">
-        <router-link to="/self/settings" class="weui-cell weui-cell_access">
+        <router-link to="/self" class="weui-cell weui-cell_access">
           <div class="weui-cell__bd" style="text-align:center;">
             <p style="color:red;margin-top:5px;margin-bottom:5px;">注销并退出</p>
           </div>

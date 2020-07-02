@@ -3,98 +3,56 @@
   <div id="explore">
     <section>
 
-      <div class="weui-cells" style="display:none;">
-        <router-link to="/explore/moments" class="weui-cell weui-cell_access" tag="div" v-on:click.native="momentNewMsg=false">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png" >
-          </div>
-          <div class="weui-cell__bd" style="line-height: 28px;">
-            圈子
-          </div>
-          <div class="weui-cell__ft">
-            <div class="home__notice" v-show="momentNewMsg">
-              <img src="https://sinacloud.net/vue-wechat/images/headers/yehua.jpg" alt="" class="">
-              <i class="new-msg-dot"></i>
+      <div class="weui-cells">
+        <div class="weui-cell weui-cell_access" id="scanCell">
+          <div class="weui-cell_app_hd" style="margin-left:5px;">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
+            <div class="weui-cell_app_bd" >
+              任务
             </div>
           </div>
-        </router-link>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
+            <div class="weui-cell_app_bd">
+              公告
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
+            <div class="weui-cell_app_bd">
+              打卡
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
+            <div class="weui-cell_app_bd">
+              签到
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell__hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
+        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
+          <div class="weui-cell__bd" style="border-bottom: 1px solid #329ff0; height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;">
+            计时
           </div>
-          <div class="weui-cell__bd">
+          <div class="weui-cell__bd" style="border-bottom: 0px solid #329ff0; height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;">
             待办
           </div>
-        </div>
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell__hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
-          </div>
-          <div class="weui-cell__bd">
+          <div class="weui-cell__bd" style="border-bottom: 0px solid #329ff0; height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;">
             已办
           </div>
-        </div>
-      </div>
-
-      <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell__hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
-          </div>
-          <div class="weui-cell__bd">
+          <div class="weui-cell__bd" style="border-bottom: 0px solid #329ff0; height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;">
             公告
           </div>
         </div>
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell__hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
-          </div>
-          <div class="weui-cell__bd">
-            网盘
-          </div>
-        </div>
       </div>
 
       <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell__hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiejing.png" >
-          </div>
-          <div class="weui-cell__bd">
-            应用
-          </div>
-        </div>
+
       </div>
 
-      <div class="weui-cells">
-        <a class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png">
-          </div>
-          <div class="weui-cell__bd">
-            搜索
-          </div>
-        </a>
-        <div class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png">
-          </div>
-          <div class="weui-cell__bd">
-            日历
-          </div>
-        </div>
-        <div class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png">
-          </div>
-          <div class="weui-cell__bd">
-            天气
-          </div>
-        </div>
-      </div>
     </section>
   </div>
 </template>
@@ -103,7 +61,7 @@
         mixins: [window.mixin],
         data() {
             return {
-                pageName: "发现",
+                pageName: "首页",
                 momentNewMsg: true
             }
         },
