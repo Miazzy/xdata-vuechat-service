@@ -14,7 +14,7 @@
                         <p>群聊</p>
                     </div>
                 </router-link>
-                <router-link to="/contact/tags" class="weui-cell">
+                <router-link to="/contact/tags" class="weui-cell" style="display:none;">
                     <div class="weui-cell_hd"> <img class="img-obj-cover" src="../../assets/images/contact_top-tag.png"> </div>
                     <div class="weui-cell_bd weui-cell_primary">
                         <p>标签</p>
