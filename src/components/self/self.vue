@@ -16,47 +16,26 @@
             <img src="../../assets/images/chat-info-qr.png">
           </div>
         </router-link>
-      </div>
-
-      <div class="weui-cells">
         <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
           </div>
           <div class="weui-cell__bd">
-            <p>打卡</p>
-          </div>
-        </router-link>
-        <router-link to="" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>签到</p>
-          </div>
-        </router-link>
-      </div>
-
-      <div class="weui-cells" style="display:none;">
-        <router-link to="" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>请假</p>
-          </div>
-        </router-link>
-        <router-link to="" class="weui-cell weui-cell_access">
-          <div class="weui-cell__hd">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png">
-          </div>
-          <div class="weui-cell__bd">
-            <p>外出</p>
+            <p>我的名片</p>
           </div>
         </router-link>
       </div>
 
       <div class="weui-cells">
+
+        <router-link to="" class="weui-cell weui-cell_access">
+          <div class="weui-cell__hd">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png">
+          </div>
+          <div class="weui-cell__bd">
+            <p>我的文件</p>
+          </div>
+        </router-link>
         <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_more-my-favorites.png">

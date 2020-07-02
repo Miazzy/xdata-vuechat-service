@@ -1,17 +1,17 @@
 <template>
   <div id="wx-nav">
 	<nav>
+      <router-link to="/explore" tag="dl">
+          <dt class="iconfont icon-home" >
+              <!-- <i class="new-msg-dot"></i> -->
+          </dt>
+          <dd>首页</dd>
+      </router-link>
       <router-link to="/" tag="dl" exact>
           <dt class="iconfont icon-message" >
               <i class="new-msg-count" v-show="$store.state.newMsgCount">{{$store.state.newMsgCount}}</i>
           </dt>
-          <dd>沟通</dd>
-      </router-link>
-		  <router-link to="/contact" tag="dl">
-          <dt class="iconfont icon-friends" >
-              <!-- <i class="new-msg-count">2</i> -->
-          </dt>
-          <dd>通讯录</dd>
+          <dd>消息</dd>
       </router-link>
        <router-link to="/app" tag="dl">
           <dt class="iconfont icon-app" >
@@ -19,16 +19,16 @@
           </dt>
           <dd>应用</dd>
       </router-link>
-		  <router-link to="/explore" tag="dl">
-          <dt class="iconfont icon-gift" >
-              <!-- <i class="new-msg-dot"></i> -->
+		  <router-link to="/contact" tag="dl">
+          <dt class="iconfont icon-friends" >
+              <!-- <i class="new-msg-count">2</i> -->
           </dt>
-          <dd>发现</dd>
+          <dd>联系人</dd>
       </router-link>
 		  <router-link to="/self" tag="dl">
           <dt class="iconfont icon-me" >
           </dt>
-          <dd>我</dd>
+          <dd>我的</dd>
       </router-link>
     </nav>
   </div>
