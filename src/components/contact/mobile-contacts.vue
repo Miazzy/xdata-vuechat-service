@@ -3,7 +3,7 @@
     <div :class="{'search-open-contact':!$store.state.headerStatus}">
     <header id="wx-header">
             <div class="center">
-                <router-link to="/contact/new-friends" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/contact/new-friends" tag="div" class="iconfont icon-left">
                     <span>新的朋友</span>
                 </router-link>
                 <span>通讯录朋友</span>

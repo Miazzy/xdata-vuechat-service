@@ -2,7 +2,7 @@
     <div class="profile">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/contact" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/contact" tag="div" class="iconfont icon-left">
                     <span>通讯录</span>
                 </router-link>
                 <span>详细资料</span>

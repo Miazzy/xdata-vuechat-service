@@ -3,7 +3,7 @@
         <header id="wx-header">
             <!--<div class="other"><span>添加朋友</span></div>-->
             <div class="center">
-                <div class="iconfont icon-return-arrow" v-on:click="$router.back()">
+                <div class="iconfont icon-left" v-on:click="$router.back()">
                     <span>返回</span>
                 </div>
                 <span>聊天详情</span>
@@ -13,7 +13,7 @@
             <ul class="chat-dialogue-entry-collect">
                 <li v-for="item in $route.query.msgInfo.user">
                     <div><img :src="item.headerUrl"></div>
-                    <p>{{item.remark||item.nickname}}</p> 
+                    <p>{{item.remark||item.nickname}}</p>
                 </li>
                 <li>
                     <div><span class="iconfont icon-chat-detail-add"></span></div>
@@ -81,7 +81,7 @@
         color: #464646;
         font-size: 14px;
     }
-    
+
     .chat-dialogue-entry-collect:before {
         content: "";
         position: absolute;
@@ -96,7 +96,7 @@
         height: 1px;
         z-index: 2;
     }
-    
+
     .chat-dialogue-entry-collect li {
         float: left;
         flex-grow: 1;
@@ -105,7 +105,7 @@
         padding: 5px 10px;
         text-align: center;
     }
-    
+
     .chat-dialogue-entry-collect li>div {
         position: relative;
         border-radius: 6px;
@@ -116,15 +116,15 @@
         background-size: cover;
         border: 1px solid #eee;
     }
-    
+
     .chat-dialogue-entry-collect li>div img {
         width: 100%;
     }
-    
+
     .chat-dialogue-entry-collect li p {
         margin-top: 5px;
     }
-    
+
     .chat-dialogue-entry-collect li .iconfont {
         font-size: 23px;
         color: #bbb;

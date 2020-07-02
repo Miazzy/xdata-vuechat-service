@@ -4,7 +4,7 @@
         <header id="wx-header">
             <div class="other"><span>添加朋友</span></div>
             <div class="center">
-                <router-link to="/contact" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/contact" tag="div" class="iconfont icon-left">
                     <span>通讯录</span>
                 </router-link>
                 <span>新的朋友</span>

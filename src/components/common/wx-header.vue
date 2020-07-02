@@ -4,9 +4,9 @@
     <!--右上角图标-->
     <div class="other">
       <!--只在“微信”页显示 更多图标-->
-      <span class="iconfont icon-tips-jia" v-show="$route.path==='/'" v-on:click="$store.commit('toggleTipsStatus')"></span>
+      <span class="iconfont icon-add" v-show="$route.path==='/'" v-on:click="$store.commit('toggleTipsStatus')"></span>
       <!--只在“通讯录”页显示 显示添加好友图标-->
-      <router-link tag="span" to="/contact/add-friend" class="iconfont icon-tips-add-friend" v-show="$route.path==='/contact'"></router-link>
+      <router-link tag="span" to="/contact/add-friend" class="iconfont icon-friends" v-show="$route.path==='/contact'"></router-link>
       <!--只在“添加朋友”页显示 -->
       <span v-show="$route.path==='/contact/new-friends'">添加朋友</span>
       <!--下面这个好像有些多余 sad -->
@@ -18,7 +18,7 @@
           <div>发起群聊</div>
         </li>
         <router-link tag="li" to="/wehchat/add-friend">
-          <span class="iconfont icon-tips-add-friend"></span>
+          <span class="iconfont icon-friends"></span>
           <div>添加朋友</div>
         </router-link>
         <li> <span class="iconfont icon-tips-saoyisao"></span>
@@ -32,7 +32,7 @@
     </div>
     <div class="center">
       <!-- <transition name="fade">
-          <div class="iconfont icon-return-arrow" style="left: 10px;position: absolute;font-size: 16px;" v-on:click="goBack" v-show="$route.path.split('/').length>2"><span>{{$store.state.backPageName}}</span></div>
+          <div class="iconfont icon-left" style="left: 10px;position: absolute;font-size: 16px;" v-on:click="goBack" v-show="$route.path.split('/').length>2"><span>{{$store.state.backPageName}}</span></div>
       </transition>-->
       <!--显示当前页的名字-->
       <span>{{$store.state.currentPageName}}</span>

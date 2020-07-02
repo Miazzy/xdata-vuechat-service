@@ -3,7 +3,7 @@
         <header id="wx-header">
             <!--<div class="other"><span>添加朋友</span></div>-->
             <div class="center">
-                <router-link to="/self/settings" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/self/settings" tag="div" class="iconfont icon-left">
                     <span>设置</span>
                 </router-link>
                 <span>新消息通知</span>

@@ -3,7 +3,7 @@
     <div class="profile">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/self" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/self" tag="div" class="iconfont icon-left">
                     <span>我</span>
                 </router-link>
                 <span>个人信息</span>

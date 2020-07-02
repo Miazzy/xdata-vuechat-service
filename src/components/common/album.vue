@@ -3,7 +3,7 @@
     <div class="album">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/self" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/self" tag="div" class="iconfont icon-left">
                     <span>我</span>
                 </router-link>
                 <span>相册</span>

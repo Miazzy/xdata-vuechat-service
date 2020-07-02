@@ -3,7 +3,7 @@
     <div id="moments">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/explore" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/explore" tag="div" class="iconfont icon-left">
                     <span>发现</span>
                 </router-link>
                 <span>圈子</span>

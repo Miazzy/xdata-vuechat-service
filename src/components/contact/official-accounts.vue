@@ -3,7 +3,7 @@
     <div :class="{'search-open-contact':!$store.state.headerStatus}" class="official-account">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/contact" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/contact" tag="div" class="iconfont icon-left">
                     <span>通讯录</span>
                 </router-link>
                 <span>应用号</span>

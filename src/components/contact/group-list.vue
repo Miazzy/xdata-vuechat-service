@@ -3,7 +3,7 @@
     <div :class="{'search-open-contact':!$store.state.headerStatus}">
         <header id="wx-header">
             <div class="center">
-                <router-link to="/contact" tag="div" class="iconfont icon-return-arrow">
+                <router-link to="/contact" tag="div" class="iconfont icon-left">
                     <span>通讯录</span>
                 </router-link>
                 <span>群聊</span>
@@ -60,7 +60,7 @@
         height: 38px;
         margin-right: 10px;
     }
-    
+
     .header-box .header {
         height: 100%;
         display: flex;
@@ -71,14 +71,14 @@
         overflow: hidden;
         background: #dddbdb;
     }
-    
+
     .header-box .header img {
         width: 10%;
         height: auto;
         flex-grow: 2;
         border: 0;
     }
-    
+
     .multi-header img {
         margin: 1px;
     }
