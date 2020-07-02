@@ -23,7 +23,7 @@
                 <router-link to="/contact/official-accounts" class="weui-cell">
                     <div class="weui-cell_hd"><img class="img-obj-cover" src="../../assets/images/contact_top-offical.png"></div>
                     <div class="weui-cell_bd weui-cell_primary">
-                        <p>公众号</p>
+                        <p>应用号</p>
                     </div>
                 </router-link>
             </div>

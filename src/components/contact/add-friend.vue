@@ -54,7 +54,7 @@
             <a class="weui-cell weui-cell_access">
                 <div class="weui-cell__hd"><img src="../../assets/images/contact_add-friend-offical.png" alt=""></div>
                 <div class="weui-cell__bd">
-                    <p>公众号</p>
+                    <p>应用号</p>
                     <p>获得更多资讯和服务</p>
                 </div>
                 <div class="weui-cell__ft"></div>

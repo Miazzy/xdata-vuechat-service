@@ -1,17 +1,17 @@
 <template>
-    <!--公众号组件-->
+    <!--应用号组件-->
     <div :class="{'search-open-contact':!$store.state.headerStatus}" class="official-account">
         <header id="wx-header">
             <div class="center">
                 <router-link to="/contact" tag="div" class="iconfont icon-return-arrow">
                     <span>通讯录</span>
                 </router-link>
-                <span>公众号</span>
+                <span>应用号</span>
             </div>
         </header>
          <!--这里的 search 组件的样式也需要修改一下-->
         <search></search>
-        <!--公众号集合-->
+        <!--应用号集合-->
         <template v-for="(value,key) in OfficialAccountsList">
             <div class="weui-cells__title">{{key}}</div>
             <div class="weui-cells">
@@ -39,7 +39,7 @@
             }
         },
         computed: {
-            // 提取公众号首字母 排序，所有公众号被存放在 OfficialAccounts.js 中
+            // 提取应用号首字母 排序，所有应用号被存放在 OfficialAccounts.js 中
             initialList: function() {
                 var initialList = [],
                     OfficialAccounts = this.$store.state.OfficialAccounts,
@@ -51,7 +51,7 @@
                 }
                 return initialList.sort()
             },
-            // 将公众号按照首字母分类
+            // 将应用号按照首字母分类
             OfficialAccountsList() {
                 var OfficialAccountsList = {},
                     OfficialAccounts = this.$store.state.OfficialAccounts,
@@ -75,7 +75,7 @@
     .official-account {
         padding-bottom: 20px;
     }
-    
+
     .official-account .weui-cell_access:active {
         background-color: rgba(177, 177, 177, 0.53)
     }

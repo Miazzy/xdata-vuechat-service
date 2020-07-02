@@ -19,5 +19,7 @@
 
 #contact .initial-bar span {
     display: block;
-    text-align: left
+    text-align: left;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
