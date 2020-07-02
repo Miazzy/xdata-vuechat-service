@@ -12,7 +12,7 @@
         <section>
             <div class="weui-cells">
                 <div class="weui-cell">
-                    <div class="weui-cell__bd">微信号</div>
+                    <div class="weui-cell__bd">账号</div>
                     <div class="weui-cell__ft">zhaohd</div>
                 </div>
             </div>

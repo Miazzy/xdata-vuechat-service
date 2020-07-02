@@ -19,31 +19,31 @@
             </div>
             <div class="weui-cells">
                 <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">通过微信号搜索到我</div>
+                    <div class="weui-cell__bd">通过账号搜索到我</div>
                     <div class="weui-cell__ft"><input type="checkbox" class="weui-switch" checked=""></div>
                 </div>
             </div>
             <div class="weui-cells">
                 <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">通过微信号搜索到我</div>
+                    <div class="weui-cell__bd">通过账号搜索到我</div>
                     <div class="weui-cell__ft"><input type="checkbox" class="weui-switch" checked=""></div>
                 </div>
             </div>
-            <div class="weui-cells__tips">关闭后, 其他用户将不能通过微信号搜索到你</div>
+            <div class="weui-cells__tips">关闭后, 其他用户将不能通过账号搜索到你</div>
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">通讯录黑名单</div>
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>
-            <div class="weui-cells__title">朋友圈</div>
+            <div class="weui-cells__title">圈子</div>
             <div class="weui-cells">
                 <div class="weui-cell">
-                    <div class="weui-cell__bd">不让他(她)看我的朋友圈</div>
+                    <div class="weui-cell__bd">不让他(她)看我的圈子</div>
                     <div class="weui-cell__ft"></div>
                 </div>
                 <div class="weui-cell">
-                    <div class="weui-cell__bd">不看他(她)看的朋友圈</div>
+                    <div class="weui-cell__bd">不看他(她)看的圈子</div>
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>

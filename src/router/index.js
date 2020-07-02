@@ -101,7 +101,7 @@ const routes = [{
         component: resolve => require(["../components/explore/explore.vue"], resolve)
     }, {
         path: '/explore/moments',
-        name: "朋友圈",
+        name: "圈子",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/moments.vue"], resolve)

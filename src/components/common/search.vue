@@ -18,12 +18,12 @@
     </div>
     <article>
       <h3 class="weui-media-box__desc">搜索指定内容</h3>
-      <div class="tag"><span>朋友圈</span><span>文章</span><span>公众号</span><span>小说</span><span>音乐</span><span>表情</span></div>
+      <div class="tag"><span>圈子</span><span>文章</span><span>公众号</span><span>小说</span><span>音乐</span><span>表情</span></div>
       <div class="weui-cells">
           <a class="weui-cell weui-cell_access" href="javascript:;">
             <div class="weui-cell__hd"><img src="../../assets/images/book.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
             <div class="weui-cell__bd">
-              <p>朋友圈热文</p>
+              <p>圈子热文</p>
             </div>
             <div class="weui-cell__ft"></div>
           </a>

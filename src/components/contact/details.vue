@@ -13,7 +13,7 @@
                 <div class="weui-cell__hd"><img :src="userInfo.headerUrl" alt="" class="self-header" style="width:60px"></div>
                 <div class="weui-cell__bd">
                     <h4 class="self-nickname">{{userInfo.nickname}}<span class="gender" :class="[userInfo.sex===1?'gender-male':'gender-female']"></span></h4>
-                    <p class="self-wxid" style="font-size: 13px;color: #999;">微信号: {{userInfo.wxid}}</p>
+                    <p class="self-wxid" style="font-size: 13px;color: #999;">账号: {{userInfo.wxid}}</p>
                     <p class="nickname" style="font-size: 13px;color: #999;">昵称:{{userInfo.nickname||'无'}}</p>
                 </div>
             </div>

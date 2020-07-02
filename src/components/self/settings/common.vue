@@ -31,7 +31,7 @@
                         <div class="weui-cell__ft"></div>
                     </div>
                     <div class="weui-cell">
-                        <div class="weui-cell__bd">朋友圈小视频</div>
+                        <div class="weui-cell__bd">圈子小视频</div>
                         <div class="weui-cell__ft"></div>
                     </div>
                 </div>

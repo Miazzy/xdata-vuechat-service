@@ -44,7 +44,7 @@
             <div class="weui-cells__tips">当微信在运行时, 你可以设置是否需要声音或者振动.</div>
             <div class="weui-cells">
                 <div class="weui-cell weui-cell_switch">
-                    <div class="weui-cell__bd">朋友圈照片更新</div>
+                    <div class="weui-cell__bd">圈子照片更新</div>
                     <div class="weui-cell__ft"><input type="checkbox" class="weui-switch" checked=""></div>
                 </div>
             </div>

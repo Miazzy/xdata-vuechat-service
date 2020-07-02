@@ -1,12 +1,12 @@
 <template>
-    <!--朋友圈组件 后期开发的核心-->
+    <!--圈子组件 后期开发的核心-->
     <div id="moments">
         <header id="wx-header">
             <div class="center">
                 <router-link to="/explore" tag="div" class="iconfont icon-return-arrow">
                     <span>发现</span>
                 </router-link>
-                <span>朋友圈</span>
+                <span>圈子</span>
             </div>
         </header>
         <div class="home-pic">
@@ -214,11 +214,11 @@
                         size,
                         item
                     for (var i = 0; i < numNodes; i++) {
-                        figureEl = thumbElements[i]; 
+                        figureEl = thumbElements[i];
                         if (figureEl.nodeType !== 1) {
                             continue
                         }
-                        linkEl = figureEl.children[0]; 
+                        linkEl = figureEl.children[0];
                         size = linkEl.getAttribute('data-size').split('x')
                         item = {
                             src: linkEl.getAttribute('href'),
@@ -228,7 +228,7 @@
                         if (figureEl.children.length > 1) {
                             item.title = figureEl.children[1].innerHTML
                         }
-                        if (linkEl.children.length > 0) {    
+                        if (linkEl.children.length > 0) {
                             item.msrc = linkEl.children[0].getAttribute('src')
                         }
                         item.el = figureEl
@@ -304,7 +304,7 @@
                         history:false,
                         galleryUID: galleryElement.getAttribute('data-pswp-uid'),
                         getThumbBoundsFn: function (index) {
-                            var thumbnail = items[index].el.getElementsByTagName('img')[0], 
+                            var thumbnail = items[index].el.getElementsByTagName('img')[0],
                                 pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
                                 rect = thumbnail.getBoundingClientRect()
                             return { x: rect.left, y: rect.top + pageYScroll, w: rect.width }

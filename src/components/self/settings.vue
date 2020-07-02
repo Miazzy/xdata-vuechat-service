@@ -36,7 +36,7 @@
                     <div class="weui-cell__ft"></div>
                 </a>
                 <div class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">关于微信</div>
+                    <div class="weui-cell__bd">关于</div>
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>
