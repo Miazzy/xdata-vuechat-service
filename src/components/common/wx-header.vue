@@ -21,10 +21,10 @@
           <span class="iconfont icon-friends"></span>
           <div>添加朋友</div>
         </router-link>
-        <li> <span class="iconfont icon-tips-saoyisao"></span>
+        <li> <span class="iconfont icon-notice"></span>
           <div>扫码</div>
         </li>
-        <li> <span class="iconfont icon-tips-fukuan"></span>
+        <li> <span class="iconfont icon-password"></span>
           <div>签到</div>
         </li>
       </ul>
