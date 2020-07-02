@@ -525,6 +525,14 @@ input.weui-btn_plain-primary {
     font-size: 16px;
 }
 
+.weui-cell_app_bd {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    font-size: 16px;
+    text-align: center;
+}
+
 .weui-cell__ft {
     text-align: right;
     color: #999

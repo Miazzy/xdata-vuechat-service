@@ -204,6 +204,17 @@ a:hover {
     width: 40px;
 }
 
+.weui-cell_app_hd {
+    margin-right: 10px;
+    text-align: center;
+    width: 22%;
+}
+
+.weui-cell_app_hd img {
+    width: 43px;
+    border-radius: 8px;
+}
+
 .gender {
     display: inline-block;
     width: 20px;

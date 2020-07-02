@@ -96,6 +96,17 @@ const routes = [{
             "subPage": resolve => require(["../components/contact/tags.vue"], resolve)
         }
     }, {
+        path: '/app',
+        name: "发现",
+        component: resolve => require(["../components/app/app.vue"], resolve)
+    }, {
+        path: '/app/moments',
+        name: "圈子",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/moments.vue"], resolve)
+        }
+    }, {
         path: '/explore',
         name: "发现",
         component: resolve => require(["../components/explore/explore.vue"], resolve)
