@@ -6,15 +6,15 @@
 
 ### 界面截图
 
-<img src="https://images.gitee.com/uploads/images/2020/0703/183806_c6606be6_499098.jpeg" width="35%">
+<img src="https://images.gitee.com/uploads/images/2020/0703/183806_c6606be6_499098.jpeg" width="32%" style="margin-right:10px">
 
-<img src="https://images.gitee.com/uploads/images/2020/0703/184010_d4b3c5c8_499098.jpeg" width="35%">
+<img src="https://images.gitee.com/uploads/images/2020/0703/184010_d4b3c5c8_499098.jpeg" width="32%" style="margin-right:10px">
 
-<img src="https://images.gitee.com/uploads/images/2020/0703/184020_b233a769_499098.jpeg" width="35%">
+<img src="https://images.gitee.com/uploads/images/2020/0703/184020_b233a769_499098.jpeg" width="32%" style="margin-right:10px">
 
-<img src="https://images.gitee.com/uploads/images/2020/0703/184029_cda0b920_499098.jpeg" width="35%">
+<img src="https://images.gitee.com/uploads/images/2020/0703/184029_cda0b920_499098.jpeg" width="32%" style="margin-right:10px">
 
-<img src="https://images.gitee.com/uploads/images/2020/0703/184039_c908a267_499098.jpeg" width="35%">
+<img src="https://images.gitee.com/uploads/images/2020/0703/184039_c908a267_499098.jpeg" width="32%" style="margin-right:10px">
 
 ### 演示地址
 
