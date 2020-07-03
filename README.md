@@ -6,7 +6,7 @@
 
 ### 界面截图
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0703/183806_c6606be6_499098.jpeg 100x)
+![输入图片说明](https://images.gitee.com/uploads/images/2020/0703/183806_c6606be6_499098.jpeg 100x200)
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0703/184010_d4b3c5c8_499098.jpeg "WechatIMG2.jpeg")
 
