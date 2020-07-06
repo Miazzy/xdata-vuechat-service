@@ -1,6 +1,6 @@
 <template>
   <!--发现组件-->
-  <div id="task" style="margin-top: -18px;" >
+  <div id="task" style="margin-top: 28px;" >
     <section>
 
       <div class="weui-cells">
@@ -98,7 +98,7 @@
     @import "../../assets/css/explore.css";
 
     #task {
-      margin-top: -18px;
+      margin-top: 28px;
     }
 
     #search {
@@ -107,6 +107,20 @@
 
     .weui-cell_tab {
       height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;
+    }
+
+    .app-header {
+        /* position: absolute; */
+        position: relative;
+        transition: 0.3s;
+        width: 100%;
+        z-index: 10000;
+        height: 45px;
+        line-height: 45px;
+        font-size: 17px;
+        background: linear-gradient(180deg, #303036, #3c3b40);
+        color: #fff;
+        text-align: center;
     }
 
     .wechat-list .list-info {

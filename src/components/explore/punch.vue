@@ -1,6 +1,6 @@
 <template>
   <!--发现组件-->
-  <div id="punch" style="margin-top: -18px;" >
+  <div id="punch" style="margin-top: 28px;" >
     <section>
 
       <div class="weui-cells">
@@ -40,6 +40,24 @@
             </div>
             <div class="desc-box">
               <div class="desc-time">22:04</div>
+              <div class="desc-author">午间打卡</div>
+              <div class="desc-msg">
+                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                <span style="display: none;"></span>
+                <span>临时有事，申请请假，望领导批准！</span>
+              </div>
+            </div>
+         </div>
+         <div class="list-info">
+            <div class="header-box">
+             <i class="new-msg-count" style="display: none;">3</i>
+             <i class="new-msg-dot" style="display: none;"></i>
+             <div class="header">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+             </div>
+            </div>
+            <div class="desc-box">
+              <div class="desc-time">22:04</div>
               <div class="desc-author">下班打卡</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
@@ -50,27 +68,60 @@
          </div>
       </div>
 
+      <div class="wechat-list" style="background-color:#fefefe;">
+        <div class="wechat-baidu-map" style="height:350px;width:100%;">
+          <div id="allmap" style="height:350px;width:100%;" ></div>
+        </div>
+        <div style="text-align: left;margin-left:10px;margin-top:10px;">
+          <span>时间：{{ctime}}</span>
+        </div>
+        <div style="text-align: left;margin-left:10px;margin-top:10px;">
+          <span>经度：{{longitude}}</span>
+          <span>维度：{{latitude}}</span>
+        </div>
+        <div style="text-align: left;margin-left:10px;margin-top:10px;">
+          <span>地址：{{location}}</span>
+        </div>
+        <div style="text-align: left;margin-left:10px;margin-top:10px;height:250px;">
+          <div style="margin-left:35%;margin-top:20px;">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:40px;width:80px;height:80px;">
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 </template>
 <script>
-    //import * as $ from 'jquery';
+    import dayjs from 'dayjs';
 
     export default {
+        components: {
+        },
         mixins: [window.mixin],
         data() {
             return {
                 pageName: "打卡",
                 momentNewMsg: true,
                 tabname: '1',
+                longitude:'',
+                latitude:'',
+                location:'',
+                ctime:'',
             }
         },
         activated() {
-            this.$store.commit("toggleTipsStatus", -1);
-            this.queryReturnDiv();
+          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+          this.$store.commit("toggleTipsStatus", -1);
+          this.queryReturnDiv();
+          this.baiduGeo();
+          this.getLocation();
         },
         mounted() {
+          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.queryReturnDiv();
+          this.baiduGeo();
+          this.getLocation();
         },
         methods: {
           queryReturnDiv(){
@@ -81,6 +132,62 @@
             $('#return[tag=div]').click(()=>{
               that.$router.push(`/explore`);
             });
+          },
+          getLocation(){
+            var options={
+                enableHighAccuracy:true,
+                maximumAge:1000
+            }
+            if(navigator.geolocation){
+                console.log('支持定位服务')
+                //浏览器支持geolocation
+                navigator.geolocation.getCurrentPosition(this.getLocationSuc,this.getLocationErr,options);
+            } else{
+                //浏览器不支持geolocation
+                console.log('不支持定位服务')
+            }
+          },
+          baiduGeo(){
+            var that = this;
+            var vpage = this;
+            var map = new BMap.Map("allmap");
+            var point = new BMap.Point(116.331398,39.897445);
+            map.centerAndZoom(point,14);
+            var geolocation = new BMap.Geolocation();
+            var geoc = new BMap.Geocoder();
+            map.addEventListener("click", function(e){
+              var pt = e.point;
+              geoc.getLocation(pt, function(rs){
+                var addComp = rs.addressComponents;
+                alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+              });
+            });
+            geolocation.getCurrentPosition(function(r){
+              if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                var mk = new BMap.Marker(r.point);
+                map.addOverlay(mk);
+                map.panTo(r.point);
+                that.longitude = r.point.lng;
+                that.latitude = r.point.lat;
+                geoc.getLocation(r.point, function(rs){
+                  var addComp = rs.addressComponents;
+                  vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+                });
+              } else {
+                console.log(' get baidu geo error !');
+              }
+            },{enableHighAccuracy: true});
+          },
+          //成功时
+          getLocationSuc(position) {
+              //经度
+              this.longitude = position.coords.longitude;
+              //纬度
+              this.latitude = position.coords.latitude;
+          },
+          //失败时
+          getLocationErr(error) {
+            console.log('query location error!')
           }
         }
     }
@@ -89,11 +196,25 @@
     @import "../../assets/css/explore.css";
 
     #news, #puncth {
-      margin-top: -18px;
+      margin-top: 28px;
     }
 
     #search {
       display:none;
+    }
+
+    .app-header {
+        /* position: absolute; */
+        position: relative;
+        transition: 0.3s;
+        width: 100%;
+        z-index: 10000;
+        height: 45px;
+        line-height: 45px;
+        font-size: 17px;
+        background: linear-gradient(180deg, #303036, #3c3b40);
+        color: #fff;
+        text-align: center;
     }
 
     .weui-cell_tab {

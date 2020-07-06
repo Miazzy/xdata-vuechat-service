@@ -113,10 +113,25 @@ export default {
       this.$store.commit("toggleTipsStatus", -1)
     },
     mounted() {
-
+      $('#return[tag=div]').remove();
     },
-    methods() {
-      queryReturnDiv : () => {
+    watch: {
+      $route(to, from) {
+        var that = this;
+        (async () => {
+          await that.goUrl(to , from);
+        })();
+      }
+    },
+    methods: {
+      goUrl(to , from){
+        //获取URL参数
+        var path = this.$route.path;
+        if(path == '/explore'){
+          $('#return[tag=div]').remove();
+        }
+      },
+      queryReturnDiv(){
         var that = this;
         $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
                                   <span>返回</span>
@@ -132,7 +147,7 @@ export default {
     @import "../../assets/css/explore.css";
 
     #explore {
-      margin-top: -18px;
+      margin-top: 28px;
     }
 
     .weui-cell_tab {

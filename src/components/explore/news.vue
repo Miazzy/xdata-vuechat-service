@@ -1,6 +1,6 @@
 <template>
   <!--发现组件-->
-  <div id="news" style="margin-top: -18px;" >
+  <div id="news" style="margin-top: 28px;" >
     <section>
 
       <div class="weui-cells">
@@ -98,11 +98,25 @@ export default {
     @import "../../assets/css/explore.css";
 
     #news {
-      margin-top: -18px;
+      margin-top: 28px;
     }
 
     #search {
       display:none;
+    }
+
+    .app-header {
+        /* position: absolute; */
+        position: relative;
+        transition: 0.3s;
+        width: 100%;
+        z-index: 10000;
+        height: 45px;
+        line-height: 45px;
+        font-size: 17px;
+        background: linear-gradient(180deg, #303036, #3c3b40);
+        color: #fff;
+        text-align: center;
     }
 
     .weui-cell_tab {

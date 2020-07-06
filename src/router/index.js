@@ -113,15 +113,27 @@ const routes = [{
     }, {
         path: '/task',
         name: "任务",
-        component: resolve => require(["../components/explore/task.vue"], resolve)
+        components: {
+            "default": resolve => require(["../components/explore/explore.vue"], resolve),
+            "subPage": resolve => require(["../components/explore/task.vue"], resolve)
+        }
+        //component: resolve => require(["../components/explore/task.vue"], resolve)
     }, {
         path: '/news',
         name: "新闻",
-        component: resolve => require(["../components/explore/news.vue"], resolve)
+        components: {
+            "default": resolve => require(["../components/explore/explore.vue"], resolve),
+            "subPage": resolve => require(["../components/explore/news.vue"], resolve)
+        }
+        //component: resolve => require(["../components/explore/news.vue"], resolve)
     }, {
         path: '/punch',
         name: "打卡",
-        component: resolve => require(["../components/explore/punch.vue"], resolve)
+        components: {
+            "default": resolve => require(["../components/explore/explore.vue"], resolve),
+            "subPage": resolve => require(["../components/explore/punch.vue"], resolve)
+        }
+        //component: resolve => require(["../components/explore/punch.vue"], resolve)
     }, {
         path: '/self',
         name: "我的",
