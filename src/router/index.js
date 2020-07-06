@@ -124,7 +124,7 @@ const routes = [{
         component: resolve => require(["../components/explore/punch.vue"], resolve)
     }, {
         path: '/self',
-        name: "我",
+        name: "我的",
         component: resolve => require(["../components/self/self.vue"], resolve)
     }, {
         path: '/self/album',

@@ -171,7 +171,6 @@
             }
         },
         activated() {
-          debugger;
           $('#return[tag=div]').remove();
           this.$store.commit("toggleTipsStatus", -1)
         }

@@ -20,6 +20,9 @@
             return {
                 "pageName": "消息"
             }
+        },
+        activated() {
+          $('#return[tag=div]').remove();
         }
     }
 </script>
