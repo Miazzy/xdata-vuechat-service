@@ -13,7 +13,7 @@ export default {
     mounted() {
         setTimeout(() => {
             this.hide = true
-        }, 600)
+        }, 1500)
     }
 }
 </script>

@@ -1,53 +1,21 @@
 <template>
   <!--发现组件-->
-  <div id="explore">
+  <div id="task">
     <section>
-      <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell">
-          <div class="weui-cell_app_hd" style="margin-left:5px;">
-          <router-link to="/task" tag="dl">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
-              <div class="weui-cell_app_bd" >
-                任务
-              </div>
-          </router-link>
-          </div>
-          <div class="weui-cell_app_hd">
-          <router-link to="/news" tag="dl">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
-            <div class="weui-cell_app_bd">
-              公告
-            </div>
-          </router-link>
-          </div>
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
-            <div class="weui-cell_app_bd">
-              打卡
-            </div>
-          </div>
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
-            <div class="weui-cell_app_bd">
-              签到
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="weui-cells">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            计时
+            最新
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            待办
+            行政
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            已办
+            红头
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            公告
+            新闻
           </div>
         </div>
       </div>
@@ -58,7 +26,7 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png">
              </div>
             </div>
             <div class="desc-box">
@@ -76,7 +44,7 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
              </div>
             </div>
             <div class="desc-box">
@@ -99,7 +67,7 @@
         mixins: [window.mixin],
         data() {
             return {
-                pageName: "首页",
+                pageName: "任务",
                 momentNewMsg: true,
                 tabname: '1',
             }
@@ -112,8 +80,12 @@
 <style>
     @import "../../assets/css/explore.css";
 
-    #explore {
+    #news {
       margin-top: -18px;
+    }
+
+    #search {
+      display:none;
     }
 
     .weui-cell_tab {

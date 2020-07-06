@@ -115,6 +115,10 @@ const routes = [{
         name: "任务",
         component: resolve => require(["../components/explore/task.vue"], resolve)
     }, {
+        path: '/news',
+        name: "新闻",
+        component: resolve => require(["../components/explore/news.vue"], resolve)
+    }, {
         path: '/explore/moments',
         name: "圈子",
         components: {

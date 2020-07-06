@@ -74,7 +74,7 @@
         mixins: [window.mixin],
         data() {
             return {
-                "pageName": "我"
+                "pageName": "我的"
             }
         },
         mounted() {

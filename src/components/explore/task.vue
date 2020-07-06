@@ -80,6 +80,14 @@
 <style>
     @import "../../assets/css/explore.css";
 
+    #task {
+      margin-top: -18px;
+    }
+
+    #search {
+      display:none;
+    }
+
     .weui-cell_tab {
       height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;
     }
