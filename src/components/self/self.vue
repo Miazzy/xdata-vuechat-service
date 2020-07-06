@@ -73,15 +73,16 @@
     export default {
         mixins: [window.mixin],
         data() {
-            return {
-                "pageName": "我的"
-            }
+          return {
+              "pageName": "我的"
+          }
         },
         mounted() {
-            this.$store.commit("toggleTipsStatus", -1)
+          this.$store.commit("toggleTipsStatus", -1)
         },
         activated() {
-            this.$store.commit("toggleTipsStatus", -1)
+          $('#return[tag=div]').remove();
+          this.$store.commit("toggleTipsStatus", -1)
         }
     }
 </script>

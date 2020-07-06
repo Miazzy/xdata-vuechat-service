@@ -57,11 +57,12 @@
             }
         },
         mounted() {
-            // mutations.js中有介绍
-            this.$store.commit("toggleTipsStatus", -1)
+          // mutations.js中有介绍
+          this.$store.commit("toggleTipsStatus", -1)
         },
         activated() {
-            this.$store.commit("toggleTipsStatus", -1)
+          $('#return[tag=div]').remove();
+          this.$store.commit("toggleTipsStatus", -1)
         },
         computed: {
             contactsInitialList() {

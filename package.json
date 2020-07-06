@@ -11,6 +11,7 @@
         "build": "node build/build.js"
     },
     "dependencies": {
+        "jquery": "^3.5.1",
         "vue": "^2.4.2",
         "vue-router": "^2.7.0"
     },

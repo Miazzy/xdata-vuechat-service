@@ -98,29 +98,17 @@
                         recordingVoice = document.querySelector('.recording-voice'),
                         recordingCancel = document.querySelector('.recording-cancel'),
                         startTx, startTy;
-
                     element.addEventListener('touchstart', function(e) {
-                        // 用bind时，vue还没插入到dom,故dom获取为 undefine，用 inserted 代替 bind,也可以开个0秒的定时器
                         element.className = "chat-say say-active"
                         recording.style.display = recordingVoice.style.display = "block"
-                            // console.log('start')
                         var touches = e.touches[0]
                         startTx = touches.clientX
                         startTy = touches.clientY
                         e.preventDefault()
                     }, false)
                     element.addEventListener('touchend', function(e) {
-                        /*var touches = e.changedTouches[0];
-                        var distanceY = startTy - touches.clientY;
-                        if (distanceY > 50) {
-                            console.log("取消发送信息");
-                        }else{
-                            console.log("发送信息");
-                        }*/
-
                         element.className = "chat-say"
                         recordingCancel.style.display = recording.style.display = recordingVoice.style.display = "none"
-                            // console.log('end')
                         e.preventDefault()
                     }, false)
                     element.addEventListener('touchmove', function(e) {

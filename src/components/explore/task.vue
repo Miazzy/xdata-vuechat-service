@@ -1,6 +1,6 @@
 <template>
   <!--发现组件-->
-  <div id="task">
+  <div id="task" style="margin-top: -18px;" >
     <section>
 
       <div class="weui-cells">
@@ -63,6 +63,8 @@
   </div>
 </template>
 <script>
+    import * as $ from 'jquery';
+
     export default {
         mixins: [window.mixin],
         data() {
@@ -73,7 +75,22 @@
             }
         },
         activated() {
-            this.$store.commit("toggleTipsStatus", -1)
+            this.$store.commit("toggleTipsStatus", -1);
+            this.queryReturnDiv();
+        },
+        mounted() {
+          this.queryReturnDiv();
+        },
+        methods: {
+          queryReturnDiv(){
+            var that = this;
+            $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
+                                      <span style="margin-left:10px;">返回</span>
+                                  </div>`);
+            $('#return[tag=div]').click(()=>{
+              that.$router.push(`/explore`);
+            });
+          }
         }
     }
 </script>

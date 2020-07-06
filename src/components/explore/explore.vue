@@ -1,6 +1,6 @@
 <template>
   <!--发现组件-->
-  <div id="explore">
+  <div id="explore" style="margin-top: -18px;" >
     <section>
       <div class="weui-cells">
         <div class="weui-cell weui-cell_access" id="scanCell">
@@ -21,10 +21,12 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
+          <router-link to="/punch" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
             <div class="weui-cell_app_bd">
               打卡
             </div>
+          </router-link>
           </div>
           <div class="weui-cell_app_hd">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
@@ -95,19 +97,36 @@
   </div>
 </template>
 <script>
-    export default {
-        mixins: [window.mixin],
-        data() {
-            return {
-                pageName: "首页",
-                momentNewMsg: true,
-                tabname: '1',
-            }
-        },
-        activated() {
-            this.$store.commit("toggleTipsStatus", -1)
+import * as $ from 'jquery';
+
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            pageName: "首页",
+            momentNewMsg: true,
+            tabname: '1',
         }
+    },
+    activated() {
+      $('#return[tag=div]').remove();
+      this.$store.commit("toggleTipsStatus", -1)
+    },
+    mounted() {
+
+    },
+    methods() {
+      queryReturnDiv : () => {
+        var that = this;
+        $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
+                                  <span>返回</span>
+                              </div>`);
+        $('#return[tag=div]').click(()=>{
+          that.$router.push(`/explore`);
+        });
+      }
     }
+}
 </script>
 <style>
     @import "../../assets/css/explore.css";

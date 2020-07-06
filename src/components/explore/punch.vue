@@ -1,21 +1,12 @@
 <template>
   <!--发现组件-->
-  <div id="task">
+  <div id="punch" style="margin-top: -18px;" >
     <section>
 
       <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            最新
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            行政
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            红头
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            新闻
+        <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
+            考勤组：鹏程晟泰建筑有限公司
           </div>
         </div>
       </div>
@@ -26,12 +17,12 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
              </div>
             </div>
             <div class="desc-box">
               <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
+              <div class="desc-author">上班打卡</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
                 <span style="display: none;"></span>
@@ -49,7 +40,7 @@
             </div>
             <div class="desc-box">
               <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
+              <div class="desc-author">下班打卡</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
                 <span style="display: none;"></span>
@@ -63,24 +54,41 @@
   </div>
 </template>
 <script>
+    import * as $ from 'jquery';
+
     export default {
         mixins: [window.mixin],
         data() {
             return {
-                pageName: "任务",
+                pageName: "打卡",
                 momentNewMsg: true,
                 tabname: '1',
             }
         },
         activated() {
-            this.$store.commit("toggleTipsStatus", -1)
+            this.$store.commit("toggleTipsStatus", -1);
+            this.queryReturnDiv();
+        },
+        mounted() {
+          this.queryReturnDiv();
+        },
+        methods: {
+          queryReturnDiv(){
+            var that = this;
+            $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
+                                      <span style="margin-left:10px;" >返回</span>
+                                  </div>`);
+            $('#return[tag=div]').click(()=>{
+              that.$router.push(`/explore`);
+            });
+          }
         }
     }
 </script>
 <style>
     @import "../../assets/css/explore.css";
 
-    #news {
+    #news, #puncth {
       margin-top: -18px;
     }
 
@@ -90,6 +98,14 @@
 
     .weui-cell_tab {
       height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;
+    }
+
+    .punch-cell {
+      border-bottom: 1px solid #d9d9d9;
+    }
+
+    .punch-cell::after{
+      border-bottom: 1px solid #d9d9d9;
     }
 
     .wechat-list .list-info {

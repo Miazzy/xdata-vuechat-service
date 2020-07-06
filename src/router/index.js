@@ -109,7 +109,7 @@ const routes = [{
     }, {
         path: '/explore',
         name: "发现",
-        component: resolve => require(["../components/explore/explore.vue"], resolve)
+        components: { "default": resolve => require(["../components/explore/explore.vue"], resolve) }
     }, {
         path: '/task',
         name: "任务",
@@ -119,12 +119,9 @@ const routes = [{
         name: "新闻",
         component: resolve => require(["../components/explore/news.vue"], resolve)
     }, {
-        path: '/explore/moments',
-        name: "圈子",
-        components: {
-            "default": resolve => require(["../components/explore/explore.vue"], resolve),
-            "subPage": resolve => require(["../components/explore/moments.vue"], resolve)
-        }
+        path: '/punch',
+        name: "打卡",
+        component: resolve => require(["../components/explore/punch.vue"], resolve)
     }, {
         path: '/self',
         name: "我",
