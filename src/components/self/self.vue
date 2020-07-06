@@ -21,7 +21,7 @@
             <img src="../../assets/images/me_my-card-package-icon.png">
           </div>
           <div class="weui-cell__bd">
-            <p>我的名片</p>
+            <p>名片</p>
           </div>
         </router-link>
       </div>
@@ -33,7 +33,7 @@
             <img src="../../assets/images/me_more-my-bank-card.png">
           </div>
           <div class="weui-cell__bd">
-            <p>我的文件</p>
+            <p>文件</p>
           </div>
         </router-link>
         <router-link to="" class="weui-cell weui-cell_access">
