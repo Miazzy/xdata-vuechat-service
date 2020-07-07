@@ -76,18 +76,21 @@
           <div id='container' style="height:350px;width:100%;"></div>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:10px;">
-          <span>时间：{{ctime}}</span>
+          <span>IP：{{ip}}</span>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:10px;">
+          <span>时间：{{ctime}}</span>
+        </div>
+        <div style="text-align: left;margin-left:10px;margin-top:10px;display:none;">
           <span>经度：{{longitude}}</span>
           <span>维度：{{latitude}}</span>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:10px;">
           <span>地址：{{location}}</span>
         </div>
-        <div style="text-align: left;margin-left:10px;margin-top:10px;height:250px;">
+        <div style="text-align: left;margin-left:10px;margin-top:25px;height:200px;">
           <div @click="punchWork();" style="margin-left:35%;margin-top:20px;" >
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:40px;width:80px;height:80px;">
+            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:80px;width:90px;height:90px;">
           </div>
         </div>
       </div>
@@ -96,7 +99,6 @@
   </div>
 </template>
 <script>
-    import dayjs from 'dayjs';
 
     export default {
         components: {
@@ -112,6 +114,8 @@
                 location:'',
                 ctime:'',
                 addrs:[],
+                ip:'',
+                ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
             }
         },
         activated() {
@@ -120,16 +124,16 @@
           this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
+          this.getMapIP();
           this.getIPs((ip)=>{console.log(`ip:${ip}`);});
-          this.getLocation();
         },
         mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.queryReturnDiv();
-          this.baiduGeo()
+          this.baiduGeo();
           this.amapGeo();
+          this.getMapIP();
           this.getIPs((ip)=>{console.log(`ip:${ip}`);});
-          this.getLocation();
         },
         methods: {
           queryReturnDiv(){
@@ -140,22 +144,6 @@
             $('#return[tag=div]').click(()=>{
               that.$router.push(`/explore`);
             });
-          },
-          queryIP(){
-            var iurl = `https://ip.seeip.org/geoip`;
-            var turl = `https://apis.map.qq.com/ws/location/v1/ip?key=3BFBZ-ZKD3X-LW54A-ZT76D-E7AHO-4RBD5&&output=jsonp&callback=jQuery1113036332414521160006_1594041336523&_=1594041336524`;
-          },
-          getLocation(){
-            var options={
-                enableHighAccuracy:true,
-                maximumAge:1000
-            }
-            if(navigator.geolocation){
-                //浏览器支持geolocation
-                navigator.geolocation.getCurrentPosition(this.getLocationSuc,this.getLocationErr,options);
-            } else{
-                //console.log('不支持定位服务')
-            }
           },
           amapGeo(){
             var vpage = this;
@@ -207,18 +195,17 @@
               vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
             });
           },
-          //成功时
-          getLocationSuc(position) {
-            //console.log('query location success!')
-          },
-          //失败时
-          getLocationErr(error) {
-            //console.log('query location error!')
-          },
           punchWork(){
             if(this.location!=''&&this.location!=null){
               alert(`打卡成功，位置：${this.location}！`);
             }
+          },
+          getMapIP(){
+            var ipInfo = localStorage.getItem(`system_location_info`);
+            if(ipInfo != null && ipInfo != ''){
+              ipInfo = JSON.parse(ipInfo);
+            }
+            this.ip = ipInfo.result.ip;
           },
           //get the IP addresses associated with an account
           getIPs(callback){
