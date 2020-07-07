@@ -1,5 +1,5 @@
 <template>
-  <!--发现组件-->
+  <!--首页组件-->
   <div id="explore" style="margin-top: -18px;" >
     <section>
       <div class="weui-cells">

@@ -1,5 +1,5 @@
 <template>
-  <!--发现组件-->
+  <!--首页组件-->
   <div id="news" style="margin-top: 28px;" >
     <section>
 

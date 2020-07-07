@@ -97,7 +97,7 @@ const routes = [{
         }
     }, {
         path: '/app',
-        name: "发现",
+        name: "应用",
         component: resolve => require(["../components/app/app.vue"], resolve)
     }, {
         path: '/app/moments',
@@ -108,7 +108,7 @@ const routes = [{
         }
     }, {
         path: '/explore',
-        name: "发现",
+        name: "首页",
         components: { "default": resolve => require(["../components/explore/explore.vue"], resolve) }
     }, {
         path: '/task',
@@ -117,7 +117,6 @@ const routes = [{
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/task.vue"], resolve)
         }
-        //component: resolve => require(["../components/explore/task.vue"], resolve)
     }, {
         path: '/news',
         name: "新闻",
@@ -125,7 +124,6 @@ const routes = [{
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/news.vue"], resolve)
         }
-        //component: resolve => require(["../components/explore/news.vue"], resolve)
     }, {
         path: '/punch',
         name: "打卡",
@@ -133,7 +131,6 @@ const routes = [{
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/punch.vue"], resolve)
         }
-        //component: resolve => require(["../components/explore/punch.vue"], resolve)
     }, {
         path: '/self',
         name: "我的",
