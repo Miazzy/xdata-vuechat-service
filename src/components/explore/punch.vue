@@ -118,7 +118,7 @@
                 ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
             }
         },
-        activated() {
+        async activated() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.$store.commit("toggleTipsStatus", -1);
           this.queryReturnDiv();
@@ -127,7 +127,7 @@
           this.getMapIP();
           this.getIPs((ip)=>{console.log(`ip:${ip}`);});
         },
-        mounted() {
+        async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.queryReturnDiv();
           this.baiduGeo();
@@ -136,6 +136,7 @@
           this.getIPs((ip)=>{console.log(`ip:${ip}`);});
         },
         methods: {
+
           queryReturnDiv(){
             var that = this;
             $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
@@ -200,14 +201,26 @@
               alert(`打卡成功，位置：${this.location}！`);
             }
           },
-          getMapIP(){
+          async getMapIP(){
+
             var ipInfo = localStorage.getItem(`system_location_info`);
+            //此处后端代码为node-spider-api
+            var response = await superagent.get('http://app.shengtai.club/ip/');
+            var ipLocation = response.body.ip;
+
             if(ipInfo != null && ipInfo != ''){
               ipInfo = JSON.parse(ipInfo);
             }
-            this.ip = ipInfo.result.ip;
+
+            if(ipInfo.result.ip == ipLocation){
+              this.ip = ipInfo.result.ip;
+            } else {
+              this.ip = ipLocation;
+            }
+
+            console.log('ip location : ' + response.body.ip);
+            debugger;
           },
-          //get the IP addresses associated with an account
           getIPs(callback){
               var ip_dups = {};
 
@@ -219,10 +232,6 @@
 
               //bypass naive webrtc blocking using an iframe
               if(!RTCPeerConnection){
-                  //NOTE: you need to have an iframe in the page right above the script tag
-                  //
-                  //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
-                  //<script>...getIPs called in here...
                   //
                   var win = iframe.contentWindow;
                   RTCPeerConnection = win.RTCPeerConnection
@@ -287,7 +296,6 @@
                     i--;
                 }
             }
-            debugger;
           },
           grepSDP(sdp) {
             var that = this;
@@ -304,9 +312,8 @@
                     that.updateDisplay(addr);
                 }
             });
-            debugger;
           },
-          getYourIP(){
+          getBrowserIP(){
             var that = this;
             var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
             if (RTCPeerConnection) {
@@ -328,8 +335,6 @@
                   that.addrs["0.0.0.0"] = false;
                   debugger;
               })();
-            } else {
-                //document.getElementById('list').textContent = "请使用主流浏览器：chrome,firefox,opera,safari";
             }
           }
 
