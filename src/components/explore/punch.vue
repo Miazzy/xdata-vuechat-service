@@ -107,6 +107,8 @@
 </template>
 <script>
 
+    import Peer from 'peerjs';
+
     export default {
         components: {
         },
@@ -124,6 +126,7 @@
                 locationTips:'',
                 locationFlag:'',
                 ip:'',
+                peer:null,
                 ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
             }
         },
@@ -141,8 +144,51 @@
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
+          this.connectWebRTC();
+          this.connectCommon();
         },
         methods: {
+          connectWebRTC(){
+
+            let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
+            let peerID = `app_peer_${username}`;
+
+            this.peer = new Peer(peerID, {
+              host: 'upload.shengtai.club',
+              port: 9000,
+              path: '/myapp'
+            });
+            localStorage.setItem(`system_peer_info` , peerID);
+            this.peer.on('connection', (conn) => {
+              conn.on('data', (data) => {
+                let random = Math.random().toString().slice(2,6);
+                console.log(data);
+                conn.send(`hello user ${random}!`);
+              });
+              conn.on('open', () => {
+                conn.send('hello!');
+              });
+            });
+          },
+          connectCommon(){
+            let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
+            if(username != 'common'){
+              const conn = this.peer.connect('app_peer_common');
+              conn.on('open', () => {
+                conn.send('hi!');
+              });
+              conn.on('data', (data) => {
+                let random = Math.random().toString().slice(2,6);
+                console.log(data);
+                conn.send(`hello common ${random} !`);
+              });
+            }
+          },
+          getUrlParam(name) {
+              var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+              var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
+              if (r != null) return decodeURI(r[2]); return null; //返回参数值
+          },
           relocation() {
             this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
             this.baiduGeo();
@@ -206,9 +252,9 @@
             var geoc = new BMap.Geocoder();
             geoc.getLocation(point, function(rs){
               var addComp = rs.addressComponents;
-              vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+              //vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
               if(vpage.ipaddrs.includes(vpage.ip)){
-                vpage.location = '四川省成都市高新西区西芯大道蓝光集团';
+                vpage.location = '中国四川省成都市高新西区西芯大道11号蓝光集团';
                 vpage.locationTips = '中国四川省成都市郫县西芯大道11号';
                 vpage.locationFlag = '√ 已进入考勤范围 ';
               }
@@ -237,9 +283,15 @@
             }
 
             if(this.ipaddrs.includes(this.ip)){
+               this.ip = `${this.ip} (蓝光集团内网)`
               this.location = '四川省成都市高新西区西芯大道蓝光集团';
+              this.locationTips = '中国四川省成都市郫县西芯大道11号';
+              this.locationFlag = '√ 已进入考勤范围 ';
+            } else {
+              this.location = ipInfo.result.ad_info.nation + ipInfo.result.ad_info.province +  ipInfo.result.ad_info.city +  ipInfo.result.ad_info.district;
+              this.locationTips = this.location;
+              this.locationFlag = '× 未进入考勤范围 ';
             }
-
             console.log('ip location : ' + response.body.ip);
           },
           getIPs(callback){
@@ -280,7 +332,6 @@
                   if(ip_dups[ip_addr] === undefined)
                       callback(ip_addr);
                   ip_dups[ip_addr] = true;
-                  debugger;
               }
 
               //listen for candidate events
@@ -354,7 +405,7 @@
 
                   that.addrs = Object.create(null);
                   that.addrs["0.0.0.0"] = false;
-                  debugger;
+
               })();
             }
           }
