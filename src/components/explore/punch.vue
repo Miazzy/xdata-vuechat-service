@@ -89,7 +89,7 @@
           <span>地址：{{location}}</span>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:25px;height:200px;">
-          <div @click="punchWork();" style="margin-left:38%;margin-top:20px;" >
+          <div @click="punchWork();" style="margin-left:38%;margin-right:38%;margin-top:20px;" >
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:80px;width:90px;height:90px;">
           </div>
           <div style="text-align:center;margin-left:0px;margin-top:10px;">
