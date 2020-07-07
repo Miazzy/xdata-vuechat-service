@@ -89,8 +89,15 @@
           <span>地址：{{location}}</span>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:25px;height:200px;">
-          <div @click="punchWork();" style="margin-left:35%;margin-top:20px;" >
+          <div @click="punchWork();" style="margin-left:38%;margin-top:20px;" >
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:80px;width:90px;height:90px;">
+          </div>
+          <div style="text-align:center;margin-left:0px;margin-top:10px;">
+            <span style="color:#aeaeae;" >{{locationFlag}}</span>
+            <span>{{locationTips}}</span>
+          </div>
+          <div style="text-align:center;margin-left:0px;margin-top:10px;">
+            <span @click="relocation" style="border: 1px solid skyblue; padding: 5px 15px; border-radius: 4px; color: skyblue;">重新定位</span>
           </div>
         </div>
       </div>
@@ -114,6 +121,8 @@
                 location:'',
                 ctime:'',
                 addrs:[],
+                locationTips:'',
+                locationFlag:'',
                 ip:'',
                 ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
             }
@@ -125,7 +134,6 @@
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
-          this.getIPs((ip)=>{console.log(`ip:${ip}`);});
         },
         async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -133,10 +141,14 @@
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
-          this.getIPs((ip)=>{console.log(`ip:${ip}`);});
         },
         methods: {
-
+          relocation() {
+            this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+            this.baiduGeo();
+            this.amapGeo();
+            this.getMapIP();
+          },
           queryReturnDiv(){
             var that = this;
             $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
@@ -173,11 +185,12 @@
                       vpage.longitude = data.position.KL;
                       //纬度
                       vpage.latitude = data.position.kT;
-                      //解析地理位置
-                      vpage.baiduGeo();
-                    }else{
-                      document.getElementById('status').innerHTML='定位失败'
-                      document.getElementById('result').innerHTML = '失败原因排查信息:'+data.message;
+                      //查询地理位置信息
+                      if(vpage.ipaddrs.includes(vpage.ip)){
+                        vpage.location = '四川省成都市高新西区西芯大道蓝光集团';
+                        vpage.locationTips = '中国四川省成都市郫县西芯大道11号';
+                        vpage.locationFlag = '√ 已进入考勤范围 ';
+                      }
                     }
                 });
             });
@@ -194,6 +207,11 @@
             geoc.getLocation(point, function(rs){
               var addComp = rs.addressComponents;
               vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+              if(vpage.ipaddrs.includes(vpage.ip)){
+                vpage.location = '四川省成都市高新西区西芯大道蓝光集团';
+                vpage.locationTips = '中国四川省成都市郫县西芯大道11号';
+                vpage.locationFlag = '√ 已进入考勤范围 ';
+              }
             });
           },
           punchWork(){
@@ -218,8 +236,11 @@
               this.ip = ipLocation;
             }
 
+            if(this.ipaddrs.includes(this.ip)){
+              this.location = '四川省成都市高新西区西芯大道蓝光集团';
+            }
+
             console.log('ip location : ' + response.body.ip);
-            debugger;
           },
           getIPs(callback){
               var ip_dups = {};
