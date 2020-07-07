@@ -69,8 +69,11 @@
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;">
-        <div class="wechat-baidu-map" style="height:350px;width:100%;">
-          <div id="allmap" style="height:350px;width:100%;" ></div>
+        <div class="wechat-baidu-map" style="height:350px;width:100%;display:none;">
+          <div id="allmap" style="height:350px;width:100%;display:none;" ></div>
+        </div>
+        <div>
+          <div id='container' style="height:350px;width:100%;"></div>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:10px;">
           <span>时间：{{ctime}}</span>
@@ -83,7 +86,7 @@
           <span>地址：{{location}}</span>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:10px;height:250px;">
-          <div style="margin-left:35%;margin-top:20px;">
+          <div @click="punchWork();" style="margin-left:35%;margin-top:20px;" >
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:40px;width:80px;height:80px;">
           </div>
         </div>
@@ -108,6 +111,7 @@
                 latitude:'',
                 location:'',
                 ctime:'',
+                addrs:[],
             }
         },
         activated() {
@@ -115,12 +119,16 @@
           this.$store.commit("toggleTipsStatus", -1);
           this.queryReturnDiv();
           this.baiduGeo();
+          this.amapGeo();
+          this.getIPs((ip)=>{console.log(`ip:${ip}`);});
           this.getLocation();
         },
         mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.queryReturnDiv();
-          this.baiduGeo();
+          this.baiduGeo()
+          this.amapGeo();
+          this.getIPs((ip)=>{console.log(`ip:${ip}`);});
           this.getLocation();
         },
         methods: {
@@ -133,62 +141,211 @@
               that.$router.push(`/explore`);
             });
           },
+          queryIP(){
+            var iurl = `https://ip.seeip.org/geoip`;
+            var turl = `https://apis.map.qq.com/ws/location/v1/ip?key=3BFBZ-ZKD3X-LW54A-ZT76D-E7AHO-4RBD5&&output=jsonp&callback=jQuery1113036332414521160006_1594041336523&_=1594041336524`;
+          },
           getLocation(){
             var options={
                 enableHighAccuracy:true,
                 maximumAge:1000
             }
             if(navigator.geolocation){
-                console.log('支持定位服务')
                 //浏览器支持geolocation
                 navigator.geolocation.getCurrentPosition(this.getLocationSuc,this.getLocationErr,options);
             } else{
-                //浏览器不支持geolocation
-                console.log('不支持定位服务')
+                //console.log('不支持定位服务')
             }
+          },
+          amapGeo(){
+            var vpage = this;
+            var map = new AMap.Map('container', {
+                resizeEnable: true
+            });
+            AMap.plugin('AMap.Geolocation', function() {
+                var geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                    timeout: 10000,          //超过10秒后停止定位，默认：5s
+                    position:'RB',    //定位按钮的停靠位置
+                    buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                    zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+                });
+                map.addControl(geolocation);
+                geolocation.getCurrentPosition(function(status,data){
+                    if(status=='complete'){
+                      var str = [];
+                      str.push('定位结果：' + data.position);
+                      str.push('定位类别：' + data.location_type);
+                      if(data.accuracy){
+                          str.push('精度：' + data.accuracy + ' 米');
+                      }//如为IP精确定位结果则没有精度信息
+                      str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+                      //经度
+                      vpage.longitude = data.position.KL;
+                      //纬度
+                      vpage.latitude = data.position.kT;
+                      //解析地理位置
+                      vpage.baiduGeo();
+                    }else{
+                      document.getElementById('status').innerHTML='定位失败'
+                      document.getElementById('result').innerHTML = '失败原因排查信息:'+data.message;
+                    }
+                });
+            });
+
           },
           baiduGeo(){
             var that = this;
             var vpage = this;
             var map = new BMap.Map("allmap");
-            var point = new BMap.Point(116.331398,39.897445);
+            var point = new BMap.Point(vpage.longitude,vpage.latitude);
             map.centerAndZoom(point,14);
             var geolocation = new BMap.Geolocation();
             var geoc = new BMap.Geocoder();
-            map.addEventListener("click", function(e){
-              var pt = e.point;
-              geoc.getLocation(pt, function(rs){
-                var addComp = rs.addressComponents;
-                alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
-              });
+            geoc.getLocation(point, function(rs){
+              var addComp = rs.addressComponents;
+              vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
             });
-            geolocation.getCurrentPosition(function(r){
-              if(this.getStatus() == BMAP_STATUS_SUCCESS){
-                var mk = new BMap.Marker(r.point);
-                map.addOverlay(mk);
-                map.panTo(r.point);
-                that.longitude = r.point.lng;
-                that.latitude = r.point.lat;
-                geoc.getLocation(r.point, function(rs){
-                  var addComp = rs.addressComponents;
-                  vpage.location = (addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
-                });
-              } else {
-                console.log(' get baidu geo error !');
-              }
-            },{enableHighAccuracy: true});
           },
           //成功时
           getLocationSuc(position) {
-              //经度
-              this.longitude = position.coords.longitude;
-              //纬度
-              this.latitude = position.coords.latitude;
+            //console.log('query location success!')
           },
           //失败时
           getLocationErr(error) {
-            console.log('query location error!')
+            //console.log('query location error!')
+          },
+          punchWork(){
+            if(this.location!=''&&this.location!=null){
+              alert(`打卡成功，位置：${this.location}！`);
+            }
+          },
+          //get the IP addresses associated with an account
+          getIPs(callback){
+              var ip_dups = {};
+
+              //compatibility for firefox and chrome
+              var RTCPeerConnection = window.RTCPeerConnection
+                  || window.mozRTCPeerConnection
+                  || window.webkitRTCPeerConnection;
+              var useWebKit = !!window.webkitRTCPeerConnection;
+
+              //bypass naive webrtc blocking using an iframe
+              if(!RTCPeerConnection){
+                  //NOTE: you need to have an iframe in the page right above the script tag
+                  //
+                  //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
+                  //<script>...getIPs called in here...
+                  //
+                  var win = iframe.contentWindow;
+                  RTCPeerConnection = win.RTCPeerConnection
+                      || win.mozRTCPeerConnection
+                      || win.webkitRTCPeerConnection;
+                  useWebKit = !!win.webkitRTCPeerConnection;
+              }
+
+              //minimal requirements for data connection
+              var mediaConstraints = {
+                  optional: [{RtpDataChannels: true}]
+              };
+
+              var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
+
+              //construct a new RTCPeerConnection
+              var pc = new RTCPeerConnection(servers, mediaConstraints);
+
+              function handleCandidate(candidate){
+                  //match just the IP address
+                  var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
+                  var ip_addr = ip_regex.exec(candidate)[1];
+
+                  //remove duplicates
+                  if(ip_dups[ip_addr] === undefined)
+                      callback(ip_addr);
+                  ip_dups[ip_addr] = true;
+                  debugger;
+              }
+
+              //listen for candidate events
+              pc.onicecandidate = function(ice){
+
+                  if(ice.candidate)
+                      handleCandidate(ice.candidate.candidate);
+              };
+
+              //create a bogus data channel
+              pc.createDataChannel("");
+
+              //create an offer sdp
+              pc.createOffer(function(result){
+                  //trigger the stun server request
+                  var lines = result.sdp.split('\n');
+                  console.log('ip info: '+JSON.stringify(lines));
+                  pc.setLocalDescription(result, function(){}, function(){});
+                  lines.forEach(function(line){
+                    if(line.indexOf('a=candidate:') === 0){
+                      handleCandidate(line);
+                    }
+                  });
+              }, function(){});
+          },
+          updateDisplay(newAddr) {
+            var that = this;
+            if (newAddr in that.addrs) return;
+            else this.addrs[newAddr] = true;
+            var displayAddrs = Object.keys(that.addrs).filter(function (k) { return that.addrs[k]; });
+            for(var i = 0; i < displayAddrs.length; i++){
+                if(displayAddrs[i].length > 16){
+                    displayAddrs.splice(i, 1);
+                    i--;
+                }
+            }
+            debugger;
+          },
+          grepSDP(sdp) {
+            var that = this;
+            var hosts = [];
+            sdp.split('\r\n').forEach((line, index, arr) => {
+              if (~line.indexOf("a=candidate")) {
+                    var parts = line.split(' '),
+                        addr = parts[4],
+                        type = parts[7];
+                    if (type === 'host') that.updateDisplay(addr);
+                } else if (~line.indexOf("c=")) {
+                    var parts = line.split(' '),
+                        addr = parts[2];
+                    that.updateDisplay(addr);
+                }
+            });
+            debugger;
+          },
+          getYourIP(){
+            var that = this;
+            var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+            if (RTCPeerConnection) {
+              (() => {
+                  var rtc = new RTCPeerConnection({iceServers:[]});
+                  if (1 || window.mozRTCPeerConnection) {
+                      rtc.createDataChannel('', {reliable:false});
+                  };
+
+                  rtc.onicecandidate = function (evt) {
+                      if (evt.candidate) that.grepSDP("a="+evt.candidate.candidate);
+                  };
+                  rtc.createOffer(function (offerDesc) {
+                      that.grepSDP(offerDesc.sdp);
+                      rtc.setLocalDescription(offerDesc);
+                  }, function (e) { console.warn("offer failed", e); });
+
+                  that.addrs = Object.create(null);
+                  that.addrs["0.0.0.0"] = false;
+                  debugger;
+              })();
+            } else {
+                //document.getElementById('list').textContent = "请使用主流浏览器：chrome,firefox,opera,safari";
+            }
           }
+
         }
     }
 </script>
