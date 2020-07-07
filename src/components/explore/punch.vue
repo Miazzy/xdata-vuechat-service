@@ -107,7 +107,7 @@
 </template>
 <script>
 
-    import Peer from 'peerjs';
+    //import Peer from 'peerjs';
 
     export default {
         components: {
@@ -144,45 +144,44 @@
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
-          this.connectWebRTC();
-          this.connectCommon();
+          // this.connectWebRTC();
+          // this.connectCommon();
         },
         methods: {
           connectWebRTC(){
+            // let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
+            // let peerID = `app_peer_${username}`;
 
-            let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
-            let peerID = `app_peer_${username}`;
-
-            this.peer = new Peer(peerID, {
-              host: 'upload.shengtai.club',
-              port: 9000,
-              path: '/myapp'
-            });
-            localStorage.setItem(`system_peer_info` , peerID);
-            this.peer.on('connection', (conn) => {
-              conn.on('data', (data) => {
-                let random = Math.random().toString().slice(2,6);
-                console.log(data);
-                conn.send(`hello user ${random}!`);
-              });
-              conn.on('open', () => {
-                conn.send('hello!');
-              });
-            });
+            // this.peer = new Peer(peerID, {
+            //   host: 'upload.shengtai.club',
+            //   port: 9000,
+            //   path: '/myapp'
+            // });
+            // localStorage.setItem(`system_peer_info` , peerID);
+            // this.peer.on('connection', (conn) => {
+            //   conn.on('data', (data) => {
+            //     let random = Math.random().toString().slice(2,6);
+            //     console.log(data);
+            //     conn.send(`hello user ${random}!`);
+            //   });
+            //   conn.on('open', () => {
+            //     conn.send('hello!');
+            //   });
+            // });
           },
           connectCommon(){
-            let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
-            if(username != 'common'){
-              const conn = this.peer.connect('app_peer_common');
-              conn.on('open', () => {
-                conn.send('hi!');
-              });
-              conn.on('data', (data) => {
-                let random = Math.random().toString().slice(2,6);
-                console.log(data);
-                conn.send(`hello common ${random} !`);
-              });
-            }
+            // let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
+            // if(username != 'common'){
+            //   const conn = this.peer.connect('app_peer_common');
+            //   conn.on('open', () => {
+            //     conn.send('hi!');
+            //   });
+            //   conn.on('data', (data) => {
+            //     let random = Math.random().toString().slice(2,6);
+            //     console.log(data);
+            //     conn.send(`hello common ${random} !`);
+            //   });
+            // }
           },
           getUrlParam(name) {
               var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
