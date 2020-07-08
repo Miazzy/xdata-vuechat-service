@@ -11,17 +11,17 @@
           </dt>
           <dd>消息</dd>
       </router-link>
-       <router-link id="wx-nax-app" to="/app" tag="dl" @click="changeTab('app');" :style="active == 'app' ? activeStyle:'' ">
+       <router-link id="wx-nav-app" to="/app" tag="dl" @click="changeTab('app');" :style="active == 'app' ? activeStyle:'' ">
           <dt @click="changeTab('app');" class="iconfont icon-app" >
           </dt>
           <dd>应用</dd>
       </router-link>
-		  <router-link id="wx-nax-contact" to="/contact" tag="dl" @click="changeTab('contact');" :style="active == 'contact' ? activeStyle:'' ">
+		  <router-link id="wx-nav-contact" to="/contact" tag="dl" @click="changeTab('contact');" :style="active == 'contact' ? activeStyle:'' ">
           <dt @click="changeTab('contact');" class="iconfont icon-friends" >
           </dt>
           <dd>联系人</dd>
       </router-link>
-		  <router-link id="wx-nax-self" to="/self" tag="dl" @click="changeTab('self');" :style="active == 'self' ? activeStyle:'' ">
+		  <router-link id="wx-nav-self" to="/self" tag="dl" @click="changeTab('self');" :style="active == 'self' ? activeStyle:'' ">
           <dt @click="changeTab('self');" class="iconfont icon-me" >
           </dt>
           <dd>我的</dd>
@@ -46,23 +46,38 @@
             }
         },
         methods: {
+            getUrlParam(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
+                if (r != null) return decodeURI(r[2]); return null; //返回参数值
+            },
             changeTab(name){
               var that = this;
-              this.active = name;
-              this.changeStyle(name);
+              var name = window.location.hash.slice(2);
+              that.active = name;
               setTimeout(() => {
                 that.changeStyle(name);
-              },500);
+              },0);
+              setTimeout(() => {
+                that.changeStyle(name);
+              },300);
+              setTimeout(() => {
+                that.changeStyle(name);
+              },600);
+              setTimeout(() => {
+                that.changeStyle(name);
+              },900);
+              setTimeout(() => {
+                that.changeStyle(name);
+              },1200);
             },
             changeStyle(name){
-              (async () => {
-                $('#wx-nav dl').removeClass('router-link-exact-active');
-                $('#wx-nav dl').removeClass('router-link-active');
-              })();
-              (async () => {
-                $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-                $(`#wx-nav-${name}`).addClass('router-link-active');
-              })();
+              var name = window.location.hash.slice(2);
+              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+              $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+              $(`#wx-nav-${name}`).addClass('router-link-active');
+              console.log(name);
             }
         }
     }
