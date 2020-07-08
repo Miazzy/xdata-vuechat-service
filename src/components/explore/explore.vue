@@ -5,7 +5,7 @@
       <div class="weui-cells">
         <div class="weui-cell weui-cell_access" id="scanCell" style="margin-top:10px;">
           <div class="weui-cell_app_hd" style="margin-left:5px;">
-          <router-link to="/task" tag="dl">
+          <router-link to="/explore/task" tag="dl">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
               <div class="weui-cell_app_bd" >
                 任务
@@ -13,7 +13,7 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
-          <router-link to="/news" tag="dl">
+          <router-link to="/explore/news" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
             <div class="weui-cell_app_bd">
               公告
@@ -21,7 +21,7 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
-          <router-link to="/punch" tag="dl">
+          <router-link to="/explore/punch" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
             <div class="weui-cell_app_bd">
               打卡
@@ -29,10 +29,12 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
+          <router-link to="/explore/sign" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
             <div class="weui-cell_app_bd">
               签到
             </div>
+          </router-link>
           </div>
         </div>
       </div>
