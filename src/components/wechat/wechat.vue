@@ -23,6 +23,21 @@
         },
         activated() {
           $('#return[tag=div]').remove();
+          this.changeStyle();
+        },
+        mounted() {
+          this.$store.commit("toggleTipsStatus", -1);
+          this.changeStyle();
+        },
+        methods: {
+            changeStyle(name){
+              var name = window.location.hash.slice(2);
+              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+              $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+              $(`#wx-nav-${name}`).addClass('router-link-active');
+              console.log(name);
+            }
         }
     }
 </script>

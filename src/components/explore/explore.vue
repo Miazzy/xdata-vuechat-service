@@ -97,8 +97,6 @@
   </div>
 </template>
 <script>
-//import * as $ from 'jquery';
-
 export default {
     mixins: [window.mixin],
     data() {
@@ -110,10 +108,12 @@ export default {
     },
     activated() {
       $('#return[tag=div]').remove();
-      this.$store.commit("toggleTipsStatus", -1)
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
     },
     mounted() {
       $('#return[tag=div]').remove();
+      this.changeStyle();
     },
     watch: {
       $route(to, from) {
@@ -129,6 +129,7 @@ export default {
         var path = this.$route.path;
         if(path == '/explore'){
           $('#return[tag=div]').remove();
+          this.changeStyle();
         }
       },
       queryReturnDiv(){
@@ -139,6 +140,14 @@ export default {
         $('#return[tag=div]').click(()=>{
           that.$router.push(`/explore`);
         });
+      },
+      changeStyle(name){
+        var name = window.location.hash.slice(2);
+        $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+        $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+        $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+        $(`#wx-nav-${name}`).addClass('router-link-active');
+        console.log(name);
       }
     }
 }
