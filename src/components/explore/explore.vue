@@ -3,7 +3,7 @@
   <div id="explore" style="margin-top: -18px;" >
     <section>
       <div class="weui-cells">
-        <div class="weui-cell weui-cell_access" id="scanCell">
+        <div class="weui-cell weui-cell_access" id="scanCell" style="margin-top:10px;">
           <div class="weui-cell_app_hd" style="margin-left:5px;">
           <router-link to="/task" tag="dl">
             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >

@@ -202,6 +202,7 @@ a:hover {
 
 .weui-cell__hd img {
     width: 40px;
+    border-radius: 8px;
 }
 
 .weui-cell_app_hd {

@@ -5,7 +5,11 @@ Vue.use(Router)
     //app整体由店面页和店内页组成 暂时并没有用到嵌套路由
 const routes = [{
         path: '/',
-        name: "沟通",
+        name: "应用",
+        component: resolve => require(["../components/app/app.vue"], resolve)
+    }, {
+        path: '/wechat',
+        name: "消息",
         component: resolve => require(["../components/wechat/wechat.vue"], resolve)
     }, {
         path: '/wechat/dialogue',

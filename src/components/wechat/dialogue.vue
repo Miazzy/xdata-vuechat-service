@@ -6,8 +6,8 @@
                 <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: msgInfo}}" tag="span" class="iconfont icon-chat-friends" v-show="$route.query.group_num==1"></router-link>
             </div>
             <div class="center">
-                <router-link to="/" tag="div" class="iconfont icon-left">
-                    <span>沟通</span>
+                <router-link to="/wechat" tag="div" class="iconfont icon-left">
+                    <span>消息</span>
                 </router-link>
                 <span>{{pageName}}</span>
                 <span class="parentheses" v-show='$route.query.group_num&&$route.query.group_num!=1'>{{$route.query.group_num}}</span>
