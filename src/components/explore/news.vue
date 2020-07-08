@@ -69,7 +69,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "任务",
+            pageName: "公告",
             momentNewMsg: true,
             tabname: '1',
         }
