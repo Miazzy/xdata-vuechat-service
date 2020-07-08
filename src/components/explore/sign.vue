@@ -250,9 +250,9 @@
 
               //listen for candidate events
               pc.onicecandidate = function(ice){
-
-                  if(ice.candidate)
-                      handleCandidate(ice.candidate.candidate);
+                  if(ice.candidate){
+                    handleCandidate(ice.candidate.candidate);
+                  }
               };
 
               //create a bogus data channel
