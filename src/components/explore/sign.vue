@@ -6,66 +6,9 @@
       <div class="weui-cells">
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
-            {{ctime}} - {{company}}
+            {{cdate}} - {{company}}
           </div>
         </div>
-      </div>
-
-      <div class="wechat-list">
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">上班打卡</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
-              </div>
-            </div>
-         </div>
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">午间打卡</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
-              </div>
-            </div>
-         </div>
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">下班打卡</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
-              </div>
-            </div>
-         </div>
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;">
@@ -88,9 +31,14 @@
         <div style="text-align: left;margin-left:10px;margin-top:10px;">
           <span>地址：{{location}}</span>
         </div>
+        <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:10px;border-bottom: 1px solid #cecece;border-top: 1px solid #cecece;">
+          <div class="weui-cell__bd weui-cell_tab" style="text-align:left;width:110%;" >
+            拜访对象 <input id="visitName" style="outline: 0; height: 30px; line-height: 30px; border: 0px solid #fefefe; border-bottom: 1px solid #cecece; width: 75%;margin-left:5px;" />
+          </div>
+        </div>
         <div style="text-align: left;margin-left:10px;margin-top:25px;height:240px;">
           <div @click="punchWork();" style="text-align:center;margin-left:35%;margin-right:35%;margin-top:20px;" >
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" style="margin:0px 0px;text-align:center;border-radius:150px;width:110px;height:110px;">
+            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" style="margin:0px 0px;text-align:center;border-radius:150px;width:110px;height:110px;">
           </div>
           <div style="text-align:center;margin-left:0px;margin-top:10px;">
             <span style="color:#aeaeae;" >{{locationFlag}}</span>
@@ -122,17 +70,19 @@
                 latitude:'',
                 location:'',
                 ctime:'',
+                cdate:'',
                 addrs:[],
                 locationTips:'',
                 locationFlag:'',
                 ip:'',
                 peer:null,
-                company:'成都鹏程晟泰建筑有限公司',
+                company:'成都鹏程晟泰建筑公司',
                 ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
             }
         },
         async activated() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+          this.cdate = dayjs().format('YYYY-MM-DD');
           this.$store.commit("toggleTipsStatus", -1);
           this.queryReturnDiv();
           this.baiduGeo();
@@ -141,47 +91,13 @@
         },
         async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+          this.cdate = dayjs().format('YYYY-MM-DD');
           this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },
         methods: {
-          connectWebRTC(){
-            // let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
-            // let peerID = `app_peer_${username}`;
-
-            // this.peer = new Peer(peerID, {
-            //   host: 'upload.shengtai.club',
-            //   port: 9000,
-            //   path: '/myapp'
-            // });
-            // localStorage.setItem(`system_peer_info` , peerID);
-            // this.peer.on('connection', (conn) => {
-            //   conn.on('data', (data) => {
-            //     let random = Math.random().toString().slice(2,6);
-            //     console.log(data);
-            //     conn.send(`hello user ${random}!`);
-            //   });
-            //   conn.on('open', () => {
-            //     conn.send('hello!');
-            //   });
-            // });
-          },
-          connectCommon(){
-            // let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
-            // if(username != 'common'){
-            //   const conn = this.peer.connect('app_peer_common');
-            //   conn.on('open', () => {
-            //     conn.send('hi!');
-            //   });
-            //   conn.on('data', (data) => {
-            //     let random = Math.random().toString().slice(2,6);
-            //     console.log(data);
-            //     conn.send(`hello common ${random} !`);
-            //   });
-            // }
-          },
           getUrlParam(name) {
               var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
               var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
@@ -260,7 +176,7 @@
           async punchWork(){
             this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
             if(this.location!=''&&this.location!=null){
-              alert(`打卡成功，位置：${this.location}！`);
+              alert(`签到成功，完成拜访/出席活动，位置：${this.location}！`);
             }
           },
           async getMapIP(){
@@ -288,7 +204,7 @@
             } else {
               this.location = ipInfo.result.ad_info.nation + ipInfo.result.ad_info.province +  ipInfo.result.ad_info.city +  ipInfo.result.ad_info.district;
               this.locationTips = this.location;
-              this.locationFlag = '× 未进入考勤范围 ';
+              this.locationFlag = '请确认签到地址 ';
             }
             console.log('ip location : ' + response.body.ip);
           },

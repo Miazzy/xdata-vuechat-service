@@ -115,28 +115,28 @@ const routes = [{
         name: "首页",
         components: { "default": resolve => require(["../components/explore/explore.vue"], resolve) }
     }, {
-        path: '/explore/task',
+        path: '/task',
         name: "任务",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/task.vue"], resolve)
         }
     }, {
-        path: '/explore/news',
+        path: '/news',
         name: "新闻",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/news.vue"], resolve)
         }
     }, {
-        path: '/explore/punch',
+        path: '/punch',
         name: "打卡",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/punch.vue"], resolve)
         }
     }, {
-        path: '/explore/sign',
+        path: '/sign',
         name: "签到",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
