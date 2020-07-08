@@ -540,16 +540,27 @@ input.weui-btn_plain-primary {
 
 .weui-cell_access {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    color: inherit
+    color: inherit;
 }
 
 .weui-cell_access:active {
-    background-color: #ececec
+    background-color: #fcfcfc;
+}
+
+.weui-cell-app_access {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    color: inherit;
+    text-align: center;
+}
+
+.weui-cell-app_access:active {
+    /* background-color: #ececec; */
+    text-align: center;
 }
 
 .weui-cell_access .weui-cell__ft {
     padding-right: 13px;
-    position: relative
+    position: relative;
 }
 
 .weui-cell_access .weui-cell__ft:after {
@@ -567,29 +578,29 @@ input.weui-btn_plain-primary {
     position: absolute;
     top: 50%;
     margin-top: -4px;
-    right: 2px
+    right: 2px;
 }
 
 .weui-cell_link {
     color: #586c94;
-    font-size: 14px
+    font-size: 14px;
 }
 
 .weui-cell_link:first-child:before {
-    display: block
+    display: block;
 }
 
 .weui-check__label {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .weui-check__label:active {
-    background-color: #ececec
+    background-color: #ececec;
 }
 
 .weui-check {
     position: absolute;
-    left: -9999em
+    left: -9999em;
 }
 
 .weui-cells_radio .weui-cell__ft {
