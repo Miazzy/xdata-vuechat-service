@@ -212,8 +212,9 @@ a:hover {
 }
 
 .weui-cell_app_hd img {
-    width: 44px;
+    width: 48px;
     border-radius: 40px;
+    margin-left: 1px;
 }
 
 .gender {

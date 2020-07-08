@@ -198,6 +198,7 @@
       padding-top: 4px;
       border: 0px solid #fefefe;
       width: 100px;
+      font-size: 16px;
     }
     #search {
       display:none;

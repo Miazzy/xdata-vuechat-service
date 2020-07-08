@@ -144,8 +144,6 @@
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
-          // this.connectWebRTC();
-          // this.connectCommon();
         },
         methods: {
           connectWebRTC(){
@@ -239,7 +237,6 @@
                     }
                 });
             });
-
           },
           baiduGeo(){
             var that = this;
@@ -259,7 +256,8 @@
               }
             });
           },
-          punchWork(){
+          async punchWork(){
+            this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
             if(this.location!=''&&this.location!=null){
               alert(`打卡成功，位置：${this.location}！`);
             }
