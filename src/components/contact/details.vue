@@ -39,7 +39,7 @@
             </div>
             <div class="weui-cell weui-cell_access">
                 <div class="weui-cell__bd">
-                    <p>个人相册</p>
+                    <p>动态</p>
                 </div>
                 <div class="weui-cell__ft" style="-webkit-flex: 4;text-align: left;">
                     <div class="album-list">

@@ -70,10 +70,12 @@
         },
         computed: {
             contactsInitialList() {
-                return this.$store.getters.contactsInitialList
+              debugger;
+              return this.$store.getters.contactsInitialList
             },
             contactsList() {
-                return this.$store.getters.contactsList
+              debugger;
+              return this.$store.getters.contactsList
             }
         },
         methods: {

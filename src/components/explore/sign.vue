@@ -33,7 +33,7 @@
         </div>
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:10px;border-bottom: 1px solid #cecece;border-top: 1px solid #cecece;">
           <div class="weui-cell__bd weui-cell_tab" style="text-align:left;width:110%;" >
-            拜访对象 <input id="visitName" style="outline: 0; height: 30px; line-height: 30px; border: 0px solid #fefefe; border-bottom: 1px solid #cecece; width: 75%;margin-left:5px;" />
+            拜访对象 <input id="visitName" type="text" placeholder="请输入拜访对象或出席活动" style="outline: 0; height: 30px; line-height: 30px; border: 0px solid #fefefe; border-bottom: 0px solid #cecece; width: 75%;margin-left:5px; " />
           </div>
         </div>
         <div style="text-align: left;margin-left:10px;margin-top:25px;height:240px;">
@@ -176,7 +176,7 @@
           async punchWork(){
             this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
             if(this.location!=''&&this.location!=null){
-              alert(`签到成功，完成拜访/出席活动，位置：${this.location}！`);
+              alert(`签到成功，完成拜访/出席活动的签到，位置：${this.location}！`);
             }
           },
           async getMapIP(){

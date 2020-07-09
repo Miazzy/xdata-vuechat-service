@@ -1,8 +1,9 @@
 const getters = {
 
-    //  从联系人中提取出首字母 再排序 
+    //  从联系人中提取出首字母 再排序
 
     contactsInitialList: state => {
+        debugger
         var initialList = [],
             allContacts = state.allContacts,
             max = allContacts.length
@@ -16,6 +17,7 @@ const getters = {
 
     // 将联系人根据首字母进行分类
     contactsList: (state, getters) => {
+        debugger
         var contactsList = {},
             allContacts = state.allContacts,
             max = allContacts.length;

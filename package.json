@@ -1,8 +1,8 @@
 {
-    "name": "vue-wechat",
+    "name": "vuechat",
     "version": "1.0.0",
-    "description": "App单页应用",
-    "author": "zhaohaodang@gmail.com",
+    "description": "OA",
+    "author": "qq695926920@163.com",
     "private": true,
     "scripts": {
         "dev": "node build/dev-server.js",

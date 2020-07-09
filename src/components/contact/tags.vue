@@ -32,13 +32,6 @@
                 </div>
             </div>
         </div>
-        <!--<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-            <div class="weui-media__bd">
-                <h4 class="weui-media-box__title">同学</h4>
-
-                <p class="weui-media-box__desc">夜华</p>
-            </div>
-        </a>-->
     </div>
 </template>
 <script>
