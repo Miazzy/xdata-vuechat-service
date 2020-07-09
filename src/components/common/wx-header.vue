@@ -21,19 +21,9 @@
           <span class="iconfont icon-friends"></span>
           <div>添加朋友</div>
         </router-link>
-        <li> <span class="iconfont icon-notice"></span>
-          <div>扫码</div>
-        </li>
-        <li> <span class="iconfont icon-password"></span>
-          <div>签到</div>
-        </li>
       </ul>
-      <!--<div class="tips-masker" v-show="tips_isOpen"></div>-->
     </div>
     <div class="center">
-      <!-- <transition name="fade">
-          <div class="iconfont icon-left" style="left: 10px;position: absolute;font-size: 16px;" v-on:click="goBack" v-show="$route.path.split('/').length>2"><span>{{$store.state.backPageName}}</span></div>
-      </transition>-->
       <!--显示当前页的名字-->
       <span>{{$store.state.currentPageName}}</span>
       <!--微信群 显示群名以及成员人数 好像和 dialogue 组件 写重了 sad -->
@@ -53,9 +43,9 @@
         methods: {
             // 暂且用不到 先留着
             goBack() {
-                this.$router.go(-1)
-                    //保证返回操作后正确显示页面名称
-                    // this.$store.commit("setPageName", this.$store.state.backPageName)
+              //保证返回操作后正确显示页面名称
+              // this.$store.commit("setPageName", this.$store.state.backPageName)
+              this.$router.go(-1);
             }
         }
     }

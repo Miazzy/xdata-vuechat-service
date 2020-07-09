@@ -28,174 +28,179 @@
   </div>
 </template>
 <script>
-    export default {
-        mixins: [window.mixin],
-        data() {
-            return {
-                pageName: "登录",
-                momentNewMsg: true,
-                customActiveKey: "tab1",
-                loginInfo:{},
-            }
-        },
-        activated() {
-          this.$store.commit("toggleTipsStatus", -1);
-          this.changeStyle();
-          this.displayFoot();
-        },
-        mounted() {
-          this.changeStyle();
-          this.displayFoot();
-        },
-        methods:{
-          changeStyle(){
-            //this.$router.push('/self');
-          },
-          displayFoot() {
-            $('.app-footer').css('display','none');
-          },
-          userLogin(){
+import storage from '@/request/storage';
 
-          },
-          checkTel(){
-
-          },
-          toForgetPassword(){
-
-          },
-          toRegister(){
-
-          },
-          background(type,msg) {
-            //提示信息
-            this.$Message[type]({
-              background: true,
-              content: msg
-            });
-          },
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            pageName: "登录",
+            momentNewMsg: true,
+            customActiveKey: "tab1",
+            loginInfo:{},
         }
+    },
+    activated() {
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+    },
+    mounted() {
+      this.changeStyle();
+      this.displayFoot();
+      this.userLogin();
+    },
+    methods:{
+      changeStyle(){
+
+      },
+      displayFoot() {
+        $('.app-footer').css('display','none');
+      },
+      async userLogin(){
+        storage.setStore('username' , 'zhaoziyu' , 1000);
+        let username = storage.getStore('username' , 'zhaoziyu');
+        console.log(username);
+        debugger;
+      },
+      checkTel(){
+
+      },
+      toForgetPassword(){
+
+      },
+      toRegister(){
+
+      },
+      background(type,msg) {
+        //提示信息
+        this.$Message[type]({
+          background: true,
+          content: msg
+        });
+      },
     }
+}
 </script>
 <style>
-    @import "../../assets/css/explore.css";
+@import "../../assets/css/explore.css";
 
-    .weui-cell-title{
-      margin-left: 20px;
-      margin-top: 2px;
-      padding-top: 4px;
-      border: 0px solid #fefefe;
-      width: 100px;
-      font-size: 16px;
-    }
+.weui-cell-title {
+  margin-left: 20px;
+  margin-top: 2px;
+  padding-top: 4px;
+  border: 0px solid #fefefe;
+  width: 100px;
+  font-size: 16px;
+}
 
-    #login {
-      background:#fefefe;height:100%;
-    }
+#login {
+  background:#fefefe;height:100%;
+}
 
-    #search {
-      display:none;
-    }
+#search {
+  display:none;
+}
 
-    .app-footer {
-      display:none;
-    }
+.app-footer {
+  display:none;
+}
 
-    .main-content {
-      background:#fefefe;
-      height:1000px;
-      margin-top:-30px;
-    }
+.main-content {
+  background:#fefefe;
+  height:1000px;
+  margin-top:-30px;
+}
 
-    .main-title {
-      text-align:left;
-      width:100%;
-      height:50px;
-      margin-top:100px;
-      background:#fefefe;
-      margin-left:35px;
-      font-size:18px;
-    }
+.main-title {
+  text-align:left;
+  width:100%;
+  height:50px;
+  margin-top:100px;
+  background:#fefefe;
+  margin-left:35px;
+  font-size:18px;
+}
 
-    .main-account {
-      text-align:center;
-      width:100%;
-      height:50px;
-      margin-top:0px;
-      background:#fefefe;
-    }
+.main-account {
+  text-align:center;
+  width:100%;
+  height:50px;
+  margin-top:0px;
+  background:#fefefe;
+}
 
-    .input-account {
-      text-align:left;
-      width:80%;
-      height:50px;
-      border:0px solid #fefefe;
-      border-bottom: 1px solid #cecece;
-    }
+.input-account {
+  text-align:left;
+  width:80%;
+  height:50px;
+  border:0px solid #fefefe;
+  border-bottom: 1px solid #cecece;
+}
 
-    .main-password {
-      text-align:center;
-      width:100%;
-      height:50px;
-      margin-top:0px;
-      background:#fefefe;
-    }
+.main-password {
+  text-align:center;
+  width:100%;
+  height:50px;
+  margin-top:0px;
+  background:#fefefe;
+}
 
-    .input-password {
-      text-align:left;
-      width:80%;
-      height:50px;
-      border:0px solid #fefefe;
-      border-bottom: 1px solid #cecece;
-    }
+.input-password {
+  text-align:left;
+  width:80%;
+  height:50px;
+  border:0px solid #fefefe;
+  border-bottom: 1px solid #cecece;
+}
 
-    .main-login {
-      text-align:center;
-      width:100%;
-      height:60px;
-      margin-top:0px;
-      background:#fefefe;
-    }
+.main-login {
+  text-align:center;
+  width:100%;
+  height:60px;
+  margin-top:0px;
+  background:#fefefe;
+}
 
-    .span-login {
-      text-align:center;
-      border-radius:8px;
-      border:1px solid #cecece;
-      height:40px;
-      margin:10px 10px;
-      display:inline-block;
-      width:80%;
-      padding: 10px 35%;
-      margin-top: 30px;
-    }
+.span-login {
+  text-align:center;
+  border-radius:8px;
+  border:1px solid #cecece;
+  height:40px;
+  margin:10px 10px;
+  display:inline-block;
+  width:80%;
+  padding: 10px 35%;
+  margin-top: 30px;
+}
 
-    .main-forget {
-      text-align:center;
-      width:100%;
-      height:60px;
-      margin-top:0px;
-      background:#fefefe;
-    }
+.main-forget {
+  text-align:center;
+  width:100%;
+  height:60px;
+  margin-top:0px;
+  background:#fefefe;
+}
 
-    .span-forget {
-      text-align:center;
-      border-radius:8px;
-      border:0px solid #cecece;
-      height:40px;
-      margin:10px 10px;
-      display:inline-block;
-      width:80%;
-      padding: 10px 10px;
-      margin-top: 15px;
-      color: #aeaeae;
-    }
+.span-forget {
+  text-align:center;
+  border-radius:8px;
+  border:0px solid #cecece;
+  height:40px;
+  margin:10px 10px;
+  display:inline-block;
+  width:80%;
+  padding: 10px 10px;
+  margin-top: 15px;
+  color: #aeaeae;
+}
 
-    .app-content {
-        overflow-x: hidden;
-        overflow-y: auto;
-        z-index: 1;
-        padding-bottom: 49px;
-        width: 100%;
-        background-color:#fefefe;
-    }
-
+.app-content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 1;
+    padding-bottom: 49px;
+    width: 100%;
+    background-color:#fefefe;
+}
 </style>

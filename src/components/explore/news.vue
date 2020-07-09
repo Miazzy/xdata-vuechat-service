@@ -63,7 +63,6 @@
   </div>
 </template>
 <script>
-//import * as $ from 'jquery';
 
 export default {
     mixins: [window.mixin],

@@ -9,8 +9,6 @@
                 <span>群聊</span>
             </div>
         </header>
-        <!--这里的 search 组件的样式需要修改一下-->
-        <search></search>
         <section class="weui-cells">
             <template v-for="groupInfo in groupList">
                 <a class="weui-cell weui-cell_access">
@@ -24,14 +22,12 @@
                     </div>
                 </a>
             </template>
-</section>
-</div>
+         </section>
+    </div>
 </template>
 <script>
-    import search from "../common/search"
     export default {
         components: {
-            search
         },
         data() {
             return {
@@ -41,13 +37,24 @@
         computed: {
             // 从消息数据中提取出群聊列表 不严谨 应该新建 groups.js，存放所有群聊数据
             groupList() {
-                var temp = []
+                var temp = [];
                 for (var i in this.$store.state.msgList.baseMsg) {
                     if (this.$store.state.msgList.baseMsg[i].type === 'group') {
-                        temp.push(this.$store.state.msgList.baseMsg[i])
+                        temp.push(this.$store.state.msgList.baseMsg[i]);
                     }
                 }
-                return temp
+                return temp;
+            }
+        },
+        activated() {
+          this.hiddenSearchBar();
+        },
+        mounted() {
+          this.hiddenSearchBar();
+        },
+        methods: {
+            hiddenSearchBar(){
+              $('#search').css('display','none');
             }
         }
     }

@@ -50,7 +50,7 @@ const state = {
                     "name": "阿荡",
                     "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/header01.png"
                 }],
-                "user": [contact.getUserInfo('wxid_zhaohd')] // 此消息的用户数组 长度为1则为私聊 长度大于1则为群聊
+                "user": [contact.getUserInfo('wxid_zhaohd')].filter(item => item != null && typeof item != 'undefined') // 此消息的用户数组 长度为1则为私聊 长度大于1则为群聊
             },
             {
                 "mid": 2,
@@ -78,7 +78,7 @@ const state = {
                         "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/yehua.jpg"
                     }
                 ],
-                "user": [contact.getUserInfo('wxid_zhaohd'), contact.getUserInfo('wxid_yehua')]
+                "user": [contact.getUserInfo('wxid_zhaohd'), contact.getUserInfo('wxid_yehua')].filter(item => item != null && typeof item != 'undefined')
             },
             {
                 "mid": 3,
@@ -94,7 +94,7 @@ const state = {
                     "name": "诸葛亮",
                     "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/zhugeliang.jpg"
                 }],
-                "user": [contact.getUserInfo('wxid_zhenji'), contact.getUserInfo('wxid_zhugeliang'), contact.getUserInfo('wxid_zhaohd')]
+                "user": [contact.getUserInfo('wxid_zhenji'), contact.getUserInfo('wxid_zhugeliang'), contact.getUserInfo('wxid_zhaohd')].filter(item => item != null && typeof item != 'undefined')
             },
             {
                 "mid": 4,
@@ -120,7 +120,7 @@ const state = {
                     "name": "孙权",
                     "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/sunquan.jpg"
                 }],
-                "user": [contact.getUserInfo('wxid_sunquan')]
+                "user": [contact.getUserInfo('wxid_sunquan')].filter(item => item != null && typeof item != 'undefined')
             },
             {
                 "mid": 5,
@@ -136,7 +136,7 @@ const state = {
                     "name": "孙尚香",
                     "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/sunshangxiang.jpg"
                 }],
-                "user": [contact.getUserInfo('wxid_sunshangxiang')]
+                "user": [contact.getUserInfo('wxid_sunshangxiang')].filter(item => item != null && typeof item != 'undefined')
             },
             {
                 "mid": 6,
@@ -152,7 +152,7 @@ const state = {
                     "name": "关羽",
                     "headerUrl": "https://sinacloud.net/vue-wechat/images/headers/guangyu.jpg"
                 }],
-                "user": [contact.getUserInfo('wxid_guangyu')]
+                "user": [contact.getUserInfo('wxid_guangyu')].filter(item => item != null && typeof item != 'undefined')
             }
         ]
     }

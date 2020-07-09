@@ -162,6 +162,8 @@
   </div>
 </template>
 <script>
+    import storage from 'src/request/storage';
+
     export default {
         mixins: [window.mixin],
         data() {
