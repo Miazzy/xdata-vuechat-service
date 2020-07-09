@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import storage from '@/request/storage';
+import * as storage from '@/request/storage';
 
 export default {
     mixins: [window.mixin],
@@ -44,11 +44,14 @@ export default {
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
+      this.userLogin();
+      debugger;
     },
     mounted() {
       this.changeStyle();
       this.displayFoot();
       this.userLogin();
+      debugger;
     },
     methods:{
       changeStyle(){
@@ -58,6 +61,7 @@ export default {
         $('.app-footer').css('display','none');
       },
       async userLogin(){
+        debugger;
         storage.setStore('username' , 'zhaoziyu' , 1000);
         let username = storage.getStore('username' , 'zhaoziyu');
         console.log(username);
