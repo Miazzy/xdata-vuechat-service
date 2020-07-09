@@ -174,24 +174,30 @@
           $('#return[tag=div]').remove();
           this.$store.commit("toggleTipsStatus", -1);
           this.changeStyle();
+          this.displayFoot();
         },
         mounted() {
           this.changeStyle();
+          this.displayFoot();
         },
         methods: {
-            changeStyle(name){
+            changeStyle(name) {
               var name = window.location.hash.slice(2);
               $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
               $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
               $(`#wx-nav-${name}`).addClass('router-link-exact-active');
               $(`#wx-nav-${name}`).addClass('router-link-active');
               console.log(name);
+            },
+            displayFoot() {
+              $('.app-footer').css('display','block');
             }
         }
     }
 </script>
 <style>
     @import "../../assets/css/explore.css";
+
     .weui-cell-title{
       margin-left: 20px;
       margin-top: 2px;
@@ -200,7 +206,12 @@
       width: 100px;
       font-size: 16px;
     }
+
     #search {
       display:none;
+    }
+
+    .app-footer {
+      display:block;
     }
 </style>

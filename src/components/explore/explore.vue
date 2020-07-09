@@ -112,10 +112,12 @@ export default {
       $('#return[tag=div]').remove();
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
+      this.displayFoot();
     },
     mounted() {
       $('#return[tag=div]').remove();
       this.changeStyle();
+      this.displayFoot();
     },
     watch: {
       $route(to, from) {
@@ -132,6 +134,7 @@ export default {
         if(path == '/explore'){
           $('#return[tag=div]').remove();
           this.changeStyle();
+          this.displayFoot();
         }
       },
       queryReturnDiv(){
@@ -143,13 +146,16 @@ export default {
           that.$router.push(`/explore`);
         });
       },
-      changeStyle(name){
+      changeStyle(name) {
         var name = window.location.hash.slice(2);
         $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
         $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
         $(`#wx-nav-${name}`).addClass('router-link-exact-active');
         $(`#wx-nav-${name}`).addClass('router-link-active');
         console.log(name);
+      },
+      displayFoot() {
+        $('.app-footer').css('display','block');
       }
     }
 }
@@ -159,6 +165,10 @@ export default {
 
     #explore {
       margin-top: 28px;
+    }
+
+    .app-footer {
+      display:block;
     }
 
     .weui-cell_tab {

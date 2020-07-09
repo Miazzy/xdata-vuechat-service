@@ -24,10 +24,12 @@
         activated() {
           $('#return[tag=div]').remove();
           this.changeStyle();
+          this.displayFoot();
         },
         mounted() {
           this.$store.commit("toggleTipsStatus", -1);
           this.changeStyle();
+          this.displayFoot();
         },
         methods: {
             changeStyle(name){
@@ -37,10 +39,17 @@
               $(`#wx-nav-${name}`).addClass('router-link-exact-active');
               $(`#wx-nav-${name}`).addClass('router-link-active');
               console.log(name);
+            },
+            displayFoot(){
+              $('.app-footer').css('display','block');
             }
         }
     }
 </script>
 <style>
     @import "../../assets/css/wechat.css";
+
+    .app-footer {
+      display:block;
+    }
 </style>

@@ -1,5 +1,29 @@
 <template>
-  <div id="app">
+  <div id="login" style="">
+
+      <div class="main-content" style="" >
+
+        <div class="main-title" style="">
+          <span>账号/手机/邮箱登录</span>
+        </div>
+
+        <div class="main-account" style="">
+          <input class="input-account" type="text" placeholder="请输入账号/手机/邮箱" style="" />
+        </div>
+
+        <div class="main-password" style="">
+          <input class="input-password" type="password" placeholder="请输入密码" style="" />
+        </div>
+
+        <div class="main-login" style="">
+          <span class="span-login" style="" >登录</span>
+        </div>
+
+        <div class="main-forget" style="">
+          <span class="span-forget" style="" >忘记密码？</span>
+        </div>
+
+      </div>
 
   </div>
 </template>
@@ -17,37 +41,30 @@
         activated() {
           this.$store.commit("toggleTipsStatus", -1);
           this.changeStyle();
+          this.displayFoot();
         },
         mounted() {
           this.changeStyle();
+          this.displayFoot();
         },
         methods:{
           changeStyle(){
-
+            //this.$router.push('/self');
+          },
+          displayFoot() {
+            $('.app-footer').css('display','none');
           },
           userLogin(){
-            console.log(this.loginInfo)
-            api.login({...this.loginInfo}).then(res=>{
-              if(res.code===1){
-            this.background("success",res.message);
-            localStorage.setItem('token',res.data)
-              }else{
-            this.background("error",res.message);
-              }
-            })
+
           },
           checkTel(){
-            api.checkTel(this.loginInfo.phone).then(res=>{
-              if(res.code===2){
-                this.background("error",res.message);
-              }
-            })
+
           },
           toForgetPassword(){
-            this.$router.push('/forgetPassword')
+
           },
           toRegister(){
-            this.$router.push('/register')
+
           },
           background(type,msg) {
             //提示信息
@@ -71,6 +88,10 @@
       font-size: 16px;
     }
 
+    #login {
+      background:#fefefe;height:100%;
+    }
+
     #search {
       display:none;
     }
@@ -79,175 +100,102 @@
       display:none;
     }
 
-    .ant-form {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      color: rgba(0,0,0,.65);
-      font-size: 14px;
-      font-variant: tabular-nums;
-      line-height: 1.5;
-      list-style: none;
-      font-feature-settings: "tnum";
+    .main-content {
+      background:#fefefe;
+      height:1000px;
+      margin-top:-30px;
     }
 
-    .ant-tabs {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        color: rgba(0,0,0,.65);
-        font-size: 14px;
-        font-variant: tabular-nums;
-        line-height: 1.5;
-        list-style: none;
-        font-feature-settings: "tnum";
-        position: relative;
-        overflow: hidden;
-        zoom: 1;
+    .main-title {
+      text-align:left;
+      width:100%;
+      height:50px;
+      margin-top:100px;
+      background:#fefefe;
+      margin-left:35px;
+      font-size:18px;
     }
 
-    .personal .personal-c {
-      width: 660px;
-      margin: 0 auto;
+    .main-account {
+      text-align:center;
+      width:100%;
+      height:50px;
+      margin-top:0px;
+      background:#fefefe;
     }
 
-    .personal .personal-c .head {
-      height: 186px;
+    .input-account {
+      text-align:left;
+      width:80%;
+      height:50px;
+      border:0px solid #fefefe;
+      border-bottom: 1px solid #cecece;
     }
 
-    .personal .personal-c .avatar {
-      width: 200px;
-      height: 72px;
-      margin: 0 auto;
-      padding-top: 128px;
-      background:  no-repeat center;
-      background-size: contain;
+    .main-password {
+      text-align:center;
+      width:100%;
+      height:50px;
+      margin-top:0px;
+      background:#fefefe;
     }
 
-    .personal .personal-c  .main {
-      width: 100%;
-      overflow: hidden;
+    .input-password {
+      text-align:left;
+      width:80%;
+      height:50px;
+      border:0px solid #fefefe;
+      border-bottom: 1px solid #cecece;
     }
 
-    .personal .personal-c .tips {
-      overflow: hidden;
+    .main-login {
+      text-align:center;
+      width:100%;
+      height:60px;
+      margin-top:0px;
+      background:#fefefe;
     }
 
-    .personal .personal-c  span {
-      float: left;
-      width: 132px;
-      height: 62px;
-      font-size: 44px;
-      font-family: PingFang SC;
-      font-weight: 500;
-      line-height: 62px;
-      color: rgba(21, 21, 21, 1);
-      opacity: 1;
-      margin-bottom: 36px;
+    .span-login {
+      text-align:center;
+      border-radius:8px;
+      border:1px solid #cecece;
+      height:40px;
+      margin:10px 10px;
+      display:inline-block;
+      width:80%;
+      padding: 10px 35%;
+      margin-top: 30px;
     }
 
-    .personal .personal-c .main-head {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 14px;
+    .main-forget {
+      text-align:center;
+      width:100%;
+      height:60px;
+      margin-top:0px;
+      background:#fefefe;
     }
 
-    .personal .personal-c span {
-      width: 196px;
-      height: 40px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: 500;
-      line-height: 30px;
-      color: rgba(21, 21, 21, 1);
-      opacity: 1;
+    .span-forget {
+      text-align:center;
+      border-radius:8px;
+      border:0px solid #cecece;
+      height:40px;
+      margin:10px 10px;
+      display:inline-block;
+      width:80%;
+      padding: 10px 10px;
+      margin-top: 15px;
+      color: #aeaeae;
     }
 
-    .personal .personal-c span:last-child {
-      width: 168px;
-      height: 40px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      line-height: 30px;
-      color: rgba(126, 126, 126, 1);
-      opacity: 1;
-    }
-
-    .form  .ivu-input {
-      height: 102px;
-      margin: 14px 0px;
-      font-size: 28px;
-      padding-left: 24px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: rgba(126, 126, 126, 1);
-    }
-
-    .personal .personal-c .ivu-input-suffix {
-      width: 170px;
-      display: block;
-      line-height: 120px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: rgba(21, 21, 21, 1);
-    }
-
-    .personal .personal-c .ivu-input-suffix i{
-      display: inline-block;
-      font-size:66px;
-      margin-top: 50px;
-    }
-
-    .personal .personal-c .btn {
-      margin-top: 29px;
-      overflow: hidden;
-    }
-
-    .personal .personal-c .ivu-btn-success {
-      background-image: linear-gradient(to right, #648324, #7ba22b);
-      border: none;
-      height: 102px;
-      font-size: 32px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 1);
-      opacity: 1;
-    }
-
-    .personal .personal-c .clickRegister {
-      height: 40px;
-      font-size: 28px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      line-height: 44px;
-      color: rgba(56, 170, 253, 1);
-      opacity: 1;
-      float: right;
-      margin-top: 36px;
-    }
-
-    .personal .personal-c .tel {
-      overflow: hidden;
-      margin: 0 auto;
-      margin-top: 492px;
-    }
-
-    .personal .personal-c span:first-child {
-      font-size: 28px;
-      color: #151515;
-    }
-
-    .personal .personal-c span {
-      width: 308px;
-      height: 85px;
-      font-size: 32px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      line-height: 44px;
-      color: rgba(56, 170, 253, 1);
-      opacity: 1;
+    .app-content {
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 1;
+        padding-bottom: 49px;
+        width: 100%;
+        background-color:#fefefe;
     }
 
 </style>

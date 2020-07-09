@@ -58,12 +58,15 @@
         },
         mounted() {
           // mutations.js中有介绍
-          this.$store.commit("toggleTipsStatus", -1)
+          this.$store.commit("toggleTipsStatus", -1);
+          this.changeStyle();
+          this.displayFoot();
         },
         activated() {
           $('#return[tag=div]').remove();
           this.$store.commit("toggleTipsStatus", -1)
           this.changeStyle();
+          this.displayFoot();
         },
         computed: {
             contactsInitialList() {
@@ -73,24 +76,28 @@
                 return this.$store.getters.contactsList
             }
         },
-        mounted() {
-          this.changeStyle();
-        },
         methods: {
-            toPs(i){
+            toPs(i) {
                 window.scrollTo(0,this.$refs['key_'+i][0].offsetTop)
             },
-            changeStyle(name){
+            changeStyle(name) {
               var name = window.location.hash.slice(2);
               $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
               $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
               $(`#wx-nav-${name}`).addClass('router-link-exact-active');
               $(`#wx-nav-${name}`).addClass('router-link-active');
               console.log(name);
+            },
+            displayFoot() {
+              $('.app-footer').css('display','block');
             }
         }
     }
 </script>
 <style>
     @import "../../assets/css/contact.css";
+
+    .app-footer {
+      display:block;
+    }
 </style>

@@ -58,7 +58,7 @@
       </div>
 
       <div class="weui-cells" style="">
-        <router-link to="/self" class="weui-cell weui-cell_access">
+        <router-link to="/login" class="weui-cell weui-cell_access">
           <div class="weui-cell__bd" style="text-align:center;">
             <p style="color:red;margin-top:5px;margin-bottom:5px;">注销并退出</p>
           </div>
@@ -80,11 +80,13 @@
         mounted() {
           this.$store.commit("toggleTipsStatus", -1);
           this.changeStyle();
+          this.displayFoot();
         },
         activated() {
           $('#return[tag=div]').remove();
           this.$store.commit("toggleTipsStatus", -1);
           this.changeStyle();
+          this.displayFoot();
         },
         methods: {
             changeStyle(name){
@@ -94,11 +96,17 @@
               $(`#wx-nav-${name}`).addClass('router-link-exact-active');
               $(`#wx-nav-${name}`).addClass('router-link-active');
               console.log(name);
+            },
+            displayFoot(){
+              $('.app-footer').css('display','block');
             }
         }
-
     }
 </script>
 <style>
     @import "../../assets/css/self.css";
+
+    .app-footer {
+      display:block;
+    }
 </style>
