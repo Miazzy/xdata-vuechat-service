@@ -8,15 +8,15 @@
         </div>
 
         <div class="main-account" style="">
-          <input class="input-account" type="text" placeholder="请输入账号/手机/邮箱" style="" />
+          <input class="input-account" type="text" placeholder="请输入账号/手机/邮箱" style="" v-model="username" />
         </div>
 
         <div class="main-password" style="">
-          <input class="input-password" type="password" placeholder="请输入密码" style="" />
+          <input class="input-password" type="password" placeholder="请输入密码" style="" v-model="password" />
         </div>
 
-        <div class="main-login" style="">
-          <span class="span-login" style="" >登录</span>
+        <div class="main-login" style="" >
+          <span class="span-login" style="" @click="userLogin" >登录</span>
         </div>
 
         <div class="main-forget" style="">
@@ -29,6 +29,12 @@
 </template>
 <script>
 import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+import { Toast } from 'vant';
+
+Vue.use(Toast);
+
+window.storage = storage;
 
 export default {
     mixins: [window.mixin],
@@ -38,20 +44,18 @@ export default {
             momentNewMsg: true,
             customActiveKey: "tab1",
             loginInfo:{},
+            username:'',
+            password:'',
         }
     },
     activated() {
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
-      this.userLogin();
-      debugger;
     },
     mounted() {
       this.changeStyle();
       this.displayFoot();
-      this.userLogin();
-      debugger;
     },
     methods:{
       changeStyle(){
@@ -61,9 +65,14 @@ export default {
         $('.app-footer').css('display','none');
       },
       async userLogin(){
-        debugger;
+        if(tools.isNull(this.username)){
+          Toast('请输入账号/手机/邮箱登录！');
+        }
+        if(tools.isNull(this.password)){
+          Toast('请输入密码！');
+        }
         storage.setStore('username' , 'zhaoziyu' , 1000);
-        let username = storage.getStore('username' , 'zhaoziyu');
+        let username = storage.getStore('username');
         console.log(username);
         debugger;
       },

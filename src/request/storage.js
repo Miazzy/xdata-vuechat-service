@@ -1,15 +1,17 @@
-//import * as localforage from 'localforage';
+try {
+    localforage.config({
+        driver: localforage.WEBSQL,
+        name: 'cache',
+        version: 1.0,
+        size: 4294967296,
+        storeName: 'keyvaluepairs',
+        description: 'some description'
+    });
+} catch (error) {
+    console.log(error);
+}
 
-localforage.config({
-    driver: localforage.WEBSQL,
-    name: 'cache',
-    version: 1.0,
-    size: 4294967296,
-    storeName: 'keyvaluepairs',
-    description: 'some description'
-});
-
-export const STORAGE_KEY = 'questionnaire';
+export const STORAGE_KEY = 'system_oa_app';
 
 /**
  * @function Set storage
@@ -104,7 +106,6 @@ export const clearAll = (name) => {
     }
 };
 
-
 /**
  * @function 获取缓存信息
  * @param {*} key
@@ -121,7 +122,6 @@ export const get = (key = STORAGE_KEY) => {
 export const save = (items, key = STORAGE_KEY) => {
     window.localStorage.setItem(key, JSON.stringify(items));
 };
-
 
 /**
  * @function Set storage
@@ -164,8 +164,6 @@ export const setStoreAll = async(name, content, maxAge = null) => {
         }
     }
 };
-
-
 
 /**
  * @function Get storage
@@ -283,3 +281,17 @@ export const clearDB = name => {
 export const clearAllDB = () => {
     localforage.clear();
 };
+
+export const TokenKey = 'Access-Token'
+
+export function getToken() {
+    return getStore(TokenKey)
+}
+
+export function setToken(token) {
+    return setStore(TokenKey, token, 86400 * 30)
+}
+
+export function removeToken() {
+    return clearStore(TokenKey)
+}
