@@ -1,13 +1,16 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+//import Vue from 'vue'
+//import Vuex from 'vuex'
 import OfficialAccounts from "./official-account" //存放所有关注的应用号
 import contact from './contacts' //存放所有联系人的数据
 import mutations from "./mutations"
 import actions from "./actions"
 import getters from "./getters"
-Vue.use(Vuex)
-    // 统一管理接口域名
-let apiPublicDomain = '//vrapi.snail.com/'
+
+Vue.use(Vuex);
+
+// 统一管理接口域名
+let apiPublicDomain = '//vrapi.snail.com/';
+
 const state = {
     currentLang: "zh", //当前使用的语言 zh：简体中文 en:英文 后期需要
     newMsgCount: 0, //新消息数量
@@ -154,6 +157,7 @@ const state = {
         ]
     }
 }
+
 export default new Vuex.Store({
     state,
     mutations,

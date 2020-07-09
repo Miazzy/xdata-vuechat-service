@@ -8,8 +8,23 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var CompressionWebpackPlugin = require('compression-webpack-plugin');
 
-var env = config.build.env
+var env = config.build.env;
+var productionGzipExtensions = [
+    'js',
+    'css',
+    'html',
+    'svg',
+    'png',
+    'less',
+    'jpg',
+    'jpeg',
+    'woff',
+    'ttf',
+    'woff2',
+    'ico',
+];
 
 var webpackConfig = merge(baseWebpackConfig, {
     module: {
@@ -29,6 +44,12 @@ var webpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': env
         }),
+        // new CompressionWebpackPlugin({
+        //     algorithm: 'gzip',
+        //     test: productionGzipExtensions,
+        //     threshold: 0,
+        //     minRatio: 0.8,
+        // }),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
@@ -99,14 +120,13 @@ if (config.build.productionGzip) {
 
     webpackConfig.plugins.push(
         new CompressionWebpackPlugin({
-            asset: '[path].gz[query]',
             algorithm: 'gzip',
             test: new RegExp(
                 '\\.(' +
                 config.build.productionGzipExtensions.join('|') +
                 ')$'
             ),
-            threshold: 10240,
+            threshold: 1024,
             minRatio: 0.8
         })
     )
