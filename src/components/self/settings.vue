@@ -40,7 +40,7 @@
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>
-            <div class="weui-btn-area">
+            <div class="weui-btn-area" style="display:none;">
                 <button class="weui-btn weui-btn_warn" id="exitBtn">退出登录</button>
             </div>
         </section>

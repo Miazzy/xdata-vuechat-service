@@ -1,8 +1,9 @@
 //import Vue from 'vue'
-import Router from 'vue-router'
+import Router from 'vue-router';
 
-Vue.use(Router)
-    //app整体由店面页和店内页组成 暂时并没有用到嵌套路由
+Vue.use(Router);
+
+//app整体由店面页和店内页组成 暂时并没有用到嵌套路由
 const routes = [{
         path: '/',
         name: "应用",
@@ -206,12 +207,4 @@ const routes = [{
 export default new Router({
     base: "/vue-wechat/",
     routes,
-    // scrollBehavior(to, from, savedPosition) {
-    //     if (savedPosition) {
-    //         return savedPosition
-    //     } else {
-    //         return { x: 0, y: 0 }
-    //     }
-    // }
-
 })
