@@ -34,6 +34,7 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as contact from '@/vuex/contacts';
 
 const loginURL = `https://www.shengtai.club/jeecg-boot/sys/login`;
 
@@ -50,6 +51,8 @@ export default {
             username:'',
             password:'',
             loading:false,
+            contactsInitialList:[],
+            contactsList:[],
         }
     },
     activated() {
@@ -67,6 +70,39 @@ export default {
     methods:{
       displayFoot() {
         $('.app-footer').css('display','none');
+      },
+      // 将联系人根据首字母进行分类
+      async queryContactsInitialList(){
+          var initialList = [];
+          var allContacts = await contact.queryContacts();
+          debugger;
+          var max = allContacts.length;
+          for (var i = 0; i < max; i++) {
+              if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
+                  initialList.push(allContacts[i].initial.toUpperCase());
+              }
+          }
+          return initialList.sort();
+      },
+
+      // 将联系人根据首字母进行分类
+      async queryContactsList() {
+          var initialList = [];
+          var contactsList = [];
+          var allContacts = await contact.queryContacts();
+          var contactsInitialList = await this.queryContactsInitialList();
+          debugger;
+          var max = allContacts.length;
+          for (var i = 0; i < contactsInitialList.length; i++) {
+              var protoTypeName = contactsInitialList[i];
+              contactsList[protoTypeName] = [];
+              for (var j = 0; j < max; j++) {
+                  if (allContacts[j].initial.toUpperCase() === protoTypeName) {
+                      contactsList[protoTypeName].push(allContacts[j]);
+                  }
+              }
+          }
+          return contactsList;
       },
       async userLogin(){
 

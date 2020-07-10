@@ -14,7 +14,8 @@ let apiPublicDomain = '//vrapi.snail.com/';
 const state = {
     currentLang: "zh", //当前使用的语言 zh：简体中文 en:英文 后期需要
     newMsgCount: 0, //新消息数量
-    allContacts: contact.contacts, //所有联系人
+    contact: contact,
+    allContacts: [], //所有联系人
     OfficialAccounts: OfficialAccounts, //所有关注的应用号
     currentPageName: "消息", //用于在wx-header组件中显示当前页标题
     //backPageName: "", //用于在返回按钮出 显示前一页名字 已遗弃

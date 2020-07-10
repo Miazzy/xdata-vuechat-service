@@ -51,37 +51,90 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as contact from '@/vuex/contacts';
+
+const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST';
+const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST';
 
 export default {
     mixins: [window.mixin],
     data() {
         return {
-            "pageName": "通讯录"
+            "pageName": "通讯录",
+            contactsInitialList:[],
+            contactsList:{},
         }
     },
-    mounted() {
+    async mounted() {
       // mutations.js中有介绍
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      this.contactsInitialList = await this.queryContactsInitialList();
+      this.contactsList = await this.queryContactsList();
     },
-    activated() {
+    async activated() {
       $('#return[tag=div]').remove();
       this.$store.commit("toggleTipsStatus", -1)
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      this.contactsInitialList = await this.queryContactsInitialList();
+      this.contactsList = await this.queryContactsList();
+    },
+    async created(){
+      this.contactsInitialList = await this.queryContactsInitialList();
+      this.contactsList = await this.queryContactsList();
     },
     computed: {
-        contactsInitialList() {
-          return this.$store.getters.contactsInitialList
-        },
-        contactsList() {
-          return this.$store.getters.contactsList
-        }
+
     },
     methods: {
+
+        // 将联系人根据首字母进行分类
+        async queryContactsInitialList(){
+            var initialList = storage.getStore(ALL_CONTACT_INIT_CACHE_LIST) || [];
+            if(tools.isNull(initialList) || initialList.length <= 0){
+              var allContacts = await contact.queryContacts();
+              debugger;
+              var max = allContacts.length;
+              for (var i = 0; i < max; i++) {
+                  if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
+                      initialList.push(allContacts[i].initial.toUpperCase());
+                  }
+              }
+              initialList = initialList.sort();
+              storage.setStore(ALL_CONTACT_INIT_CACHE_LIST , initialList , 3600 * 24);
+            }
+            return initialList;
+        },
+
+        // 将联系人根据首字母进行分类
+        async queryContactsList() {
+            var initialList = [];
+            var contactsList = storage.getStore(ALL_CONTACT_CACHE_LIST) || {};
+
+            if(tools.isNull(contactsList) || contactsList.length <= 0){
+              contactsList = {};
+              var allContacts = await contact.queryContacts();
+              var contactsInitialList = await this.queryContactsInitialList();
+              var max = allContacts.length;
+
+              for (var i = 0; i < contactsInitialList.length; i++) {
+                  var protoTypeName = contactsInitialList[i];
+                  contactsList[protoTypeName] = [];
+                  for (var j = 0; j < max; j++) {
+                      if (allContacts[j].initial.toUpperCase() === protoTypeName) {
+                          contactsList[protoTypeName].push(allContacts[j]);
+                      }
+                  }
+              }
+              let cache = JSON.stringify(contactsList);
+              storage.setStore(ALL_CONTACT_CACHE_LIST , cache , 3600 * 24);
+            }
+            return contactsList;
+        },
         toPs(i) {
             window.scrollTo(0,this.$refs['key_'+i][0].offsetTop)
         },

@@ -1,6 +1,6 @@
 /**
  * @function 保存Session在线
- * @param {*} manageAPI 
+ * @param {*} manageAPI
  */
 function keepAlive(storage = window.storage, manageAPI = window.manageAPI) {
 
