@@ -62,7 +62,11 @@ export const queryUserList = async(params) => {
                 console.log(error);
             }
             try {
-                item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
+                if (tools.isNull(item.avatar)) {
+                    item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
+                } else {
+                    item['headerUrl'] = window._CONFIG['uploaxURL'] + '/' + item.avatar;
+                }
             } catch (error) {
                 console.log(error);
             }

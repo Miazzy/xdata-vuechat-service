@@ -5,12 +5,12 @@
       <div class="weui-cells">
         <router-link to="/self/profile" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img src="https://sinacloud.net/vue-wechat/images/headers/header01.png" alt="" class="self-header">
+            <img :src="avatar" alt="" class="self-header">
           </div>
           <div class="weui-cell__bd">
-            <h4 class="self-nickname">阿荡</h4>
+            <h4 class="self-nickname">{{realname}}</h4>
 
-            <p class="self-wxid">账号: zhaohd</p>
+            <p class="self-wxid">账号: {{username}}</p>
           </div>
           <div class="weui-cell__ft">
             <img src="../../assets/images/chat-info-qr.png">
@@ -77,7 +77,10 @@ export default {
     mixins: [window.mixin],
     data() {
       return {
-          "pageName": "我的"
+          "pageName": "我的",
+          username:'',
+          realname:'',
+          avatar:'',
       }
     },
     mounted() {
@@ -120,7 +123,6 @@ export default {
           } catch (error) {
             console.log(error);
           }
-
         },
         async userStatus(){
           try {
@@ -129,6 +131,11 @@ export default {
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
               this.$router.push(`/login`);
+            } else {
+              this.username = info.username;
+              this.realname = info.realname;
+              this.avatar = window._CONFIG['uploaxURL'] + '/' + info.avatar;
+              debugger;
             }
           } catch (error) {
             console.log(error);
