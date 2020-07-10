@@ -30,9 +30,6 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
-import { Toast } from 'vant';
-
-Vue.use(Toast);
 
 window.storage = storage;
 
@@ -65,16 +62,20 @@ export default {
         $('.app-footer').css('display','none');
       },
       async userLogin(){
+        //检查用户是否存在
+        let vuser = '';
         if(tools.isNull(this.username)){
-          Toast('请输入账号/手机/邮箱登录！');
+          vant.Toast('请输入账号/手机/邮箱登录！');
+        } else if(tools.isNull(this.password)){
+          vant.Toast('请输入密码！');
+        } else if(tools.isNull(vuser)){
+          vant.Toast('此账户不存在！');
+        } else {
+          storage.setStore('username' , 'zhaoziyu' , 1000);
+          let username = storage.getStore('username');
+          console.log(username);
+          debugger;
         }
-        if(tools.isNull(this.password)){
-          Toast('请输入密码！');
-        }
-        storage.setStore('username' , 'zhaoziyu' , 1000);
-        let username = storage.getStore('username');
-        console.log(username);
-        debugger;
       },
       checkTel(){
 
