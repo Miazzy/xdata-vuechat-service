@@ -162,39 +162,104 @@
   </div>
 </template>
 <script>
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
 
-    export default {
-        mixins: [window.mixin],
-        data() {
-            return {
-                pageName: "应用",
-                momentNewMsg: true
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            pageName: "应用",
+            momentNewMsg: true
+        }
+    },
+    activated() {
+      $('#return[tag=div]').remove();
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+    },
+    mounted() {
+      this.changeStyle();
+      this.displayFoot();
+    },
+    methods: {
+        changeStyle(name) {
+          var name = window.location.hash.slice(2);
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+          $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+          $(`#wx-nav-${name}`).addClass('router-link-active');
+          console.log(name);
+        },
+        displayFoot() {
+          $('.app-footer').css('display','block');
+        },
+        async userLogin(){
+
+          //检查用户是否存在
+          let vuser = await queryUserInfoByView(this.username);
+
+          //显示加载状态
+          this.loading = true;
+
+          try {
+            if(tools.isNull(this.username)){
+              vant.Toast('请输入账号/手机/邮箱登录！');
+            } else if(tools.isNull(this.password)){
+              vant.Toast('请输入密码！');
+            } else if(tools.isNull(vuser)){
+              vant.Toast('此账户不存在！');
+            } else {
+              let username = this.username;
+              let password = this.password;
+              let response = await superagent
+                    .post(loginURL)
+                    .send({"remember_me":true,"auto_login":false,"username":username,"password":password})
+                    .set('accept', 'application/json');
+
+              if(!tools.isNull(response) && !tools.isNull(response.body)
+                && response.body.code == 200 && response.body.message == "登录成功"){
+                  let userinfo = response.body.result.userInfo;
+                  let token = response.body.result.token;
+                  let department = response.body.result.departs;
+                  userinfo.password = password;
+                  storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
+                  storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
+                  storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
+                  storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
+                  storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+                  vant.Toast('登录成功！');
+                  this.$router.push(`/explore`);
+                  this.loading = false;
+              } else {
+                  vant.Toast('登录失败: ' + response.body.message);
+                  this.loading = false;
+              }
             }
+          } catch (error) {
+            this.loading = false;
+          }
         },
-        activated() {
-          $('#return[tag=div]').remove();
-          this.$store.commit("toggleTipsStatus", -1);
-          this.changeStyle();
-          this.displayFoot();
-        },
-        mounted() {
-          this.changeStyle();
-          this.displayFoot();
-        },
-        methods: {
-            changeStyle(name) {
-              var name = window.location.hash.slice(2);
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-              $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-              $(`#wx-nav-${name}`).addClass('router-link-active');
-              console.log(name);
-            },
-            displayFoot() {
-              $('.app-footer').css('display','block');
-            }
+        async clearLoginInfo(){
+
+          try {
+            let info = await storage.getStore('system_linfo');
+
+            this.username = info.username;
+            this.password = info.password;
+
+            storage.clearStore('system_userinfo');
+            storage.clearStore('system_token');
+            storage.clearStore('system_department');
+            storage.clearStore('system_login_time');
+          } catch (error) {
+            console.log(error);
+          }
+
         }
     }
+}
 </script>
 <style>
     @import "../../assets/css/explore.css";

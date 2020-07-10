@@ -295,3 +295,23 @@ export function setToken(token) {
 export function removeToken() {
     return clearStore(TokenKey)
 }
+
+export async function clearLoginInfo() {
+
+    try {
+
+        let info = await getStore('system_linfo');
+
+        this.username = info.username;
+        this.password = info.password;
+
+        clearStore('system_userinfo');
+        clearStore('system_token');
+        clearStore('system_department');
+        clearStore('system_login_time');
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}

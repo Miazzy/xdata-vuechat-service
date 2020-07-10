@@ -49,52 +49,82 @@
 </div>
 </template>
 <script>
-    export default {
-        mixins: [window.mixin],
-        data() {
-            return {
-                "pageName": "通讯录"
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            "pageName": "通讯录"
+        }
+    },
+    mounted() {
+      // mutations.js中有介绍
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+      this.userStatus();
+    },
+    activated() {
+      $('#return[tag=div]').remove();
+      this.$store.commit("toggleTipsStatus", -1)
+      this.changeStyle();
+      this.displayFoot();
+      this.userStatus();
+    },
+    computed: {
+        contactsInitialList() {
+          return this.$store.getters.contactsInitialList
+        },
+        contactsList() {
+          return this.$store.getters.contactsList
+        }
+    },
+    methods: {
+        toPs(i) {
+            window.scrollTo(0,this.$refs['key_'+i][0].offsetTop)
+        },
+        changeStyle(name) {
+          var name = window.location.hash.slice(2);
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+          $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+          $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+          $(`#wx-nav-${name}`).addClass('router-link-active');
+          console.log(name);
+        },
+        displayFoot() {
+          $('.app-footer').css('display','block');
+        },
+        async clearLoginInfo(){
+          try {
+            let info = await storage.getStore('system_linfo');
+
+            this.username = info.username;
+            this.password = info.password;
+
+            storage.clearStore('system_userinfo');
+            storage.clearStore('system_token');
+            storage.clearStore('system_department');
+            storage.clearStore('system_login_time');
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async userStatus(){
+          try {
+            let info = await storage.getStore('system_userinfo');
+            if( tools.isNull(info) ){
+              vant.Toast('尚未登录！');
+              await this.clearLoginInfo();
+              this.$router.push(`/login`);
             }
-        },
-        mounted() {
-          // mutations.js中有介绍
-          this.$store.commit("toggleTipsStatus", -1);
-          this.changeStyle();
-          this.displayFoot();
-        },
-        activated() {
-          $('#return[tag=div]').remove();
-          this.$store.commit("toggleTipsStatus", -1)
-          this.changeStyle();
-          this.displayFoot();
-        },
-        computed: {
-            contactsInitialList() {
-              debugger;
-              return this.$store.getters.contactsInitialList
-            },
-            contactsList() {
-              debugger;
-              return this.$store.getters.contactsList
-            }
-        },
-        methods: {
-            toPs(i) {
-                window.scrollTo(0,this.$refs['key_'+i][0].offsetTop)
-            },
-            changeStyle(name) {
-              var name = window.location.hash.slice(2);
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-              $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-              $(`#wx-nav-${name}`).addClass('router-link-active');
-              console.log(name);
-            },
-            displayFoot() {
-              $('.app-footer').css('display','block');
-            }
+          } catch (error) {
+            console.log(error);
+          }
         }
     }
+}
 </script>
 <style>
     @import "../../assets/css/contact.css";

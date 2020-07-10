@@ -99,6 +99,9 @@
   </div>
 </template>
 <script>
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -113,11 +116,13 @@ export default {
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
+      this.userStatus();
     },
     mounted() {
       $('#return[tag=div]').remove();
       this.changeStyle();
       this.displayFoot();
+      this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -135,6 +140,7 @@ export default {
           $('#return[tag=div]').remove();
           this.changeStyle();
           this.displayFoot();
+          this.userStatus();
         }
       },
       queryReturnDiv(){
@@ -156,6 +162,33 @@ export default {
       },
       displayFoot() {
         $('.app-footer').css('display','block');
+      },
+      async clearLoginInfo(){
+        try {
+          let info = await storage.getStore('system_linfo');
+
+          this.username = info.username;
+          this.password = info.password;
+
+          storage.clearStore('system_userinfo');
+          storage.clearStore('system_token');
+          storage.clearStore('system_department');
+          storage.clearStore('system_login_time');
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async userStatus(){
+        try {
+          let info = await storage.getStore('system_userinfo');
+          if( tools.isNull(info) ){
+            vant.Toast('尚未登录！');
+            await this.clearLoginInfo();
+            this.$router.push(`/login`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
 }

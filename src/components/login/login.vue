@@ -23,6 +23,10 @@
           <span class="span-forget" style="" >忘记密码？</span>
         </div>
 
+        <div class="main-loading" :style=" loading ? 'display:block;':'display:none;' ">
+          <van-loading type="spinner" size="48px" style="text-align:text;" />
+        </div>
+
       </div>
 
   </div>
@@ -30,6 +34,8 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+
+const loginURL = `https://www.shengtai.club/jeecg-boot/sys/login`;
 
 window.storage = storage;
 
@@ -43,56 +49,89 @@ export default {
             loginInfo:{},
             username:'',
             password:'',
+            loading:false,
         }
     },
     activated() {
       this.$store.commit("toggleTipsStatus", -1);
-      this.changeStyle();
       this.displayFoot();
+      this.clearLoginInfo();
     },
     mounted() {
-      this.changeStyle();
       this.displayFoot();
+      this.clearLoginInfo();
+    },
+    created(){
+      this.clearLoginInfo();
     },
     methods:{
-      changeStyle(){
-
-      },
       displayFoot() {
         $('.app-footer').css('display','none');
       },
       async userLogin(){
+
         //检查用户是否存在
-        let vuser = '';
-        if(tools.isNull(this.username)){
-          vant.Toast('请输入账号/手机/邮箱登录！');
-        } else if(tools.isNull(this.password)){
-          vant.Toast('请输入密码！');
-        } else if(tools.isNull(vuser)){
-          vant.Toast('此账户不存在！');
-        } else {
-          storage.setStore('username' , 'zhaoziyu' , 1000);
-          let username = storage.getStore('username');
-          console.log(username);
-          debugger;
+        let vuser = await queryUserInfoByView(this.username);
+
+        //显示加载状态
+        this.loading = true;
+
+        try {
+          if(tools.isNull(this.username)){
+            vant.Toast('请输入账号/手机/邮箱登录！');
+          } else if(tools.isNull(this.password)){
+            vant.Toast('请输入密码！');
+          } else if(tools.isNull(vuser)){
+            vant.Toast('此账户不存在！');
+          } else {
+            let username = this.username;
+            let password = this.password;
+            let response = await superagent
+                  .post(loginURL)
+                  .send({"remember_me":true,"auto_login":false,"username":username,"password":password})
+                  .set('accept', 'application/json');
+
+            if(!tools.isNull(response) && !tools.isNull(response.body)
+              && response.body.code == 200 && response.body.message == "登录成功"){
+                let userinfo = response.body.result.userInfo;
+                let token = response.body.result.token;
+                let department = response.body.result.departs;
+                userinfo.password = password;
+                storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
+                storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
+                storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
+                storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
+                storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+                vant.Toast('登录成功！');
+                this.$router.push(`/explore`);
+                this.loading = false;
+            } else {
+                vant.Toast('登录失败: ' + response.body.message);
+                this.loading = false;
+            }
+          }
+        } catch (error) {
+          this.loading = false;
         }
-      },
-      checkTel(){
 
       },
-      toForgetPassword(){
+      async clearLoginInfo(){
 
-      },
-      toRegister(){
+        try {
+          let info = await storage.getStore('system_linfo');
 
-      },
-      background(type,msg) {
-        //提示信息
-        this.$Message[type]({
-          background: true,
-          content: msg
-        });
-      },
+          this.username = info.username;
+          this.password = info.password;
+
+          storage.clearStore('system_userinfo');
+          storage.clearStore('system_token');
+          storage.clearStore('system_department');
+          storage.clearStore('system_login_time');
+        } catch (error) {
+          console.log(error);
+        }
+
+      }
     }
 }
 </script>
@@ -197,6 +236,27 @@ export default {
 }
 
 .span-forget {
+  text-align:center;
+  border-radius:8px;
+  border:0px solid #cecece;
+  height:40px;
+  margin:10px 10px;
+  display:inline-block;
+  width:80%;
+  padding: 10px 10px;
+  margin-top: 15px;
+  color: #aeaeae;
+}
+
+.main-loading {
+  text-align:center;
+  width:100%;
+  height:60px;
+  margin-top:0px;
+  background:#fefefe;
+}
+
+.span-loading {
   text-align:center;
   border-radius:8px;
   border:0px solid #cecece;
