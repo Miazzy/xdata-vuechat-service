@@ -93,3 +93,34 @@ export async function queryNewsList(page = 0, size = 50) {
         console.log(err);
     }
 }
+
+
+/**
+ * 获取奖罚通报数据
+ */
+export async function queryNoticeList(page = 0, size = 50) {
+    //提交URL
+    var queryURL = `${window.requestAPIConfig.restapi}/api/bs_notice?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        var result = res.body;
+
+        //遍历并格式化日期
+        window.__.each(result, function(item) {
+            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['operate_time'] = optime;
+            item['create_time'] = ctime;
+            item['timestamp'] = time;
+            item['username'] = tools.deNull(item['username']).split(',');
+            item['table_name'] = 'bs_notice';
+            item['content'] = item['content'] || item['title'];
+        });
+
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}

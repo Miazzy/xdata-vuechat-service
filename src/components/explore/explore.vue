@@ -247,15 +247,15 @@ export default {
         let alist = await announce.queryAnnounceList(0,10);
         let hlist = await announce.queryHeadList(0,10);
         let nlist = await announce.queryNewsList(0,10);
+        let tlist = await announce.queryNoticeList(0,10);
 
-        let temp = [...alist , ...hlist , ...nlist];
+        let temp = [...alist , ...hlist , ...nlist , tlist];
         temp.sort((a, b) => {
           return b.timestamp - a.timestamp;
         });
 
-        this.announces = temp;
+        this.announces = temp.slice(0,10);
 
-        debugger;
       }
     }
 }
