@@ -35,7 +35,7 @@
                     <router-link :key="item.wxid" :to="{path:'/contact/details',query:{wxid:item.wxid}}" class="weui-cell weui-cell_access" v-for="item in value"
                         tag="div">
                         <div class="weui-cell__hd">
-                            <img :src="item.headerUrl" onerror="javascript:this.src='images/logoError.png';" class="home__mini-avatar___1nSrW">
+                            <img :src="item.headerUrl" onerror="javascript:this.src='https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png';" class="home__mini-avatar___1nSrW">
                         </div>
                         <div class="weui-cell__bd">
                             {{item.remark?item.remark:item.nickname}}
