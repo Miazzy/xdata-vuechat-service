@@ -5,7 +5,6 @@ const getters = {
     contactsInitialList: async(state) => {
         var initialList = [];
         var allContacts = await state.contact.queryContacts();
-        debugger;
         var max = allContacts.length;
         state.contact = allContacts;
         for (var i = 0; i < max; i++) {
@@ -20,7 +19,6 @@ const getters = {
     contactsList: async(state, getters) => {
         var initialList = [];
         var allContacts = await state.contact.queryContacts();
-        debugger;
         var max = allContacts.length;
         state.contact = allContacts;
         for (var i = 0; i < getters.contactsInitialList.length; i++) {

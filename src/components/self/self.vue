@@ -135,7 +135,6 @@ export default {
               this.username = info.username;
               this.realname = info.realname;
               this.avatar = window._CONFIG['uploaxURL'] + '/' + info.avatar;
-              debugger;
             }
           } catch (error) {
             console.log(error);

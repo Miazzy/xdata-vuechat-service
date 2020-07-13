@@ -75,7 +75,6 @@ export default {
       async queryContactsInitialList(){
           var initialList = [];
           var allContacts = await contact.queryContacts();
-          debugger;
           var max = allContacts.length;
           for (var i = 0; i < max; i++) {
               if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
@@ -91,7 +90,6 @@ export default {
           var contactsList = [];
           var allContacts = await contact.queryContacts();
           var contactsInitialList = await this.queryContactsInitialList();
-          debugger;
           var max = allContacts.length;
           for (var i = 0; i < contactsInitialList.length; i++) {
               var protoTypeName = contactsInitialList[i];

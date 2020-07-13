@@ -97,7 +97,6 @@ export default {
             var initialList = storage.getStore(ALL_CONTACT_INIT_CACHE_LIST) || [];
             if(tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
-              debugger;
               var max = allContacts.length;
               for (var i = 0; i < max; i++) {
                   if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
