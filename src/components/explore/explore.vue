@@ -57,7 +57,49 @@
       </div>
 
       <div class="wechat-list">
-         <div class="list-info">
+
+         <template v-show="tabname == 1">
+          <div class="list-info" v-show="tabname == 1">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">22:04</div>
+                <div class="desc-author">请假申请审批单</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>临时有事1，申请请假，望领导批准！</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 2">
+          <div class="list-info" v-show="tabname == 2">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;">3</i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">22:04</div>
+                <div class="desc-author">请假申请审批单</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>临时有事2，申请请假，望领导批准！</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 3">
+         <div class="list-info" v-show="tabname == 3">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -71,28 +113,31 @@
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
                 <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
+                <span>临时有事3，申请请假，望领导批准！</span>
               </div>
             </div>
          </div>
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
+         </template>
+         <template v-show="tabname == 4">
+          <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in announces">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
-            </div>
-         </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
       </div>
 
     </section>
@@ -101,6 +146,7 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as announce from '@/request/announce';
 
 export default {
     mixins: [window.mixin],
@@ -109,20 +155,26 @@ export default {
             pageName: "首页",
             momentNewMsg: true,
             tabname: '1',
+            announces:[],
+            donetasks:[],
+            doingtasks:[],
+            timetasks:[],
         }
     },
-    activated() {
+    async activated() {
       $('#return[tag=div]').remove();
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      await this.queryAnnounce();
     },
-    mounted() {
+    async mounted() {
       $('#return[tag=div]').remove();
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      await this.queryAnnounce();
     },
     watch: {
       $route(to, from) {
@@ -133,7 +185,7 @@ export default {
       }
     },
     methods: {
-      goUrl(to , from){
+      async goUrl(to , from){
         //获取URL参数
         var path = this.$route.path;
         if(path == '/explore'){
@@ -141,6 +193,7 @@ export default {
           this.changeStyle();
           this.displayFoot();
           this.userStatus();
+          await this.queryAnnounce();
         }
       },
       queryReturnDiv(){
@@ -189,6 +242,20 @@ export default {
         } catch (error) {
           console.log(error);
         }
+      },
+      async queryAnnounce(){
+        let alist = await announce.queryAnnounceList(0,10);
+        let hlist = await announce.queryHeadList(0,10);
+        let nlist = await announce.queryNewsList(0,10);
+
+        let temp = [...alist , ...hlist , ...nlist];
+        temp.sort((a, b) => {
+          return b.timestamp - a.timestamp;
+        });
+
+        this.announces = temp;
+
+        debugger;
       }
     }
 }
