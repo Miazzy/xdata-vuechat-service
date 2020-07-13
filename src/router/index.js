@@ -40,7 +40,7 @@ const routes = [{
         }
     }, {
         path: '/contact',
-        name: "通讯录",
+        name: "联系人",
         component: resolve => require(["../components/contact/contact.vue"], resolve)
     }, {
         path: '/contact/add-friend',
@@ -58,7 +58,7 @@ const routes = [{
         }
     }, {
         path: '/contact/new-friends/mobile-contacts',
-        name: "通讯录朋友",
+        name: "联系人朋友",
         components: {
             "subPage": resolve => require(["../components/contact/mobile-contacts.vue"], resolve)
         }

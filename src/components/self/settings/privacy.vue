@@ -10,7 +10,7 @@
             </div>
         </header>
         <section>
-            <div class="weui-cells__title">通讯录</div>
+            <div class="weui-cells__title">联系人</div>
             <div class="weui-cells">
                 <div class="weui-cell weui-cell_switch">
                     <div class="weui-cell__bd">加我为朋友时需要验证</div>
@@ -32,7 +32,7 @@
             <div class="weui-cells__tips">关闭后, 其他用户将不能通过账号搜索到你</div>
             <div class="weui-cells">
                 <div class="weui-cell">
-                    <div class="weui-cell__bd">通讯录黑名单</div>
+                    <div class="weui-cell__bd">联系人黑名单</div>
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>

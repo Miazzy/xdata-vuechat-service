@@ -60,7 +60,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            "pageName": "通讯录",
+            "pageName": "联系人",
             contactsInitialList:[],
             contactsList:{},
         }

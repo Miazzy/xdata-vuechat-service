@@ -47,7 +47,7 @@
                 <div class="weui-cell__hd"><img src="../../assets/images/contact_add-friend-contacts.png" alt=""></div>
                 <div class="weui-cell__bd">
                     <p>手机联系人</p>
-                    <p>添加通讯录中的朋友</p>
+                    <p>添加联系人中的朋友</p>
                 </div>
                 <div class="weui-cell__ft"></div>
             </a>

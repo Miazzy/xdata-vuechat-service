@@ -5,7 +5,7 @@
             <div class="other"><span>添加朋友</span></div>
             <div class="center">
                 <router-link to="/contact" tag="div" class="iconfont icon-left">
-                    <span>通讯录</span>
+                    <span>联系人</span>
                 </router-link>
                 <span>新的朋友</span>
             </div>
@@ -26,7 +26,7 @@
                     <img src="https://sinacloud.net/vue-wechat/images/headers/header02.png" alt=""> </div>
                 <div class="weui-cell__bd weui-cell_primary">
                     <p><b>路飞</b></p>
-                    <p><span>来自手机通讯录</span></p>
+                    <p><span>来自手机联系人</span></p>
                 </div>
                 <div class="weui-cell__ft">已添加</div>
             </div>

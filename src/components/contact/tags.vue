@@ -5,7 +5,7 @@
             <!--<div class="other"><span>添加朋友</span></div>-->
             <div class="center">
                 <router-link to="/contact" tag="div" class="iconfont icon-left">
-                    <span>通讯录</span>
+                    <span>联系人</span>
                 </router-link>
                 <span>标签</span>
             </div>

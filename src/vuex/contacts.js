@@ -85,7 +85,7 @@ export const queryUserList = async(params) => {
                 imgSrc: ""
             }];
             item["area"] = ["中国", "四川", "成都"];
-            item["from"] = "通过企业通讯录添加";
+            item["from"] = "通过企业联系人添加";
             item["tag"] = "";
             item["desc"] = {
                 "title": "",

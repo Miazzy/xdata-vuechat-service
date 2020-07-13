@@ -5,7 +5,7 @@
     <div class="other">
       <!--只在“微信”页显示 更多图标-->
       <span class="iconfont icon-add" v-show="$route.path==='/'" v-on:click="$store.commit('toggleTipsStatus')"></span>
-      <!--只在“通讯录”页显示 显示添加好友图标-->
+      <!--只在“联系人”页显示 显示添加好友图标-->
       <router-link tag="span" to="/contact/add-friend" class="iconfont icon-friends" v-show="$route.path==='/contact'"></router-link>
       <!--只在“添加朋友”页显示 -->
       <span v-show="$route.path==='/contact/new-friends'">添加朋友</span>

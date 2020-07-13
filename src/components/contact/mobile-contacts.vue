@@ -6,7 +6,7 @@
                 <router-link to="/contact/new-friends" tag="div" class="iconfont icon-left">
                     <span>新的朋友</span>
                 </router-link>
-                <span>通讯录朋友</span>
+                <span>联系人朋友</span>
             </div>
         </header>
         <!--这里的 search 组件的样式也需要修改一下-->
@@ -105,7 +105,7 @@
         },
         data() {
             return {
-                pageName: "通讯录朋友"
+                pageName: "联系人朋友"
             }
         }
     }

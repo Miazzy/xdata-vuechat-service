@@ -44,7 +44,7 @@
                 <div class="weui-cell__ft"><input type="checkbox" class="weui-switch"></div>
             </div>
             <div class="weui-cell weui-cell_switch">
-                <div class="weui-cell__bd">保存到通讯录</div>
+                <div class="weui-cell__bd">保存到联系人</div>
                 <div class="weui-cell__ft"><input type="checkbox" class="weui-switch"></div>
             </div>
 

@@ -3,7 +3,7 @@
         <header id="wx-header">
             <div class="center">
                 <router-link to="/contact" tag="div" class="iconfont icon-left">
-                    <span>通讯录</span>
+                    <span>联系人</span>
                 </router-link>
                 <span>详细资料</span>
             </div>

@@ -1,16 +1,17 @@
 <template>
   <div id="app">
     <section>
-      <div class="weui-cells" style="margin-top:-15px;">
-        <img src="http://weather.shengtai.club/static/media/background.c327aeb9.jpg" style="height:155px;width:100%;">
+      <div class="weui-cells" style="margin-top:0px;">
 
-        <router-link to="" class="weui-cell weui-cell-app_access" style="padding:3px 5px;padding-left:10px;border-top:0px solid #ffffff;">
-          <div class="weui-cell__hd" style="width:22px; border-radius: 4px; margin-top: 0px;">
-            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" style="width:22px; border-radius: 4px; margin-top: 0px;">
-          </div>
-          <div class="weui-cell__bd" style="text-align:left;font-size:13px;margin-top:-2px;margin-left:-1px;">
-            公告
-          </div>
+        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+          <van-swipe-item>欢迎来到鹏程OA移动办公APP</van-swipe-item>
+        </van-swipe>
+
+        <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
+          <van-notice-bar style="width:100%;" color="#1989fa" background="#ecf9ff"
+            left-icon="volume-o"
+            text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+          />
         </router-link>
       </div>
 
@@ -279,5 +280,13 @@ export default {
 
     .app-footer {
       display:block;
+    }
+
+    .my-swipe .van-swipe-item {
+      color: #fff;
+      font-size: 20px;
+      line-height: 180px;
+      text-align: center;
+      background-color: #39a9ed;
     }
 </style>
