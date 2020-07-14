@@ -1,4 +1,5 @@
-initimport * as tools from '@/request/tools';
+import * as tools from '@/request/tools';
+import * as storage from '@/request/storage';
 
 /**
  * 获取行政公告数据
@@ -8,10 +9,9 @@ export async function queryAnnounceList(page = 0, size = 50) {
     //提交URL
     var queryURL = `${window.requestAPIConfig.restapi}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
-
     try {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_administration_by_user@${username}`);
+        let resultInfo = storage.getStore(`system_announce_administration`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -34,7 +34,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_administration_by_user@${username}`, result, 3600 * 2);
+            storage.setStore(`system_announce_administration`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -53,7 +53,7 @@ export async function queryHeadList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_redhead_by_user@${username}`);
+        let resultInfo = storage.getStore(`system_announce_redhead`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -76,7 +76,7 @@ export async function queryHeadList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_redhead_by_user@${username}`, result, 3600 * 2);
+            storage.setStore(`system_announce_redhead`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -95,7 +95,7 @@ export async function queryNewsList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_news_by_user@${username}`);
+        let resultInfo = storage.getStore(`system_announce_news`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -118,7 +118,7 @@ export async function queryNewsList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_news_by_user@${username}`, result, 3600 * 2);
+            storage.setStore(`system_announce_news`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -138,7 +138,7 @@ export async function queryNoticeList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_notice_by_user@${username}`);
+        let resultInfo = storage.getStore(`system_announce_notice`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -160,7 +160,7 @@ export async function queryNoticeList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_notice_by_user@${username}`, result, 3600 * 2);
+            storage.setStore(`system_announce_notice`, result, 3600 * 2);
         }
 
         return resultInfo;

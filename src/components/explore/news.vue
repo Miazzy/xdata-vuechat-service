@@ -17,46 +17,113 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
             新闻
           </div>
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ;" :style="tabname == 5 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
+            奖罚
+          </div>
         </div>
       </div>
 
       <div class="wechat-list">
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
+        <template v-show="tabname == 1">
+          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in announces">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
-            </div>
-         </div>
-         <div class="list-info">
-            <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
-             <i class="new-msg-dot" style="display: none;"></i>
-             <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-             </div>
-            </div>
-            <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
-              <div class="desc-msg">
-                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
               </div>
-            </div>
-         </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 2">
+          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in alist">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 3">
+          <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in hlist">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 4">
+          <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in nlist">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 5">
+          <div class="list-info" v-show="tabname == 5" :key="item.id" v-for=" (item , index) in tlist">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
       </div>
 
     </section>
@@ -75,14 +142,23 @@ export default {
             pageName: "公告",
             momentNewMsg: true,
             tabname: '1',
+            alist:[],
+            hlist:[],
+            nlist:[],
+            tlist:[],
+            announces:[],
         }
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryReturnDiv();
+        this.queryAnnounce();
+        this.queryEach();
     },
     mounted() {
       this.queryReturnDiv();
+      this.queryAnnounce();
+      this.queryEach();
     },
     methods: {
       queryReturnDiv(){
@@ -93,6 +169,40 @@ export default {
         $('#return[tag=div]').click(()=>{
           that.$router.push(`/explore`);
         });
+      },
+      async queryAnnounce(){
+
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let temp = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_announce_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+
+          this.alist = await announce.queryAnnounceList(0,30);
+          this.hlist = await announce.queryHeadList(0,30);
+          this.nlist = await announce.queryNewsList(0,30);
+          this.tlist = await announce.queryNoticeList(0,30);
+
+          temp = [...this.alist , ...this.hlist , ...this.nlist , ...this.tlist];
+          temp = temp.flat();
+          temp.sort((a, b) => {
+            return b.timestamp - a.timestamp;
+          });
+          storage.setStore(`system_announce_by_user@${username}` , temp , 3600 * 24);
+        } else {
+          temp = result;
+        }
+
+        this.announces = temp.slice(0,30);
+      },
+      async queryEach(){
+        this.alist = await announce.queryAnnounceList(0,30);
+        this.hlist = await announce.queryHeadList(0,30);
+        this.nlist = await announce.queryNewsList(0,30);
+        this.tlist = await announce.queryNoticeList(0,30);
       }
     }
 }
