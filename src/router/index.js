@@ -109,6 +109,20 @@ const routes = [{
             "subPage": resolve => require(["../components/app/news.vue"], resolve)
         }
     }, {
+        path: '/app/donetask',
+        name: "我的已办",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/donetask.vue"], resolve)
+        }
+    }, {
+        path: '/app/doingtask',
+        name: "我的待办",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/doingtask.vue"], resolve)
+        }
+    }, {
         path: '/explore',
         name: "首页",
         components: { "default": resolve => require(["../components/explore/explore.vue"], resolve) }
