@@ -1,5 +1,8 @@
 import * as tools from '@/request/tools';
 
+//计时待办任务常量数组
+export const TIME_TASK_NAME = ['请假申请表', '外出申请表', '加班申请表', '出差申请表', '车补申请表'];
+
 export async function queryProcessLogDone(
     username,
     realname,

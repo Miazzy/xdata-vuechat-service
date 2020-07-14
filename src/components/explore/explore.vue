@@ -149,9 +149,6 @@ import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 
-//计时待办任务常量数组
-const TIME_TASK_NAME = ['请假申请表' , '外出申请表' , '加班申请表' , '出差申请表' , '车补申请表'];
-
 export default {
     mixins: [window.mixin],
     data() {
@@ -320,7 +317,7 @@ export default {
 
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
-          return !TIME_TASK_NAME.includes(item.name);
+          return !task.TIME_TASK_NAME.includes(item.name);
         })
 
         tlist = tlist.slice(0,30);
@@ -346,7 +343,7 @@ export default {
 
         //过滤，去掉非计时待办业务
         tlist = tlist.filter((item)=>{
-          return TIME_TASK_NAME.includes(item.name);
+          return task.TIME_TASK_NAME.includes(item.name);
         })
 
         tlist = tlist.slice(0,30);
