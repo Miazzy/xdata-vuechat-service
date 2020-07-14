@@ -30,7 +30,7 @@
               已办
             </div>
           </div>
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/news`)">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
             <div class="weui-cell_app_bd">
               公告
@@ -175,7 +175,6 @@ export default {
         }
     },
     activated() {
-      $('#return[tag=div]').remove();
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
