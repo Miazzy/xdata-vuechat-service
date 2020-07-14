@@ -6,93 +6,250 @@
       <div class="weui-cells">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            待办
+            计时
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            已办
+            待办
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            本人
+            已办
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
+            本人
+          </div>
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ;" :style="tabname == 5 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
             收藏
           </div>
         </div>
       </div>
 
       <div class="wechat-list">
-         <div class="list-info">
+        <template v-show="tabname == 1">
+          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in timetasks">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 2">
+          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in doingtasks">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+                </div>
+              </div>
+          </div>
+         </template>
+         <template v-show="tabname == 3">
+         <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in donetasks">
             <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
+             <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
             <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
+                <span >{{item.sponsor}}: </span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
               </div>
             </div>
          </div>
-         <div class="list-info">
+        </template>
+        <template v-show="tabname == 4">
+         <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in selftasks">
             <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
+             <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png">
              </div>
             </div>
             <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事，申请请假，望领导批准！</span>
+                <span ></span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
               </div>
             </div>
          </div>
+        </template>
       </div>
 
     </section>
   </div>
 </template>
 <script>
-    //import * as $ from 'jquery';
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+import * as announce from '@/request/announce';
+import * as task from '@/request/task';
 
-    export default {
-        mixins: [window.mixin],
-        data() {
-            return {
-                pageName: "任务",
-                momentNewMsg: true,
-                tabname: '1',
-            }
-        },
-        activated() {
-            this.$store.commit("toggleTipsStatus", -1);
-            this.queryReturnDiv();
-        },
-        mounted() {
-          this.queryReturnDiv();
-        },
-        methods: {
-          queryReturnDiv(){
-            var that = this;
-            $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
-                                      <span style="margin-left:10px;">返回</span>
-                                  </div>`);
-            $('#return[tag=div]').click(()=>{
-              that.$router.push(`/explore`);
-            });
-          }
+export default {
+    mixins: [window.mixin],
+    data() {
+        return {
+            pageName: "任务",
+            momentNewMsg: true,
+            tabname: '1',
+            donetasks:[],
+            doingtasks:[],
+            timetasks:[],
+            selftasks:[],
+            collecttasks:[],
         }
+    },
+    activated() {
+        this.$store.commit("toggleTipsStatus", -1);
+        this.queryReturnDiv();
+        this.queryTaskDone();
+        this.queryTaskDoing();
+        this.queryTaskTiming();
+        this.queryTaskSelf();
+    },
+    mounted() {
+      this.queryReturnDiv();
+      this.queryTaskDone();
+      this.queryTaskDoing();
+      this.queryTaskTiming();
+      this.queryTaskSelf();
+    },
+    methods: {
+      queryReturnDiv(){
+        var that = this;
+        $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
+                                  <span style="margin-left:10px;">返回</span>
+                              </div>`);
+        $('#return[tag=div]').click(()=>{
+          that.$router.push(`/explore`);
+        });
+      },
+      async queryTaskDone(){
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_done_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+          tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
+          storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        this.donetasks = tlist;
+      },
+      async queryTaskDoing(){
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_doing_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        //过滤，去掉计时待办业务
+        tlist = tlist.filter((item)=>{
+          return !task.TIME_TASK_NAME.includes(item.name);
+        })
+
+        tlist = tlist.slice(0,30);
+
+        this.doingtasks = tlist;
+      },
+      async queryTaskTiming(){
+
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_time_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          storage.setStore(`system_task_time_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        //过滤，去掉非计时待办业务
+        tlist = tlist.filter((item)=>{
+          return task.TIME_TASK_NAME.includes(item.name);
+        })
+
+        tlist = tlist.slice(0,30);
+
+        this.timetasks = tlist;
+      },
+      async queryTaskSelf(){
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_done_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+          tlist = await task.queryProcessLogDone(username , realname , 0 , 90);
+          storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        //过滤，去掉计时待办业务
+        tlist = tlist.filter((item)=>{
+          return item.sponsor ==  info.realname;
+        })
+
+        tlist = tlist.slice(0,30);
+
+        this.selftasks = tlist;
+      },
     }
+}
 </script>
 <style>
     @import "../../assets/css/explore.css";
