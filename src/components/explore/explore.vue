@@ -59,61 +59,61 @@
       <div class="wechat-list">
 
          <template v-show="tabname == 1">
-          <div class="list-info" v-show="tabname == 1">
+          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in timetasks">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
               <div class="desc-box">
-                <div class="desc-time">22:04</div>
-                <div class="desc-author">请假申请审批单</div>
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
                   <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>临时有事1，申请请假，望领导批准！</span>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
                 </div>
               </div>
           </div>
          </template>
          <template v-show="tabname == 2">
-          <div class="list-info" v-show="tabname == 2">
+          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in doingtasks">
               <div class="header-box">
-              <i class="new-msg-count" style="display: none;">3</i>
+              <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
               <div class="desc-box">
-                <div class="desc-time">22:04</div>
-                <div class="desc-author">请假申请审批单</div>
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
                   <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>临时有事2，申请请假，望领导批准！</span>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
                 </div>
               </div>
           </div>
          </template>
          <template v-show="tabname == 3">
-         <div class="list-info" v-show="tabname == 3">
+         <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in donetasks">
             <div class="header-box">
-             <i class="new-msg-count" style="display: none;">3</i>
+             <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
             <div class="desc-box">
-              <div class="desc-time">22:04</div>
-              <div class="desc-author">请假申请审批单</div>
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
                 <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                <span style="display: none;"></span>
-                <span>临时有事3，申请请假，望领导批准！</span>
+                <span >{{item.sponsor}}: </span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
               </div>
             </div>
          </div>
@@ -124,7 +124,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
               <div class="desc-box">
@@ -148,6 +148,8 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
+
+const TIME_TASK_NAME = ['请假申请表' , '外出申请表' , '加班申请表' , '出差申请表' , '车补申请表'];
 
 export default {
     mixins: [window.mixin],
@@ -262,14 +264,15 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_announce_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0) {
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
 
           let alist = await announce.queryAnnounceList(0,10);
           let hlist = await announce.queryHeadList(0,10);
           let nlist = await announce.queryNewsList(0,10);
           let tlist = await announce.queryNoticeList(0,10);
 
-          temp = [...alist , ...hlist , ...nlist , tlist];
+          temp = [...alist , ...hlist , ...nlist , ...tlist];
+          temp = temp.flat();
           temp.sort((a, b) => {
             return b.timestamp - a.timestamp;
           });
@@ -289,7 +292,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_task_done_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0) {
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
           storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
         } else {
@@ -307,12 +310,17 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_task_doing_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0) {
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
           storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
         }
+
+        //过滤，去掉计时待办业务
+        tlist = tlist.filter((item)=>{
+          return !TIME_TASK_NAME.includes(item.name);
+        })
 
         this.doingtasks = tlist;
       },
@@ -326,7 +334,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_task_time_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0) {
+        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
           storage.setStore(`system_task_time_by_user@${username}` , tlist , 3600 * 2);
         } else {
@@ -334,6 +342,9 @@ export default {
         }
 
         //过滤，去掉非计时待办业务
+        tlist = tlist.filter((item)=>{
+          return TIME_TASK_NAME.includes(item.name);
+        })
 
         this.timetasks = tlist;
       }
