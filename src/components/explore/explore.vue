@@ -149,6 +149,7 @@ import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 
+//计时待办任务常量数组
 const TIME_TASK_NAME = ['请假申请表' , '外出申请表' , '加班申请表' , '出差申请表' , '车补申请表'];
 
 export default {
@@ -311,7 +312,7 @@ export default {
         let result = storage.getStore(`system_task_doing_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
           storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
@@ -321,6 +322,8 @@ export default {
         tlist = tlist.filter((item)=>{
           return !TIME_TASK_NAME.includes(item.name);
         })
+
+        tlist = tlist.slice(0,30);
 
         this.doingtasks = tlist;
       },
@@ -335,7 +338,7 @@ export default {
         let result = storage.getStore(`system_task_time_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
           storage.setStore(`system_task_time_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
@@ -345,6 +348,8 @@ export default {
         tlist = tlist.filter((item)=>{
           return TIME_TASK_NAME.includes(item.name);
         })
+
+        tlist = tlist.slice(0,30);
 
         this.timetasks = tlist;
       }
