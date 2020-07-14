@@ -147,6 +147,7 @@
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
+import * as task from '@/request/task';
 
 export default {
     mixins: [window.mixin],
@@ -167,14 +168,20 @@ export default {
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
-      await this.queryAnnounce();
+      this.queryAnnounce();
+      this.queryTaskDone();
+      this.queryTaskDoing();
+      this.queryTaskTiming();
     },
     async mounted() {
       $('#return[tag=div]').remove();
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
-      await this.queryAnnounce();
+      this.queryAnnounce();
+      this.queryTaskDone();
+      this.queryTaskDoing();
+      this.queryTaskTiming();
     },
     watch: {
       $route(to, from) {
@@ -193,7 +200,10 @@ export default {
           this.changeStyle();
           this.displayFoot();
           this.userStatus();
-          await this.queryAnnounce();
+          this.queryAnnounce();
+          this.queryTaskDone();
+          this.queryTaskDoing();
+          this.queryTaskTiming();
         }
       },
       queryReturnDiv(){
@@ -244,37 +254,103 @@ export default {
         }
       },
       async queryAnnounce(){
-        let alist = await announce.queryAnnounceList(0,10);
-        let hlist = await announce.queryHeadList(0,10);
-        let nlist = await announce.queryNewsList(0,10);
-        let tlist = await announce.queryNoticeList(0,10);
 
-        let temp = [...alist , ...hlist , ...nlist , tlist];
-        temp.sort((a, b) => {
-          return b.timestamp - a.timestamp;
-        });
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let temp = null;
 
-        this.announces = temp.slice(0,10);
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_announce_by_user@${username}`);
 
+        if( tools.isNull(result) || result.length <= 0) {
+
+          let alist = await announce.queryAnnounceList(0,10);
+          let hlist = await announce.queryHeadList(0,10);
+          let nlist = await announce.queryNewsList(0,10);
+          let tlist = await announce.queryNoticeList(0,10);
+
+          temp = [...alist , ...hlist , ...nlist , tlist];
+          temp.sort((a, b) => {
+            return b.timestamp - a.timestamp;
+          });
+          storage.setStore(`system_announce_by_user@${username}` , temp , 3600 * 24);
+        } else {
+          temp = result;
+        }
+
+        this.announces = temp.slice(0,30);
+      },
+      async queryTaskDone(){
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_done_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0) {
+          tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
+          storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        this.donetasks = tlist;
+      },
+      async queryTaskDoing(){
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_doing_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0) {
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
+          storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        this.doingtasks = tlist;
+      },
+      async queryTaskTiming(){
+
+        let info = await storage.getStore('system_userinfo');
+        let username = info.username;
+        let realname = info.realname;
+        let tlist = null;
+
+        //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
+        let result = storage.getStore(`system_task_time_by_user@${username}`);
+
+        if( tools.isNull(result) || result.length <= 0) {
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 30);
+          storage.setStore(`system_task_time_by_user@${username}` , tlist , 3600 * 2);
+        } else {
+          tlist = result;
+        }
+
+        //过滤，去掉非计时待办业务
+
+        this.timetasks = tlist;
       }
     }
 }
 </script>
 <style>
     @import "../../assets/css/explore.css";
-
     #explore {
       margin-top: 28px;
     }
-
     .app-footer {
       display:block;
     }
-
     .weui-cell_tab {
       height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;
     }
-
     .wechat-list .list-info {
         position: relative;
         z-index: 2;
@@ -284,7 +360,6 @@ export default {
         padding: 8px;
         background-color: #fff;
     }
-
     .wechat-list .list-info .header-box {
         position: relative;
         float: left;
@@ -293,7 +368,6 @@ export default {
         margin-right: 10px;
         margin-left: 0px;
     }
-
     .wechat-list .new-msg-count {
         position: absolute;
         font-style: normal;
@@ -312,7 +386,6 @@ export default {
         font-size: 14px;
         background-color: #f43531;
     }
-
     .wechat-list .new-msg-dot {
         position: absolute;
         right: -4px;
@@ -327,7 +400,6 @@ export default {
         background-color: #f43531;
         font-size: 0;
     }
-
     .wechat-list .list-info .header-box .header {
         height: 100%;
         border-radius: 5px;
@@ -350,7 +422,6 @@ export default {
         overflow: hidden;
         background: #dddbdb;
     }
-
     .wechat-list .list-info .header-box .header img {
         width: 10%;
         height: auto;
@@ -360,33 +431,27 @@ export default {
         flex-grow: 2;
         border: 0;
     }
-
     .wechat-list .list-info .desc-box {
         overflow: hidden;
     }
-
     .wechat-list .list-info .desc-box .desc-time {
         float: right;
         color: #b8b8b8;
     }
-
     .wechat-list .list-info .desc-box .desc-author {
         height: 25px;
         line-height: 25px;
         font-size: 16px;
         color: #000;
     }
-
     .wechat-list .list-info .desc-box .desc-msg {
         height: 23px;
         line-height: 23px;
         font-size: 14px;
         color: #888;
     }
-
     .wechat-list .list-info .desc-box .desc-msg .desc-mute {
         float: right;
         color: #b8b8b8;
     }
-
 </style>
