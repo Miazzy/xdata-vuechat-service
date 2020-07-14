@@ -18,13 +18,13 @@
       <div class="weui-cells">
         <div class="weui-cell-title">常用应用</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/doingtask`)">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
             <div class="weui-cell_app_bd" >
               待办
             </div>
           </div>
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/donetask`)">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
             <div class="weui-cell_app_bd">
               已办

@@ -110,14 +110,14 @@ const routes = [{
         }
     }, {
         path: '/app/donetask',
-        name: "我的已办",
+        name: "已办",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/app/donetask.vue"], resolve)
         }
     }, {
         path: '/app/doingtask',
-        name: "我的待办",
+        name: "待办",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/app/doingtask.vue"], resolve)

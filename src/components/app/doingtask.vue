@@ -6,29 +6,29 @@
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>待办任务</span>
+            <span>待办</span>
         </div>
     </header>
     <section>
       <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            计时待办
+            计时
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            普通待办
+            待办
           </div>
         </div>
       </div>
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
-          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in tdonetasks">
+          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in tdoingtasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
              </div>
             </div>
             <div class="desc-box">
@@ -43,12 +43,12 @@
          </div>
          </template>
          <template v-show="tabname == 2">
-          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in ndonetasks">
+          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in ndoingtasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
              </div>
             </div>
             <div class="desc-box">
@@ -168,7 +168,10 @@ export default {
         let result = storage.getStore(`system_task_doing_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          let one = await task.queryProcessLogWait(username , realname , 0 , 99);
+          let two = await task.queryProcessLogWait(username , realname , 1 , 99);
+          let three = await task.queryProcessLogWait(username , realname , 2 , 99);
+          tlist = [...one , ...two , ...three];
           storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
