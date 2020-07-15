@@ -28,8 +28,13 @@
             />
         </div>
         <div class="weui-cells" style="margin-top:10px;border-bottom:0px solid #fefefe;">
-          <div style="margin-left:10px;margin-bottom:10px;">公告内容（{{type}}）：</div>
+          <div style="margin-left:10px;margin-bottom:10px;">{{type}}：</div>
           <div style="margin-left:10px;margin-bottom:10px;" v-html="content"></div>
+          <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
+            <iframe style="width:100%;height:600px;" :src="purl">
+            </iframe>
+          </div>
+          <div style="height:100px;" ></div>
         </div>
       </div>
 
@@ -41,6 +46,7 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
+import * as constant from '@/request/constant';
 
 export default {
     mixins: [window.mixin],
@@ -56,6 +62,9 @@ export default {
             type:'',
             title:'',
             content:'',
+            files:'',
+            purl:'',
+            previewurl:'',
             announces:[],
         }
     },
@@ -80,6 +89,13 @@ export default {
         this.type = window.decodeURIComponent(this.getUrlParam('type'));
         this.title = window.decodeURIComponent(this.getUrlParam('title'));
         this.content = window.decodeURIComponent(this.getUrlParam('content'));
+        this.files = window.decodeURIComponent(this.getUrlParam('files'));
+        this.previewurl = await tools.queryFileViewURL(this.files);
+        if(this.previewurl.endsWith('pdf')){
+          this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
+        } else {
+          this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+        }
       },
       async queryAnnounce(){
 

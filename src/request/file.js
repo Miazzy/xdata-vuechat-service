@@ -1,12 +1,28 @@
 /**
+ * @function 检测URL是否有效
+ * @param {*} url
+ */
+export async function queryUrlValid(url) {
+    //提交URL
+    var queryURL = `${window._CONFIG['validURL']}${url}`;
+
+    try {
+        var res = await window.superagent.get(queryURL);
+        console.log(' url :' + url + ' result :' + JSON.stringify(res));
+        return res.body.success;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * @function 处理预览功能
  * @param {*} item
- * @param {*} manageAPI
  */
-export async function handlePreview(item, manageAPI) {
+export async function handlePreview(item) {
     let type = ['doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'];
     //检测转化后的FileURL是否可用，如果可用则使用本地地址预览，否则使用kkfileview预览
-    let existFlag = await manageAPI.queryUrlValid(item.file);
+    let existFlag = await queryUrlValid(item.file);
     let suffix = item.name.split('.');
     suffix = suffix[suffix.length - 1];
     //如果文件地址不存在，则使用kkfileview预览模式，否则使用自带预览服务

@@ -276,3 +276,121 @@ export function abbreviation(str, length = 75) {
         console.log(error);
     }
 }
+
+/**
+ * @function 查询文档对应预览地址
+ * @param {*} text
+ */
+export async function queryFileViewURL(text) {
+
+    //文档URL
+    var url = '';
+
+    //查询文档对应预览地址
+    try {
+        //获取小写文档下载地址
+        var textURL = deNull(text).toLowerCase();
+        //如果不含有office文档
+        if (!(
+                textURL.includes('doc') ||
+                textURL.includes('ppt') ||
+                textURL.includes('xls') ||
+                textURL.includes('pdf')
+            )) {
+            return false;
+        }
+
+        //文档数组
+        var fileList = [];
+
+        if (text.indexOf(',') > 0) {
+            fileList = text.split(',');
+        } else {
+            fileList.push(text);
+        }
+
+        //获取第一个office文档
+        url = window.__.find(fileList, function(text) {
+            //获取小写字符串
+            text = deNull(text).toLowerCase();
+            return (
+                text.includes('doc') ||
+                text.includes('ppt') ||
+                text.includes('xls') ||
+                text.includes('pdf')
+            );
+        });
+
+        //文档下载地址
+        url = window._CONFIG['docDownURL'] + '/' + url;
+        //暂存文档地址
+        var tempUrl = `${url}`;
+
+        //URL加密，保证中文路径可以被正常解析
+        var xurl = url.replace('files/', 'files/convert/');
+        //去掉后缀
+        xurl = xurl.substring(0, xurl.lastIndexOf('.'));
+
+        //获取文件后缀
+        var suffix = deNull(url).substring(url.lastIndexOf('.'), url.length).toLowerCase();
+
+        //如果word文档，则使用微软API打开
+        url = deNull(suffix).includes('xls') ? xurl + '.html' : url;
+        //如果word文档，则使用微软API打开
+        url = deNull(suffix).includes('doc') || deNull(suffix).includes('ppt') || deNull(suffix).includes('pdf') ?
+            xurl + '.pdf' :
+            url;
+
+        //待检测URL
+        var checkURL = decodeURIComponent(url);
+
+        //打印checkURL
+        console.log('checkURL :' + checkURL);
+
+        //设置加密路径
+        xurl = encodeURIComponent(xurl);
+
+        //如果word文档，则使用微软API打开
+        url =
+            deNull(suffix).includes('doc') ||
+            deNull(suffix).includes('ppt') ||
+            deNull(suffix).includes('pdf') ?
+            decodeURIComponent(xurl) + '.pdf' : url;
+
+        //检测文件URL标识
+        var existFlag = await queryUrlValid(checkURL);
+
+        //如果文件地址不存在，则使用kkfileview预览模式
+        if (!existFlag) {
+            url = tempUrl;
+        } else {
+            url = checkURL;
+        }
+
+        //打印预览地址日志
+        console.log('preview url :' + url);
+    } catch (error) {
+        //打印错误日志
+        console.log('query file view url error :' + error);
+    }
+
+    //返回URL
+    return url;
+}
+
+/**
+ * @function 检测URL是否有效
+ * @param {*} url
+ */
+export async function queryUrlValid(url) {
+    //提交URL
+    var queryURL = `${window._CONFIG['validURL']}${url}`;
+
+    try {
+        var res = await window.superagent.get(queryURL);
+        console.log(' url :' + url + ' result :' + JSON.stringify(res));
+        return res.body.success;
+    } catch (err) {
+        console.log(err);
+    }
+}
