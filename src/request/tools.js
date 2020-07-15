@@ -394,3 +394,11 @@ export async function queryUrlValid(url) {
         console.log(err);
     }
 }
+
+export function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg); //匹配目标参数
+    if (r != null) return decodeURI(r[2]);
+    return null; //返回参数值
+
+}

@@ -1,9 +1,17 @@
 <template>
   <!--首页组件-->
-  <div id="punch" style="margin-top: 28px;" >
-    <section>
+  <div id="punch" style="margin-top: 0px;" >
+    <header id="wx-header">
+        <div class="center">
+            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
+            <span>签到</span>
+        </div>
+    </header>
 
-      <div class="weui-cells">
+    <section>
+      <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
             {{cdate}} - {{company}}
@@ -84,7 +92,6 @@
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.cdate = dayjs().format('YYYY-MM-DD');
           this.$store.commit("toggleTipsStatus", -1);
-          this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
@@ -92,12 +99,14 @@
         async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.cdate = dayjs().format('YYYY-MM-DD');
-          this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },
         methods: {
+          encodeURI(value){
+            return window.encodeURIComponent(value);
+          },
           getUrlParam(name) {
               var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
               var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数

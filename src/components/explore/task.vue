@@ -1,9 +1,17 @@
 <template>
   <!--首页组件-->
-  <div id="task" style="margin-top: 28px;" >
-    <section>
+  <div id="task" style="margin-top: 0px;" >
+    <header id="wx-header">
+        <div class="center">
+            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
+            <span>任务</span>
+        </div>
+    </header>
 
-      <div class="weui-cells">
+    <section>
+      <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
             计时
@@ -131,20 +139,21 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        this.queryReturnDiv();
         this.queryTaskDone();
         this.queryTaskDoing();
         this.queryTaskTiming();
         this.queryTaskSelf();
     },
     mounted() {
-      this.queryReturnDiv();
       this.queryTaskDone();
       this.queryTaskDoing();
       this.queryTaskTiming();
       this.queryTaskSelf();
     },
     methods: {
+      encodeURI(value){
+        return window.encodeURIComponent(value);
+      },
       queryReturnDiv(){
         var that = this;
         $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">

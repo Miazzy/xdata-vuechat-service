@@ -1,9 +1,16 @@
 <template>
   <!--首页组件-->
-  <div id="news" style="margin-top: 28px;" >
+  <div id="news" style="margin-top: 0px;" >
+    <header id="wx-header">
+        <div class="center">
+            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
+            <span>公告</span>
+        </div>
+    </header>
     <section>
-
-      <div class="weui-cells">
+      <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
             最新
@@ -33,7 +40,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -53,7 +60,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -73,7 +80,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -93,7 +100,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -113,7 +120,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -151,16 +158,17 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        this.queryReturnDiv();
         this.queryAnnounce();
         this.queryEach();
     },
     mounted() {
-      this.queryReturnDiv();
       this.queryAnnounce();
       this.queryEach();
     },
     methods: {
+      encodeURI(value){
+        return window.encodeURIComponent(value);
+      },
       queryReturnDiv(){
         var that = this;
         $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
@@ -175,6 +183,8 @@ export default {
         let info = await storage.getStore('system_userinfo');
         let username = info.username;
         let temp = null;
+
+        this.tabname = (await tools.getUrlParam('tabname')) || '1';
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_announce_by_user@${username}`);

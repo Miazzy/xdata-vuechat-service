@@ -40,7 +40,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/app/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -60,7 +60,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/app/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -80,7 +80,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/app/news`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -100,7 +100,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/app/news`)" >
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -120,7 +120,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/app/news`)" >
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">
@@ -170,11 +170,16 @@ export default {
       this.queryEach();
     },
     methods: {
+      encodeURI(value){
+        return window.encodeURIComponent(value);
+      },
       async queryAnnounce(){
 
         let info = await storage.getStore('system_userinfo');
         let username = info.username;
         let temp = null;
+
+        this.tabname = (await tools.getUrlParam('tabname')) || '1';
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_announce_by_user@${username}`);

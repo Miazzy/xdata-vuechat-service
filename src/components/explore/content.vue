@@ -161,6 +161,9 @@ export default {
       this.queryEach();
     },
     methods: {
+      encodeURI(value){
+        return window.encodeURIComponent(value);
+      },
       queryReturnDiv(){
         var that = this;
         $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">

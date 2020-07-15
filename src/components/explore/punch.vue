@@ -1,9 +1,17 @@
 <template>
   <!--首页组件-->
-  <div id="punch" style="margin-top: 28px;" >
+  <div id="punch" style="margin-top: 0px;" >
+    <header id="wx-header">
+        <div class="center">
+            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
+            <span>打卡</span>
+        </div>
+    </header>
     <section>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
             考勤组：鹏程晟泰建筑有限公司
@@ -133,19 +141,20 @@
         async activated() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.$store.commit("toggleTipsStatus", -1);
-          this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },
         async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-          this.queryReturnDiv();
           this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },
         methods: {
+          encodeURI(value){
+            return window.encodeURIComponent(value);
+          },
           connectWebRTC(){
             // let username = this.getUrlParam('username') || Math.random().toString().slice(2,6);
             // let peerID = `app_peer_${username}`;

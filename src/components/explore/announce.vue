@@ -3,7 +3,7 @@
   <div id="news" style="margin-top: 0px;" >
     <header id="wx-header">
         <div class="center">
-            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+            <router-link :to="`${from}?tabname=${tabname}`" @click="$router.push(`${from}?tabname=${tabname}`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>公告</span>
@@ -64,6 +64,7 @@ export default {
             content:'',
             files:'',
             purl:'',
+            from:'',
             previewurl:'',
             announces:[],
         }
@@ -80,6 +81,9 @@ export default {
       this.queryInfo();
     },
     methods: {
+      encodeURI(value){
+        return window.encodeURIComponent(value);
+      },
       getUrlParam(name) {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
           var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
@@ -90,6 +94,8 @@ export default {
         this.title = window.decodeURIComponent(this.getUrlParam('title'));
         this.content = window.decodeURIComponent(this.getUrlParam('content'));
         this.files = window.decodeURIComponent(this.getUrlParam('files'));
+        this.from = window.decodeURIComponent(this.getUrlParam('from'));
+        this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
         this.previewurl = await tools.queryFileViewURL(this.files);
         if(this.previewurl.endsWith('pdf')){
           this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
