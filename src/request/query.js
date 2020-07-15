@@ -71,6 +71,44 @@ export async function queryTableFieldInfoJSON(tableName) {
 }
 
 /**
+ * @function 查询表字段信息
+ * @param {*} tableName
+ */
+export async function queryTableFieldOrderJSON(tableName) {
+    //初始化
+    window.tools = window.tools == null ? tools : window.tools;
+
+    try {
+        //查询表单信息
+        var tableInfo = await queryTableDataByField(
+            'v_table_info',
+            'id',
+            tableName
+        );
+        //如果信息不为空，则解析表单信息
+        if (window.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
+            try {
+                tableInfo = window.tools.deNull(tableInfo[0]['num']);
+            } catch (error) {
+                console.log('tabale info :' + tableInfo);
+            }
+        }
+        //如果信息不为空，则进行解析数据
+        if (window.tools.deNull(tableInfo) != '') {
+            try {
+                tableInfo = JSON.parse(tableInfo);
+            } catch (error) {
+                console.log('tabale info :' + tableInfo);
+            }
+        }
+    } catch (error) {
+        console.log('query table field info json error :' + error);
+    }
+    return tableInfo;
+}
+
+
+/**
  * 查询数据
  * @param {*} tableName
  * @param {*} foreignKey
@@ -85,6 +123,39 @@ export async function queryTableDataByField(tableName, field, value) {
     try {
         var res = await superagent.get(queryURL).set('accept', 'json');
         return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function queryTableData(tableName, id) {
+
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}/${id}`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_user_cache@${tableName}&id${id}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_cache@${tableName}&id${id}`, res.body[0], 2);
+        }
+
+        return res.body[0];
     } catch (err) {
         console.log(err);
     }

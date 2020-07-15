@@ -294,11 +294,16 @@ export default {
         let result = storage.getStore(`system_task_done_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
+          tlist = await task.queryProcessLogDone(username , realname , 0 , 99);
           storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
         }
+
+        //遍历数据，并放入缓存中
+        tlist.map((item)=>{
+          storage.setStore(`system_task_done_item_by_id@${item.id}` , item , 3600 * 24 * 365);
+        });
 
         this.donetasks = tlist;
       },
@@ -317,6 +322,11 @@ export default {
         } else {
           tlist = result;
         }
+
+        //遍历数据，并放入缓存中
+        tlist.map((item)=>{
+          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 3600 * 2);
+        });
 
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
@@ -343,6 +353,11 @@ export default {
         } else {
           tlist = result;
         }
+
+        //遍历数据，并放入缓存中
+        tlist.map((item)=>{
+          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 3600 * 2);
+        });
 
         //过滤，去掉非计时待办业务
         tlist = tlist.filter((item)=>{

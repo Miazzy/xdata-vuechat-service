@@ -34,9 +34,22 @@
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
         </div>
-        <div class="weui-cells" style="margin-top:10px;border-bottom:0px solid #fefefe;">
-          <div style="margin-left:10px;margin-bottom:10px;">{{type}}：</div>
-          <div style="margin-left:10px;margin-bottom:10px;" v-html="content"></div>
+        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+
+          <van-cell-group>
+            <template v-for="(value,key) in fields">
+              <van-cell v-show=" value!='id' && item[value] != '' && typeof item[value] != 'undefined' && item[value] != null "
+                :title="tableInfo[value]"
+                :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].length > 10 ) || value == 'content' ? '' : item[value])"
+                :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].length <= 10) || value == 'content' ? '' : item[value])"
+                size="large"
+              />
+              <div v-show="value == 'content'"  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:18px;"></div>
+              <div v-show="value == 'content'" style="border-bottom:1px solid #f0f0f0;"></div>
+            </template>
+          </van-cell-group>
+
+
           <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
             <iframe style="width:100%;height:600px;" :src="purl">
             </iframe>
@@ -53,6 +66,7 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
+import * as query from '@/request/query';
 
 export default {
     mixins: [window.mixin],
@@ -65,15 +79,20 @@ export default {
             hlist:[],
             nlist:[],
             tlist:[],
+            id:'',
             type:'',
             title:'',
             content:'',
             files:'',
             from:'',
-            tabname:'',
+            tname:'',
             bname:'',
             previewurl:'',
             purl:'',
+            tableInfo:'',
+            orderInfo:'',
+            fields:[],
+            item:null,
             announces:[],
         }
     },
@@ -94,14 +113,25 @@ export default {
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
       async queryInfo(){
+        var that = this;
+        this.id = window.decodeURIComponent(this.getUrlParam('id'));
         this.type = window.decodeURIComponent(this.getUrlParam('type'));
         this.title = window.decodeURIComponent(this.getUrlParam('title'));
         this.content = window.decodeURIComponent(this.getUrlParam('content'));
         this.files = window.decodeURIComponent(this.getUrlParam('files'));
         this.from = window.decodeURIComponent(this.getUrlParam('from'));
         this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
+        this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
         this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
         this.previewurl = await tools.queryFileViewURL(this.files);
+        this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
+        this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
+        this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
+        this.item = await query.queryTableData(this.tname , this.id);
+        this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
+        delete this.item.depart_name;
+        delete this.item.sys_org_code;
+        delete this.item.files;
         if(this.previewurl&&this.previewurl.endsWith('pdf')){
           this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
         } else if(this.previewurl) {
@@ -286,6 +316,12 @@ export default {
     .wechat-list .list-info .desc-box .desc-msg .desc-mute {
         float: right;
         color: #b8b8b8;
+    }
+
+    .van-cell--large .van-cell__label {
+        font-size: 14px;
+        width: 205%;
+        display: block;
     }
 
 </style>
