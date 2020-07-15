@@ -1,6 +1,6 @@
 <template>
   <!--首页组件-->
-  <div id="news" style="margin-top: 0px;" >
+  <div id="content" style="margin-top: 0px;" >
 
     <header id="wx-header">
         <div class="center">
@@ -14,126 +14,35 @@
     <section>
 
       <div class="weui-cells" style="margin-top:0px;">
+        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+          <van-notice-bar
+              v-show=" title!='' && title != null && typeof title != 'undefined' "
+              left-icon="volume-o"
+              color="#1989fa"
+              background="#ecf9ff"
+              :text="title"
+            />
+        </div>
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            最新
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            行政
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            红头
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            新闻
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ;" :style="tabname == 5 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
-            奖罚
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
+             {{bname}}
           </div>
         </div>
       </div>
 
-      <div class="wechat-list">
-        <template v-show="tabname == 1">
-          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in announces">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
-                </div>
-              </div>
+      <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
+        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+
+        </div>
+        <div class="weui-cells" style="margin-top:10px;border-bottom:0px solid #fefefe;">
+          <div style="margin-left:10px;margin-bottom:10px;">{{type}}：</div>
+          <div style="margin-left:10px;margin-bottom:10px;" v-html="content"></div>
+          <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
+            <iframe style="width:100%;height:600px;" :src="purl">
+            </iframe>
           </div>
-         </template>
-         <template v-show="tabname == 2">
-          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in alist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
-                </div>
-              </div>
-          </div>
-         </template>
-         <template v-show="tabname == 3">
-          <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in hlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
-                </div>
-              </div>
-          </div>
-         </template>
-         <template v-show="tabname == 4">
-          <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in nlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
-                </div>
-              </div>
-          </div>
-         </template>
-         <template v-show="tabname == 5">
-          <div class="list-info" v-show="tabname == 5" :key="item.id" v-for=" (item , index) in tlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
-                </div>
-              </div>
-          </div>
-         </template>
+          <div style="height:100px;" ></div>
+        </div>
       </div>
 
     </section>
@@ -149,28 +58,55 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "公告",
+            pageName: "详情",
             momentNewMsg: true,
             tabname: '1',
             alist:[],
             hlist:[],
             nlist:[],
             tlist:[],
+            type:'',
+            title:'',
+            content:'',
+            files:'',
+            from:'',
+            tabname:'',
+            bname:'',
+            previewurl:'',
+            purl:'',
             announces:[],
         }
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        this.queryAnnounce();
-        this.queryEach();
+        this.queryInfo();
     },
     mounted() {
-      this.queryAnnounce();
-      this.queryEach();
+      this.queryInfo();
     },
     methods: {
       encodeURI(value){
         return window.encodeURIComponent(value);
+      },
+      getUrlParam(name) {
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+          var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
+          if (r != null) return decodeURI(r[2]); return null; //返回参数值
+      },
+      async queryInfo(){
+        this.type = window.decodeURIComponent(this.getUrlParam('type'));
+        this.title = window.decodeURIComponent(this.getUrlParam('title'));
+        this.content = window.decodeURIComponent(this.getUrlParam('content'));
+        this.files = window.decodeURIComponent(this.getUrlParam('files'));
+        this.from = window.decodeURIComponent(this.getUrlParam('from'));
+        this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
+        this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
+        this.previewurl = await tools.queryFileViewURL(this.files);
+        if(this.previewurl&&this.previewurl.endsWith('pdf')){
+          this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
+        } else if(this.previewurl) {
+          this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+        }
       },
       async queryAnnounce(){
 

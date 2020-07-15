@@ -97,9 +97,9 @@ export default {
         this.from = window.decodeURIComponent(this.getUrlParam('from'));
         this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
         this.previewurl = await tools.queryFileViewURL(this.files);
-        if(this.previewurl.endsWith('pdf')){
+        if(this.previewurl&&this.previewurl.endsWith('pdf')){
           this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
-        } else {
+        } else if(this.previewurl){
           this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
         }
       },

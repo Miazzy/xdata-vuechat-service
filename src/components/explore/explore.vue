@@ -67,7 +67,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -87,7 +87,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -107,7 +107,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
