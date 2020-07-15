@@ -36,10 +36,10 @@
               公告
             </div>
           </div>
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/punch`)">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
             <div class="weui-cell_app_bd">
-              网盘
+              打卡
             </div>
           </div>
         </div>
@@ -48,7 +48,7 @@
       <div class="weui-cells">
         <div class="weui-cell-title">人事管理</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/sign`)">
            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
             <div class="weui-cell_app_bd" >
               签到

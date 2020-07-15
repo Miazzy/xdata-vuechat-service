@@ -123,6 +123,20 @@ const routes = [{
             "subPage": resolve => require(["../components/app/doingtask.vue"], resolve)
         }
     }, {
+        path: '/app/sign',
+        name: "签到",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/sign.vue"], resolve)
+        }
+    }, {
+        path: '/app/punch',
+        name: "打卡",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/punch.vue"], resolve)
+        }
+    }, {
         path: '/explore',
         name: "首页",
         components: { "default": resolve => require(["../components/explore/explore.vue"], resolve) }
