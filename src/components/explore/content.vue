@@ -24,7 +24,7 @@
             />
         </div>
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;font-size:18px;` : `border-bottom: 0px solid #329ff0;font-size:18px;` ">
              {{bname}}
           </div>
         </div>
@@ -67,6 +67,7 @@ import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
+import * as constant from '@/request/constant';
 
 export default {
     mixins: [window.mixin],
@@ -129,9 +130,12 @@ export default {
         this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
         this.item = await query.queryTableData(this.tname , this.id);
         this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
+        this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
         delete this.item.depart_name;
         delete this.item.sys_org_code;
         delete this.item.files;
+        delete this.item.update_by;
+        delete this.item.update_time;
         if(this.previewurl&&this.previewurl.endsWith('pdf')){
           this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
         } else if(this.previewurl) {
@@ -322,6 +326,10 @@ export default {
         font-size: 14px;
         width: 205%;
         display: block;
+    }
+
+    .van-cell--large .van-cell__title {
+        font-size: 17.5px;
     }
 
 </style>
