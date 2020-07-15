@@ -40,18 +40,18 @@
             <template v-for="(value,key) in fields">
               <van-cell v-show=" value!='id' && item[value] != '' && typeof item[value] != 'undefined' && item[value] != null "
                 :title="tableInfo[value]"
-                :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].length > 10 ) || value == 'content' ? '' : item[value])"
-                :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].length <= 10) || value == 'content' ? '' : item[value])"
+                :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length > 10 ) || value.includes('content') || value.includes('require') ? '' : item[value])"
+                :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length <= 10) || value.includes('content') || value.includes('require') ? '' : item[value])"
                 size="large"
               />
-              <div v-show="value == 'content'"  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:18px;"></div>
-              <div v-show="value == 'content'" style="border-bottom:1px solid #f0f0f0;"></div>
+              <div v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:18px;"></div>
+              <div v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #f0f0f0;"></div>
             </template>
           </van-cell-group>
 
 
           <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
-            <iframe style="width:100%;height:600px;" :src="purl">
+            <iframe  id="iframepage" name="iframepage" frameBorder=0 scrolling=yes width="100%" style="width:100%;height:600px;" :src="purl">
             </iframe>
           </div>
           <div style="height:100px;" ></div>
@@ -114,32 +114,51 @@ export default {
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
       async queryInfo(){
-        var that = this;
-        this.id = window.decodeURIComponent(this.getUrlParam('id'));
-        this.type = window.decodeURIComponent(this.getUrlParam('type'));
-        this.title = window.decodeURIComponent(this.getUrlParam('title'));
-        this.content = window.decodeURIComponent(this.getUrlParam('content'));
-        this.files = window.decodeURIComponent(this.getUrlParam('files'));
-        this.from = window.decodeURIComponent(this.getUrlParam('from'));
-        this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
-        this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
-        this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
-        this.previewurl = await tools.queryFileViewURL(this.files);
-        this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
-        this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
-        this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
-        this.item = await query.queryTableData(this.tname , this.id);
-        this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
-        this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
-        delete this.item.depart_name;
-        delete this.item.sys_org_code;
-        delete this.item.files;
-        delete this.item.update_by;
-        delete this.item.update_time;
-        if(this.previewurl&&this.previewurl.endsWith('pdf')){
-          this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
-        } else if(this.previewurl) {
-          this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+        try {
+          var that = this;
+          this.id = window.decodeURIComponent(this.getUrlParam('id'));
+          this.type = window.decodeURIComponent(this.getUrlParam('type'));
+          this.title = window.decodeURIComponent(this.getUrlParam('title'));
+          this.content = window.decodeURIComponent(this.getUrlParam('content'));
+          this.files = window.decodeURIComponent(this.getUrlParam('files'));
+          this.from = window.decodeURIComponent(this.getUrlParam('from'));
+          this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
+          this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
+          this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
+          this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
+          this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
+          this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
+          this.item = await query.queryTableData(this.tname , this.id);
+          try {
+            delete this.item.depart_name;
+            delete this.item.sys_org_code;
+            delete this.item.update_by;
+            delete this.item.update_time;
+          } catch (error) {
+            console.log(error);
+          }
+          let ntime = tools.formatDate(new Date(),'yyyyMMddhhmmss');
+          let ctime = tools.formatDate(this.item.create_time,'yyyyMMddhhmmss');
+          this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
+          this.item.exp_join_date = tools.formatDate(this.item.exp_join_date,'yyyy-MM-dd');
+          this.item.start_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
+          this.item.end_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
+          this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
+          this.files = this.item.files;
+          try {
+            delete this.item.files;
+          } catch (error) {
+            console.log(error);
+          }
+          this.previewurl = await tools.queryFileViewURL(this.files);
+          let previewFlag = (ntime - ctime) > 20000;
+          if(this.previewurl&&previewFlag&&this.previewurl.endsWith('pdf')){
+            this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
+          } else if(this.previewurl&&previewFlag) {
+            this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+          }
+        } catch (error) {
+          console.log(error);
         }
       },
       async queryAnnounce(){
