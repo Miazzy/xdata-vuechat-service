@@ -147,14 +147,14 @@ export default {
         let tlist = null;
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let result = storage.getStore(`system_task_done_by_user@${username}`);
+        let result = storage.getStore(`system_app_task_done_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          let one = await task.queryProcessLogDone(username , realname , 0 , 99);
-          let two = await task.queryProcessLogDone(username , realname , 1 , 99);
-          let three = await task.queryProcessLogDone(username , realname , 2 , 99);
+          let one = (await task.queryProcessLogDone(username , realname , 0 , 99))||[];
+          let two = (await task.queryProcessLogDone(username , realname , 1 , 99))||[];
+          let three = (await task.queryProcessLogDone(username , realname , 2 , 99))||[];
           tlist= [...one , ...two , ...three];
-          storage.setStore(`system_task_done_by_user@${username}` , tlist , 3600 * 2);
+          storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 3600 * 2);
         } else {
           tlist = result;
         }
@@ -171,6 +171,7 @@ export default {
         this.tdonetasks = tlist.filter((item) => {
           return task.TIME_TASK_NAME.includes(item.name);
         });
+
       },
     }
 }
