@@ -127,7 +127,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}`)">
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{item.announce_type}}</div>
                 <div class="desc-msg">

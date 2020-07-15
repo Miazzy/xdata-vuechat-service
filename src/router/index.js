@@ -169,6 +169,20 @@ const routes = [{
             "subPage": resolve => require(["../components/explore/sign.vue"], resolve)
         }
     }, {
+        path: '/explore/content',
+        name: "详情",
+        components: {
+            "default": resolve => require(["../components/explore/explore.vue"], resolve),
+            "subPage": resolve => require(["../components/explore/content.vue"], resolve)
+        }
+    }, {
+        path: '/explore/announce',
+        name: "公告",
+        components: {
+            "default": resolve => require(["../components/explore/explore.vue"], resolve),
+            "subPage": resolve => require(["../components/explore/announce.vue"], resolve)
+        }
+    }, {
         path: '/self',
         name: "我的",
         component: resolve => require(["../components/self/self.vue"], resolve)
