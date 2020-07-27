@@ -58,7 +58,6 @@
 
       <div class="wechat-list">
 
-
          <template v-show="tabname == 1 && !loading">
           <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0 && !loading" />

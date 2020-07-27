@@ -32,8 +32,9 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
-          <van-empty description="暂无公告！" v-show="tabname == 1 && announces.length == 0" />
-          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in announces">
+          <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="暂无公告！" v-show="tabname == 1 && announces.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in announces">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -53,8 +54,9 @@
           </div>
          </template>
          <template v-show="tabname == 2">
-          <van-empty description="暂无公告！" v-show="tabname == 2 && alist.length == 0" />
-          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in alist">
+          <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="暂无公告！" v-show="tabname == 2 && alist.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in alist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -74,8 +76,9 @@
           </div>
          </template>
          <template v-show="tabname == 3">
-          <van-empty description="暂无公告！" v-show="tabname == 3 && hlist.length == 0" />
-          <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in hlist">
+          <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="暂无公告！" v-show="tabname == 3 && hlist.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in hlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -95,8 +98,9 @@
           </div>
          </template>
          <template v-show="tabname == 4">
-          <van-empty description="暂无公告！" v-show="tabname == 4 && nlist.length == 0" />
-          <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in nlist">
+          <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="暂无公告！" v-show="tabname == 4 && nlist.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in nlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -116,8 +120,9 @@
           </div>
          </template>
          <template v-show="tabname == 5">
-          <van-empty description="暂无公告！" v-show="tabname == 5 && tlist.length == 0" />
-          <div class="list-info" v-show="tabname == 5" :key="item.id" v-for=" (item , index) in tlist">
+          <van-loading size="12%" v-show="tabname == 5 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="暂无公告！" v-show="tabname == 5 && tlist.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 5 && !loading" :key="item.id" v-for=" (item , index) in tlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -159,6 +164,7 @@ export default {
             nlist:[],
             tlist:[],
             announces:[],
+            loading:false,
         }
     },
     activated() {
@@ -169,6 +175,17 @@ export default {
     mounted() {
       this.queryAnnounce();
       this.queryEach();
+    },
+    watch: {
+      $route(to, from) {
+
+      },
+      tabname(){
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+        },500);
+      }
     },
     methods: {
       encodeURI(value){

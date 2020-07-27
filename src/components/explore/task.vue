@@ -33,8 +33,9 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
-          <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0" />
-          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in timetasks">
+          <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in timetasks">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -54,8 +55,9 @@
           </div>
          </template>
          <template v-show="tabname == 2">
-          <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0" />
-          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in doingtasks">
+          <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -75,8 +77,9 @@
           </div>
          </template>
          <template v-show="tabname == 3">
-          <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0" />
-          <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in donetasks">
+          <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -96,8 +99,9 @@
          </div>
         </template>
         <template v-show="tabname == 4">
-         <van-empty description="您还没有已办任务(本人)哦！" v-show="tabname == 4 && selftasks.length == 0" />
-         <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in selftasks">
+         <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+         <van-empty description="您还没有已办任务(本人)哦！" v-show="tabname == 4 && selftasks.length == 0 && !loading" />
+         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -117,7 +121,8 @@
          </div>
         </template>
         <template v-show="tabname == 5">
-         <van-empty description="您还没有已收藏任务哦！" v-show="tabname == 5 && collecttasks.length == 0" />
+         <van-loading size="12%" v-show="tabname == 5 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+         <van-empty description="您还没有已收藏任务哦！" v-show="tabname == 5 && collecttasks.length == 0 && !loading" />
         </template>
       </div>
 
@@ -142,6 +147,7 @@ export default {
             timetasks:[],
             selftasks:[],
             collecttasks:[],
+            loading:false,
         }
     },
     activated() {
@@ -156,6 +162,17 @@ export default {
       this.queryTaskDoing();
       this.queryTaskTiming();
       this.queryTaskSelf();
+    },
+    watch: {
+      $route(to, from) {
+
+      },
+      tabname(){
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+        },500);
+      }
     },
     methods: {
       encodeURI(value){
