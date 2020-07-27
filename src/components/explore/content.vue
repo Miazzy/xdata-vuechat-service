@@ -7,7 +7,7 @@
             <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>已办</span>
+            <span>任务</span>
         </div>
     </header>
 
@@ -44,7 +44,7 @@
                 :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length <= 10) || value.includes('content') || value.includes('require') ? '' : item[value])"
                 size="large"
               />
-              <div v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:18px;"></div>
+              <div v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:14.5px;"></div>
               <div v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #f0f0f0;"></div>
             </template>
           </van-cell-group>
@@ -173,14 +173,15 @@ export default {
           let ctime = tools.formatDate(this.item.create_time,'yyyyMMddhhmmss');
           this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
           this.item.exp_join_date = tools.formatDate(this.item.exp_join_date,'yyyy-MM-dd');
-          this.item.start_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
-          this.item.end_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
-          this.item.starttime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm:ss');
-          this.item.endtime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm:ss');
-          this.item.interview_date = tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm:ss');
-          this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm:ss');
+          this.item.start_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
+          this.item.end_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
+          this.item.starttime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
+          this.item.endtime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
+          this.item.interview_date = tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm');
+          this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
           this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
+          this.item.leave_off_type = constant.LEAVE_TYPE[this.item.leave_off_type];
           delete this.item.bpm_status;
           this.files = this.item.files;
           try {
@@ -271,7 +272,7 @@ export default {
         z-index: 10000;
         height: 45px;
         line-height: 45px;
-        font-size: 17px;
+        font-size: 18px;
         background: linear-gradient(180deg, #303036, #3c3b40);
         color: #fff;
         text-align: center;
@@ -402,7 +403,7 @@ export default {
     }
 
     .van-cell--large .van-cell__title {
-        font-size: 17.5px;
+        font-size: 15.5px;
     }
 
 </style>
