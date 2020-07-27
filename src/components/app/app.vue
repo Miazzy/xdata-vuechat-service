@@ -10,7 +10,7 @@
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
           <van-notice-bar style="width:100%;" color="#1989fa" background="#ecf9ff"
             left-icon="volume-o"
-            text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。"
+            text="欢迎使用OA移动APP"
           />
         </router-link>
       </div>
