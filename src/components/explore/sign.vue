@@ -92,14 +92,12 @@
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.cdate = dayjs().format('YYYY-MM-DD');
           this.$store.commit("toggleTipsStatus", -1);
-          this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },
         async mounted() {
           this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.cdate = dayjs().format('YYYY-MM-DD');
-          this.baiduGeo();
           this.amapGeo();
           this.getMapIP();
         },

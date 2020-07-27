@@ -57,15 +57,28 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <div style="margin-top:10px;margin-left:7px;">
+            <div style="margin-top:15px;margin-left:7px;">
               流程进度
             </div>
 
-            <van-steps :active="active">
+            <van-steps :active="active" active-icon="success" active-color="#38f" style="padding-bottom:30px;border-bottom:1px solid #efefef;">
               <van-step>发起</van-step>
               <van-step>审核</van-step>
               <van-step>审批</van-step>
               <van-step>知会</van-step>
+            </van-steps>
+
+            <div style="margin-top:15px;margin-left:7px;">
+              审批流程
+            </div>
+
+            <van-steps direction="vertical" :active="workflowlist.length-1" active-icon="success" active-color="#38f">
+              <template v-for="(value,key) in workflowlist" >
+                <van-step v-if="value.approve_user != null" >
+                  <h3 style="font-size:14px;"> 审批：{{ `${value.approve_user}，意见：${value.action_opinion}` }} </h3>
+                  <p style="font-size:12px;margin-top:2px;"> {{ value.operate_time }}</p>
+                </van-step>
+              </template>
             </van-steps>
 
           </div>
@@ -84,6 +97,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as constant from '@/request/constant';
+import * as workflow from '@/request/workflow';
 
 export default {
     mixins: [window.mixin],
@@ -111,6 +125,7 @@ export default {
             orderInfo:'',
             fields:[],
             item:null,
+            workflowlist:[],
             announces:[],
         }
     },
@@ -160,7 +175,13 @@ export default {
           this.item.exp_join_date = tools.formatDate(this.item.exp_join_date,'yyyy-MM-dd');
           this.item.start_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
           this.item.end_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm:ss');
+          this.item.starttime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm:ss');
+          this.item.endtime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm:ss');
+          this.item.interview_date = tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm:ss');
+          this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm:ss');
+          this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
+          delete this.item.bpm_status;
           this.files = this.item.files;
           try {
             delete this.item.files;
@@ -174,9 +195,25 @@ export default {
           } else if(this.previewurl&&previewFlag) {
             this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
           }
+
+          //查询审批流程数据
+          this.queryWorkflow();
         } catch (error) {
           console.log(error);
         }
+      },
+      async queryWorkflow(){
+        let id = window.decodeURIComponent(this.getUrlParam('id'));
+        let hlist = await workflow.queryPRLogHistoryByDataID(id);
+        let clist = await workflow.queryPRLogByDataID(id);
+        let ilist = await workflow.queryPRLogInformedByDataID(id);
+        let list = [...hlist , ...clist , ...ilist];
+        this.workflowlist = list;
+
+        this.workflowlist.map(async (item)=>{
+          item.operate_time = tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
+          item.approve_user = await workflow.queryUserByName(item.approve_user);
+        });
       },
       async queryAnnounce(){
 

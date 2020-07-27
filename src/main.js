@@ -7,7 +7,8 @@ import router from './router';
 import store from './vuex/store';
 import FastClick from 'fastclick'; //使用 fastclick 解决移动端 300ms 点击延迟
 import filters from './filters'; //将全部过滤器放在 filters/index.js 中便于管理
-//import * as $ from 'jquery';
+import '@/reservice'; //注册service worker服务
+
 //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
 Vue.use(VueAxios, axios, vuex);
 
@@ -27,6 +28,7 @@ new Vue({
 
 Vue.use(vant.Empty);
 Vue.use(vant.Lazyload);
+Vue.use(vant.Icon);
 
 // 运行 vue init webpack命令新建项目时 可以选择关闭 ESLint
 // 若新建项目时开启了 ESLint .eslintignore 文件，告诉 ESLint 去忽略特定的文件和目录。
