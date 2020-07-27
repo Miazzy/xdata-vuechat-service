@@ -1,6 +1,6 @@
 <template>
   <!--首页组件-->
-  <div id="news" style="margin-top: 0px;" >
+  <div id="news" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
         <div class="center">
             <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
@@ -32,6 +32,7 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
+          <van-empty description="暂无公告！" v-show="tabname == 1 && announces.length == 0" />
           <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in announces">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -52,6 +53,7 @@
           </div>
          </template>
          <template v-show="tabname == 2">
+          <van-empty description="暂无公告！" v-show="tabname == 2 && alist.length == 0" />
           <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in alist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -72,6 +74,7 @@
           </div>
          </template>
          <template v-show="tabname == 3">
+          <van-empty description="暂无公告！" v-show="tabname == 3 && hlist.length == 0" />
           <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in hlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -92,6 +95,7 @@
           </div>
          </template>
          <template v-show="tabname == 4">
+          <van-empty description="暂无公告！" v-show="tabname == 4 && nlist.length == 0" />
           <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in nlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -112,6 +116,7 @@
           </div>
          </template>
          <template v-show="tabname == 5">
+          <van-empty description="暂无公告！" v-show="tabname == 5 && tlist.length == 0" />
           <div class="list-info" v-show="tabname == 5" :key="item.id" v-for=" (item , index) in tlist">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>

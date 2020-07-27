@@ -1,6 +1,6 @@
 <template>
   <!--首页组件-->
-  <div id="task" style="margin-top: 0px;" >
+  <div id="task" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
         <div class="center">
             <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
@@ -33,6 +33,7 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
+          <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0" />
           <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in timetasks">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -53,6 +54,7 @@
           </div>
          </template>
          <template v-show="tabname == 2">
+          <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0" />
           <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in doingtasks">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
@@ -73,7 +75,8 @@
           </div>
          </template>
          <template v-show="tabname == 3">
-         <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in donetasks">
+          <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0" />
+          <div class="list-info" v-show="tabname == 3" :key="item.id" v-for=" (item , index) in donetasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -93,6 +96,7 @@
          </div>
         </template>
         <template v-show="tabname == 4">
+         <van-empty description="您还没有已办任务(本人)哦！" v-show="tabname == 4 && selftasks.length == 0" />
          <div class="list-info" v-show="tabname == 4" :key="item.id" v-for=" (item , index) in selftasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
@@ -111,6 +115,9 @@
               </div>
             </div>
          </div>
+        </template>
+        <template v-show="tabname == 5">
+         <van-empty description="您还没有已收藏任务哦！" v-show="tabname == 5 && collecttasks.length == 0" />
         </template>
       </div>
 

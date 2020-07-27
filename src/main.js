@@ -25,6 +25,7 @@ new Vue({
     render: h => h(App)
 })
 
+Vue.use(vant.Empty);
 Vue.use(vant.Lazyload);
 
 // 运行 vue init webpack命令新建项目时 可以选择关闭 ESLint

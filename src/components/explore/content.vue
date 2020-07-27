@@ -54,6 +54,22 @@
             <iframe  id="iframepage" name="iframepage" frameBorder=0 scrolling=yes width="100%" style="width:100%;height:600px;" :src="purl">
             </iframe>
           </div>
+
+          <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
+
+            <div style="margin-top:10px;margin-left:7px;">
+              流程进度
+            </div>
+
+            <van-steps :active="active">
+              <van-step>发起</van-step>
+              <van-step>审核</van-step>
+              <van-step>审批</van-step>
+              <van-step>知会</van-step>
+            </van-steps>
+
+          </div>
+
           <div style="height:100px;" ></div>
         </div>
       </div>
@@ -76,6 +92,7 @@ export default {
             pageName: "详情",
             momentNewMsg: true,
             tabname: '1',
+            active: 1,
             alist:[],
             hlist:[],
             nlist:[],
