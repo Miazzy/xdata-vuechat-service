@@ -57,14 +57,13 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <div style="margin-top:15px;margin-left:7px;">
+            <div v-show=" fileList.length > 0 " style="margin-top:15px;margin-left:7px;">
               图片附件
             </div>
 
             <div style="margin-left:10px;margin-top:10px;">
-              <van-uploader v-model="fileList" multiple />
+              <van-uploader v-model="fileList" multiple  preview-size="100" :lazy-load="true" :show-upload="false" :deletable="false" :preview-options="{closeable:true,loop:true,showIndicators:true,swipeDuration:500}"  />
             </div>
-
 
             <div style="margin-top:15px;margin-left:7px;">
               流程进度
@@ -221,6 +220,10 @@ export default {
 
           //查询审批流程数据
           this.queryWorkflow();
+
+          //渲染图片
+          this.renderCSS();
+
         } catch (error) {
           console.log(error);
         }
@@ -237,6 +240,9 @@ export default {
           item.operate_time = tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
           item.approve_user = await workflow.queryUserByName(item.approve_user);
         });
+      },
+      async renderCSS(){
+        $('.van-uploader__upload').css('display','none');
       },
       async queryAnnounce(){
 
