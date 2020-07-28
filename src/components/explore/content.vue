@@ -40,12 +40,12 @@
             <template v-for="(value,key) in fields">
               <van-cell v-show=" value!='id' && item[value] != '' && typeof item[value] != 'undefined' && item[value] != null "
                 :title="tableInfo[value]"
-                :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length > 10 ) || value.includes('content') || value.includes('require') ? '' : item[value])"
-                :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length <= 10) || value.includes('content') || value.includes('require') ? '' : item[value])"
+                :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length > 16 ) || value.includes('content') || value.includes('require') ? '' : item[value])"
+                :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length <= 16) || value.includes('content') || value.includes('require') ? '' : item[value])"
                 size="large"
               />
               <div v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:14.5px;"></div>
-              <div v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #f0f0f0;"></div>
+              <div v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #fafafa;"></div>
             </template>
           </van-cell-group>
 
@@ -56,6 +56,15 @@
           </div>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
+
+            <div style="margin-top:15px;margin-left:7px;">
+              图片附件
+            </div>
+
+            <div style="margin-left:10px;margin-top:10px;">
+              <van-uploader v-model="fileList" multiple />
+            </div>
+
 
             <div style="margin-top:15px;margin-left:7px;">
               流程进度
@@ -127,6 +136,7 @@ export default {
             item:null,
             workflowlist:[],
             announces:[],
+            fileList:[],
         }
     },
     activated() {
@@ -144,6 +154,16 @@ export default {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
           var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
+      },
+      queryPictureList(files){
+        let list = files.split(',');
+        list = list.filter((item)=>{
+          return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
+        })
+        list = list.map((item)=>{
+          return { url:`https://upload.shengtai.club/` + item, isImage: true };
+        });
+        return list;
       },
       async queryInfo(){
         try {
@@ -179,9 +199,11 @@ export default {
           this.item.endtime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
           this.item.interview_date = tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm');
           this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
+          this.item.resign_date = tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
           this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
           this.item.leave_off_type = constant.LEAVE_TYPE[this.item.leave_off_type];
+          this.fileList = this.queryPictureList(this.item.files);
           delete this.item.bpm_status;
           this.files = this.item.files;
           try {
@@ -249,11 +271,12 @@ export default {
         this.hlist = await announce.queryHeadList(0,30);
         this.nlist = await announce.queryNewsList(0,30);
         this.tlist = await announce.queryNoticeList(0,30);
-      }
+      },
+
     }
 }
 </script>
-<style>
+<style scoped>
     @import "../../assets/css/explore.css";
 
     #news {
@@ -404,6 +427,52 @@ export default {
 
     .van-cell--large .van-cell__title {
         font-size: 15.5px;
+    }
+
+    .wechat-list .weui-cells .van-cell::after {
+        position: absolute;
+        box-sizing: border-box;
+        content: ' ';
+        pointer-events: none;
+        right: 16px;
+        bottom: 0;
+        left: 16px;
+        border-bottom: 0px solid #ebedf0;
+        -webkit-transform: scaleY(.5);
+        transform: scaleY(.5);
+    }
+
+    .van-uploader__preview .van-uploader__preview-image {
+        display: block;
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+    }
+
+    .van-uploader__upload {
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: none;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 80px;
+        height: 80px;
+        margin: 0 8px 8px 0;
+        background-color: #f7f8fa;
+    }
+
+    .van-uploader__wrapper .van-uploader__upload {
+      display:none;
     }
 
 </style>
