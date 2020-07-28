@@ -1,7 +1,7 @@
 import { register } from 'register-service-worker'
 
 let random = Math.random().toString().slice(2);
-let url = `http://localhost:8080/static/js/servicework.js?random=${random}`;
+let url = `/static/js/servicework.js?random=${random}`;
 
 localStorage.setItem(`SERVICE_WORKER_REGISTER`, url);
 
