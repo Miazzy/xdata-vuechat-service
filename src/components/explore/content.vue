@@ -190,7 +190,7 @@ export default {
       queryOfficeList(files){
         let list = files.split(',');
         list = list.filter((item)=>{
-          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf)$/.test(item);
+          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
         })
         list = list.map((item)=>{
           return { url:`https://upload.shengtai.club/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
