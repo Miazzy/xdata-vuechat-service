@@ -69,7 +69,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -91,7 +91,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -113,7 +113,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -333,14 +333,14 @@ export default {
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
-          storage.setStore(`system_task_doing_by_user@${username}` , tlist , 3600 * 2);
+          storage.setStore(`system_task_doing_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
-          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 3600 * 2);
+          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 60);
         });
 
         //过滤，去掉计时待办业务
@@ -364,14 +364,14 @@ export default {
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
-          storage.setStore(`system_task_time_by_user@${username}` , tlist , 3600 * 2);
+          storage.setStore(`system_task_time_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
-          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 3600 * 2);
+          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 60);
         });
 
         //过滤，去掉非计时待办业务

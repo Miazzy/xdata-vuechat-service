@@ -81,7 +81,7 @@
               流程进度
             </div>
 
-            <van-steps :active="active" active-icon="success" active-color="#38f" style="padding-bottom:30px;border-bottom:1px solid #efefef;">
+            <van-steps :active="active" active-icon="success" active-color="#38f" style="padding-bottom:15px;border-bottom:1px solid #efefef;">
               <van-step>发起</van-step>
               <van-step>审核</van-step>
               <van-step>审批</van-step>
@@ -101,12 +101,12 @@
               </template>
             </van-steps>
 
-            <van-goods-action v-if="item.bpm_value == 2 || item.bpm_value == 3">
+            <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
               <van-goods-action-button type="warning" text="驳回" />
               <van-goods-action-button type="danger" text="同意" />
             </van-goods-action>
 
-            <van-goods-action v-if="item.bpm_value == 4 && informList.length > 0" >
+            <van-goods-action v-if="(item.bpm_value == 4 && informList.length > 0) && tasktype == 'wait' " >
               <van-goods-action-button id="informed_confirm" type="danger" text="确认" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -148,6 +148,7 @@ export default {
             from:'',
             tname:'',
             bname:'',
+            tasktype:'',
             previewurl:'',
             purl:'',
             tableInfo:'',
@@ -209,6 +210,7 @@ export default {
           this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
           this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
           this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
+          this.tasktype = window.decodeURIComponent(this.getUrlParam('tasktype'));
           this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
           this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
           this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
