@@ -65,6 +65,18 @@
               <van-uploader v-model="fileList" multiple  preview-size="100" :lazy-load="true" :show-upload="false" :deletable="false" :preview-options="{closeable:true,loop:true,showIndicators:true,swipeDuration:500}"  />
             </div>
 
+            <div v-show=" officeList.length > 0 " style="margin-top:15px;margin-left:7px;">
+              其他附件
+            </div>
+
+            <div style="margin-left:10px;margin-top:10px;">
+              <van-cell-group>
+                <template v-for="(value,key) in officeList">
+                  <van-cell :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
+                </template>
+              </van-cell-group>
+            </div>
+
             <div style="margin-top:15px;margin-left:7px;">
               流程进度
             </div>
@@ -88,6 +100,15 @@
                 </van-step>
               </template>
             </van-steps>
+
+            <van-goods-action v-if="item.bpm_value == 2 || item.bpm_value == 3">
+              <van-goods-action-button type="warning" text="驳回" />
+              <van-goods-action-button type="danger" text="同意" />
+            </van-goods-action>
+
+            <van-goods-action v-if="item.bpm_value == 4 && informList.length > 0" >
+              <van-goods-action-button id="informed_confirm" type="danger" text="确认" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
 
           </div>
 
@@ -135,7 +156,9 @@ export default {
             item:null,
             workflowlist:[],
             announces:[],
+            informList:[],
             fileList:[],
+            officeList:[],
         }
     },
     activated() {
@@ -161,6 +184,16 @@ export default {
         })
         list = list.map((item)=>{
           return { url:`https://upload.shengtai.club/` + item, isImage: true };
+        });
+        return list;
+      },
+      queryOfficeList(files){
+        let list = files.split(',');
+        list = list.filter((item)=>{
+          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf)$/.test(item);
+        })
+        list = list.map((item)=>{
+          return { url:`https://upload.shengtai.club/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
         });
         return list;
       },
@@ -200,9 +233,11 @@ export default {
           this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
           this.item.resign_date = tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
           this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
+          this.item.bpm_value = this.item.bpm_status;
           this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
           this.item.leave_off_type = constant.LEAVE_TYPE[this.item.leave_off_type];
           this.fileList = this.queryPictureList(this.item.files);
+          this.officeList = this.queryOfficeList(this.item.files);
           delete this.item.bpm_status;
           this.files = this.item.files;
           try {
@@ -228,6 +263,13 @@ export default {
           console.log(error);
         }
       },
+      async saveAsFile(file , name){
+        try {
+          window.saveAs(file , name);
+        } catch (error) {
+          console.log(error);
+        }
+      },
       async queryWorkflow(){
         let id = window.decodeURIComponent(this.getUrlParam('id'));
         let hlist = await workflow.queryPRLogHistoryByDataID(id);
@@ -235,6 +277,7 @@ export default {
         let ilist = await workflow.queryPRLogInformedByDataID(id);
         let list = [...hlist , ...clist , ...ilist];
         this.workflowlist = list;
+        this.informList = ilist;
 
         this.workflowlist.map(async (item)=>{
           item.operate_time = tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
@@ -242,7 +285,7 @@ export default {
         });
       },
       async renderCSS(){
-        $('.van-uploader__upload').css('display','none');
+        //$('.van-uploader__upload').css('display','none');
       },
       async queryAnnounce(){
 
@@ -479,6 +522,39 @@ export default {
 
     .van-uploader__wrapper .van-uploader__upload {
       display:none;
+    }
+
+    .van-goods-action {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+        box-sizing: content-box;
+        height: 50px;
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
+        background-color: #fff;
+        z-index: 10000;
+    }
+
+    .van-goods-action-button--danger {
+        background: -webkit-linear-gradient(left,#ff6034,#ee0a24);
+        background: linear-gradient(to right,#ff6034,#ee0a24);
+        border-radius: 0px 10px 10px 0px;
+    }
+
+    .van-goods-action-button--warning {
+        border-radius: 10px 0px 0px 10px;
+    }
+
+    #informed_confirm .van-goods-action-button--danger {
+        border-radius: 10px 10px 10px 10px;
     }
 
 </style>

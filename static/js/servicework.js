@@ -22,6 +22,7 @@ self.addEventListener('install', function(event) {
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/common/antd.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/config/config.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/request/request.js",
+                "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/common/FileSaver.min.js",
             ]);
         })
     );
