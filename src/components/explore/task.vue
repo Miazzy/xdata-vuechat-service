@@ -33,7 +33,7 @@
 
       <div class="wechat-list">
 
-        <template v-show="tabname == 1">
+        <template v-show="tabname == 1 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0 && !loading" />
           <van-pull-refresh
@@ -82,7 +82,7 @@
           </div>
          </template>
 
-         <template v-show="tabname == 2">
+         <template v-show="tabname == 2 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0 && !loading" />
           <van-pull-refresh
@@ -131,7 +131,7 @@
           </div>
          </template>
 
-         <template v-show="tabname == 3">
+         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0 && !loading" />
           <van-pull-refresh
@@ -180,7 +180,7 @@
           </div>
         </template>
 
-        <template v-show="tabname == 4">
+        <template v-show="tabname == 4 && !loading && !isLoading">
          <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
          <van-empty description="您还没有已办任务(本人)哦！" v-show="tabname == 4 && selftasks.length == 0 && !loading" />
          <van-pull-refresh
@@ -229,7 +229,7 @@
          </div>
         </template>
 
-        <template v-show="tabname == 5">
+        <template v-show="tabname == 5 && !loading && !isLoading">
          <van-loading size="12%" v-show="tabname == 5 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
          <van-empty description="您还没有已收藏任务哦！" v-show="tabname == 5 && collecttasks.length == 0 && !loading" />
         </template>

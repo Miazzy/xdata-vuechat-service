@@ -31,10 +31,36 @@
       </div>
 
       <div class="wechat-list">
-        <template v-show="tabname == 1">
+        <template v-show="tabname == 1 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 1 && announces.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in announces">
+          <van-pull-refresh
+            v-show="tabname == 1 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in announces.slice(0,8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in announces.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -53,10 +79,17 @@
               </div>
           </div>
          </template>
-         <template v-show="tabname == 2">
+         <template v-show="tabname == 2 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 2 && alist.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in alist">
+          <van-pull-refresh
+            v-show="tabname == 2 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+            <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in alist.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -73,73 +106,170 @@
                   <span>{{item.title}}</span>
                 </div>
               </div>
-          </div>
+            </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in alist.slice(8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+            </div>
          </template>
-         <template v-show="tabname == 3">
+         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 3 && hlist.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in hlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
+          <van-pull-refresh
+            v-show="tabname == 3 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+            <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in hlist.slice(0,8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
-              </div>
-          </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in hlist.slice(8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+                </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
          </template>
-         <template v-show="tabname == 4">
+         <template v-show="tabname == 4 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 4 && nlist.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in nlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
+          <van-pull-refresh
+            v-show="tabname == 4 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+            <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in nlist.slice(0,8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
-              </div>
-          </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in nlist.slice(8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+                </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
          </template>
-         <template v-show="tabname == 5">
+         <template v-show="tabname == 5 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 5 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 5 && tlist.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 5 && !loading" :key="item.id" v-for=" (item , index) in tlist">
-              <div class="header-box">
-              <i class="new-msg-count" style="display: none;"></i>
-              <i class="new-msg-dot" style="display: none;"></i>
-              <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
-              </div>
-              </div>
-              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
-                <div class="desc-time">{{item.create_time}}</div>
-                <div class="desc-author">{{item.announce_type}}</div>
-                <div class="desc-msg">
-                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
-                  <span style="display: none;"></span>
-                  <span>{{item.title}}</span>
+          <van-pull-refresh
+            v-show="tabname == 5 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+            <div class="list-info" v-show="tabname == 5 && !loading" :key="item.id" v-for=" (item , index) in tlist.slice(0,8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
-              </div>
-          </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 5 && !loading" :key="item.id" v-for=" (item , index) in tlist.slice(8)">
+                <div class="header-box">
+                <i class="new-msg-count" style="display: none;"></i>
+                <i class="new-msg-dot" style="display: none;"></i>
+                <div class="header">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+                </div>
+                </div>
+                <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
+                  <div class="desc-time">{{item.create_time}}</div>
+                  <div class="desc-author">{{item.announce_type}}</div>
+                  <div class="desc-msg">
+                    <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                    <span style="display: none;"></span>
+                    <span>{{item.title}}</span>
+                  </div>
+                </div>
+            </div>
          </template>
       </div>
 
@@ -164,6 +294,7 @@ export default {
             nlist:[],
             tlist:[],
             announces:[],
+            isLoading:false,
             loading:false,
         }
     },
