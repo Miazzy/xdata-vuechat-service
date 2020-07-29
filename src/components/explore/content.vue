@@ -30,6 +30,8 @@
         </div>
       </div>
 
+      <van-tag style="position: absolute; top: 54px; right: 0px; z-index: 1000; border-radius: 30px 0px 0px 30px;" :type="status_type"> {{ ` ${status}` }}</van-tag>
+
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
@@ -72,7 +74,7 @@
             <div style="margin-left:10px;margin-top:10px;">
               <van-cell-group>
                 <template v-for="(value,key) in officeList">
-                  <van-cell :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
+                  <van-cell class="van-ellipsis" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
                 </template>
               </van-cell-group>
             </div>
@@ -153,8 +155,10 @@ export default {
             purl:'',
             tableInfo:'',
             orderInfo:'',
+            status:'',
+            status_type:'',
             fields:[],
-            item:null,
+            item:{},
             workflowlist:[],
             announces:[],
             informList:[],
@@ -236,7 +240,9 @@ export default {
           this.item.resign_date = tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
           this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_value = this.item.bpm_status;
-          this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_status];
+          this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_value];
+          this.status = constant.WORKFLOW_STATUS[this.item.bpm_value];
+          this.status_type = constant.WORKSTEP_TYPE[this.item.bpm_value];
           this.item.leave_off_type = constant.LEAVE_TYPE[this.item.leave_off_type];
           this.fileList = this.queryPictureList(this.item.files);
           this.officeList = this.queryOfficeList(this.item.files);
@@ -288,6 +294,9 @@ export default {
       },
       async renderCSS(){
         //$('.van-uploader__upload').css('display','none');
+        setTimeout(() => {
+          this.status_type = 'none';
+        },3000)
       },
       async queryAnnounce(){
 
