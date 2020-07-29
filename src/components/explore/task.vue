@@ -32,10 +32,18 @@
       </div>
 
       <div class="wechat-list">
+
         <template v-show="tabname == 1">
           <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in timetasks">
+          <van-pull-refresh
+            v-show="tabname == 1 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+            <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in timetasks.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -52,12 +60,58 @@
                   <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
                 </div>
               </div>
+            </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in timetasks.slice(8)">
+            <div class="header-box">
+            <i class="new-msg-count" style="display: none;"></i>
+            <i class="new-msg-dot" style="display: none;"></i>
+            <div class="header">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
+            </div>
+            </div>
+            <div class="desc-box">
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+              <div class="desc-msg">
+                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                <span>{{item.sponsor}}: </span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+              </div>
+            </div>
           </div>
          </template>
+
          <template v-show="tabname == 2">
           <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks">
+          <van-pull-refresh
+            v-show="tabname == 2 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks.slice(0,8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+              </div>
+              </div>
+              <div class="desc-box">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+                </div>
+              </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -76,10 +130,18 @@
               </div>
           </div>
          </template>
+
          <template v-show="tabname == 3">
           <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks">
+          <van-pull-refresh
+            v-show="tabname == 3 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks.slice(0,8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -96,12 +158,58 @@
                 <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
               </div>
             </div>
-         </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks.slice(8)">
+            <div class="header-box">
+             <i class="new-msg-count" style="display: none;"></i>
+             <i class="new-msg-dot" style="display: none;"></i>
+             <div class="header">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
+             </div>
+            </div>
+            <div class="desc-box">
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+              <div class="desc-msg">
+                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                <span >{{item.sponsor}}: </span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+              </div>
+            </div>
+          </div>
         </template>
+
         <template v-show="tabname == 4">
          <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
          <van-empty description="您还没有已办任务(本人)哦！" v-show="tabname == 4 && selftasks.length == 0 && !loading" />
-         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks">
+         <van-pull-refresh
+            v-show="tabname == 4 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks.slice(0,8)">
+            <div class="header-box">
+             <i class="new-msg-count" style="display: none;"></i>
+             <i class="new-msg-dot" style="display: none;"></i>
+             <div class="header">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
+             </div>
+            </div>
+            <div class="desc-box">
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+              <div class="desc-msg">
+                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                <span ></span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+              </div>
+            </div>
+         </div>
+         </van-pull-refresh>
+         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks.slice(8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -120,10 +228,12 @@
             </div>
          </div>
         </template>
+
         <template v-show="tabname == 5">
          <van-loading size="12%" v-show="tabname == 5 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
          <van-empty description="您还没有已收藏任务哦！" v-show="tabname == 5 && collecttasks.length == 0 && !loading" />
         </template>
+
       </div>
 
     </section>
@@ -147,6 +257,7 @@ export default {
             timetasks:[],
             selftasks:[],
             collecttasks:[],
+            isLoading:false,
             loading:false,
         }
     },
