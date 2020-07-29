@@ -58,10 +58,36 @@
 
       <div class="wechat-list">
 
-         <template v-show="tabname == 1 && !loading">
+        <template v-show="tabname == 1 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有计时待办任务哦！" v-show="tabname == 1 && timetasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in timetasks">
+          <van-pull-refresh
+            v-show="tabname == 1 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in timetasks.slice(0,8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
+              </div>
+              </div>
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+                </div>
+              </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in timetasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -80,10 +106,37 @@
               </div>
           </div>
          </template>
-         <template v-show="tabname == 2 && !loading">
+
+         <template v-show="tabname == 2 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有非计时待办任务哦！" v-show="tabname == 2 && doingtasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks">
+          <van-pull-refresh
+             v-show="tabname == 2 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in doingtasks.slice(0,8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
+              </div>
+              </div>
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span>{{item.sponsor}}: </span>
+                  <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+                </div>
+              </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in doingtasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -102,10 +155,18 @@
               </div>
           </div>
          </template>
-         <template v-show="tabname == 3 && !loading">
+
+         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 3 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="您还没有已办任务哦！" v-show="tabname == 3 && donetasks.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks">
+          <van-pull-refresh
+            v-show="tabname == 3 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in donetasks.slice(0,8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -122,12 +183,58 @@
                 <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
               </div>
             </div>
-         </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in donetasks.slice(8)">
+            <div class="header-box">
+             <i class="new-msg-count" style="display: none;"></i>
+             <i class="new-msg-dot" style="display: none;"></i>
+             <div class="header">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
+             </div>
+            </div>
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-time">{{item.create_time}}</div>
+              <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
+              <div class="desc-msg">
+                <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                <span >{{item.sponsor}}: </span>
+                <span>{{item.topic || `${item.name.replace('表','')}申请`}}</span>
+              </div>
+            </div>
+          </div>
          </template>
-         <template v-show="tabname == 4 && !loading">
+
+         <template v-show="tabname == 4 && !loading && !isLoading">
           <van-loading size="12%" v-show="tabname == 4 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
           <van-empty description="暂无公告！" v-show="tabname == 4 && announces.length == 0 && !loading" />
-          <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in announces">
+          <van-pull-refresh
+            v-show="tabname == 4 && !loading"
+            v-model="isLoading"
+            success-text="刷新成功"
+            @refresh="refreshData"
+            style="min-height:400px;"
+          >
+          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in announces.slice(0,8)">
+              <div class="header-box">
+              <i class="new-msg-count" style="display: none;"></i>
+              <i class="new-msg-dot" style="display: none;"></i>
+              <div class="header">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+              </div>
+              </div>
+              <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=4&from=/explore`)">
+                <div class="desc-time">{{item.create_time}}</div>
+                <div class="desc-author">{{item.announce_type}}</div>
+                <div class="desc-msg">
+                  <div class="desc-mute iconfont icon-mute" style="display: none;"></div>
+                  <span style="display: none;"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+          </div>
+          </van-pull-refresh>
+          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in announces.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -146,6 +253,7 @@
               </div>
           </div>
          </template>
+
       </div>
 
     </section>
@@ -168,6 +276,7 @@ export default {
             donetasks:[],
             doingtasks:[],
             timetasks:[],
+            isLoading:false,
             loading:false,
         }
     },
@@ -298,6 +407,14 @@ export default {
         }
 
         this.announces = temp.slice(0,30);
+      },
+      async refreshData(){
+        debugger;
+        setTimeout(() => {
+          vant.Toast('刷新成功');
+          this.isLoading = false;
+          this.count++;
+        }, 1000);
       },
       async queryTaskDone(){
         let info = await storage.getStore('system_userinfo');
