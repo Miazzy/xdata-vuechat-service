@@ -103,6 +103,11 @@
               </template>
             </van-steps>
 
+            <div class="main-loading" :style=" loading ? 'display:block;':'display:none;' ">
+              <van-loading type="spinner" size="48px" style="text-align:text;" />
+            </div>
+
+
             <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
               <van-goods-action-button type="warning" text="驳回" />
               <van-goods-action-button type="danger" text="同意" @click="handleAgree()" />
@@ -294,7 +299,6 @@ export default {
         });
       },
       async renderCSS(){
-        //$('.van-uploader__upload').css('display','none');
         setTimeout(() => {
           this.status_type = 'none';
         },3000)
@@ -334,7 +338,11 @@ export default {
         this.tlist = await announce.queryNoticeList(0,30);
       },
       async handleAgree(){
-        await wflowprocess.handleApproveWF();
+        let result = await wflowprocess.handleApproveWF();
+        result == 'success' ? (this.tasktype = 'done') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+        } , 2000);
       }
     }
 }
@@ -569,6 +577,14 @@ export default {
 
     #informed_confirm .van-goods-action-button--danger {
         border-radius: 10px 10px 10px 10px;
+    }
+
+    .main-loading {
+      text-align:center;
+      width:100%;
+      height:60px;
+      margin-top:0px;
+      background:#fefefe;
     }
 
 </style>

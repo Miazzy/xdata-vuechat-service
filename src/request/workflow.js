@@ -1,6 +1,7 @@
 import * as tools from '@/request/tools';
 import * as storage from '@/request/storage';
 import * as constant from '@/request/constant';
+import * as manage from '@/request/manage';
 
 /**
  * 获取某业务记录对应的审批日志信息(历史)
@@ -163,7 +164,11 @@ export async function queryUserByName(username) {
         return flag;
     })
 
-    return user.realname;
+    if (user != null && user.realname != null) {
+        return user.realname;
+    } else {
+        return username;
+    }
 
 }
 
@@ -188,7 +193,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
     //流程事务处理框架，保证流程处理操作的事务最终一致性
     try {
         //执行事务处理框架
-        result = await manageAPI.postTableData(
+        result = await manage.postTableData(
             "BS_TRANSACTION",
             operationData
         );
@@ -200,7 +205,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         //如果“审批处理下一节点的审批信息”不为空，则执行当前处理
         if (pnode != null) {
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manageAPI.postProcessLog(pnode);
+            result = await manage.postProcessLog(pnode);
         }
     } catch (error) {
         console.log("审批处理下一节点的审批信息", error);
@@ -211,28 +216,28 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         if (tableName != null && curRow != null && prLogHisNode != null && bpmStatus != null) {
 
             //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-            result = await manageAPI.postProcessLogHistory(prLogHisNode);
+            result = await manage.postProcessLogHistory(prLogHisNode);
 
             //删除当前审批节点中的所有记录
-            result = await manageAPI.deleteProcessLog(
+            result = await manage.deleteProcessLog(
                 tableName,
                 prLogHisNode
             );
 
             //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中
-            result = await manageAPI.patchTableData(
+            result = await manage.patchTableData(
                 tableName,
                 curRow["business_data_id"],
                 bpmStatus
             );
 
             //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史，以前此表单的自由流程进入历史，并删除以前此表单对应的自由流程
-            result = await manageAPI.transFreeWflowHis(curRow["business_data_id"]);
+            result = await manage.transFreeWflowHis(curRow["business_data_id"]);
 
             //二次提交审批状态
             setTimeout(async() => {
                 //修改审批状态为审批中
-                result = await manageAPI.patchTableData(
+                result = await manage.patchTableData(
                     tableName,
                     curRow["business_data_id"],
                     bpmStatus
@@ -285,7 +290,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
             freeNode.audit_node = freeNode.audit_node.substring(0, freeNode.audit_node.length - 1);
         }
 
-        result = await manageAPI.patchTableData(
+        result = await manage.patchTableData(
             'bs_free_process',
             freeNode["id"], {
                 audit_node: freeNode.audit_node

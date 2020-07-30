@@ -473,3 +473,168 @@ export async function queryApprovalLength(tableName, businessID) {
         console.log(err);
     }
 }
+
+/**
+ * @function 将当前自由流程的数据转移到历史数据中
+ * @param {*} id
+ */
+export async function transFreeWflowHis(id) {
+
+    //定义返回结果
+    var result;
+
+    try {
+
+        //获取本表单业务的所有的自由流程数据
+        let wflist = await manageAPI.queryHisFreeWorkflow(id);
+
+        //将历史数据插入到历史自由流程表中
+        let wcode = await manageAPI.insertTableData("bs_free_process_h", wflist);
+
+        //删除当前自由流程表中历史数据
+        result = await manageAPI.deleteTableItem("bs_free_process", wflist);
+
+        //打印返回结果
+        console.log("result :" + result + " wcode :" + wcode);
+
+
+    } catch (error) {
+        console.log("transfer free workflow node into history " + error);
+    }
+
+    return result;
+
+}
+
+/**
+ * 更新数据
+ * @param {*} tableName
+ * @param {*} id
+ * @param {*} node
+ */
+export async function patchTableData(tableName, id, node) {
+
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var patchURL = `${window.requestAPIConfig.restapi}/api/${tableName}/${id}`;
+
+    //如果传入数据为空，则直接返回错误
+    if (typeof node == 'undefined' || node == null || node == '') {
+        return false;
+    }
+
+    try {
+        var res = await superagent
+            .patch(patchURL)
+            .send(node)
+            .set('accept', 'json');
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postProcessLog(node) {
+    //提交URL
+    var postURL = `${window.requestAPIConfig.restapi}/api/pr_log`;
+
+    try {
+        var res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postProcessLogHistory(node) {
+    //提交URL
+    var postURL = null;
+    //是否批处理
+    var bflag = node instanceof Array && node.length > 1 ? '/bulk' : '';
+
+    //如果只有一条数据,则URL中不���要/bulk路径
+    try {
+        if (node instanceof Array && node.length == 1) {
+            bflag = '';
+            node = node[0];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    //构建流程历史表提交数据的URL
+    try {
+        postURL = `${window.requestAPIConfig.restapi}/api/pr_log_history${bflag}`;
+    } catch (error) {
+        console.log(error);
+    }
+
+    //发送post请求，保存数据
+    try {
+        var res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function deleteProcessLog(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //提交URL
+    var deleteURL = '';
+    //遍历node,取出里面的ids
+    var ids = '';
+
+    //如果node不是数组，则转化为数组
+    if (!(node instanceof Array)) {
+        node = [node];
+    }
+
+    try {
+        node.map((item) => {
+            ids = ids + ',' + item['id'];
+        });
+
+        //去掉开头的逗号
+        ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        deleteURL = `${window.requestAPIConfig.restapi}/api/pr_log/bulk?_ids=${ids}`;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        var res = await superagent.delete(deleteURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}

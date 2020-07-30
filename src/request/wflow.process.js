@@ -11,14 +11,10 @@ import * as query from '@/request/query';
  * @param fixedWFlow
  * @param data
  */
-export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
-
-    debugger;
+export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], tasktype = 'wait') {
 
     var wflowAddUsers = ''; //加签用户，暂时设置为空
     var wflowNotifyUsers = ''; //会签用户，暂时设置为空
-    var tipVisible = false;
-    var tipContent = '';
 
     //查询业务编号
     var bussinessCodeID = tools.queryUrlString("id");
@@ -33,14 +29,14 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
     var wfreeNode = await manage.queryCurFreeWorkflow(bussinessCodeID);
 
     //查询当前数据
-    curRow = await query.queryTableData(tableName, id);
+    curRow = await query.queryTableData(tableName, bussinessCodeID);
 
     //如果加签、会签同时选择，则无法提交
     if (
         tools.deNull(wflowAddUsers) != "" &&
         tools.deNull(wflowNotifyUsers) != ""
     ) {
-        console.warning("无法同时进行加签及会签操作，请单独选择加签用户或会签用户！");
+        vant.Toast("无法同时进行加签及会签操作，请单独选择加签用户或会签用户！");
         return false;
     }
 
@@ -67,7 +63,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
         //将英文名转化为中文名
         readyUser = await manage.patchEnameCname(readyUser);
         //提示错误信息
-        console.warning(`加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`);
+        vant.Toast(`加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`);
         return false;
     }
 
@@ -80,7 +76,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
             var result;
 
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = storage.getStore("system_userinfo");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await manage.handleUserInfo(userInfo);
@@ -92,7 +88,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
             //审批意见
             var message = message || curRow.idea_content || "同意";
             //流程日志编号
-            var processLogID = tools.queryUrlString("processLogID");
+            var processLogID = tools.queryUrlString("pid");
             //审批节点信息
             var approveNode = null;
             //定义当前审批日志信息
@@ -117,7 +113,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
 
             //未获取当前审批流程
             if (tools.deNull(curRow) == "") {
-                console.warning("未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！");
+                vant.Toast("未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！");
                 return false;
             }
 
@@ -131,7 +127,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
                     tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
                     tools.deNull(curRow["employee"]).includes(userInfo["realname"])
                 )) {
-                console.warning("您不在此审批流程记录的操作职员列中，无法进行审批操作！");
+                vant.Toast("您不在此审批流程记录的操作职员列中，无法进行审批操作！");
                 return false;
             }
 
@@ -143,7 +139,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
             }
 
             //遍历node,设置approve_user，action
-            node.each((item) => {
+            node.map((item) => {
                 //记录创建时间
                 let ctime = item["create_time"];
                 //设置审批人员
@@ -167,15 +163,13 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
 
             //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
             if (rights.length > 1 && curRow.business_code != "000000000") {
-                tipVisible = true;
-                tipContent = "获取到此业务含有多个流程权责，请联系管理员进行配置！";
+                vant.Toast("获取到此业务含有多个流程权责，请联系管理员进行配置！");
                 return false;
             } else if (
                 rights.length <= 0 &&
                 curRow.business_code != "000000000"
             ) {
-                tipVisible = true;
-                tipContent = "未获取到此业务的流程权责，无法同意审批！";
+                vant.Toast("未获取到此业务的流程权责，无法同意审批！");
                 return false;
             } else {
                 //所有待审核节点
@@ -203,8 +197,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
                         //设置审批节点
                         approveNode = fixedWFlow["approve"];
                     } catch (error) {
-                        tipVisible = true;
-                        tipContent = "固化流程设置节点失败，无法进行审批操作！";
+                        vant.Toast("固化流程设置节点失败，无法进行审批操作！");
                         console.log("固化流程设置节点失败 :" + error);
                         return false;
                     }
@@ -301,8 +294,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
                         //设置审批节点
                         approveNode = freeNode.approve_node;
                     } catch (error) {
-                        tipVisible = true;
-                        tipContent = "自由流程设置节点失败，无法进行审批操作！";
+                        vant.Toast("自由流程设置节点失败，无法进行审批操作！");
                         console.log("自由流程设置节点失败 :" + error);
                         return false;
                     }
@@ -461,9 +453,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
                     await handleTaskItem(data, curRow);
 
                     //当前已经是最后一个审批节点，流程已经处理完毕
-                    tipContent = "同意审批成功，审批流程处理完毕！";
+                    vant.Toast("同意审批成功，审批流程处理完毕！");
 
-                    //TODO 以前此表单的自由流程进入历史 //TODO 删除以前此表单对应的自由流程
                 } else {
                     //如果firstAuditor是逗号开头，则去掉开头的逗号
                     firstAuditor =
@@ -535,7 +526,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
 
                     if (vflag == 0) {
                         //数据库中已经存在此记录，提示用户无法提交审批
-                        tipContent = `处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`;
+                        vant.Toast(`处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`);
                     } else {
                         //执行事务处理
                         let operationData = {
@@ -601,26 +592,15 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = []) {
                         );
 
                         //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
-                        tipContent = "同意审批成功，审批流程已推向后续处理人！";
+                        vant.Toast("同意审批成功，审批流程已推向后续处理人！");
 
                         console.log("operationData : " + operationData);
                     }
                 }
             }
-            //提示用户撤销审批操作成功
-            tipVisible = true;
-
-            //刷新页面数据
-            manage.setTimeouts(() => {
-                console.log('reload data');
-            }, 900, 1500);
 
             //同意审批成功
-            return result;
-        })
-        .catch(() => {
-            //点击取消，无操作
-            console.log(`点击取消，无操作`);
+            return 'success';
         });
 
 }
