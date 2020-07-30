@@ -402,3 +402,120 @@ export function getUrlParam(name) {
     return null; //返回参数值
 
 }
+
+/**
+ * 获取URL参数值
+ * @param {*} val
+ */
+export function queryUrlString(name, flag = 'history') {
+    try {
+        if (flag == 'history') {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg); //匹配目标参数
+            if (r != null) return decodeURI(r[2]);
+            return null; //返回参数值
+        } else {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+            var r = window.location.search.substr(1).match(reg); //search,查询？后面的参数，并匹配正则
+            if (r != null) return unescape(r[2]);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+    return '';
+}
+
+/**
+ * @function 合成唯一编码
+ */
+export function queryUniqueID(length = 32) {
+    //日期格式化
+    var timestamp = new Date().getTime();
+    //定义动态编码
+    var id = formatDate(timestamp, "yyyyMMddhhmmssS");
+    //打印日志
+    console.log('动态编号 :' + id);
+    //定义随机编码
+    var random = (Math.floor(Math.random() * 100000000000000000000) + "") + (Math.floor(Math.random() * 100000000000000000000) + "");
+    //打印随机编码
+    console.log('随机编号 :' + random);
+    //合成动态编码
+    id = (id + random).replace(/\./g, '').substring(0, length);
+    //返回唯一编码
+    return id;
+}
+
+/**
+ * @function 去除字符串中html标签
+ * @param {*} str
+ */
+// export function delHtmlTag(str) {
+//     try {
+//         if (isNull(str)) {
+//             return ""; //去掉所有的html标记
+//         } else {
+//             return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+/**
+ * @function 字符串缩略函数
+ * @param {*} str
+ */
+// export function abbreviation(str, length = 75) {
+//     try {
+
+//         if (deNull(str).length < length) {
+//             return deNull(str).trim();
+//         } else {
+//             return deNull(str).trim().substring(0, length) + '...';
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+/**
+ * @function 检测字符串是否包含字符函数
+ * @param {*} origin
+ * @param {*} arg
+ */
+export function contain(origin, arg) {
+
+    //设置前后缀信息
+    origin = `,${origin},`;
+
+    //设置包含的用户
+    var ready = '';
+
+    //设置数组信息
+    var array = null;
+
+    try {
+        array = arg.split(',');
+
+        //遍历数据，并查询出含有的用户数据
+        for (var item of array) {
+            ready = origin.includes(`,${item},`) ? `${ready},${item}` : ready;
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    //去掉字符串开头的逗号
+    if (ready.startsWith(',')) {
+        ready = ready.substring(1);
+    }
+
+    //去掉字符串结尾的逗号
+    if (ready.endsWith(',')) {
+        ready = ready.substring(0, ready.length - 1);
+    }
+
+    //返回包含的用户数据
+    return ready;
+}

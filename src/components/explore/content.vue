@@ -105,7 +105,7 @@
 
             <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
               <van-goods-action-button type="warning" text="驳回" />
-              <van-goods-action-button type="danger" text="同意" />
+              <van-goods-action-button type="danger" text="同意" @click="handleAgree()" />
             </van-goods-action>
 
             <van-goods-action v-if="(item.bpm_value == 4 && informList.length > 0) && tasktype == 'wait' " >
@@ -129,6 +129,7 @@ import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
+import * as wflowprocess from '@/request/wflow.process';
 
 export default {
     mixins: [window.mixin],
@@ -332,7 +333,9 @@ export default {
         this.nlist = await announce.queryNewsList(0,30);
         this.tlist = await announce.queryNoticeList(0,30);
       },
-
+      async handleAgree(){
+        await wflowprocess.handleApproveWF();
+      }
     }
 }
 </script>

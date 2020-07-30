@@ -29,6 +29,7 @@ new Vue({
 Vue.use(vant.Empty);
 Vue.use(vant.Lazyload);
 Vue.use(vant.Icon);
+Vue.use(vant.Dialog);
 
 // 运行 vue init webpack命令新建项目时 可以选择关闭 ESLint
 // 若新建项目时开启了 ESLint .eslintignore 文件，告诉 ESLint 去忽略特定的文件和目录。
