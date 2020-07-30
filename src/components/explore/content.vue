@@ -114,7 +114,7 @@
             </van-goods-action>
 
             <van-goods-action v-if="(item.bpm_value == 4 && informList.length > 0) && tasktype == 'wait' " >
-              <van-goods-action-button id="informed_confirm" type="danger" text="确认" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button id="informed_confirm" type="danger" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -361,7 +361,18 @@ export default {
           await this.queryInfo();
           this.loading = false;
         } , 3500);
+      },
+      async handleConfirm(){
+        this.loading = true;
+        let result = await wflowprocess.handleConfirmWF();
+        result == 'success' ? (this.tasktype = 'done') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+          this.loading = false;
+        } , 3500);
       }
+
+
     }
 }
 </script>
