@@ -25,7 +25,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$history&id${business_data_id}`, res.body, 600);
+            storage.setStore(`sys_workflow_cache@$history&id${business_data_id}`, res.body, 60);
         }
 
         return res.body;
@@ -55,7 +55,7 @@ export async function queryPRLogByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 600);
+            storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 60);
         }
 
         return res.body;
@@ -85,7 +85,7 @@ export async function queryPRLogInformedByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$informed&id${business_data_id}`, res.body, 600);
+            storage.setStore(`sys_workflow_cache@$informed&id${business_data_id}`, res.body, 60);
         }
 
         return res.body;

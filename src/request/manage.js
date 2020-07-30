@@ -638,3 +638,47 @@ export async function deleteProcessLog(tableName, node) {
         console.log(err);
     }
 }
+
+
+/**
+ * 根据数据字典中的节点编号，删除到这个节点对应的流程信息
+ */
+export async function deleteProcessLogInf(tableName, node) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //遍历node,取出里面的ids
+    var ids = '';
+    //提交URL
+    var deleteURL = '';
+
+    //如果node不是数组，则转化为数组
+    if (!(node instanceof Array)) {
+        node = [node];
+    }
+
+    try {
+        node.map((item) => {
+            ids = ids + ',' + item['id'];
+        });
+
+        //去掉开头的逗号
+        ids = ids.indexOf(',') == 0 ? ids.substring(1) : ids;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        deleteURL = `${window.requestAPIConfig.restapi}/api/pr_log_informed/bulk?_ids=${ids}`;
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        var res = await superagent.delete(deleteURL).set('accept', 'json');
+        console.log(res);
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}

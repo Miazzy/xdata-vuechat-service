@@ -1,6 +1,5 @@
 import * as tools from '@/request/tools';
 import * as storage from '@/request/storage';
-import * as constant from '@/request/constant';
 import * as manage from '@/request/manage';
 import * as workflow from '@/request/workflow';
 import * as query from '@/request/query';
@@ -36,7 +35,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
         tools.deNull(wflowAddUsers) != "" &&
         tools.deNull(wflowNotifyUsers) != ""
     ) {
-        vant.Toast("无法同时进行加签及会签操作，请单独选择加签用户或会签用户！");
+        vant.Dialog.alert({
+            message: "无法同时进行加签及会签操作，请单独选择加签用户或会签用户！"
+        });
         return false;
     }
 
@@ -63,7 +64,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
         //将英文名转化为中文名
         readyUser = await manage.patchEnameCname(readyUser);
         //提示错误信息
-        vant.Toast(`加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`);
+        vant.Dialog.alert({
+            message: `加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`
+        });
         return false;
     }
 
@@ -113,7 +116,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
             //未获取当前审批流程
             if (tools.deNull(curRow) == "") {
-                vant.Toast("未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！");
+                vant.Dialog.alert({
+                    message: "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
+                });
                 return false;
             }
 
@@ -127,7 +132,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                     tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
                     tools.deNull(curRow["employee"]).includes(userInfo["realname"])
                 )) {
-                vant.Toast("您不在此审批流程记录的操作职员列中，无法进行审批操作！");
+                vant.Dialog.alert({
+                    message: "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
+                });
                 return false;
             }
 
@@ -163,13 +170,17 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
             //如果流程权责有多个，那么弹出选择框，让用户自己选择一个流程
             if (rights.length > 1 && curRow.business_code != "000000000") {
-                vant.Toast("获取到此业务含有多个流程权责，请联系管理员进行配置！");
+                vant.Dialog.alert({
+                    message: "获取到此业务含有多个流程权责，请联系管理员进行配置！"
+                });
                 return false;
             } else if (
                 rights.length <= 0 &&
                 curRow.business_code != "000000000"
             ) {
-                vant.Toast("未获取到此业务的流程权责，无法同意审批！");
+                vant.Dialog.alert({
+                    message: "未获取到此业务的流程权责，无法同意审批！"
+                });
                 return false;
             } else {
                 //所有待审核节点
@@ -197,7 +208,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                         //设置审批节点
                         approveNode = fixedWFlow["approve"];
                     } catch (error) {
-                        vant.Toast("固化流程设置节点失败，无法进行审批操作！");
+                        vant.Dialog.alert({
+                            message: "固化流程设置节点失败，无法进行审批操作！"
+                        });
                         console.log("固化流程设置节点失败 :" + error);
                         return false;
                     }
@@ -294,7 +307,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                         //设置审批节点
                         approveNode = freeNode.approve_node;
                     } catch (error) {
-                        vant.Toast("自由流程设置节点失败，无法进行审批操作！");
+                        vant.Dialog.alert({
+                            message: "自由流程设置节点失败，无法进行审批操作！"
+                        });
                         console.log("自由流程设置节点失败 :" + error);
                         return false;
                     }
@@ -453,7 +468,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                     await handleTaskItem(data, curRow);
 
                     //当前已经是最后一个审批节点，流程已经处理完毕
-                    vant.Toast("同意审批成功，审批流程处理完毕！");
+                    vant.Dialog.alert({
+                        message: "同意审批成功，审批流程处理完毕！"
+                    });
 
                 } else {
                     //如果firstAuditor是逗号开头，则去掉开头的逗号
@@ -526,7 +543,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
                     if (vflag == 0) {
                         //数据库中已经存在此记录，提示用户无法提交审批
-                        vant.Toast(`处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`);
+                        vant.Dialog.alert({
+                            message: `处理异常，请稍后重试；如果多次处理异常，可能需要撤销当前审批，重新发起审批流程！异常流程数据[status:${vflag}]`,
+                        });
                     } else {
                         //执行事务处理
                         let operationData = {
@@ -592,7 +611,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                         );
 
                         //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
-                        vant.Toast("同意审批成功，审批流程已推向后续处理人！");
+                        vant.Dialog.alert({
+                            message: "同意审批成功，审批流程已推向后续处理人！",
+                        })
 
                         console.log("operationData : " + operationData);
                     }
@@ -639,4 +660,296 @@ async function handleTaskItem(data, curRow, result = "") {
 
     //返回执行结果
     return result;
+}
+
+
+/**
+ * @function 驳回审批
+ */
+export async function handleRejectWF() {
+
+    var result = '';
+
+    await vant.Dialog.confirm({
+            title: '确认操作',
+            message: '是否进行驳回审批操作?',
+        })
+        .then(async() => {
+
+            //查询业务编号
+            var bussinessCodeID = tools.queryUrlString("id");
+
+            //获取表单名称
+            var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
+
+            //查询当前数据
+            var curRow = await query.queryTableData(tableName, bussinessCodeID);
+
+            //获取当前用户
+            var userInfo = storage.getStore("system_userinfo");
+
+            //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+            await manage.handleUserInfo(userInfo);
+
+            //获取当前时间
+            var date = tools.formatDate(
+                new Date().getTime(),
+                "yyyy-MM-dd hh:mm:ss"
+            );
+
+            //审批动作
+            var operation = operation || "驳回";
+
+            //审批意见
+            var message = message || curRow.idea_content || "驳回";
+
+            //流程日志编号
+            var processLogID = tools.queryUrlString("pid");
+
+            //流程状态
+            var bpmStatus = { bpm_status: "1" };
+
+            //获取当前审批节点的所有数据
+            curRow = await manage.queryProcessLogByID(tableName, processLogID);
+
+            //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+            if (!(
+                    tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+                    tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+                )) {
+                vant.Dialog.alert({
+                    message: "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
+                });
+                return false;
+            }
+
+            //获取当前审批节点的所有数据
+            curRow = await manage.queryProcessLogByID(tableName, curRow["id"]);
+
+            //获取关于此表单的所有当前审批日志信息
+            let node = await manage.queryProcessLog(
+                tableName,
+                curRow["business_data_id"]
+            );
+
+            //遍历node,设置approve_user，action
+            node.map((item) => {
+                //获取创建时间
+                let ctime = item["create_time"];
+                //设置审批人员
+                item["approve_user"] = userInfo["username"];
+                //设置操作动作
+                item["action"] = operation;
+                //设置操作时间
+                item["operate_time"] = date;
+                //设置操作意见
+                item["action_opinion"] = message;
+                //设置创建时间
+                item["create_time"] = tools.formatDate(
+                    ctime,
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+            });
+
+            //执行审批驳回业务
+            await workflow.postWorkflowApprove(
+                tableName,
+                curRow,
+                null,
+                null,
+                node,
+                bpmStatus
+            );
+
+            //提示用户撤销审批操作成功
+            vant.Dialog.alert({
+                message: "驳回审批成功！"
+            });
+
+            result = 'success';
+
+            return result;
+        });
+
+    //返回操作结果
+    return result;
+}
+
+/**
+ * @function 知会确认
+ */
+export async function handleConfirmWF() {
+
+    var result = '';
+
+    await vant.Dialog.confirm({
+            title: '确认操作',
+            message: '是否进行确认知会操作?',
+        })
+        .then(async() => {
+
+            //查询业务编号
+            var bussinessCodeID = tools.queryUrlString("id");
+
+            //获取表单名称
+            var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
+
+            //查询当前数据
+            var curRow = await query.queryTableData(tableName, bussinessCodeID);
+
+            //获取当前用户
+            var userInfo = storage.getStore("system_userinfo");
+
+            //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
+            await manage.handleUserInfo(userInfo);
+
+            //获取当前时间
+            var date = tools.formatDate(
+                new Date().getTime(),
+                "yyyy-MM-dd hh:mm:ss"
+            );
+
+            //审批动作
+            var operation = operation || "知会";
+
+            //审批意见
+            var message = message || curRow.idea_content || "知会确认";
+
+            //流程日志编号
+            var processLogID = tools.queryUrlString("pid");
+
+            //定义流程状态
+            var bpmStatus = { bpm_status: "5" };
+
+            //获取当前审批节点的所有数据
+            curRow = await manage.queryProcessLogInfByID(
+                tableName,
+                processLogID
+            );
+
+            //设置本次知会确认创建时间
+            curRow["create_time"] = date;
+
+            //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+            if (
+                tools.deNull(curRow["approve_user"]).length >=
+                tools.deNull(curRow["employee"]).length
+            ) {
+                //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+                try {
+                    //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+                    result = await manage.postProcessLogHistory(curRow);
+                    //删除当前审批节点中的所有记录
+                    result = await manage.deleteProcessLogInf(tableName, [curRow]);
+                    //如果当前已经进入流程，则需要将流程状态设置为5：已完成
+                    result = await manage.patchTableData(
+                        tableName,
+                        curRow["business_data_id"],
+                        bpmStatus
+                    );
+                } catch (error) {
+                    console.log(error);
+                }
+
+                //提示用户撤销审批操作成功
+                vant.Dialog.alert({
+                    message: "知会确认成功！"
+                });
+
+                result = 'success';
+                return result;
+            }
+
+            var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
+            var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
+
+            //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
+            if (!(
+                    tools
+                    .deNull(employeeList)
+                    .includes("," + userInfo["username"] + ",") ||
+                    tools
+                    .deNull(employeeList)
+                    .includes("," + userInfo["realname"] + ",")
+                )) {
+                vant.Dialog.alert({
+                    message: "您不在此知会记录的操作职员列中，无法进行确认操作！"
+                });
+                result = 'success';
+                return result;
+            }
+
+            //已经知会确认过的用户，无法再次知会
+            if (
+                tools
+                .deNull(appoveUserList)
+                .includes("," + userInfo["username"] + ",") ||
+                tools
+                .deNull(appoveUserList)
+                .includes("," + userInfo["realname"] + ",")
+            ) {
+                vant.Dialog.alert({
+                    message: "您已经在此知会记录中，执行过确认操作了！"
+                });
+
+                result = 'success';
+
+                return result;
+            }
+
+            //设置知会确认人员
+            curRow["approve_user"] =
+                tools.deNull(curRow["approve_user"]) +
+                (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
+                userInfo["username"];
+
+            //设置操作内容
+            curRow["action"] = operation;
+
+            //设置操作时间
+            curRow["operate_time"] = date;
+
+            //设置操作意见
+            curRow["action_opinion"] =
+                tools.deNull(curRow["action_opinion"]) +
+                (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+                `${userInfo["username"]}:${message}`;
+
+            //保存当前数据到数据库中
+            await manage.patchTableData(
+                "PR_LOG_INFORMED",
+                curRow["id"],
+                curRow
+            );
+
+            //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
+            if (curRow["approve_user"].length >= curRow["employee"].length) {
+                try {
+                    //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
+                    result = await manage.postProcessLogHistory(curRow);
+                    //删除当前审批节点中的所有记录
+                    result = await manage.deleteProcessLogInf(tableName, [curRow]);
+                    //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
+                    result = await manage.patchTableData(
+                        tableName,
+                        curRow["business_data_id"],
+                        bpmStatus
+                    );
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            //提示用户撤销审批操作成功
+            vant.Dialog.alert({
+                message: "知会确认成功！"
+            });
+
+            result = 'success';
+
+            return result;
+        });
+
+    return result;
+
 }

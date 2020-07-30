@@ -109,8 +109,8 @@
 
 
             <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
-              <van-goods-action-button type="warning" text="驳回" />
-              <van-goods-action-button type="danger" text="同意" @click="handleAgree()" />
+              <van-goods-action-button type="warning" text="驳回" @click="handleDisagree();" />
+              <van-goods-action-button type="danger" text="同意" @click="handleAgree();" />
             </van-goods-action>
 
             <van-goods-action v-if="(item.bpm_value == 4 && informList.length > 0) && tasktype == 'wait' " >
@@ -156,7 +156,7 @@ export default {
             from:'',
             tname:'',
             bname:'',
-            tasktype:'',
+            tasktype:'done',
             previewurl:'',
             purl:'',
             tableInfo:'',
@@ -169,15 +169,18 @@ export default {
             announces:[],
             informList:[],
             fileList:[],
+            loading:false,
             officeList:[],
         }
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
+        this.renderStatus();
     },
     mounted() {
       this.queryInfo();
+      this.renderStatus();
     },
     methods: {
       encodeURI(value){
@@ -220,7 +223,6 @@ export default {
           this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
           this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
           this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
-          this.tasktype = window.decodeURIComponent(this.getUrlParam('tasktype'));
           this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
           this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
           this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
@@ -301,7 +303,12 @@ export default {
       async renderCSS(){
         setTimeout(() => {
           this.status_type = 'none';
-        },3000)
+        } , 3000)
+      },
+      async renderStatus(){
+        setTimeout(()=>{
+          this.tasktype = window.decodeURIComponent(this.getUrlParam('tasktype'));
+        } , 100);
       },
       async queryAnnounce(){
 
@@ -338,11 +345,22 @@ export default {
         this.tlist = await announce.queryNoticeList(0,30);
       },
       async handleAgree(){
+        this.loading = true;
         let result = await wflowprocess.handleApproveWF();
         result == 'success' ? (this.tasktype = 'done') : '';
         setTimeout(async () => {
           await this.queryInfo();
-        } , 2000);
+          this.loading = false;
+        } , 3500);
+      },
+      async handleDisagree(){
+        this.loading = true;
+        let result = await wflowprocess.handleRejectWF();
+        result == 'success' ? (this.tasktype = 'done') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+          this.loading = false;
+        } , 3500);
       }
     }
 }
@@ -585,6 +603,10 @@ export default {
       height:60px;
       margin-top:0px;
       background:#fefefe;
+      position: absolute;
+      top: 300px;
+      opacity: 0.4;
+      filter: alpha(opacity=40);
     }
 
 </style>
