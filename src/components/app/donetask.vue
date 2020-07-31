@@ -101,11 +101,13 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
+        this.renderStatus();
         this.queryAnnounce();
         this.queryEach();
         this.queryTaskDone();
     },
     mounted() {
+      this.renderStatus();
       this.queryAnnounce();
       this.queryEach();
       this.queryTaskDone();
@@ -115,13 +117,21 @@ export default {
       },
       tabname(){
         this.loading = true;
+        this.queryTaskDone();
         setTimeout(() => {
-          this.queryTaskDone();
           this.loading = false;
         },500);
       }
     },
     methods: {
+      renderStatus(){
+        this.tabname = window.decodeURIComponent(this.getUrlParam('tabname') || 1 ) ;;
+      },
+      getUrlParam(name) {
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+          var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
+          if (r != null) return decodeURI(r[2]); return null; //返回参数值
+      },
       async queryAnnounce(){
 
         let info = await storage.getStore('system_userinfo');
@@ -170,7 +180,7 @@ export default {
           let two = (await task.queryProcessLogDone(username , realname , 1 , 99))||[];
           let three = (await task.queryProcessLogDone(username , realname , 2 , 99))||[];
           tlist= [...one , ...two , ...three];
-          storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 60);
+          storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 3600);
         } else {
           tlist = result;
         }
