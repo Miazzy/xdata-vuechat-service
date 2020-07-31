@@ -124,7 +124,7 @@ export default {
           temp.sort((a, b) => {
             return b.timestamp - a.timestamp;
           });
-          storage.setStore(`system_announce_by_user@${username}` , temp , 3600 * 24);
+          storage.setStore(`system_announce_by_user@${username}` , temp , 60);
         } else {
           temp = result;
         }

@@ -280,11 +280,19 @@ export default {
     },
     watch: {
       $route(to, from) {
-        debugger;
       },
       tabname(){
         this.loading = true;
-        setTimeout(() => {
+        setTimeout(async () => {
+          if(this.tabname == 1){
+            await this.queryTaskTiming();
+          } else if(this.tabname == 2){
+            await this.queryTaskDoing();
+          } else if(this.tabname == 3){
+            await this.queryTaskDone();
+          } else if(this.tabname == 4){
+            await this.queryTaskSelf();
+          }
           this.loading = false;
         },500);
       }

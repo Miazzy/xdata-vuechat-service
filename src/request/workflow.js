@@ -115,7 +115,7 @@ export async function queryPRLogUserByPage(page, size) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_username@$all&p=${page}&size=${size}`, res.body, 3600 * 24);
+            storage.setStore(`sys_workflow_username@$all&p=${page}&size=${size}`, res.body, 3600);
         }
 
         return res.body;

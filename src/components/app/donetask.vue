@@ -1,6 +1,6 @@
 <template>
   <!--首页组件-->
-  <div id="news" style="margin-top: 0px;" >
+  <div id="news" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
         <div class="center">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -23,7 +23,9 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1">
-          <div class="list-info" v-show="tabname == 1" :key="item.id" v-for=" (item , index) in tdonetasks">
+          <van-loading size="12%" v-show="tabname == 1 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="您还没有计时已办任务哦！" v-show="tabname == 1 && tdonetasks.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 1 && !loading" :key="item.id" v-for=" (item , index) in tdonetasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -43,7 +45,9 @@
          </div>
          </template>
          <template v-show="tabname == 2">
-          <div class="list-info" v-show="tabname == 2" :key="item.id" v-for=" (item , index) in ndonetasks">
+          <van-loading size="12%" v-show="tabname == 2 && loading" vertical style="display:flex;margin: 0px auto;margin-top:10px;margin-left:0%;text-align: center;">加载中...</van-loading>
+          <van-empty description="您还没有非计时已办任务哦！" v-show="tabname == 2 && ndonetasks.length == 0 && !loading" />
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in ndonetasks">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -92,6 +96,7 @@ export default {
             ndonetasks:[],
             donetasks:[],
             announces:[],
+            loading:false,
         }
     },
     activated() {
@@ -104,6 +109,17 @@ export default {
       this.queryAnnounce();
       this.queryEach();
       this.queryTaskDone();
+    },
+    watch: {
+      $route(to, from) {
+      },
+      tabname(){
+        this.loading = true;
+        setTimeout(() => {
+          this.queryTaskDone();
+          this.loading = false;
+        },500);
+      }
     },
     methods: {
       async queryAnnounce(){
@@ -127,7 +143,7 @@ export default {
           temp.sort((a, b) => {
             return b.timestamp - a.timestamp;
           });
-          storage.setStore(`system_announce_by_user@${username}` , temp , 3600 * 24);
+          storage.setStore(`system_announce_by_user@${username}` , temp , 60);
         } else {
           temp = result;
         }
@@ -154,7 +170,7 @@ export default {
           let two = (await task.queryProcessLogDone(username , realname , 1 , 99))||[];
           let three = (await task.queryProcessLogDone(username , realname , 2 , 99))||[];
           tlist= [...one , ...two , ...three];
-          storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 3600 * 2);
+          storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
