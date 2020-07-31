@@ -55,6 +55,7 @@
               var that = this;
               var name = window.location.hash.slice(2);
               name = name.includes('?') ? name.split('?')[0] : name;
+              name = name.includes('/') ? name.split('/')[0] : name;
               that.active = name;
               setTimeout(() => {
                 that.changeStyle(name);
@@ -76,6 +77,7 @@
               try {
                 var name = window.location.hash.slice(2);
                 name = name.includes('?') ? name.split('?')[0] : name;
+                name = name.includes('/') ? name.split('/')[0] : name;
                 $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
                 $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
                 $(`#wx-nav-${name}`).addClass('router-link-exact-active');

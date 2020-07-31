@@ -1,6 +1,6 @@
 <template>
   <!--首页组件-->
-  <div id="news" style="margin-top: 0px;" >
+  <div id="news" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
         <div class="center">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -172,10 +172,12 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
+        this.renderStatus();
         this.queryAnnounce();
         this.queryEach();
     },
     mounted() {
+      this.renderStatus();
       this.queryAnnounce();
       this.queryEach();
     },
@@ -199,8 +201,6 @@ export default {
         let info = await storage.getStore('system_userinfo');
         let username = info.username;
         let temp = null;
-
-        this.tabname = (await tools.getUrlParam('tabname')) || '1';
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = storage.getStore(`system_announce_by_user@${username}`);
@@ -229,6 +229,9 @@ export default {
         this.hlist = await announce.queryHeadList(0,30);
         this.nlist = await announce.queryNewsList(0,30);
         this.tlist = await announce.queryNoticeList(0,30);
+      },
+      async renderStatus(){
+        this.tabname = (await tools.getUrlParam('tabname')) || '1';
       }
     }
 }
