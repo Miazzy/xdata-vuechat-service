@@ -54,6 +54,7 @@
             changeTab(name){
               var that = this;
               var name = window.location.hash.slice(2);
+              name = name.includes('?') ? name.split('?')[0] : name;
               that.active = name;
               setTimeout(() => {
                 that.changeStyle(name);
@@ -72,11 +73,16 @@
               },1200);
             },
             changeStyle(name){
-              var name = window.location.hash.slice(2);
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-              $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-              $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-              $(`#wx-nav-${name}`).addClass('router-link-active');
+              try {
+                var name = window.location.hash.slice(2);
+                name = name.includes('?') ? name.split('?')[0] : name;
+                $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+                $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+                $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+                $(`#wx-nav-${name}`).addClass('router-link-active');
+              } catch (error) {
+                console.log(error);
+              }
               console.log(name);
             }
         }
