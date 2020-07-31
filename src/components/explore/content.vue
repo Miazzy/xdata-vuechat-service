@@ -1,10 +1,11 @@
 <template>
+  <keep-alive>
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
     <header id="wx-header">
         <div class="center">
-            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+            <router-link :to="backPath" @click="$router.push(backPath)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>任务</span>
@@ -125,6 +126,7 @@
 
     </section>
   </div>
+  </keep-alive>
 </template>
 <script>
 import * as storage from '@/request/storage';
@@ -165,6 +167,7 @@ export default {
             status_type:'',
             fields:[],
             item:{},
+            backPath:'/explore',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -216,6 +219,7 @@ export default {
           var that = this;
           this.id = window.decodeURIComponent(this.getUrlParam('id'));
           this.type = window.decodeURIComponent(this.getUrlParam('type'));
+          this.backPath = window.decodeURIComponent(this.getUrlParam('backpath'));
           this.title = window.decodeURIComponent(this.getUrlParam('title'));
           this.content = window.decodeURIComponent(this.getUrlParam('content'));
           this.files = window.decodeURIComponent(this.getUrlParam('files'));

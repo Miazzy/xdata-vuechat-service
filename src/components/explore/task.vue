@@ -1,4 +1,5 @@
 <template>
+  <keep-alive>
   <!--首页组件-->
   <div id="task" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
@@ -51,7 +52,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=1`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -70,7 +71,7 @@
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
             </div>
             </div>
-            <div class="desc-box">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=1`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -100,7 +101,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -119,7 +120,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box">
+              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -149,7 +150,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -168,7 +169,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -198,7 +199,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
              </div>
             </div>
-            <div class="desc-box">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=4`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -217,7 +218,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
              </div>
             </div>
-            <div class="desc-box">
+            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=4`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -238,6 +239,7 @@
 
     </section>
   </div>
+  </keep-alive>
 </template>
 <script>
 import * as storage from '@/request/storage';
@@ -263,12 +265,14 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
+        this.renderStatus();
         this.queryTaskDone();
         this.queryTaskDoing();
         this.queryTaskTiming();
         this.queryTaskSelf();
     },
     mounted() {
+      this.renderStatus();
       this.queryTaskDone();
       this.queryTaskDoing();
       this.queryTaskTiming();
@@ -276,7 +280,7 @@ export default {
     },
     watch: {
       $route(to, from) {
-
+        debugger;
       },
       tabname(){
         this.loading = true;
@@ -289,6 +293,11 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+      getUrlParam(name) {
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+          var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
+          if (r != null) return decodeURI(r[2]); return null; //返回参数值
+      },
       queryReturnDiv(){
         var that = this;
         $('.center').prepend(`<div id="return" tag="div" class="iconfont icon-left">
@@ -297,6 +306,9 @@ export default {
         $('#return[tag=div]').click(()=>{
           that.$router.push(`/explore`);
         });
+      },
+      renderStatus(){
+        this.tabname = window.decodeURIComponent(this.getUrlParam('tabname') || 1 ) ;
       },
       async queryTaskDone(){
         let info = await storage.getStore('system_userinfo');
