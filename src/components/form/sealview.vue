@@ -5,7 +5,7 @@
 
     <header id="wx-header">
         <div class="center">
-            <span>用印登记</span>
+            <span>用印确认</span>
         </div>
     </header>
 
@@ -94,13 +94,9 @@
               </van-cell-group>
             </div>
 
-            <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
-              <van-goods-action-button type="warning" text="驳回" @click="handleDisagree();" />
-              <van-goods-action-button type="danger" text="同意" @click="handleAgree();" />
-            </van-goods-action>
-
-            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && status == '' ">
-              <van-goods-action-button id="informed_confirm" type="danger" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            <van-goods-action >
+              <van-goods-action-button type="warning" text="作废" @click="handleDisagree();" />
+              <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
             </van-goods-action>
 
           </div>
@@ -136,7 +132,7 @@ export default {
             active: 1,
             id:'',
             type:'',
-            title:'用印登记表',
+            title:'用印登记确认表',
             content:'',
             files:'',
             from:'',
@@ -186,7 +182,7 @@ export default {
               'fronting':'寄前台',
               'done':'已归档',
             },
-            readonly: false,
+            readonly: true,
             sealTypeColumns: ['财务确认' , '档案确认'],
             sealTypeColumns: ['合同类' , '非合同类'],
             approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
@@ -239,8 +235,28 @@ export default {
       async queryInfo(){
         try {
           var that = this;
-          that.item.sealman = this.getUrlParam('sealman');
+          that.item.id = this.getUrlParam('id');
           that.item.status = this.statusType[this.getUrlParam('statustype')];
+
+          const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
+
+          this.item = {
+              createtime: dayjs().format('YYYY-MM-DD'),
+              filename: value.filename,
+              count: value.count,
+              dealDepart: value.deal_depart,
+              dealManager: value.deal_manager,
+              approveType: value.approve_type,
+              contractId: value.contract_id,
+              signman: value.sign_man,
+              workno: value.workno,
+              sealtime: value.seal_time,
+              sealman: value.seal_man,
+              sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
+              confirmStatus: '',//财务确认/档案确认
+              status: '',
+            }
+
         } catch (error) {
           console.log(error);
         }
@@ -255,16 +271,6 @@ export default {
       async queryWorkflow(){
 
       },
-      async renderCSS(){
-        setTimeout(() => {
-          this.status_type = 'none';
-        } , 3000)
-      },
-      async renderStatus(){
-        setTimeout(()=>{
-          this.tasktype = window.decodeURIComponent(this.getUrlParam('tasktype'));
-        } , 100);
-      },
       async queryAnnounce(){
 
       },
@@ -278,55 +284,6 @@ export default {
 
       },
       async handleConfirm(){
-
-        //第一步，构造form对象
-        const item = this.item;
-        const id = tools.queryUniqueID();
-        const create_by = item.dealManager;
-        const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        const filename = item.filename;
-        const count = item.count;
-        const seal_type = item.sealtype;
-        const deal_depart = item.dealDepart;
-        const deal_manager = item.dealManager;
-        const approve_type = item.approveType;
-        const seal_time = item.sealtime;
-        const seal_man = item.sealman;
-        const contract_id = item.contractId;
-        const sign_man = item.signman;
-        const workno = item.workno;
-        const seal_wflow = this.getUrlParam('statustype');
-        const status = this.statusType[this.getUrlParam('statustype')];
-        const elem = {id , create_by , create_time , filename , count , deal_depart , deal_manager , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
-
-        //第二步，向表单提交form对象数据
-        this.loading = true;
-        const result = await manageAPI.postTableData('bs_seal_regist' , elem);
-
-        //第三步，回显当前用印登记信息，并向印章管理员推送消息
-        this.loading = false;
-        let message = null;
-
-        if(result.protocol41 == true && result.affectedRows > 0){
-          message = '已成功提交用印登记信息！';
-
-          this.status = 'none';
-          this.readonly = true;
-
-          const title = '用印登记申请';
-          const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
-          const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=none`);
-
-          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
-                      .set('accept', 'json');
-
-        } else {
-          message = '提交用印登记信息失败，请稍后再试！';
-        }
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: message,
-        });
 
       }
 
