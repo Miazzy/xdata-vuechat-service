@@ -339,7 +339,8 @@ export async function postTableData(tableName, node) {
             .post(insertURL)
             .send(node)
             .set('accept', 'json');
-        return res.body[0];
+
+        return res.body;
     } catch (err) {
         console.log(err);
     }

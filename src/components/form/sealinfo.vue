@@ -37,18 +37,18 @@
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-            <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+            <van-field :readonly="readonly" clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
             <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
-            <van-field clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
-            <van-field clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
-            <van-field clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
-            <van-field clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+            <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
+            <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
+            <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
+            <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
             <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
-            <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
-            <van-field clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
-            <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
-            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
-            <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
+            <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
+            <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
+            <van-field :readonly="readonly" clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
+            <van-field :readonly="readonly" clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
@@ -133,11 +133,13 @@
               <van-goods-action-button type="danger" text="同意" @click="handleAgree();" />
             </van-goods-action>
 
-            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false ">
+            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
+
+          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
 
           <div style="height:100px;" ></div>
         </div>
@@ -155,6 +157,7 @@ import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
+import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -217,6 +220,7 @@ export default {
               'fronting':'寄前台',
               'done':'已归档',
             },
+            readonly: false,
             sealTypeColumns: ['财务确认' , '档案确认'],
             sealTypeColumns: ['合同类' , '非合同类'],
             approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
@@ -252,7 +256,7 @@ export default {
           return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
         })
         list = list.map((item)=>{
-          return { url:`https://upload.shengtai.club/` + item, isImage: true };
+          return { url:`https://upload.yunwisdom.club:30443/` + item, isImage: true };
         });
         return list;
       },
@@ -262,7 +266,7 @@ export default {
           return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
         })
         list = list.map((item)=>{
-          return { url:`https://upload.shengtai.club/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
+          return { url:`https://upload.yunwisdom.club:30443/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
         });
         return list;
       },
@@ -310,10 +314,43 @@ export default {
       async handleConfirm(){
 
         //第一步，构造form对象
+        const item = this.item;
+        const id = tools.queryUniqueID();
+        const create_by = item.dealManager;
+        const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        const filename = item.filename;
+        const count = item.count;
+        const deal_depart = item.dealDepart;
+        const deal_manager = item.dealManager;
+        const approve_type = item.approveType;
+        const seal_time = item.sealtime;
+        const seal_man = item.sealman;
+        const contract_id = item.contractId;
+        const sign_man = item.signman;
+        const workno = item.workno;
+        const seal_wflow = this.getUrlParam('statustype');
+        const status = this.statusType[this.getUrlParam('statustype')];
+        const elem = {id , create_by , create_time , filename , count , deal_depart , deal_manager , approve_type , seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
 
         //第二步，向表单提交form对象数据
+        this.loading = true;
+        const result = await manageAPI.postTableData('bs_seal_regist' , elem);
 
-        //第三步，回显当前用印登记信息
+        //第三步，回显当前用印登记信息，并向印章管理员推送消息
+        this.loading = false;
+        let message = null;
+
+        if(result.protocol41 == true && result.affectedRows > 0){
+          message = '已成功提交用印登记信息！'
+          this.status = 'none';
+          this.readonly = true;
+        } else {
+          message = '提交用印登记信息失败，请稍后再试！';
+        }
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: message,
+        });
 
       }
 
