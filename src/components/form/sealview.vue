@@ -268,24 +268,20 @@ export default {
           console.log(error);
         }
       },
-      async queryWorkflow(){
 
-      },
-      async queryAnnounce(){
-
-      },
-      async queryEach(){
-
-      },
       async handleAgree(){
+        //修改状态为已用印
+
+        //通知签收人领取资料
 
       },
       async handleDisagree(){
 
-      },
-      async handleConfirm(){
+        //修改状态为已作废
 
-      }
+        //通知签收人修改申请
+
+      },
 
     }
 }
