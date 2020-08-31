@@ -37,17 +37,32 @@
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-            <van-field v-model="value" clearable  label="名称" placeholder="请输入文件名称" />
-            <van-field v-model="value" clearable  label="份数" placeholder="请输入文件份数" />
-            <van-field v-model="value" clearable  label="经办部门" placeholder="请输入经办部门" />
-            <van-field v-model="value" clearable  label="经办人" placeholder="请输入经办人" />
-            <van-field readonly clickable clearable  label="审批类型" :value="approveType" placeholder="选择审批类型" @click="showPicker = true" />
-            <van-popup v-model="showPicker" round position="bottom">
+            <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+            <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
+            <van-field clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
+            <van-field clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
+            <van-field clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
+            <van-field clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+            <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
+            <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
+            <van-field clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
+            <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
+            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
+            <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
-                :columns="columns"
-                @cancel="showPicker = false"
+                :columns="approveColumns"
+                @cancel="tag.showPicker = false"
                 @confirm="approveTypeConfirm"
+              />
+            </van-popup>
+            <van-popup v-model="tag.showPickerSealType" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="sealTypeColumns"
+                @cancel="tag.showPickerSealType = false"
+                @confirm="sealTypeConfirm"
               />
             </van-popup>
           </van-cell-group>
@@ -79,33 +94,38 @@
               </van-cell-group>
             </div>
 
-            <div style="margin-top:15px;margin-left:7px;">
-              流程进度
+            <div style="display:none;">
+              <div style="margin-top:15px;margin-left:7px;">
+                流程进度
+              </div>
+
+              <van-steps :active="active" active-icon="success" active-color="#38f" style="padding-bottom:15px;border-bottom:1px solid #efefef;">
+                <van-step>发起</van-step>
+                <van-step>审核</van-step>
+                <van-step>审批</van-step>
+                <van-step>知会</van-step>
+              </van-steps>
             </div>
 
-            <van-steps :active="active" active-icon="success" active-color="#38f" style="padding-bottom:15px;border-bottom:1px solid #efefef;">
-              <van-step>发起</van-step>
-              <van-step>审核</van-step>
-              <van-step>审批</van-step>
-              <van-step>知会</van-step>
-            </van-steps>
+            <div style="display:none;" >
+              <div style="margin-top:15px;margin-left:7px;">
+                审批流程
+              </div>
 
-            <div style="margin-top:15px;margin-left:7px;">
-              审批流程
+              <van-steps direction="vertical" :active="workflowlist.length-1" active-icon="success" active-color="#38f">
+                <template v-for="(value,key) in workflowlist" >
+                  <van-step v-if="value.approve_user != null" >
+                    <h3 style="font-size:14px;"> 审批：{{ `${value.approve_user}，意见：${value.action_opinion}` }} </h3>
+                    <p style="font-size:12px;margin-top:2px;"> {{ value.operate_time }}</p>
+                  </van-step>
+                </template>
+              </van-steps>
+
+              <div class="main-loading" :style=" loading ? 'display:block;':'display:none;' ">
+                <van-loading type="spinner" size="48px" style="text-align:text;" />
+              </div>
             </div>
 
-            <van-steps direction="vertical" :active="workflowlist.length-1" active-icon="success" active-color="#38f">
-              <template v-for="(value,key) in workflowlist" >
-                <van-step v-if="value.approve_user != null" >
-                  <h3 style="font-size:14px;"> 审批：{{ `${value.approve_user}，意见：${value.action_opinion}` }} </h3>
-                  <p style="font-size:12px;margin-top:2px;"> {{ value.operate_time }}</p>
-                </van-step>
-              </template>
-            </van-steps>
-
-            <div class="main-loading" :style=" loading ? 'display:block;':'display:none;' ">
-              <van-loading type="spinner" size="48px" style="text-align:text;" />
-            </div>
 
 
             <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
@@ -113,8 +133,8 @@
               <van-goods-action-button type="danger" text="同意" @click="handleAgree();" />
             </van-goods-action>
 
-            <van-goods-action v-if="(item.bpm_value == 4 && informList.length > 0) && tasktype == 'wait' " >
-              <van-goods-action-button id="informed_confirm" type="danger" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false ">
+              <van-goods-action-button id="informed_confirm" type="danger" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -145,10 +165,6 @@ export default {
             momentNewMsg: true,
             tabname: '1',
             active: 1,
-            alist:[],
-            hlist:[],
-            nlist:[],
-            tlist:[],
             id:'',
             type:'',
             title:'用印登记表',
@@ -165,31 +181,62 @@ export default {
             status:'',
             status_type:'',
             fields:[],
-            item:{},
-            backPath:'/explore',
+            item:{
+              createtime: dayjs().format('YYYY-MM-DD'),
+              filename:'',
+              count:'',
+              dealDepart:'',
+              dealManager:'',
+              approveType:'',
+              contractId:'',
+              signman:'',
+              workno:'',
+              sealtime:'',
+              sealman: '',
+              sealtype: '',
+              confirmStatus: '',//财务确认/档案确认
+              status: '',
+            },
+            backPath:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
             fileList:[],
             loading:false,
             officeList:[],
-            showPicker: false,
-            columns: ['杭州', '宁波', '温州', '绍兴', '湖州', '嘉兴', '金华', '衢州'],
+            tag:{
+              showPicker: false,
+              showPickerSealType:false,
+            },
+            statusType:{
+              'none':'待用印',
+              'seal':'已用印',
+              'receive':'已领取',
+              'sending':'已寄送', //我方先用印，则已用印后，将合同寄给对方
+              'getback':'已寄回', //收到对方盖章后的合同后，接收人，将合同设置为已返回
+              'fronting':'寄前台',
+              'done':'已归档',
+            },
+            sealTypeColumns: ['财务确认' , '档案确认'],
+            sealTypeColumns: ['合同类' , '非合同类'],
+            approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
         }
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        this.renderStatus();
     },
     mounted() {
       this.queryInfo();
-      this.renderStatus();
     },
     methods: {
+      sealTypeConfirm(value) {
+        this.item.sealtype = value;
+        this.tag.showPickerSealType = false;
+      },
       approveTypeConfirm(value) {
-        this.approveType = value;
-        this.showPicker = false;
+        this.item.approveType = value;
+        this.tag.showPicker = false;
       },
       encodeURI(value){
         return window.encodeURIComponent(value);
@@ -222,7 +269,8 @@ export default {
       async queryInfo(){
         try {
           var that = this;
-
+          that.item.sealman = this.getUrlParam('sealman');
+          that.item.status = this.statusType[this.getUrlParam('statustype')];
         } catch (error) {
           console.log(error);
         }
@@ -260,6 +308,12 @@ export default {
 
       },
       async handleConfirm(){
+
+        //第一步，构造form对象
+
+        //第二步，向表单提交form对象数据
+
+        //第三步，回显当前用印登记信息
 
       }
 
