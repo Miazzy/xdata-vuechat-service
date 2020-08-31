@@ -4,7 +4,7 @@
       <div class="weui-cells" style="margin-top:0px;">
 
         <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-          <van-swipe-item>欢迎来到鹏程OA移动办公APP</van-swipe-item>
+          <van-swipe-item>欢迎来到移动办公中心</van-swipe-item>
         </van-swipe>
 
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">

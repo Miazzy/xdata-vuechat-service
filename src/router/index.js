@@ -102,6 +102,13 @@ const routes = [{
             "subPage": resolve => require(["../components/app/moments.vue"], resolve)
         }
     }, {
+        path: '/app/sealinfo',
+        name: "用印登记",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealinfo.vue"], resolve)
+        }
+    }, {
         path: '/app/news',
         name: "公告",
         components: {
