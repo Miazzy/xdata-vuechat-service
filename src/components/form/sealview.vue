@@ -438,6 +438,12 @@ export default {
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , this.item.id);
 
+        //设置归档时间
+        value.finance_time = value.finance_time || node.finance_time;
+        value.doc_time = value.doc_time || value.doc_time;
+
+        debugger;
+
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
           //通知经办人前台已收取资料，等待进行归档处理
