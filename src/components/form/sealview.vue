@@ -39,41 +39,29 @@
 
           <van-cell-group>
             <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
-            <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
+            <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
             <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
             <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
             <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
-            <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
+            <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
+            <van-field clickable clearable  label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
-                :columns="approveColumns"
+                :columns="archiveTypeColumns"
                 @cancel="tag.showPicker = false"
-                @confirm="approveTypeConfirm"
-              />
-            </van-popup>
-            <van-popup v-model="tag.showPickerSealType" round position="bottom">
-              <van-picker
-                show-toolbar
-                :columns="sealTypeColumns"
-                @cancel="tag.showPickerSealType = false"
-                @confirm="sealTypeConfirm"
+                @confirm="archiveTypeConfirm"
               />
             </van-popup>
           </van-cell-group>
-
-          <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
-            <iframe  id="iframepage" name="iframepage" frameBorder=0 scrolling=yes width="100%" style="width:100%;height:600px;" :src="purl">
-            </iframe>
-          </div>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
@@ -104,6 +92,10 @@
 
             <van-goods-action  v-if=" item.status == '已用印' && item.type == 'front' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
+
+            <van-goods-action  v-if=" item.status == '移交前台' && item.type == 'done' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -190,9 +182,7 @@ export default {
               'done':'已归档',
             },
             readonly: true,
-            sealTypeColumns: ['财务确认' , '档案确认'],
-            sealTypeColumns: ['合同类' , '非合同类'],
-            approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
+            archiveTypeColumns: ['财务确认' , '档案确认'],
         }
     },
     activated() {
@@ -204,13 +194,8 @@ export default {
     },
     methods: {
 
-      sealTypeConfirm(value) {
-        this.item.sealtype = value;
-        this.tag.showPickerSealType = false;
-      },
-
-      approveTypeConfirm(value) {
-        this.item.approveType = value;
+      archiveTypeConfirm(value) {
+        this.item.archiveType = value;
         this.tag.showPicker = false;
       },
 
@@ -314,7 +299,7 @@ export default {
                       .set('accept', 'json');
 
         //通知前台准备接受资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料等待移交通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -382,10 +367,10 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=front&type=done`);
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , seal_time: time});
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , seal_time: time});
 
         //通知经办人前台已收取资料，等待进行归档处理
         await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
@@ -397,7 +382,6 @@ export default {
 
         //修改用印状态
         this.item.status = '移交前台';
-        this.item.sealtime = time;
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -406,6 +390,69 @@ export default {
         });
 
       },
+
+      async handleArchive(){
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印资料归档',
+          message: '请确认进行‘资料归档’操作，确认后生成台账！',
+        })
+
+        //系统编号
+        const id = this.getUrlParam('id');
+        //领取人邮箱
+        const email = this.item.dealMail;
+        //提示信息
+        const message = `已向财务/档案相关人员推送邮件通知！`;
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        //回调地址
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=front&type=done`);
+
+        let node = null;
+
+        if(this.item.archiveType == '财务归档'){
+          node = {id , status: '财务归档' , finance_time: time};
+        } else if(this.item.archiveType == '档案归档'){
+          node = {id , status: '档案归档' , archive_time: time};
+        } else {
+          //弹出用印推送成功提示
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请选择归档类型！',
+          });
+          return false;
+        }
+
+        //修改状态为已用印
+        manageAPI.patchTableData(`bs_seal_regist` , id , node);
+
+        //查询归档状态
+        const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
+
+        if(value.finance_time != '' && value.doc_time != ''){
+
+          //通知经办人前台已收取资料，等待进行归档处理
+          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+                         .set('accept', 'json');
+
+          //通知前台准备接受资料
+          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                         .set('accept', 'json');
+
+        }
+
+        //修改用印状态
+        this.item.status = node.status;
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: `${this.item.archiveType}完成！`,
+        });
+
+      }
 
     }
 }
