@@ -98,6 +98,10 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
+            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="完成归档"  @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
+
           </div>
 
           <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
@@ -179,6 +183,7 @@ export default {
               'sending':'已寄送', //我方先用印，则已用印后，将合同寄给对方
               'getback':'已寄回', //收到对方盖章后的合同后，接收人，将合同设置为已返回
               'front':'移交前台',
+              'archive':'归档完成',
               'done':'已归档',
             },
             readonly: true,
@@ -396,7 +401,7 @@ export default {
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印资料归档',
-          message: '请确认进行‘资料归档’操作，确认后生成台账！',
+          message: '请确认进行‘资料归档’操作！',
         })
 
         //系统编号
@@ -408,7 +413,7 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=front&type=done`);
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=archive&type=archive`);
 
         let node = null;
 
@@ -434,12 +439,15 @@ export default {
         if(value.finance_time != '' && value.doc_time != ''){
 
           //通知经办人前台已收取资料，等待进行归档处理
-          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
                          .set('accept', 'json');
 
           //通知前台准备接受资料
-          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                          .set('accept', 'json');
+
+          //修改状态为已用印
+          manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
 
         }
 
@@ -450,6 +458,24 @@ export default {
         await vant.Dialog.alert({
           title: '温馨提示',
           message: `${this.item.archiveType}完成！`,
+        });
+
+      },
+
+      async handleFinaly(){
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印资料归档',
+          message: '请确认进行‘完成归档’并生成用印台账！',
+        });
+
+        //TODO生成台账
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: `用印归档完成，已生成台账！`,
         });
 
       }
