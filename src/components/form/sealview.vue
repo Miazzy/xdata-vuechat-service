@@ -5,7 +5,7 @@
 
     <header id="wx-header">
         <div class="center">
-            <span>用印确认</span>
+            <span>印章管理</span>
         </div>
     </header>
 
@@ -21,10 +21,12 @@
               :text="title"
             />
         </div>
-        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;font-size:18px;` : `border-bottom: 0px solid #329ff0;font-size:18px;` ">
-             {{bname}}
-          </div>
+        <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
+          <van-row>
+            <van-col span="8"></van-col>
+            <van-col span="8">盖章确认</van-col>
+            <van-col span="8"></van-col>
+          </van-row>
         </div>
       </div>
 
@@ -32,7 +34,6 @@
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-
         </div>
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
@@ -286,6 +287,20 @@ export default {
     }
 }
 </script>
+<style>
+  .van-field__label {
+      -webkit-box-flex: 0;
+      -webkit-flex: none;
+      flex: none;
+      box-sizing: border-box;
+      width: 30%;
+      margin-right: 12px;
+      color: #646566;
+      text-align: left;
+      word-wrap: break-word;
+      font-size: 0.92rem;
+  }
+</style>
 <style scoped>
     @import "../../assets/css/explore.css";
 

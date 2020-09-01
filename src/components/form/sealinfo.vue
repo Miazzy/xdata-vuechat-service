@@ -5,13 +5,14 @@
 
     <header id="wx-header">
         <div class="center">
-            <span>用印登记</span>
+            <span>印章管理</span>
         </div>
     </header>
 
     <section>
 
       <div class="weui-cells" style="margin-top:0px;">
+
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
           <van-notice-bar
               v-show=" title!='' && title != null && typeof title != 'undefined' "
@@ -21,20 +22,21 @@
               :text="title"
             />
         </div>
-        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;font-size:18px;` : `border-bottom: 0px solid #329ff0;font-size:18px;` ">
-             {{bname}}
-          </div>
-        </div>
-      </div>
 
-      <van-tag style="position: absolute; top: 54px; right: 0px; z-index: 1000; border-radius: 30px 0px 0px 30px;" :type="status_type"> {{ ` ${status}` }}</van-tag>
+        <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
+          <van-row>
+            <van-col span="8"></van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">用印登记表</van-col>
+            <van-col span="8"></van-col>
+          </van-row>
+        </div>
+
+      </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-
         </div>
-        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+        <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
             <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
@@ -44,7 +46,7 @@
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
             <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
             <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
-            <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
+            <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
@@ -65,6 +67,11 @@
                 @confirm="sealTypeConfirm"
               />
             </van-popup>
+          </van-cell-group>
+
+          <van-cell-group style="margin-top:10px;">
+            <van-cell value="上传附件" style="margin-left:0px;margin-left:-0px;font-size: 0.95rem;" />
+            <van-uploader style="margin:0px 15px;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -156,36 +163,53 @@ export default {
               'fronting':'寄前台',
               'done':'已归档',
             },
+            fileList: [],
             readonly: false,
             sealTypeColumns: ['财务确认' , '档案确认'],
             sealTypeColumns: ['合同类' , '非合同类'],
             approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
         }
     },
-    activated() {
+    async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
-    mounted() {
+    async mounted() {
       this.queryInfo();
     },
     methods: {
+
+      afterRead(file) {
+
+        file.status = 'uploading';
+        file.message = '上传中...';
+
+        setTimeout(() => {
+          file.status = 'failed';
+          file.message = '上传成功';
+        }, 1000);
+      },
+
       sealTypeConfirm(value) {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
       },
+
       approveTypeConfirm(value) {
         this.item.approveType = value;
         this.tag.showPicker = false;
       },
+
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+
       getUrlParam(name) {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
           var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
+
       queryPictureList(files){
         let list = files.split(',');
         list = list.filter((item)=>{
@@ -196,6 +220,7 @@ export default {
         });
         return list;
       },
+
       queryOfficeList(files){
         let list = files.split(',');
         list = list.filter((item)=>{
@@ -206,6 +231,7 @@ export default {
         });
         return list;
       },
+
       async queryInfo(){
         try {
           var that = this;
@@ -215,6 +241,7 @@ export default {
           console.log(error);
         }
       },
+
       async saveAsFile(file , name){
         try {
           window.saveAs(file , name);
@@ -222,10 +249,20 @@ export default {
           console.log(error);
         }
       },
+
       async handleConfirm(){
+
+        //此处可以加分布式锁，防止高并发合同编号相同
+
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
+        maxinfo = maxinfo.body[0];
+        const maxno = (maxinfo.maxno + 100001).toString().slice(-4)
+        this.item.contractId = `LD[${dayjs().format('YYYYMMDD')}]${maxno}`;
 
         //第一步，构造form对象
         const item = this.item;
+        const no = maxinfo.maxno + 1;
         const id = tools.queryUniqueID();
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -242,7 +279,8 @@ export default {
         const workno = item.workno;
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
-        const elem = {id , create_by , create_time , filename , count , deal_depart , deal_manager , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
+
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
@@ -278,6 +316,20 @@ export default {
     }
 }
 </script>
+<style>
+  .van-field__label {
+      -webkit-box-flex: 0;
+      -webkit-flex: none;
+      flex: none;
+      box-sizing: border-box;
+      width: 30%;
+      margin-right: 12px;
+      color: #646566;
+      text-align: left;
+      word-wrap: break-word;
+      font-size: 0.92rem;
+  }
+</style>
 <style scoped>
     @import "../../assets/css/explore.css";
 
@@ -290,7 +342,6 @@ export default {
     }
 
     .app-header {
-        /* position: absolute; */
         position: relative;
         transition: 0.3s;
         width: 100%;
