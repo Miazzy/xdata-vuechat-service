@@ -44,7 +44,8 @@
             <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
-            <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+            <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealMail" placeholder="请输入经办人" />
+            <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealManager" placeholder="请输入经办人的邮箱地址" />
             <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
             <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
@@ -70,8 +71,8 @@
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
-            <van-cell value="上传附件" style="margin-left:0px;margin-left:-0px;font-size: 0.95rem;" />
-            <van-uploader style="margin:0px 15px;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
+            <van-cell value="上传附件" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -271,6 +272,7 @@ export default {
         const seal_type = item.sealtype;
         const deal_depart = item.dealDepart;
         const deal_manager = item.dealManager;
+        const deal_mail = item.dealMail;
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
         const seal_man = item.sealman;
@@ -280,7 +282,7 @@ export default {
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;

@@ -24,7 +24,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8">盖章确认</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">用印登记确认</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -35,15 +35,16 @@
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
         </div>
-        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+        <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-            <van-field :readonly="readonly" clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+            <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
             <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
             <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
             <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+            <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
             <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
@@ -247,6 +248,7 @@ export default {
               count: value.count,
               dealDepart: value.deal_depart,
               dealManager: value.deal_manager,
+              dealMail: value.deal_mail,
               approveType: value.approve_type,
               contractId: value.contract_id,
               signman: value.sign_man,
