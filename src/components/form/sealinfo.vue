@@ -252,31 +252,6 @@ export default {
           console.log(error);
         }
       },
-      async queryWorkflow(){
-
-      },
-      async renderCSS(){
-        setTimeout(() => {
-          this.status_type = 'none';
-        } , 3000)
-      },
-      async renderStatus(){
-        setTimeout(()=>{
-          this.tasktype = window.decodeURIComponent(this.getUrlParam('tasktype'));
-        } , 100);
-      },
-      async queryAnnounce(){
-
-      },
-      async queryEach(){
-
-      },
-      async handleAgree(){
-
-      },
-      async handleDisagree(){
-
-      },
       async handleConfirm(){
 
         //第一步，构造form对象
