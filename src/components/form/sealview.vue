@@ -273,16 +273,46 @@ export default {
       },
 
       async handleAgree(){
+
+        //领取人邮箱
+        const email = this.item.dealMail;
+        //提示信息
+        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
+
         //修改状态为已用印
+        manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已用印'});
 
         //通知签收人领取资料
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处领取/${email}`)
+                      .set('accept', 'json');
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: message,
+        });
 
       },
+
       async handleDisagree(){
 
-        //修改状态为已作废
+        //领取人邮箱
+        const email = this.item.dealMail;
+        //提示信息
+        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
 
-        //通知签收人修改申请
+        //修改状态为已作废
+        manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已作废'});
+
+        //通知签收人领取资料
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处修复用印登录信息/${email}`)
+                      .set('accept', 'json');
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: message,
+        });
 
       },
 

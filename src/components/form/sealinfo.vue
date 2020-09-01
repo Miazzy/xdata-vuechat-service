@@ -253,7 +253,7 @@ export default {
 
       async handleConfirm(){
 
-        //此处可以加分布式锁，防止高并发合同编号相同
+        //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
