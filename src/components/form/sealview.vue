@@ -436,7 +436,61 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , node);
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , this.item.id);
+        const value = await query.queryTableData(`bs_seal_regist` , id);
+
+        //设置归档时间
+        value.finance_time = value.finance_time || node.finance_time;
+        value.doc_time = value.doc_time || node.doc_time;
+
+        if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
+          //推送消息
+          this.handleMessage();
+        } else {
+          //修改用印状态
+          this.item.status = node.status;
+          //弹出用印推送成功提示
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `${this.item.archiveType}完成！`,
+          });
+          //延时推送
+          setTimeout(()=>{
+            this.handleMessage();
+          },1500);
+        }
+
+        this.item.type = '';
+
+
+      },
+
+      async handleFinaly(){
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印资料归档',
+          message: '请确认进行‘完成归档’并生成用印台账！',
+        });
+
+        //TODO生成台账
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: `用印归档完成，已生成台账！`,
+        });
+
+        this.item.type = '';
+
+      },
+
+      async handleMessage(){
+
+        //系统编号
+        const id = this.getUrlParam('id');
+
+        //查询归档状态
+        const value = await query.queryTableData(`bs_seal_regist` , id);
 
         //设置归档时间
         value.finance_time = value.finance_time || node.finance_time;
@@ -466,41 +520,7 @@ export default {
             message: `财务/档案归档完成，推送前台通知！`,
           });
 
-        } else {
-
-          //修改用印状态
-          this.item.status = node.status;
-
-          //弹出用印推送成功提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: `${this.item.archiveType}完成！`,
-          });
         }
-
-        this.item.type = '';
-
-
-      },
-
-      async handleFinaly(){
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印资料归档',
-          message: '请确认进行‘完成归档’并生成用印台账！',
-        });
-
-        //TODO生成台账
-
-        //弹出用印推送成功提示
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: `用印归档完成，已生成台账！`,
-        });
-
-        this.item.type = '';
-
       }
 
     }
