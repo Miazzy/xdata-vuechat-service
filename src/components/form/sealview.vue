@@ -274,6 +274,12 @@ export default {
 
       async handleAgree(){
 
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印确认',
+          message: '请确认进行‘已用印’处理，确认后推送通知！',
+        })
+
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -283,7 +289,7 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已用印'});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处领取/${email}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
                       .set('accept', 'json');
 
         //弹出用印推送成功提示
@@ -296,6 +302,12 @@ export default {
 
       async handleDisagree(){
 
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印作废',
+          message: '请确认进行‘已作废’处理，提交后推送通知！',
+        })
+
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -305,7 +317,7 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已作废'});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处修复用印登录信息/${email}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
                       .set('accept', 'json');
 
         //弹出用印推送成功提示

@@ -39,35 +39,37 @@
         <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-            <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
-            <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
-            <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
-            <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
-            <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
-            <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealMail" placeholder="请输入经办人" />
-            <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealManager" placeholder="请输入经办人的邮箱地址" />
-            <van-field readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
-            <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
-            <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
-            <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
-            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
-            <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
-            <van-popup v-model="tag.showPicker" round position="bottom">
-              <van-picker
-                show-toolbar
-                :columns="approveColumns"
-                @cancel="tag.showPicker = false"
-                @confirm="approveTypeConfirm"
-              />
-            </van-popup>
-            <van-popup v-model="tag.showPickerSealType" round position="bottom">
-              <van-picker
-                show-toolbar
-                :columns="sealTypeColumns"
-                @cancel="tag.showPickerSealType = false"
-                @confirm="sealTypeConfirm"
-              />
-            </van-popup>
+            <van-form @validate="" >
+              <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+              <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
+              <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
+              <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
+              <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
+              <van-field required :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager')" :error-message="message.dealManager" />
+              <van-field required :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
+              <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
+              <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
+              <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
+              <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
+              <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
+              <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+              <van-popup v-model="tag.showPicker" round position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="approveColumns"
+                  @cancel="tag.showPicker = false"
+                  @confirm="approveTypeConfirm"
+                />
+              </van-popup>
+              <van-popup v-model="tag.showPickerSealType" round position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="sealTypeColumns"
+                  @cancel="tag.showPickerSealType = false"
+                  @confirm="sealTypeConfirm"
+                />
+              </van-popup>
+            </van-form>
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
@@ -78,7 +80,7 @@
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
             <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && status == '' ">
-              <van-goods-action-button id="informed_confirm" type="danger" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -128,12 +130,36 @@ export default {
             status:'',
             status_type:'',
             fields:[],
+            message:{
+              filename:'',
+              count:'',
+              dealDepart:'',
+              dealManager:'',
+              dealMail:'',
+              approveType:'',
+              signman:'',
+              workno:'',
+            },
+            valid:{
+              sealtype: '请选择用印类型！',
+              filename:'请输入文件名称！',
+              count:'请输入文件份数！',
+              dealDepart:'请输入经办部门！',
+              dealManager:'请输入经办人!',
+              dealMail:'请输入经办人邮箱!',
+              approveType:'请选择审批类型！',
+              signman:'请输入签收人！',
+              workno:'请输入流程编号！',
+              approveType:'请输入审批类型！',
+              contractId:'请输入合同编号！',
+            },
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
               count:'',
               dealDepart:'',
               dealManager:'',
+              dealMail:'',
               approveType:'',
               contractId:'',
               signman:'',
@@ -179,7 +205,26 @@ export default {
       this.queryInfo();
     },
     methods: {
+      validField(fieldName){
+        //邮箱验证正则表达式
+        const regMail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
 
+        if(this.item[fieldName] == '' || typeof this.item[fieldName] == null){
+          this.message[fieldName] = this.valid[fieldName];
+        } else {
+          this.message[fieldName] = '';
+        }
+
+        if(fieldName == 'dealMail'){
+          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        }
+
+        if(this.message[fieldName] == '' || this.message[fieldName] == null) {
+          return true;
+        } else {
+          return false;
+        }
+      },
       afterRead(file) {
 
         file.status = 'uploading';
@@ -194,11 +239,13 @@ export default {
       sealTypeConfirm(value) {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
+        this.validField('sealtype');
       },
 
       approveTypeConfirm(value) {
         this.item.approveType = value;
         this.tag.showPicker = false;
+        this.validField('approveType');
       },
 
       encodeURI(value){
@@ -254,6 +301,22 @@ export default {
       async handleConfirm(){
 
         //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
+
+        //先验证是否合法
+        const keys = Object.keys({sealtype:'', filename:'', count:'', dealDepart:'', dealManager:'',dealMail:'', approveType:'',  signman:'', workno:'',})
+        const invalidKey = keys.find(key => {
+          return !this.validField(key);
+        });
+
+        debugger
+
+        if(invalidKey != '' && invalidKey != null){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请检查表单填写内容，确认内容是否填写完整无误！',
+          });
+          return false;
+        }
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
