@@ -103,7 +103,7 @@
             </van-goods-action>
 
             <van-goods-action  v-if=" item.status == '已用印' && item.type == 'front' ">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="领取"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -186,7 +186,7 @@ export default {
               'receive':'已领取',
               'sending':'已寄送', //我方先用印，则已用印后，将合同寄给对方
               'getback':'已寄回', //收到对方盖章后的合同后，接收人，将合同设置为已返回
-              'fronting':'寄前台',
+              'front':'移交前台',
               'done':'已归档',
             },
             readonly: true,
@@ -203,22 +203,27 @@ export default {
       this.queryInfo();
     },
     methods: {
+
       sealTypeConfirm(value) {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
       },
+
       approveTypeConfirm(value) {
         this.item.approveType = value;
         this.tag.showPicker = false;
       },
+
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+
       getUrlParam(name) {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
           var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
+
       queryPictureList(files){
         let list = files.split(',');
         list = list.filter((item)=>{
@@ -229,6 +234,7 @@ export default {
         });
         return list;
       },
+
       queryOfficeList(files){
         let list = files.split(',');
         list = list.filter((item)=>{
@@ -239,6 +245,7 @@ export default {
         });
         return list;
       },
+
       async queryInfo(){
         try {
           var that = this;
@@ -343,7 +350,7 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -362,8 +369,8 @@ export default {
 
         //提示确认用印操作
         await vant.Dialog.confirm({
-          title: '用印资料领取',
-          message: '请确认进行‘已领取’操作，确认后财务/档案推送通知！',
+          title: '用印资料移交',
+          message: '请确认进行‘移交前台’操作，确认后财务/档案推送通知！',
         })
 
         //系统编号
@@ -375,21 +382,21 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=front&type=done`);
 
         //修改状态为已用印
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , seal_time: time});
 
-        //通知签收人领取资料
-        // await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
-        //               .set('accept', 'json');
+        //通知经办人前台已收取资料，等待进行归档处理
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+                       .set('accept', 'json');
 
         //通知前台准备接受资料
-        // await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料领取通知/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-        //               .set('accept', 'json');
+        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                       .set('accept', 'json');
 
         //修改用印状态
-        this.item.status = '已用印';
+        this.item.status = '移交前台';
         this.item.sealtime = time;
 
         //弹出用印推送成功提示
