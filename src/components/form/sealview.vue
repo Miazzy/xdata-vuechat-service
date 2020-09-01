@@ -52,7 +52,7 @@
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
-            <van-field clickable clearable  label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
+            <van-field clickable clearable v-if=" item.type == 'done' " label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
@@ -94,7 +94,7 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" item.status == '移交前台' && item.type == 'done' ">
+            <van-goods-action  v-if=" item.type == 'done' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -187,7 +187,7 @@ export default {
               'done':'已归档',
             },
             readonly: true,
-            archiveTypeColumns: ['财务确认' , '档案确认'],
+            archiveTypeColumns: ['财务归档' , '档案归档'],
         }
     },
     activated() {
@@ -398,6 +398,15 @@ export default {
 
       async handleArchive(){
 
+        if(this.item.archiveType == '' || this.item.archiveType == null) {
+          //弹出用印推送成功提示
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请选择归档类型！',
+          });
+          return false;
+        }
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印资料归档',
@@ -420,23 +429,16 @@ export default {
         if(this.item.archiveType == '财务归档'){
           node = {id , status: '财务归档' , finance_time: time};
         } else if(this.item.archiveType == '档案归档'){
-          node = {id , status: '档案归档' , archive_time: time};
-        } else {
-          //弹出用印推送成功提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请选择归档类型！',
-          });
-          return false;
+          node = {id , status: '档案归档' , doc_time: time};
         }
 
         //修改状态为已用印
         manageAPI.patchTableData(`bs_seal_regist` , id , node);
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
+        const value = await query.queryTableData(`bs_seal_regist` , this.item.id);
 
-        if(value.finance_time != '' && value.doc_time != ''){
+        if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
           //通知经办人前台已收取资料，等待进行归档处理
           await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
@@ -449,16 +451,29 @@ export default {
           //修改状态为已用印
           manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
 
+          //修改用印状态
+          this.item.status = '已归档';
+
+          //弹出用印推送成功提示
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `财务/档案归档完成，推送前台通知！`,
+          });
+
+        } else {
+
+          //修改用印状态
+          this.item.status = node.status;
+
+          //弹出用印推送成功提示
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `${this.item.archiveType}完成！`,
+          });
         }
 
-        //修改用印状态
-        this.item.status = node.status;
+        this.item.type = '';
 
-        //弹出用印推送成功提示
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: `${this.item.archiveType}完成！`,
-        });
 
       },
 
@@ -477,6 +492,8 @@ export default {
           title: '温馨提示',
           message: `用印归档完成，已生成台账！`,
         });
+
+        this.item.type = '';
 
       }
 
