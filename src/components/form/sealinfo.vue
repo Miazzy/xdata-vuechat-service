@@ -37,7 +37,7 @@
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-            <van-field :readonly="readonly" clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+            <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
             <van-field readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
             <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
@@ -47,8 +47,8 @@
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
-            <van-field :readonly="readonly" clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
-            <van-field :readonly="readonly" clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
+            <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
@@ -67,37 +67,7 @@
             </van-popup>
           </van-cell-group>
 
-          <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
-            <iframe  id="iframepage" name="iframepage" frameBorder=0 scrolling=yes width="100%" style="width:100%;height:600px;" :src="purl">
-            </iframe>
-          </div>
-
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
-
-            <div v-show=" fileList.length > 0 " style="margin-top:15px;margin-left:7px;">
-              图片附件
-            </div>
-
-            <div style="margin-left:10px;margin-top:10px;">
-              <van-uploader v-model="fileList" multiple  preview-size="100" :lazy-load="true" :show-upload="false" :deletable="false" :preview-options="{closeable:true,loop:true,showIndicators:true,swipeDuration:500}"  />
-            </div>
-
-            <div v-show=" officeList.length > 0 " style="margin-top:15px;margin-left:7px;">
-              其他附件
-            </div>
-
-            <div style="margin-left:10px;margin-top:10px;">
-              <van-cell-group>
-                <template v-for="(value,key) in officeList">
-                  <van-cell class="van-ellipsis" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
-                </template>
-              </van-cell-group>
-            </div>
-
-            <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
-              <van-goods-action-button type="warning" text="驳回" @click="handleDisagree();" />
-              <van-goods-action-button type="danger" text="同意" @click="handleAgree();" />
-            </van-goods-action>
 
             <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
