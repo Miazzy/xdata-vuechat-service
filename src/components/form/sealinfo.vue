@@ -190,6 +190,12 @@ export default {
               'fronting':'寄前台',
               'done':'已归档',
             },
+            mailconfig: {
+              '杨高春': 'yanggc@leading-group.cn',
+              '陈乐丽': 'chenll@leading-group.cn',
+              '周贤磊': 'zhou_32@qq.com',
+              '陈雅兰': 'chenyl0929@leading-group.cn',
+            },
             fileList: [],
             readonly: false,
             sealTypeColumns: ['财务确认' , '档案确认'],
@@ -308,8 +314,6 @@ export default {
           return !this.validField(key);
         });
 
-        debugger
-
         if(invalidKey != '' && invalidKey != null){
           await vant.Dialog.alert({
             title: '温馨提示',
@@ -317,6 +321,12 @@ export default {
           });
           return false;
         }
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印申请',
+          message: '确认提交用印登记申请？',
+        })
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
@@ -364,8 +374,14 @@ export default {
           const title = '用印登记申请';
           const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
           const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=none`);
+          const signmail = this.mailconfig[seal_man];
 
+          //推送群消息，告知印章管理员进行用印处理
           await superagent.get(`http://172.18.254.95:7001/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
+                      .set('accept', 'json');
+
+          //通知签收人领取资料
+          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印登记申请成功通知[${id}]/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件名称：${this.item.filename},合同编号：${this.item.contractId},系统编码：${id} /${this.item.dealMail},${signmail}`)
                       .set('accept', 'json');
 
         } else {

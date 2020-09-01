@@ -49,8 +49,9 @@
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
-            <van-field :readonly="readonly" clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
-            <van-field :readonly="readonly" clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
+            <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
@@ -96,9 +97,13 @@
               </van-cell-group>
             </div>
 
-            <van-goods-action >
+            <van-goods-action v-if="item.status =='待用印' " >
               <van-goods-action-button type="warning" text="作废" @click="handleDisagree();" />
               <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
+            </van-goods-action>
+
+            <van-goods-action  v-if=" item.status == '已用印' && item.type == 'front' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="领取"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -239,10 +244,12 @@ export default {
           var that = this;
           that.item.id = this.getUrlParam('id');
           that.item.status = this.statusType[this.getUrlParam('statustype')];
+          that.item.type = this.getUrlParam('type');
 
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
           this.item = {
+              id: that.item.id,
               createtime: dayjs().format('YYYY-MM-DD'),
               filename: value.filename,
               count: value.count,
@@ -253,11 +260,12 @@ export default {
               contractId: value.contract_id,
               signman: value.sign_man,
               workno: value.workno,
-              sealtime: value.seal_time,
+              sealtime: dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss'),
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
-              status: '',
+              status: value.status,
+              type: that.item.type
             }
 
         } catch (error) {
@@ -280,17 +288,31 @@ export default {
           message: '请确认进行‘已用印’处理，确认后推送通知！',
         })
 
+        //系统编号
+        const id = this.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        //回调地址
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已用印'});
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
                       .set('accept', 'json');
+
+        //通知前台准备接受资料
+        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                      .set('accept', 'json');
+
+        //修改用印状态
+        this.item.status = '已用印';
+        this.item.sealtime = time;
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -308,17 +330,67 @@ export default {
           message: '请确认进行‘已作废’处理，提交后推送通知！',
         })
 
+        //系统编号
+        const id = this.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已作废
-        manageAPI.patchTableData(`bs_seal_regist` , this.item.id , {id:this.item.id, status: '已作废'});
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
+        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
                       .set('accept', 'json');
+
+        //修改用印状态
+        this.item.status = '已作废';
+        this.item.sealtime = time;
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: message,
+        });
+
+      },
+
+      async handleConfirm(){
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印资料领取',
+          message: '请确认进行‘已领取’操作，确认后财务/档案推送通知！',
+        })
+
+        //系统编号
+        const id = this.getUrlParam('id');
+        //领取人邮箱
+        const email = this.item.dealMail;
+        //提示信息
+        const message = `已向财务/档案相关人员推送邮件通知！`;
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        //回调地址
+        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
+
+        //修改状态为已用印
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , seal_time: time});
+
+        //通知签收人领取资料
+        // await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
+        //               .set('accept', 'json');
+
+        //通知前台准备接受资料
+        // await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料领取通知/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        //               .set('accept', 'json');
+
+        //修改用印状态
+        this.item.status = '已用印';
+        this.item.sealtime = time;
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
