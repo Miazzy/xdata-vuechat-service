@@ -42,6 +42,7 @@
             <van-form >
               <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
               <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
+              <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
               <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
               <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
@@ -59,6 +60,14 @@
                   :columns="approveColumns"
                   @cancel="tag.showPicker = false"
                   @confirm="approveTypeConfirm"
+                />
+              </van-popup>
+              <van-popup v-model="tag.showPickerOrderType" round position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="orderTypeColumns"
+                  @cancel="tag.showPickerOrderType = false"
+                  @confirm="orderTypeConfirm"
                 />
               </van-popup>
               <van-popup v-model="tag.showPickerSealType" round position="bottom">
@@ -79,7 +88,7 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && status == '' ">
+            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -136,20 +145,23 @@ export default {
               dealDepart:'',
               dealManager:'',
               dealMail:'',
-              approveType:'',
               signman:'',
               workno:'',
+              sealtype:'',
+              approveType:'',
+              ordertype:'',
+              contractId:'',
             },
             valid:{
-              sealtype: '请选择用印类型！',
               filename:'请输入文件名称！',
               count:'请输入文件份数！',
               dealDepart:'请输入经办部门！',
               dealManager:'请输入经办人!',
               dealMail:'请输入经办人邮箱!',
-              approveType:'请选择审批类型！',
               signman:'请输入签收人！',
               workno:'请输入流程编号！',
+              sealtype: '请选择用印类型！',
+              ordertype:'请选择用印顺序！',
               approveType:'请输入审批类型！',
               contractId:'请输入合同编号！',
             },
@@ -167,6 +179,7 @@ export default {
               sealtime:'',
               sealman: '',
               sealtype: '',
+              ordertype:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -180,6 +193,7 @@ export default {
             tag:{
               showPicker: false,
               showPickerSealType:false,
+              showPickerOrderType:false,
             },
             statusType:{
               'none':'待用印',
@@ -198,7 +212,7 @@ export default {
             },
             fileList: [],
             readonly: false,
-            sealTypeColumns: ['财务确认' , '档案确认'],
+            orderTypeColumns: ['我方先印' , '常规用印'],
             sealTypeColumns: ['合同类' , '非合同类'],
             approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
         }
@@ -215,21 +229,13 @@ export default {
         //邮箱验证正则表达式
         const regMail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
 
-        if(this.item[fieldName] == '' || typeof this.item[fieldName] == null){
-          this.message[fieldName] = this.valid[fieldName];
-        } else {
-          this.message[fieldName] = '';
-        }
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName == 'dealMail'){
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        if(this.message[fieldName] == '' || this.message[fieldName] == null) {
-          return true;
-        } else {
-          return false;
-        }
+        return tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
 
@@ -246,6 +252,12 @@ export default {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
         this.validField('sealtype');
+      },
+
+      orderTypeConfirm(value) {
+        this.item.ordertype = value;
+        this.tag.showPickerOrderType = false;
+        this.validField('ordertype');
       },
 
       approveTypeConfirm(value) {
@@ -309,7 +321,7 @@ export default {
         //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
 
         //先验证是否合法
-        const keys = Object.keys({sealtype:'', filename:'', count:'', dealDepart:'', dealManager:'',dealMail:'', approveType:'',  signman:'', workno:'',})
+        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', dealMail:'', approveType:'',  signman:'', workno:'',})
         const invalidKey = keys.find(key => {
           return !this.validField(key);
         });
