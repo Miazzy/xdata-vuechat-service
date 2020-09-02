@@ -331,8 +331,16 @@ export default {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
         maxinfo = maxinfo.body[0];
-        const maxno = (maxinfo.maxno + 100001).toString().slice(-4)
-        this.item.contractId = `LD[${dayjs().format('YYYYMMDD')}]${maxno}`;
+        var maxno = '';
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          maxno = (maxinfo.maxno + 100001).toString().slice(-4);
+          this.item.contractId = `LDHT[${dayjs().format('YYYYMMDD')}]${maxno}`;
+        } else {
+          maxno = (maxinfo.caxno + 100001).toString().slice(-4);
+          this.item.contractId = `LDPT[${dayjs().format('YYYYMMDD')}]${maxno}`;
+        }
 
         //第一步，构造form对象
         const item = this.item;
@@ -381,7 +389,7 @@ export default {
                       .set('accept', 'json');
 
           //通知签收人领取资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知[${id}]/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件名称：${this.item.filename},合同编号：${this.item.contractId},系统编码：${id} /${this.item.dealMail},${signmail}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知[${id}]/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件名称：${this.item.filename},合同/流水编号：${this.item.contractId},系统编码：${id} /${this.item.dealMail},${signmail}`)
                       .set('accept', 'json');
 
         } else {
