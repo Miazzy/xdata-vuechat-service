@@ -105,7 +105,7 @@
             </van-goods-action>
 
             <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取' || item.status == '已寄送' ) && item.type == 'front' ">
-              <van-goods-action-button v-show=" item.ordertype == '我方先印' " id="informed_confirm" type="danger" native-type="submit" text="确认寄送"  @click="handleSending();" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button v-show=" (item.ordertype == '我方先印' && (item.status == '已用印' || item.status == '已领取')) " id="informed_confirm" type="danger" native-type="submit" text="确认寄送"  @click="handleSending();" style="border-radius: 10px 10px 10px 10px;" />
               <van-goods-action-button v-show=" (item.ordertype != '我方先印' && (item.status == '已用印' || item.status == '已领取')) || (item.ordertype == '我方先印' && item.status == '已寄送')" id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
