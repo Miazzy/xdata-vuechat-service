@@ -420,8 +420,8 @@ export default {
                       .set('accept', 'json');
 
           //通知签收人领取资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}/${this.item.dealMail},${signmail}`)
-                      .set('accept', 'json');
+          // await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}/${this.item.dealMail},${signmail}`)
+          //             .set('accept', 'json');
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';
