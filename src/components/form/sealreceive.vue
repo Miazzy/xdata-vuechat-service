@@ -40,6 +40,7 @@
           <van-cell-group>
             <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
             <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
+            <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
             <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
@@ -152,6 +153,7 @@ export default {
               sealtime:'',
               sealman: '',
               sealtype: '',
+              ordertype: '',
               finance_time:'',
               doc_time:'',
               receive_time:'',
@@ -256,6 +258,7 @@ export default {
               receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
+              ordertype: value.order_type,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
