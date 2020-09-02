@@ -129,7 +129,6 @@ import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as sleep from 'await-sleep';
 
 export default {
     mixins: [window.mixin],
