@@ -54,6 +54,7 @@
             <van-field clearable label="资料领取时间" v-model="item.receive_time" placeholder="--" readonly v-show="!!item.receive_time"/>
             <van-field clearable label="财务归档时间" v-model="item.finance_time" placeholder="--" readonly v-show="!!item.finance_time"/>
             <van-field clearable label="档案归档时间" v-model="item.doc_time" placeholder="--" readonly v-show="!!item.doc_time"/>
+            <van-field clearable label="台账生成时间" v-model="item.done_time" placeholder="--" readonly v-show="!!item.done_time"/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
             <van-field clickable clearable v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time)" label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
             <van-popup v-model="tag.showPicker" round position="bottom">
@@ -101,7 +102,7 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' ">
+            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' && !item.done_time ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="完成归档"  @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -169,6 +170,7 @@ export default {
               finance_time:'',
               doc_time:'',
               receive_time:'',
+              done_time:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -388,7 +390,7 @@ export default {
         const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , seal_time: time});
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
 
         //通知经办人前台已收取资料，等待进行归档处理
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
