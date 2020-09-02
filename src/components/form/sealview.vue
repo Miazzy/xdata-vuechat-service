@@ -52,6 +52,7 @@
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             <van-field clearable label="资料领取时间" v-model="item.receive_time" placeholder="--" readonly v-show="!!item.receive_time"/>
+            <van-field clearable label="移交前台时间" v-model="item.front_time" placeholder="--" readonly v-show="!!item.front_time"/>
             <van-field clearable label="财务归档时间" v-model="item.finance_time" placeholder="--" readonly v-show="!!item.finance_time"/>
             <van-field clearable label="档案归档时间" v-model="item.doc_time" placeholder="--" readonly v-show="!!item.doc_time"/>
             <van-field clearable label="台账生成时间" v-model="item.done_time" placeholder="--" readonly v-show="!!item.done_time"/>
@@ -171,6 +172,7 @@ export default {
               doc_time:'',
               receive_time:'',
               done_time:'',
+              front_time:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -271,6 +273,7 @@ export default {
               doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
               receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
               done_time: value.done_time ? dayjs(value.done_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
