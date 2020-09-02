@@ -82,8 +82,8 @@
 
             <div style="margin-left:10px;margin-top:10px;">
               <van-cell-group>
-                <template v-for="(value,key) in officeList">
-                  <van-cell class="van-ellipsis" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
+                <template  v-for="(value,key) in officeList">
+                  <van-cell class="van-ellipsis" :key="key" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
                 </template>
               </van-cell-group>
             </div>
