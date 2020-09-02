@@ -268,6 +268,7 @@ export default {
               finance_time: value.finance_time ? dayjs(value.finance_time).format('YYYY-MM-DD HH:mm:ss') : '',
               doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
               receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              done_time: value.done_time ? dayjs(value.done_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
@@ -494,6 +495,15 @@ export default {
 
         //TODO生成台账
 
+        //系统编号
+        const id = this.getUrlParam('id');
+
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+        //修改状态为已用印
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , done_time: time });
+
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
@@ -519,11 +529,11 @@ export default {
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
           //通知经办人前台已收取资料，等待进行归档处理
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}/${email}`)
                          .set('accept', 'json');
 
           //通知前台准备接受资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                          .set('accept', 'json');
 
           //修改状态为已用印
