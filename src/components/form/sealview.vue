@@ -310,9 +310,9 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
+        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=seal&type=front`);
         //领取地址
-        const receiveURL = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealreceive?id=${id}&type=receive`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
@@ -390,7 +390,7 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=done&type=done`);
+        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
@@ -440,7 +440,7 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=archive&type=archive`);
+        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=archive&type=archive`);
 
         let node = null;
 

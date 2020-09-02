@@ -373,7 +373,7 @@ export default {
 
           const title = '用印登记申请';
           const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
-          const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=none`);
+          const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=none`);
           const signmail = this.mailconfig[seal_man];
 
           //推送群消息，告知印章管理员进行用印处理
