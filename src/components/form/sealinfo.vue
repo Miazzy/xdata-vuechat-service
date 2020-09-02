@@ -366,6 +366,7 @@ export default {
         const filename = item.filename;
         const count = item.count;
         const seal_type = item.sealtype;
+        const order_type = item.ordertype;
         const deal_depart = item.dealDepart;
         const deal_manager = item.dealManager;
         const deal_mail = item.dealMail;
@@ -378,7 +379,7 @@ export default {
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , approve_type , seal_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
