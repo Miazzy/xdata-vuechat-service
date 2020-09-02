@@ -51,8 +51,10 @@
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="财务归档时间" v-model="item.finance_time" placeholder="--" readonly v-show="!!item.finance_time"/>
+            <van-field clearable label="档案归档时间" v-model="item.doc_time" placeholder="--" readonly v-show="!!item.doc_time"/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
-            <van-field clickable clearable v-if=" item.type == 'done' " label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
+            <van-field clickable clearable v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time)" label="归档类型" v-model="item.archiveType" placeholder="选择归档类型" @click="tag.showPicker = true" />
             <van-popup v-model="tag.showPicker" round position="bottom">
               <van-picker
                 show-toolbar
@@ -94,7 +96,7 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" item.type == 'done' ">
+            <van-goods-action  v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time) && !tag.showPicker">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -124,6 +126,7 @@ import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
+import * as sleep from 'await-sleep';
 
 export default {
     mixins: [window.mixin],
@@ -162,6 +165,8 @@ export default {
               sealtime:'',
               sealman: '',
               sealtype: '',
+              finance_time:'',
+              doc_time:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -257,7 +262,9 @@ export default {
               contractId: value.contract_id,
               signman: value.sign_man,
               workno: value.workno,
-              sealtime: dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss'),
+              sealtime: value.seal_time ? dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              finance_time: value.finance_time ? dayjs(value.finance_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
@@ -433,7 +440,10 @@ export default {
         }
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , node);
+        await manageAPI.patchTableData(`bs_seal_regist` , id , node);
+
+        //延时处理
+        await sleep(300);
 
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
@@ -442,9 +452,14 @@ export default {
         value.finance_time = value.finance_time || node.finance_time;
         value.doc_time = value.doc_time || node.doc_time;
 
-        if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
+        //处理完成标识
+        const archiveFlag = !tools.isNull(value.finance_time) && !tools.isNull(value.doc_time);
+
+        if(archiveFlag){
+          //延时处理
+          await sleep(300);
           //推送消息
-          this.handleMessage(email , url);
+          await this.handleMessage(email , url);
         } else {
           //修改用印状态
           this.item.status = node.status;
@@ -453,14 +468,14 @@ export default {
             title: '温馨提示',
             message: `${this.item.archiveType}完成！`,
           });
+          //延时处理
+          await sleep(1500);
           //延时推送
-          setTimeout(()=>{
-            this.handleMessage(email , url);
-          },1500);
+          await this.handleMessage(email , url);
+
         }
 
         this.item.type = '';
-
 
       },
 
@@ -495,8 +510,6 @@ export default {
         //设置归档时间
         value.finance_time = value.finance_time || node.finance_time;
         value.doc_time = value.doc_time || value.doc_time;
-
-        debugger;
 
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
