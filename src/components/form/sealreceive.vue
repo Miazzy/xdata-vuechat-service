@@ -24,7 +24,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">用印登记确认</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">用印资料领取</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -51,6 +51,7 @@
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="资料领取时间" v-model="item.receive_time" placeholder="--" readonly v-show="!!item.receive_time"/>
             <van-field clearable label="财务归档时间" v-model="item.finance_time" placeholder="--" readonly v-show="!!item.finance_time"/>
             <van-field clearable label="档案归档时间" v-model="item.doc_time" placeholder="--" readonly v-show="!!item.doc_time"/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
@@ -87,21 +88,8 @@
               </van-cell-group>
             </div>
 
-            <van-goods-action v-if="item.status =='待用印' " >
-              <van-goods-action-button type="warning" text="作废" @click="handleDisagree();" />
-              <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
-            </van-goods-action>
-
-            <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取') && item.type == 'front' ">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
-            </van-goods-action>
-
-            <van-goods-action  v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time) && !tag.showPicker">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
-            </van-goods-action>
-
-            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' ">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="完成归档"  @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px;" />
+            <van-goods-action  v-if=" item.status == '已用印' && item.type == 'receive' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认领取"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -167,6 +155,7 @@ export default {
               sealtype: '',
               finance_time:'',
               doc_time:'',
+              receive_time:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -265,6 +254,7 @@ export default {
               sealtime: value.seal_time ? dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss') : '',
               finance_time: value.finance_time ? dayjs(value.finance_time).format('YYYY-MM-DD HH:mm:ss') : '',
               doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
@@ -284,92 +274,12 @@ export default {
         }
       },
 
-      async handleAgree(){
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印确认',
-          message: '请确认进行‘已用印’处理，确认后推送通知！',
-        })
-
-        //系统编号
-        const id = this.getUrlParam('id');
-        //领取人邮箱
-        const email = this.item.dealMail;
-        //提示信息
-        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
-        //操作时间
-        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
-        //领取地址
-        const receiveURL = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealreceive?id=${id}&statustype=seal&type=receive`);
-
-        //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
-
-        //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取，确认：${receiveURL}/${email}`)
-                      .set('accept', 'json');
-
-        //通知前台准备接受资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                      .set('accept', 'json');
-
-        //修改用印状态
-        this.item.status = '已用印';
-        this.item.sealtime = time;
-
-        //弹出用印推送成功提示
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: message,
-        });
-
-      },
-
-      async handleDisagree(){
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印作废',
-          message: '请确认进行‘已作废’处理，提交后推送通知！',
-        })
-
-        //系统编号
-        const id = this.getUrlParam('id');
-        //领取人邮箱
-        const email = this.item.dealMail;
-        //提示信息
-        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
-        //操作时间
-        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-
-        //修改状态为已作废
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
-
-        //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
-                      .set('accept', 'json');
-
-        //修改用印状态
-        this.item.status = '已作废';
-        this.item.sealtime = time;
-
-        //弹出用印推送成功提示
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: message,
-        });
-
-      },
-
       async handleConfirm(){
 
         //提示确认用印操作
         await vant.Dialog.confirm({
-          title: '用印资料移交',
-          message: '请确认进行‘移交前台’操作，确认后财务/档案推送通知！',
+          title: '用印资料领取',
+          message: '请确认进行‘已领取’操作，确认后请及时将资料移交前台！',
         })
 
         //系统编号
@@ -377,25 +287,15 @@ export default {
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
-        const message = `已向财务/档案相关人员推送邮件通知！`;
+        const message = `已完成资料领取！`;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , seal_time: time});
-
-        //通知经办人前台已收取资料，等待进行归档处理
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
-                       .set('accept', 'json');
-
-        //通知前台准备接受资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                       .set('accept', 'json');
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , receive_time: time});
 
         //修改用印状态
-        this.item.status = '移交前台';
+        this.item.status = '已领取';
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -404,139 +304,6 @@ export default {
         });
 
       },
-
-      async handleArchive(){
-
-        if(this.item.archiveType == '' || this.item.archiveType == null) {
-          //弹出用印推送成功提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请选择归档类型！',
-          });
-          return false;
-        }
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印资料归档',
-          message: '请确认进行‘资料归档’操作！',
-        })
-
-        //系统编号
-        const id = this.getUrlParam('id');
-        //领取人邮箱
-        const email = this.item.dealMail;
-        //提示信息
-        const message = `已向财务/档案相关人员推送邮件通知！`;
-        //操作时间
-        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        //回调地址
-        const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=archive&type=archive`);
-
-        let node = null;
-
-        if(this.item.archiveType == '财务归档'){
-          node = {id , status: '财务归档' , finance_time: time};
-        } else if(this.item.archiveType == '档案归档'){
-          node = {id , status: '档案归档' , doc_time: time};
-        }
-
-        //修改状态为已用印
-        await manageAPI.patchTableData(`bs_seal_regist` , id , node);
-
-        //延时处理
-        await sleep(300);
-
-        //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , id);
-
-        //设置归档时间
-        value.finance_time = value.finance_time || node.finance_time;
-        value.doc_time = value.doc_time || node.doc_time;
-
-        //处理完成标识
-        const archiveFlag = !tools.isNull(value.finance_time) && !tools.isNull(value.doc_time);
-
-        if(archiveFlag){
-          //延时处理
-          await sleep(300);
-          //推送消息
-          await this.handleMessage(email , url);
-        } else {
-          //修改用印状态
-          this.item.status = node.status;
-          //弹出用印推送成功提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: `${this.item.archiveType}完成！`,
-          });
-          //延时处理
-          await sleep(1500);
-          //延时推送
-          await this.handleMessage(email , url);
-
-        }
-
-        this.item.type = '';
-
-      },
-
-      async handleFinaly(){
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印资料归档',
-          message: '请确认进行‘完成归档’并生成用印台账！',
-        });
-
-        //TODO生成台账
-
-        //弹出用印推送成功提示
-        await vant.Dialog.alert({
-          title: '温馨提示',
-          message: `用印归档完成，已生成台账！`,
-        });
-
-        this.item.type = '';
-
-      },
-
-      async handleMessage(email , url){
-
-        //系统编号
-        const id = this.getUrlParam('id');
-
-        //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , id);
-
-        //设置归档时间
-        value.finance_time = value.finance_time || node.finance_time;
-        value.doc_time = value.doc_time || value.doc_time;
-
-        if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
-
-          //通知经办人前台已收取资料，等待进行归档处理
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
-                         .set('accept', 'json');
-
-          //通知前台准备接受资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                         .set('accept', 'json');
-
-          //修改状态为已用印
-          manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
-
-          //修改用印状态
-          this.item.status = '已归档';
-
-          //弹出用印推送成功提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: `财务/档案归档完成，推送前台通知！`,
-          });
-
-        }
-      }
 
     }
 }
