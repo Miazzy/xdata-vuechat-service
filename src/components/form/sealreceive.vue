@@ -46,6 +46,7 @@
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
             <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
             <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
+            <van-field :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" />
             <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
@@ -65,6 +66,12 @@
                 @confirm="archiveTypeConfirm"
               />
             </van-popup>
+          </van-cell-group>
+
+          <van-cell-group v-show="item.ordertype == '我方先印' " style="margin-top:10px;">
+            <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
+            <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -157,6 +164,12 @@ export default {
               finance_time:'',
               doc_time:'',
               receive_time:'',
+              frotn_time:'',
+              done_time:'',
+              send_time:'',
+              mobile:'',
+              send_location:'',
+              send_mobile:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -259,6 +272,9 @@ export default {
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               ordertype: value.order_type,
+              mobile: value.mobile,
+              send_mobile: value.send_mobile,
+              send_location: value.send_location,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type

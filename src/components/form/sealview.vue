@@ -45,6 +45,7 @@
             <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
             <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+            <van-field :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" />
             <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
             <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
@@ -67,6 +68,12 @@
                 @confirm="archiveTypeConfirm"
               />
             </van-popup>
+          </van-cell-group>
+
+          <van-cell-group v-show="item.ordertype == '我方先印' " style="margin-top:10px;">
+            <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
+            <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -96,8 +103,9 @@
               <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取') && item.type == 'front' ">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取' || item.status == '已寄送' ) && item.type == 'front' ">
+              <van-goods-action-button v-show=" item.ordertype == '我方先印' " id="informed_confirm" type="danger" native-type="submit" text="确认寄送"  @click="handleSending();" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button v-show=" item.ordertype != '我方先印' " id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
             <van-goods-action  v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time) && !tag.showPicker">
@@ -174,6 +182,10 @@ export default {
               receive_time:'',
               done_time:'',
               front_time:'',
+              send_time:'',
+              mobile:'',
+              send_location:'',
+              send_mobile:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -277,6 +289,9 @@ export default {
               front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               ordertype: value.order_type,
+              mobile: value.mobile,
+              send_mobile: value.send_mobile,
+              send_location: value.send_location,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
@@ -387,6 +402,48 @@ export default {
         //修改用印状态
         this.item.status = '已作废';
         this.item.sealtime = time;
+
+        //弹出用印推送成功提示
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: message,
+        });
+
+      },
+
+      async handleSending(){
+
+        var noname = '合同编号';
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印资料寄送',
+          message: '请确认进行‘寄送’操作，确认前请先进行线下寄件操作！',
+        })
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          noname = '合同编号';
+        } else {
+          noname = '流水编号';
+        }
+
+        //系统编号
+        const id = this.getUrlParam('id');
+        //领取人邮箱
+        const email = this.item.dealMail;
+        //提示信息
+        const message = `用印资料寄送成功！`;
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        //回调地址
+        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
+
+        //修改状态为已用印
+        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已寄送' , send_time: time});
+
+        //修改用印状态
+        this.item.status = '已寄送';
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({

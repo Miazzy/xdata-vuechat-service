@@ -47,6 +47,7 @@
               <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
               <van-field required :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager')" :error-message="message.dealManager" />
+              <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
               <van-field required :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
               <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
@@ -79,6 +80,12 @@
                 />
               </van-popup>
             </van-form>
+          </van-cell-group>
+
+          <van-cell-group v-show="item.ordertype == '我方先印' " style="margin-top:10px;">
+            <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
+            <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
@@ -140,17 +147,18 @@ export default {
             status_type:'',
             fields:[],
             message:{
-              filename:'',
-              count:'',
-              dealDepart:'',
-              dealManager:'',
-              dealMail:'',
-              signman:'',
-              workno:'',
-              sealtype:'',
-              approveType:'',
-              ordertype:'',
-              contractId:'',
+              filename: '',
+              count: '',
+              dealDepart: '',
+              dealManager: '',
+              dealMail: '',
+              signman: '',
+              workno: '',
+              sealtype: '',
+              approveType: '',
+              ordertype: '',
+              mobile: '',
+              contractId: '',
             },
             valid:{
               filename:'请输入文件名称！',
@@ -163,6 +171,7 @@ export default {
               sealtype: '请选择用印类型！',
               ordertype:'请选择用印顺序！',
               approveType:'请输入审批类型！',
+              mobile:'请输入经办人电话!',
               contractId:'请输入合同编号！',
             },
             item:{
@@ -180,6 +189,9 @@ export default {
               sealman: '',
               sealtype: '',
               ordertype:'',
+              mobile:'',
+              send_mobile:'',
+              send_location:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -376,10 +388,13 @@ export default {
         const contract_id = item.contractId;
         const sign_man = item.signman;
         const workno = item.workno;
+        const mobile = item.mobile;
+        const send_location = item.send_location;
+        const send_mobile = item.send_mobile;
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
