@@ -300,11 +300,11 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取/${email}`)
                       .set('accept', 'json');
 
         //通知前台准备接受资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料等待移交通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -340,7 +340,7 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -378,11 +378,11 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , seal_time: time});
 
         //通知经办人前台已收取资料，等待进行归档处理
-        await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
                        .set('accept', 'json');
 
         //通知前台准备接受资料
-        await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                        .set('accept', 'json');
 
         //修改用印状态
@@ -444,7 +444,7 @@ export default {
 
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
           //推送消息
-          this.handleMessage();
+          this.handleMessage(email , url);
         } else {
           //修改用印状态
           this.item.status = node.status;
@@ -455,7 +455,7 @@ export default {
           });
           //延时推送
           setTimeout(()=>{
-            this.handleMessage();
+            this.handleMessage(email , url);
           },1500);
         }
 
@@ -484,7 +484,7 @@ export default {
 
       },
 
-      async handleMessage(){
+      async handleMessage(email , url){
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -501,11 +501,11 @@ export default {
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
           //通知经办人前台已收取资料，等待进行归档处理
-          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
                          .set('accept', 'json');
 
           //通知前台准备接受资料
-          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                          .set('accept', 'json');
 
           //修改状态为已用印

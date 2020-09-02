@@ -377,11 +377,11 @@ export default {
           const signmail = this.mailconfig[seal_man];
 
           //推送群消息，告知印章管理员进行用印处理
-          await superagent.get(`http://172.18.254.95:7001/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
                       .set('accept', 'json');
 
           //通知签收人领取资料
-          await superagent.get(`http://172.18.254.95:7001/api/v1/mail/用印登记申请成功通知[${id}]/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件名称：${this.item.filename},合同编号：${this.item.contractId},系统编码：${id} /${this.item.dealMail},${signmail}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知[${id}]/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件名称：${this.item.filename},合同编号：${this.item.contractId},系统编码：${id} /${this.item.dealMail},${signmail}`)
                       .set('accept', 'json');
 
         } else {
