@@ -51,6 +51,7 @@
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="资料领取时间" v-model="item.receive_time" placeholder="--" readonly v-show="!!item.receive_time"/>
             <van-field clearable label="财务归档时间" v-model="item.finance_time" placeholder="--" readonly v-show="!!item.finance_time"/>
             <van-field clearable label="档案归档时间" v-model="item.doc_time" placeholder="--" readonly v-show="!!item.doc_time"/>
             <van-field clearable label="流程状态" v-model="item.status" placeholder="" readonly/>
@@ -167,6 +168,7 @@ export default {
               sealtype: '',
               finance_time:'',
               doc_time:'',
+              receive_time:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -265,6 +267,7 @@ export default {
               sealtime: value.seal_time ? dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss') : '',
               finance_time: value.finance_time ? dayjs(value.finance_time).format('YYYY-MM-DD HH:mm:ss') : '',
               doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
               sealman: value.seal_man,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               confirmStatus: '',//财务确认/档案确认
@@ -303,13 +306,13 @@ export default {
         //回调地址
         const url = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealview?id=${id}&statustype=seal&type=front`);
         //领取地址
-        const receiveURL = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealreceive?id=${id}&statustype=seal&type=receive`);
+        const receiveURL = encodeURIComponent(`http://10.100.123.119:8080/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，请及时到印章管理处（@${this.item.sealman}）领取，确认：${receiveURL}/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时领取/${email}?rurl=${receiveURL}`)
                       .set('accept', 'json');
 
         //通知前台准备接受资料
@@ -346,7 +349,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已作废
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
         //通知签收人领取资料
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)

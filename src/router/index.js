@@ -110,10 +110,17 @@ const routes = [{
         }
     }, {
         path: '/app/sealview',
-        name: "用印登记",
+        name: "用印归档",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/sealview.vue"], resolve)
+        }
+    }, {
+        path: '/app/sealreceive',
+        name: "用印领取",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealreceive.vue"], resolve)
         }
     }, {
         path: '/app/news',
