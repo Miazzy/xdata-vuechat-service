@@ -318,7 +318,7 @@ export default {
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，请及时领取/${email}?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，合同编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
                       .set('accept', 'json');
 
         //通知前台准备接受资料
