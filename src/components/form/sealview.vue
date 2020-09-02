@@ -329,9 +329,12 @@ export default {
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
                       .set('accept', 'json');
 
-        //通知前台准备接受资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                      .set('accept', 'json');
+        //如果是合同类才走后续流程，如果是非合同类则通知经办人领取即可
+        if(this.item.sealtype === '合同类'){
+          //通知前台准备接受资料
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                        .set('accept', 'json');
+        }
 
         //修改用印状态
         this.item.status = '已用印';
