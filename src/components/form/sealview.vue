@@ -294,11 +294,20 @@ export default {
 
       async handleAgree(){
 
+        var noname = '合同编号';
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印确认',
           message: '请确认进行‘已用印’处理，确认后推送通知！',
         })
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          noname = '合同编号';
+        } else {
+          noname = '流水编号';
+        }
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -317,11 +326,11 @@ export default {
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知[${id}]/文件:‘${this.item.filename}’已用印，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
                       .set('accept', 'json');
 
         //通知前台准备接受资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知[${id}]/文件:‘${this.item.filename}’已用印，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -338,11 +347,20 @@ export default {
 
       async handleDisagree(){
 
+        var noname = '合同编号';
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印作废',
           message: '请确认进行‘已作废’处理，提交后推送通知！',
         })
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          noname = '合同编号';
+        } else {
+          noname = '流水编号';
+        }
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -357,7 +375,7 @@ export default {
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
         //通知签收人领取资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知[${id}]/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId}/${email}`)
                       .set('accept', 'json');
 
         //修改用印状态
@@ -374,11 +392,20 @@ export default {
 
       async handleConfirm(){
 
+        var noname = '合同编号';
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印资料移交',
           message: '请确认进行‘移交前台’操作，确认后财务/档案推送通知！',
         })
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          noname = '合同编号';
+        } else {
+          noname = '流水编号';
+        }
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -395,11 +422,11 @@ export default {
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
 
         //通知经办人前台已收取资料，等待进行归档处理
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知[${id}]/文件:‘${this.item.filename}’已移交前台，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知(${this.item.contractId})/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
                        .set('accept', 'json');
 
         //通知前台准备接受资料
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                        .set('accept', 'json');
 
         //修改用印状态
@@ -520,11 +547,20 @@ export default {
 
       async handleMessage(email , url){
 
+        var noname = '合同编号';
+
         //系统编号
         const id = this.getUrlParam('id');
 
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
+
+        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+        if(this.item.sealtype === '合同类') {
+          noname = '合同编号';
+        } else {
+          noname = '流水编号';
+        }
 
         //设置归档时间
         value.finance_time = value.finance_time || node.finance_time;
@@ -533,11 +569,11 @@ export default {
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
           //通知经办人前台已收取资料，等待进行归档处理
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知[${id}]/文件:‘${this.item.filename}’已归档，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}/${email}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知(${this.item.contractId})/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}/${email}`)
                          .set('accept', 'json');
 
           //通知前台准备接受资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，合同/流水编号:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                          .set('accept', 'json');
 
           //修改状态为已用印
