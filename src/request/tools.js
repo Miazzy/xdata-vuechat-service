@@ -127,6 +127,14 @@ export function isBlank(data) {
     }
 }
 
+/**
+ * @function JS Sleep休眠函数
+ * @param {*} time
+ */
+export async function sleep(time = 1000) {
+    return new Promise(function(resolve) { return setTimeout(resolve, time) });
+}
+
 
 /**
  * 深度克隆对象、数组

@@ -454,7 +454,7 @@ export default {
         await manageAPI.patchTableData(`bs_seal_regist` , id , node);
 
         //延时处理
-        await sleep(300);
+        await tools.sleep(300);
 
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
@@ -468,7 +468,7 @@ export default {
 
         if(archiveFlag){
           //延时处理
-          await sleep(300);
+          await tools.sleep(300);
           //推送消息
           await this.handleMessage(email , url);
         } else {
@@ -480,7 +480,7 @@ export default {
             message: `${this.item.archiveType}完成！`,
           });
           //延时处理
-          await sleep(1500);
+          await tools.sleep(1500);
           //延时推送
           await this.handleMessage(email , url);
 
