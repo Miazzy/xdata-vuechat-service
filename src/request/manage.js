@@ -328,6 +328,13 @@ export async function postTableData(tableName, node) {
     tableName = tableName.toLowerCase();
     //Post数据的URL地址
     var insertURL = `${window.requestAPIConfig.restapi}/api/${tableName}`;
+    //设置node为value
+    const value = node;
+
+    //设置时间格式
+    Object.keys(value).map(key => {
+        value[key] = key.includes('_time') && value[key] ? dayjs(value[key]).format('YYYY-MM-DD HH:mm:ss') : value[key];
+    })
 
     //如果传入数据为数组，则URL添加bulk路径
     if (typeof node != 'undefined' && node != null && node instanceof Array) {
