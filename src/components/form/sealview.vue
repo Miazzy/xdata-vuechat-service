@@ -637,8 +637,6 @@ export default {
           message: '请确认进行‘完成归档’并生成用印台账！',
         });
 
-        //TODO生成台账
-
         //系统编号
         const id = this.getUrlParam('id');
 
@@ -653,7 +651,7 @@ export default {
 
         //设置时间格式
         Object.keys(value).map( key => {
-          value[key] = key.includes('_time') ? dayjs(value[key]).format('YYYY-MM-DD HH:mm:ss') : value[key];
+          value[key] = key.includes('_time') && value[key] ? dayjs(value[key]).format('YYYY-MM-DD HH:mm:ss') : value[key];
         })
 
         //将数据转存到用印台账记录中
