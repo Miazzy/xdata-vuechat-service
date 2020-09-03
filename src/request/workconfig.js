@@ -25,10 +25,11 @@ export const config = {
  */
 export const group = {
     Group_LD: {
-        seal: 'yanggc,chenll,zhouxl0121',
-        front: 'zhouxl0627',
-        archive: 'chenyl0929',
+        seal: 'yanggc,chenll,zhouxl0121,zhaozy1028',
+        front: 'zhouxl0627,zhaozy1028',
+        archive: 'chenyl0929,zhaozy1028',
         prefix: 'LD',
+        name: 'Group_LD',
     },
 }
 

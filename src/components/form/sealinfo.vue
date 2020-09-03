@@ -348,6 +348,9 @@ export default {
           noname = '流水编号';
         }
 
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+
         //第一步，构造form对象
         const item = this.item;
         const no = maxinfo.maxno + 1;
@@ -399,16 +402,16 @@ export default {
           //领取地址
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-          //推送群消息，告知印章管理员进行用印处理
+          //推送群消息，告知印章管理员进行用印处理(企业微信群)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
                       .set('accept', 'json');
 
-          //通知签收人领取资料
+          //通知签收人领取资料(企业微信发送)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
                        .set('accept', 'json');
 
-          //通知印章人领取资料
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
+          //通知印章人领取资料(企业微信发送)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
                        .set('accept', 'json');
 
         } else {
