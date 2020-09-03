@@ -139,6 +139,7 @@ import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
+import * as workconfig from '@/request/workconfig';
 
 export default {
     mixins: [window.mixin],
@@ -164,12 +165,16 @@ export default {
             status:'',
             status_type:'',
             fields:[],
+            sealuserid:'',
+            message: workconfig.compValidation.seal.message,
+            valid: workconfig.compValidation.seal.valid,
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
               count:'',
               dealDepart:'',
               dealManager:'',
+              username:'',
               approveType:'',
               contractId:'',
               signman:'',
@@ -190,6 +195,10 @@ export default {
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
+            statusType: workconfig.statusType,
+            mailconfig: workconfig.mailconfig,
+            config: workconfig.config,
+            group: workconfig.group,
             backPath:'/app',
             workflowlist:[],
             announces:[],
@@ -201,18 +210,11 @@ export default {
               showPicker: false,
               showPickerSealType:false,
             },
-            statusType:{
-              'none':'待用印',
-              'seal':'已用印',
-              'receive':'已领取',
-              'sending':'已寄送', //我方先用印，则已用印后，将合同寄给对方
-              'getback':'已寄回', //收到对方盖章后的合同后，接收人，将合同设置为已返回
-              'front':'移交前台',
-              'archive':'归档完成',
-              'done':'已归档',
-            },
             readonly: true,
-            archiveTypeColumns: ['财务归档' , '档案归档'],
+            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            approveColumns: workconfig.compcolumns.approveColumns,
         }
     },
     activated() {
@@ -278,6 +280,7 @@ export default {
               dealDepart: value.deal_depart,
               dealManager: value.deal_manager,
               dealMail: value.deal_mail,
+              username: value.username,
               approveType: value.approve_type,
               contractId: value.contract_id,
               signman: value.sign_man,
@@ -333,6 +336,8 @@ export default {
         const id = this.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
+        //领取人OA账户
+        const username = this.item.username;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
@@ -345,13 +350,17 @@ export default {
         //修改状态为已用印
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
 
-        //通知签收人领取资料
+        //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
                       .set('accept', 'json');
 
+        //通知签收人领取资料(企业微信通知)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已用印，请及时领取。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
+                       .set('accept', 'json');
+
         //如果是合同类才走后续流程，如果是非合同类则通知经办人领取即可
         if(this.item.sealtype === '合同类'){
-          //通知前台准备接受资料
+          //通知前台准备接受资料(企业微信群聊通知)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                         .set('accept', 'json');
         }
@@ -389,17 +398,26 @@ export default {
         const id = this.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
+        //领取人OA账户
+        const username = this.item.username;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
+        //领取地址
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
+
         //修改状态为已作废
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
 
-        //通知签收人领取资料
+        //通知签收人领取资料(email邮件通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId}/${email}`)
                       .set('accept', 'json');
+
+        //通知签收人领取资料(企业微信通知)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId}?rurl=${receiveURL}`)
+                       .set('accept', 'json');
 
         //修改用印状态
         this.item.status = '已作废';
@@ -478,16 +496,24 @@ export default {
         const email = this.item.dealMail;
         //提示信息
         const message = `已向财务/档案相关人员推送邮件通知！`;
+        //领取人OA账户
+        const username = this.item.username;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
         const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
+        //回调地址
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
 
         //修改状态为已用印
         manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
 
-        //通知经办人前台已收取资料，等待进行归档处理
+        //通知经办人前台已收取资料，等待进行归档处理(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知(${this.item.contractId})/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+                       .set('accept', 'json');
+
+        //通知经办人前台已收取资料，等待进行归档处理(企业微信通知)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理?rurl=${receiveURL}`)
                        .set('accept', 'json');
 
         //通知前台准备接受资料
@@ -617,8 +643,14 @@ export default {
         //系统编号
         const id = this.getUrlParam('id');
 
+        //领取人OA账户
+        const username = this.item.username;
+
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
+
+        //回调地址
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
@@ -633,11 +665,15 @@ export default {
 
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
-          //通知经办人前台已收取资料，等待进行归档处理
+          //通知经办人已归档资料(email通知)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知(${this.item.contractId})/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}/${email}`)
                          .set('accept', 'json');
 
-          //通知前台准备接受资料
+          //通知经办人已归档资料(企业微信通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${receiveURL}`)
+                       .set('accept', 'json');
+
+          //通知前台准备接受资料(企业微信群聊通知)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                          .set('accept', 'json');
 

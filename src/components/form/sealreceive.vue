@@ -125,6 +125,7 @@ import * as constant from '@/request/constant';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
+import * as workconfig from '@/request/workconfig';
 
 export default {
     mixins: [window.mixin],
@@ -150,6 +151,9 @@ export default {
             status:'',
             status_type:'',
             fields:[],
+            sealuserid:'',
+            message: workconfig.compValidation.seal.message,
+            valid: workconfig.compValidation.seal.valid,
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -176,6 +180,10 @@ export default {
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
+            statusType: workconfig.statusType,
+            mailconfig: workconfig.mailconfig,
+            config: workconfig.config,
+            group: workconfig.group,
             backPath:'/app',
             workflowlist:[],
             announces:[],
@@ -187,18 +195,11 @@ export default {
               showPicker: false,
               showPickerSealType:false,
             },
-            statusType:{
-              'none':'待用印',
-              'seal':'已用印',
-              'receive':'已领取',
-              'sending':'已寄送', //我方先用印，则已用印后，将合同寄给对方
-              'getback':'已寄回', //收到对方盖章后的合同后，接收人，将合同设置为已返回
-              'front':'移交前台',
-              'archive':'归档完成',
-              'done':'已归档',
-            },
             readonly: true,
-            archiveTypeColumns: ['财务归档' , '档案归档'],
+            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            approveColumns: workconfig.compcolumns.approveColumns,
         }
     },
     activated() {
