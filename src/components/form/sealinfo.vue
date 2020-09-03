@@ -47,6 +47,7 @@
               <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
               <van-field required :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager')" :error-message="message.dealManager" />
+              <van-field required :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" @blur="validField('username')" :error-message="message.username" />
               <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
               <van-field required :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
               <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
@@ -158,6 +159,7 @@ export default {
               approveType: '',
               ordertype: '',
               mobile: '',
+              username: '',
               contractId: '',
             },
             valid:{
@@ -172,6 +174,7 @@ export default {
               ordertype:'请选择用印顺序！',
               approveType:'请输入审批类型！',
               mobile:'请输入经办人电话!',
+              username:'请输入经办人的OA账号!',
               contractId:'请输入合同编号！',
             },
             item:{
@@ -181,6 +184,7 @@ export default {
               dealDepart:'',
               dealManager:'',
               dealMail:'',
+              username:'',
               approveType:'',
               contractId:'',
               signman:'',
@@ -333,7 +337,7 @@ export default {
         //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
 
         //先验证是否合法
-        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', dealMail:'', approveType:'',  signman:'', workno:'',})
+        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'',})
         const invalidKey = keys.find(key => {
           return !this.validField(key);
         });
@@ -382,6 +386,7 @@ export default {
         const deal_depart = item.dealDepart;
         const deal_manager = item.dealManager;
         const deal_mail = item.dealMail;
+        const username = item.username;
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
         const seal_man = item.sealman;
@@ -394,7 +399,7 @@ export default {
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
@@ -412,16 +417,20 @@ export default {
 
           const title = '用印登记申请';
           const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
+
           const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=none`);
           const signmail = this.mailconfig[seal_man];
+
+          //领取地址
+          const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
           //推送群消息，告知印章管理员进行用印处理
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
                       .set('accept', 'json');
 
           //通知签收人领取资料
-          // await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印登记申请成功通知/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}/${this.item.dealMail},${signmail}`)
-          //             .set('accept', 'json');
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
+                       .set('accept', 'json');
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';
