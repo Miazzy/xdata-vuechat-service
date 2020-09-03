@@ -651,6 +651,11 @@ export default {
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
 
+        //设置时间格式
+        Object.keys(value).map( key => {
+          value[key] = key.includes('_time') ? dayjs(value[key]).format('YYYY-MM-DD HH:mm:ss') : value[key];
+        })
+
         //将数据转存到用印台账记录中
         await manageAPI.postTableData(`bs_seal_registed` , value);
 
