@@ -400,6 +400,9 @@ export default {
           noname = '流水编号';
         }
 
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+
         //系统编号
         const id = this.getUrlParam('id');
         //领取人邮箱
@@ -454,6 +457,9 @@ export default {
           noname = '流水编号';
         }
 
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+
         //系统编号
         const id = this.getUrlParam('id');
         //领取人邮箱
@@ -495,6 +501,9 @@ export default {
         } else {
           noname = '流水编号';
         }
+
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -557,6 +566,9 @@ export default {
           title: '用印资料归档',
           message: '请确认进行‘资料归档’操作！',
         })
+
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
         const id = this.getUrlParam('id');
@@ -656,6 +668,9 @@ export default {
 
         var noname = '合同编号';
 
+        //公司工作组
+        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+
         //系统编号
         const id = this.getUrlParam('id');
 
@@ -694,7 +709,7 @@ export default {
                          .set('accept', 'json');
 
           //通知前端归档完成，准备生成台账(企业微信消息)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成?rurl=${url}`)
                          .set('accept', 'json');
 
           //修改状态为已用印
