@@ -336,11 +336,11 @@ export default {
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
           maxno = (maxinfo.maxno + 100001).toString().slice(-4);
-          this.item.contractId = `LDHT-YZ[${dayjs().format('YYYYMMDD')}]${maxno}`;
+          this.item.contractId = `LDHT[${dayjs().format('YYYYMMDD')}]${maxno}`;
           noname = '合同编号';
         } else {
           maxno = (maxinfo.caxno + 100001).toString().slice(-4);
-          this.item.contractId = `LDPT-YZ[${dayjs().format('YYYYMMDD')}]${maxno}`;
+          this.item.contractId = `LDPT[${dayjs().format('YYYYMMDD')}]${maxno}`;
           noname = '流水编号';
         }
 
