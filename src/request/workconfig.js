@@ -24,10 +24,11 @@ export const config = {
  * @description 工作组配置
  */
 export const group = {
-    group00: {
+    Group_LD: {
         seal: 'yanggc,chenll,zhouxl0121',
         front: 'zhouxl0627',
         archive: 'chenyl0929',
+        prefix: 'LD',
     },
 }
 

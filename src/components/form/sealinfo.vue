@@ -148,6 +148,7 @@ export default {
             status:'',
             status_type:'',
             fields:[],
+            groupid:'group00',
             sealuserid:'',
             message: workconfig.compValidation.seal.message,
             valid: workconfig.compValidation.seal.valid,
@@ -285,6 +286,7 @@ export default {
           that.item.sealman = this.getUrlParam('sealman');
           that.item.status = this.statusType[this.getUrlParam('statustype')];
           that.sealuserid = this.getUrlParam('sealuserid');
+          that.groupid = this.getUrlParam('groupid') || 'Group_LD';
 
           if(!that.sealuserid){
             that.sealuserid = this.config[that.item.sealman];
@@ -333,14 +335,16 @@ export default {
         var maxno = '';
         var noname = '合同编号';
 
+        //根据用户选择的印章实体公司来设置印章编码
+
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
-          maxno = (maxinfo.maxno + 100001).toString().slice(-4);
-          this.item.contractId = `LDHT[${dayjs().format('YYYYMMDD')}]${maxno}`;
+          maxno = (maxinfo.maxno + 100001).toString().slice(-3);
+          this.item.contractId = `${workconfig.group[this.groupid].prefix}[${dayjs().format('YYYY')}]${maxno}`;
           noname = '合同编号';
         } else {
-          maxno = (maxinfo.caxno + 100001).toString().slice(-4);
-          this.item.contractId = `LDPT[${dayjs().format('YYYYMMDD')}]${maxno}`;
+          maxno = (maxinfo.caxno + 100001).toString().slice(-3);
+          this.item.contractId = `NM[${dayjs().format('YYYY')}]${maxno}`;
           noname = '流水编号';
         }
 
