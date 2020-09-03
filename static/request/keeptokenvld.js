@@ -31,7 +31,7 @@ const yunpanToken = async(that, UUID, md5) => {
         response = localStorage.getItem(`system_user_stoken:${stoken}`);
         let tflag = (response == null || typeof response == 'undefined' || response == '');
         if (tflag) {
-            let url = `https://www.shengtai.club/jeecg-boot/sys/user/list?pageSize=0`;
+            let url = `${window.requestAPIConfig.domain}/jeecg-boot/sys/user/list?pageSize=0`;
             response = (await superagent.get(url).set('x-access-token', stoken))['body'];
             localStorage.setItem(`system_user_stoken:${stoken}`, JSON.stringify(response));
         } else {
@@ -163,7 +163,7 @@ const webchatToken = async(that, UUID, md5) => {
 
     //服务端stoken认证
     try {
-        let url = `https://www.shengtai.club/jeecg-boot/sys/user/list?pageSize=0`;
+        let url = `${window.requestAPIConfig.domain}/jeecg-boot/sys/user/list?pageSize=0`;
         response = (await superagent.get(url).set('x-access-token', stoken))['body'];
         console.log(response);
     } catch (error) {

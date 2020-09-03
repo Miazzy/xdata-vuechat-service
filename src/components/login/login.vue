@@ -36,7 +36,7 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
 
-const loginURL = `https://www.shengtai.club/jeecg-boot/sys/login`;
+const loginURL = `${window.requestAPIConfig.domain}/jeecg-boot/sys/login`;
 
 window.storage = storage;
 
