@@ -123,6 +123,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealreceive.vue"], resolve)
         }
     }, {
+        path: '/app/entryjob',
+        name: "入职引导",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/entryjob.vue"], resolve)
+        }
+    }, {
         path: '/app/news',
         name: "公告",
         components: {

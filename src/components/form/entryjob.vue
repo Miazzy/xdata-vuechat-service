@@ -44,15 +44,28 @@
 
             <van-form >
               <van-cell-group style="margin-top:10px;">
+
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
                 <!-- 登记日期（系统自动生成） -->
-                <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入入职登记日期" readonly />
+                <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
                 <van-field required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="入职岗位" v-model="item.create_time" placeholder="请输入入职岗位！" @blur="validField('create_time')" :error-message="message.create_time"/>
+                <van-field required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPicker = true"/>
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
+
+                <van-popup v-model="tag.showPicker" round position="bottom">
+                  <van-datetime-picker
+                    v-model="item.join_time"
+                    type="date"
+                    title="选择日期"
+                  />
+                </van-popup>
+
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -83,6 +96,20 @@
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 笔记簿/本（HR需要确认/修改） -->
+                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
+                <!-- 入职手册（HR需要确认/修改） -->
+                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
+                <!-- 签字笔/擦（HR需要确认/修改） -->
+                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
+                <!-- 员工工牌（HR需要确认/修改） -->
+                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
+                <!-- 员工照片（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 笔记簿/本（HR需要确认/修改） -->
                 <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
                 <!-- 入职手册（HR需要确认/修改） -->
@@ -213,7 +240,7 @@ export default {
     },
     methods: {
       validField(fieldName){
-        //邮箱验证正则表达式
+        // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
@@ -234,7 +261,9 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
+      joinTimeConfirm(){
 
+      },
       sealTypeConfirm(value) {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;

@@ -504,17 +504,17 @@ export function queryUniqueID(length = 32) {
  * @function 去除字符串中html标签
  * @param {*} str
  */
-export function delHtmlTag(str) {
-    try {
-        if (isNull(str)) {
-            return ""; //去掉所有的html标记
-        } else {
-            return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
+// export function delHtmlTag(str) {
+//     try {
+//         if (isNull(str)) {
+//             return ""; //去掉所有的html标记
+//         } else {
+//             return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 /**
  * @function 字符串缩略函数
