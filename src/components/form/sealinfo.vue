@@ -171,6 +171,11 @@ export default {
               mobile:'',
               send_mobile:'',
               send_location:'',
+              seal:'',     //用印管理员成员组
+              front:'',    //用印前台接受组
+              archive: '', //用印归档组(财务/档案)
+              prefix: '',  //编号前缀
+              name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -283,10 +288,15 @@ export default {
 
         try {
           var that = this;
+
           that.item.sealman = this.getUrlParam('sealman');
           that.item.status = this.statusType[this.getUrlParam('statustype')];
           that.sealuserid = this.getUrlParam('sealuserid');
           that.groupid = this.getUrlParam('groupid') || 'Group_LD';
+
+          that.item.seal = this.getUrlParam('seal'); //用印管理员成员组
+          that.item.front = this.getUrlParam('front');  //用印前台接受组
+          that.item.archive = this.getUrlParam('archive'); //用印归档组(财务/档案)
 
           if(!that.sealuserid){
             that.sealuserid = this.config[that.item.sealman];
@@ -372,12 +382,15 @@ export default {
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
+        const seal = item.seal;
+        const front = item.front;
+        const archive = item.archive;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
         const seal_wflow = this.getUrlParam('statustype');
         const status = this.statusType[this.getUrlParam('statustype')];
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
