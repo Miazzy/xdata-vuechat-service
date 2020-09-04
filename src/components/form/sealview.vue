@@ -51,8 +51,8 @@
             <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
             <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
             <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
-            <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly/>
             <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+            <van-field clearable label="资料盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime" />
             <van-field clearable label="资料领取时间" v-model="item.receive_time" placeholder="--" readonly v-show="!!item.receive_time"/>
             <van-field clearable label="资料寄送时间" v-model="item.send_time" placeholder="--" readonly v-show="!!item.send_time"/>
             <van-field clearable label="移交前台时间" v-model="item.front_time" placeholder="--" readonly v-show="!!item.front_time"/>
