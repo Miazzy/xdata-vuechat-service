@@ -21,6 +21,18 @@ export const config = {
 }
 
 /**
+ * @description 系统配置信息
+ */
+export const system = {
+    config: {
+        regexp: {
+            mail: /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/,
+            mobile: '',
+        }
+    }
+}
+
+/**
  * @description 工作组配置
  */
 export const group = {

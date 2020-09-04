@@ -213,7 +213,7 @@ export default {
     methods: {
       validField(fieldName){
         //邮箱验证正则表达式
-        const regMail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
+        const regMail = workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 

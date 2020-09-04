@@ -41,59 +41,61 @@
         <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
+
             <van-form >
-              <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
-              <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
-              <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
-              <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
-              <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
-              <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
-              <van-field required :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager')" :error-message="message.dealManager" />
-              <van-field required :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" @blur="validField('username')" :error-message="message.username" />
-              <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
-              <van-field required :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
-              <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
-              <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
-              <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
-              <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
-              <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
-              <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
-              <van-popup v-model="tag.showPicker" round position="bottom">
-                <van-picker
-                  show-toolbar
-                  :columns="approveColumns"
-                  @cancel="tag.showPicker = false"
-                  @confirm="approveTypeConfirm"
-                />
-              </van-popup>
-              <van-popup v-model="tag.showPickerOrderType" round position="bottom">
-                <van-picker
-                  show-toolbar
-                  :columns="orderTypeColumns"
-                  @cancel="tag.showPickerOrderType = false"
-                  @confirm="orderTypeConfirm"
-                />
-              </van-popup>
-              <van-popup v-model="tag.showPickerSealType" round position="bottom">
-                <van-picker
-                  show-toolbar
-                  :columns="sealTypeColumns"
-                  @cancel="tag.showPickerSealType = false"
-                  @confirm="sealTypeConfirm"
-                />
-              </van-popup>
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 登记日期（系统自动生成） -->
+                <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入入职登记日期" readonly />
+                <!-- 员工姓名（HR需要确认/修改） -->
+                <van-field required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="入职岗位" v-model="item.create_time" placeholder="请输入入职岗位！" @blur="validField('create_time')" :error-message="message.create_time"/>
+                <!-- 员工照片（1寸照片，用于制作工牌） -->
+                <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="资产配置" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 办公电脑（系统自动生成） -->
+                <van-field required clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" />
+                <!-- 办公座椅（HR需要确认/修改） -->
+                <van-field required clearable label="办公桌椅" v-model="item.username"  placeholder="是否需要配置办公座椅?" />
+                <!-- 办公抽屉（HR需要确认/修改） -->
+                <van-field required clearable label="办公抽屉" v-model="item.create_time" placeholder="是否需要配置办公抽屉?" />
+                <!-- 员工照片（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="其他配置" v-model="item.other_equip" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" show-word-limit />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 笔记簿/本（HR需要确认/修改） -->
+                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
+                <!-- 入职手册（HR需要确认/修改） -->
+                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
+                <!-- 签字笔/擦（HR需要确认/修改） -->
+                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
+                <!-- 员工工牌（HR需要确认/修改） -->
+                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
+                <!-- 员工照片（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 笔记簿/本（HR需要确认/修改） -->
+                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
+                <!-- 入职手册（HR需要确认/修改） -->
+                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
+                <!-- 签字笔/擦（HR需要确认/修改） -->
+                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
+                <!-- 员工工牌（HR需要确认/修改） -->
+                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
+                <!-- 员工照片（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+              </van-cell-group>
+
             </van-form>
-          </van-cell-group>
-
-          <van-cell-group v-show="item.ordertype == '我方先印' " style="margin-top:10px;">
-            <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-            <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
-            <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
-          </van-cell-group>
-
-          <van-cell-group style="margin-top:10px;">
-            <van-cell value="上传附件" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-            <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -199,10 +201,7 @@ export default {
             group: workconfig.group,
             fileList: [],
             readonly: false,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
         }
     },
     async activated() {
@@ -215,7 +214,7 @@ export default {
     methods: {
       validField(fieldName){
         //邮箱验证正则表达式
-        const regMail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
+        const regMail = workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
@@ -240,22 +239,6 @@ export default {
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
         this.validField('sealtype');
-      },
-
-      orderTypeConfirm(value) {
-        this.item.ordertype = value;
-        this.tag.showPickerOrderType = false;
-        this.validField('ordertype');
-      },
-
-      approveTypeConfirm(value) {
-        this.item.approveType = value;
-        this.tag.showPicker = false;
-        this.validField('approveType');
-      },
-
-      encodeURI(value){
-        return window.encodeURIComponent(value);
       },
 
       async queryInfo(){
