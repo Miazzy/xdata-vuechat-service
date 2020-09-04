@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "await-sleep": "0.0.1",
+        "egg-http-proxy": "^1.0.1",
         "element-ui": "^2.13.2",
         "jquery": "^3.5.1",
         "localforage": "^1.7.4",
