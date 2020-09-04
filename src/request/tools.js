@@ -119,7 +119,23 @@ export function isNull(data) {
     }
 }
 
+/**
+ * @function 过滤空对象
+ * @param {*} data
+ */
 export function isBlank(data) {
+    try {
+        return isNull(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/**
+ * @function 过滤空对象
+ * @param {*} data
+ */
+export function isEmpty(data) {
     try {
         return isNull(data);
     } catch (error) {
@@ -403,12 +419,43 @@ export async function queryUrlValid(url) {
     }
 }
 
+/**
+ * 获取URL参数值
+ * @param {*} val
+ */
 export function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg); //匹配目标参数
     if (r != null) return decodeURI(r[2]);
     return null; //返回参数值
 
+}
+
+/**
+ * 获取URL参数值
+ * @param {*} val
+ */
+export function queryUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg); //匹配目标参数
+    if (r != null) return decodeURI(r[2]);
+    return null; //返回参数值
+}
+
+/**
+ * @function URI加密
+ * @param {*} value
+ */
+export function encodeURI(value) {
+    return window.encodeURIComponent(value);
+}
+
+/**
+ * @function URI解密
+ * @param {*} value
+ */
+export function decodeURI(value) {
+    return window.decodeURIComponent(value);
 }
 
 /**
@@ -457,34 +504,34 @@ export function queryUniqueID(length = 32) {
  * @function 去除字符串中html标签
  * @param {*} str
  */
-// export function delHtmlTag(str) {
-//     try {
-//         if (isNull(str)) {
-//             return ""; //去掉所有的html标记
-//         } else {
-//             return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+export function delHtmlTag(str) {
+    try {
+        if (isNull(str)) {
+            return ""; //去掉所有的html标记
+        } else {
+            return deNull(str).replace(/<[^>]+>/g, "").replace(/&nbsp;/g, ""); //去掉所有的html标记
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 /**
  * @function 字符串缩略函数
  * @param {*} str
  */
-// export function abbreviation(str, length = 75) {
-//     try {
+export function abbreviation(str, length = 75) {
+    try {
 
-//         if (deNull(str).length < length) {
-//             return deNull(str).trim();
-//         } else {
-//             return deNull(str).trim().substring(0, length) + '...';
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
+        if (deNull(str).length < length) {
+            return deNull(str).trim();
+        } else {
+            return deNull(str).trim().substring(0, length) + '...';
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 /**
  * @function 检测字符串是否包含字符函数
