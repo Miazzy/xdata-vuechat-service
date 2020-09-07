@@ -394,11 +394,26 @@ export default {
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
                 .set('accept', 'json');
         } else if(!front){
-
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '异常提示',
+            message: '前台的姓名填写有误，未获取到相应信息，请修改后重试！',
+          });
+          return ;
         } else if(!admin){
-
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '异常提示',
+            message: '行政的姓名填写有误，未获取到相应信息，请修改后重试！',
+          });
+          return ;
         } else if(!meal){
-
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '异常提示',
+            message: '食堂的姓名填写有误，未获取到相应信息，请修改后重试！',
+          });
+          return ;
         }
 
         //设置状态

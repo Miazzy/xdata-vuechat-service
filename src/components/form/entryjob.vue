@@ -325,7 +325,7 @@ export default {
           //未获取到HR信息
           await vant.Dialog.alert({
             title: '异常提示',
-            message: '未获取到HR对应姓名的相关信息，请检查修改后重试！',
+            message: 'HR的姓名填写有误，未获取到相应信息，请修改后重试！',
           });
           return ;
         }
