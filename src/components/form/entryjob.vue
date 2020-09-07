@@ -54,15 +54,28 @@
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPicker = true"/>
+                <van-field required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
+                 <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="对接HR" v-model="item.position" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name')" :error-message="message.hr_name"/>
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
-                <van-popup v-model="tag.showPicker" round position="bottom">
+                <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
                   <van-datetime-picker
-                    v-model="item.join_time"
                     type="date"
+                    @cancel="tag.showPickerJoinTime = false"
+                    @confirm="joinTimeConfirm"
+                    :min-date="new Date()"
                     title="选择日期"
+                  />
+                </van-popup>
+
+                <van-popup v-model="tag.showPickerCommon" round position="bottom">
+                  <van-picker
+                    show-toolbar
+                    :columns="commonTypeColumns"
+                    @cancel="tag.showPickerCommon = false"
+                    @confirm="commonTypeConfirm"
                   />
                 </van-popup>
 
@@ -71,55 +84,44 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="资产配置" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 办公电脑（系统自动生成） -->
-                <van-field required clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" />
+                <van-field required clickable clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
                 <!-- 办公座椅（HR需要确认/修改） -->
-                <van-field required clearable label="办公桌椅" v-model="item.username"  placeholder="是否需要配置办公座椅?" />
+                <van-field required clickable clearable label="办公桌椅" v-model="item.username"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
                 <!-- 办公抽屉（HR需要确认/修改） -->
-                <van-field required clearable label="办公抽屉" v-model="item.create_time" placeholder="是否需要配置办公抽屉?" />
+                <van-field required clickable clearable label="办公抽屉" v-model="item.drawer" placeholder="是否需要配置办公抽屉?" @click="tag.showPickerCommon = true ; currentKey = 'drawer'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="其他配置" v-model="item.other_equip" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" show-word-limit />
+                <van-field clearable label="其他配置" v-model="item.other_equip" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" show-word-limit />
+
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 笔记簿/本（HR需要确认/修改） -->
-                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
+                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?"  @click="tag.showPickerCommon = true ; currentKey = 'notebook'; " />
                 <!-- 入职手册（HR需要确认/修改） -->
-                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
+                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" @click="tag.showPickerCommon = true ; currentKey = 'manual'; " />
                 <!-- 签字笔/擦（HR需要确认/修改） -->
-                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
+                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" @click="tag.showPickerCommon = true ; currentKey = 'writingtools'; " />
                 <!-- 员工工牌（HR需要确认/修改） -->
-                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
+                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" @click="tag.showPickerCommon = true ; currentKey = 'badge'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
-              </van-cell-group>
-
-              <van-cell-group style="margin-top:10px;">
-                <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <!-- 笔记簿/本（HR需要确认/修改） -->
-                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
-                <!-- 入职手册（HR需要确认/修改） -->
-                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
-                <!-- 签字笔/擦（HR需要确认/修改） -->
-                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
-                <!-- 员工工牌（HR需要确认/修改） -->
-                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
-                <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+                <van-field clearable label="其他用品" v-model="item.othertools" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <!-- 笔记簿/本（HR需要确认/修改） -->
-                <van-field required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?" />
-                <!-- 入职手册（HR需要确认/修改） -->
-                <van-field required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" />
-                <!-- 签字笔/擦（HR需要确认/修改） -->
-                <van-field required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" />
-                <!-- 员工工牌（HR需要确认/修改） -->
-                <van-field required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" />
-                <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="其他用品" v-model="item.othertools" rows="3" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+                <!-- 行驶证号（HR需要确认/修改） -->
+                <van-field clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
+                <!-- 驾驶证号（HR需要确认/修改） -->
+                <van-field clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
+                <!-- 身份证号（HR需要确认/修改） -->
+                <van-field required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" />
+                <!-- 学历编号（HR需要确认/修改） -->
+                <van-field required clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" />
+                <!-- 学位编号（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" />
+                <!-- 银行卡号（1寸照片，用于制作工牌） -->
+                <van-field required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" />
               </van-cell-group>
 
             </van-form>
@@ -184,30 +186,18 @@ export default {
             message: workconfig.compValidation.seal.message,
             valid: workconfig.compValidation.seal.valid,
             item:{
-              createtime: dayjs().format('YYYY-MM-DD'),
-              filename:'',
-              count:'',
-              dealDepart:'',
-              dealManager:'',
-              dealMail:'',
+              id: '',
+              create_time: dayjs().format('YYYY-MM-DD'),
+              create_by: '',
               username:'',
-              approveType:'',
-              contractId:'',
-              signman:'',
-              workno:'',
-              sealtime:'',
-              sealman: '',
-              sealtype: '',
-              ordertype:'',
-              mobile:'',
-              send_mobile:'',
-              send_location:'',
-              seal:'',     //用印管理员成员组
-              front:'',    //用印前台接受组
-              archive: '', //用印归档组(财务/档案)
-              prefix: '',  //编号前缀
-              name: '',    //流程组名，即Group_XX
-              confirmStatus: '',//财务确认/档案确认
+              position:'',  //入职岗位
+              picture:'',   //员工照片
+              computer:'',  //是否需要电脑配置
+              seat:'',      //是否需要办公座椅
+              drawer:'',    //是否需要办公抽屉drawer
+              other_equip:'',//是否需要其他办公配置
+              prefix: '',   //编号前缀
+              name: '',     //流程组名，即Group_XX
               status: '',
             },
             backPath:'/app',
@@ -219,15 +209,19 @@ export default {
             officeList:[],
             tag:{
               showPicker: false,
-              showPickerSealType:false,
-              showPickerOrderType:false,
+              showPickerCommon: false,
+              showPickerSealType: false,
+              showPickerOrderType: false,
+              showPickerJoinTime: false,
             },
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
             group: workconfig.group,
             fileList: [],
+            currentKey:'',
             readonly: false,
+            commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
         }
     },
@@ -245,7 +239,7 @@ export default {
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
-        if(fieldName == 'dealMail'){
+        if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
@@ -261,16 +255,20 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
-      joinTimeConfirm(){
-
+      // 选择入职时间
+      joinTimeConfirm(value){
+        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
+        this.tag.showPickerJoinTime = false;
+        this.validField('join_time');
       },
-      sealTypeConfirm(value) {
-        this.item.sealtype = value;
-        this.tag.showPickerSealType = false;
-        this.validField('sealtype');
+      // 选择是否
+      commonTypeConfirm(value){
+        this.item[this.currentKey] = value;
+        this.tag.showPickerCommon = false;
+        this.validField(value);
       },
-
-      async queryInfo(){
+      // 获取URL或者二维码信息
+      async queryInfo() {
 
         try {
           this.item.sealman = tools.getUrlParam('sealman');
@@ -279,12 +277,10 @@ export default {
         }
 
       },
-
-      async handleConfirm(){
+      async handleConfirm() {
 
 
       }
-
     }
 }
 </script>

@@ -63,6 +63,7 @@ export const statusType = {
  * @description 下拉组件选择类型
  */
 export const compcolumns = {
+    commonTypeColumns: ['是', '否'],
     archiveTypeColumns: ['财务归档', '档案归档'],
     orderTypeColumns: ['我方先印', '常规用印'],
     sealTypeColumns: ['合同类', '非合同类'],
