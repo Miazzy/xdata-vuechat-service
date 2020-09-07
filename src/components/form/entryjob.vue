@@ -298,9 +298,8 @@ export default {
       // 用户提交入职登记表函数
       async handleConfirm() {
 
+        //显示加载状态
         this.loading = true;
-
-        debugger;
 
         //表单ID
         const id = tools.queryUniqueID();
@@ -317,20 +316,17 @@ export default {
         const resp = await superagent.get(queryURL).set('accept', 'json');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryjob?id=${id}&statustype=none`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=hr`);
 
         // 如果没有获取到返回信息，说明填写的HR姓名有误，如果有获取到HR的返回信息，则执行转换
         if(resp && resp.body && resp.body.length > 0){
-          hrinfo = resp.body.length > 1 ? {id:hrinfo.map(obj => {return obj.id}).join(',')} : resp.body[0];
-          console.log(`hr info ids: ${hrinfo.id}`);
+          hrinfo = resp.body.length > 1 ? {id: resp.body.map(obj => {return obj.id}).join(',')} : resp.body[0];
         } else {
-
           //未获取到HR信息
           await vant.Dialog.alert({
             title: '异常提示',
             message: '未获取到HR对应姓名的相关信息，请检查修改后重试！',
           });
-
           return ;
         }
 

@@ -28,7 +28,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">入职确认表</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">入职登记表</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -50,17 +50,11 @@
                 <!-- 登记日期（系统自动生成） -->
                 <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
+                <van-field :readonly="readonly" clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
+                <van-field :readonly="readonly" clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="前台员工" v-model="item.hr_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="行政管理员工" v-model="item.hr_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="食堂管理员工" v-model="item.hr_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <van-field :readonly="readonly" clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
@@ -88,28 +82,28 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="资产配置" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 办公电脑（系统自动生成） -->
-                <van-field :readonly="readonly" required clickable clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
+                <van-field :readonly="readonly" clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
                 <!-- 办公座椅（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clickable clearable label="办公桌椅" v-model="item.seat"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
+                <van-field :readonly="readonly" clearable label="办公桌椅" v-model="item.seat"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
                 <!-- 办公抽屉（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clickable clearable label="办公抽屉" v-model="item.drawer" placeholder="是否需要配置办公抽屉?" @click="tag.showPickerCommon = true ; currentKey = 'drawer'; " />
+                <van-field :readonly="readonly" clearable label="办公抽屉" v-model="item.drawer" placeholder="是否需要配置办公抽屉?" @click="tag.showPickerCommon = true ; currentKey = 'drawer'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" clearable label="其他配置" v-model="item.other_equip" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" show-word-limit />
+                <van-field :readonly="readonly" clearable label="其他配置" v-model="item.other_equip" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" />
 
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="办公用品" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 笔记簿/本（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?"  @click="tag.showPickerCommon = true ; currentKey = 'notebook'; " />
+                <van-field :readonly="readonly" clearable label="笔记簿/本" v-model="item.notebook" placeholder="是否需要配置笔记簿/本?"  @click="tag.showPickerCommon = true ; currentKey = 'notebook'; " />
                 <!-- 入职手册（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" @click="tag.showPickerCommon = true ; currentKey = 'manual'; " />
+                <van-field :readonly="readonly" clearable label="入职手册" v-model="item.manual"  placeholder="是否需要配置入职手册?" @click="tag.showPickerCommon = true ; currentKey = 'manual'; " />
                 <!-- 签字笔/擦（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" @click="tag.showPickerCommon = true ; currentKey = 'writingtools'; " />
+                <van-field :readonly="readonly" clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" @click="tag.showPickerCommon = true ; currentKey = 'writingtools'; " />
                 <!-- 员工工牌（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" @click="tag.showPickerCommon = true ; currentKey = 'badge'; " />
+                <van-field :readonly="readonly" clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" @click="tag.showPickerCommon = true ; currentKey = 'badge'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" clearable label="其他用品" v-model="item.othertools" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
+                <van-field :readonly="readonly" clearable label="其他用品" v-model="item.othertools" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -119,13 +113,23 @@
                 <!-- 驾驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" v-show="!!item.driver_license" />
                 <!-- 身份证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
+                <van-field :readonly="readonly" clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
+                <van-field :readonly="readonly" clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" required clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
+                <van-field :readonly="readonly" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
+                <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="对接信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="前台员工" v-model="item.front_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="行政员工" v-model="item.admin_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="食堂员工" v-model="item.meal_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
               </van-cell-group>
 
             </van-form>
@@ -134,7 +138,7 @@
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
             <van-goods-action  v-show=" tag.showPickerCommon == false && tag.showPickerJoinTime == false && status == '' ">
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
           </div>
@@ -293,96 +297,114 @@ export default {
       async queryInfo() {
 
         try {
-          this.item.sealman = tools.getUrlParam('sealman');
+
+          //获取用户编号
+          this.item.id = tools.getUrlParam('id');
+
+          debugger;
+
+          //根据编号查询用户登记数据
+          const value = await query.queryTableData(`bs_entry_job` , this.item.id);
+
+          this.item = {
+            id: value.id,
+            create_time: dayjs(value.create_time).format('YYYY-MM-DD'),
+            create_by: value.create_by,
+            username: value.username,
+            position: value.position,    //入职岗位
+            picture: value.picture,     //员工照片
+            computer: value.computer,  //是否需要电脑配置
+            seat: value.seat,      //是否需要办公座椅
+            drawer: value.drawer,    //是否需要办公抽屉drawer
+            other_equip: value.other_equip,//是否需要其他办公配置
+            notebook: value.notebook,  //是否需要笔记本子
+            manual: value.manual,    //是否需要入职手册
+            writingtools: value.writingtools,//是否需要签字笔/擦
+            badge: value.badge,     //员工工牌
+            othertools: value.othertools,//其他用品
+            driving_license: value.driving_license,//行驶证
+            driver_license: value.driver_license,//驾驶证
+            idcard: value.idcard,    //身份证号
+            diploma: value.diploma,   //学历编号
+            bachelor: value.bachelor,  //学位编号
+            bank_card: value.bank_card, //工资银行卡号
+            join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
+            hr_name: value.hr_name,   //对接HR
+            remark: value.remark,    //备注信息
+            status: '待确认',
+          }
+
         } catch (error) {
           console.log(error);
         }
 
       },
-      // 用户提交入职登记表函数
-      async handleConfirm() {
-
-        this.loading = true;
-
-        debugger;
-
-        //表单ID
-        const id = tools.queryUniqueID();
-
-        // 用户对接HR姓名
-        const hr_name = this.item.hr_name;
-        // 对应HR的OA账户信息
-        let hrinfo = {};
-
-        // 查询SQL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,eq,%27${hr_name}%27)&_fields=id,lastname,loginid`;
+      // 查询用户信息
+      async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
+        // 查询前台人员SQL
+        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,eq,%27${name}%27)&_fields=id,lastname,loginid`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
-        const resp = await superagent.get(queryURL).set('accept', 'json');
-
-        // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryjob?id=${id}&statustype=none`);
+        resp = await superagent.get(queryURL).set('accept', 'json');
 
         // 如果没有获取到返回信息，说明填写的HR姓名有误，如果有获取到HR的返回信息，则执行转换
         if(resp && resp.body && resp.body.length > 0){
-          hrinfo = resp.body.length > 1 ? {id:hrinfo.map(obj => {return obj.id}).join(',')} : resp.body[0];
-          console.log(`hr info ids: ${hrinfo.id}`);
-        } else {
-
-          //未获取到HR信息
-          await vant.Dialog.alert({
-            title: '异常提示',
-            message: '未获取到HR对应姓名的相关信息，请检查修改后重试！',
-          });
-
-          return ;
+          front = resp.body.length > 1 ? {id:resp.body.map(obj => {return obj.id}).join(',')} : resp.body[0];
         }
 
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          id,
-          create_time: dayjs().format('YYYY-MM-DD'),
-          create_by: this.item.username,
-          username: this.item.username,
-          position: this.item.position,    //入职岗位
-          picture: this.item.picture,     //员工照片
-          computer: this.item.computer,  //是否需要电脑配置
-          seat: this.item.seat,      //是否需要办公座椅
-          drawer: this.item.drawer,    //是否需要办公抽屉drawer
-          other_equip: this.item.other_equip,//是否需要其他办公配置
-          notebook: this.item.manual,  //是否需要笔记本子
-          manual: this.item.manual,    //是否需要入职手册
-          writingtools: this.item.writingtools,//是否需要签字笔/擦
-          badge: this.item.badge,     //员工工牌
-          othertools: this.item.othertools,//其他用品
-          driving_license: this.item.driving_license,//行驶证
-          driver_license: this.item.driver_license,//驾驶证
-          idcard: this.item.idcard,    //身份证号
-          diploma: this.item.diploma,   //学历编号
-          bachelor: this.item.bachelor,  //学位编号
-          bank_card: this.item.bank_card, //工资银行卡号
-          join_time: this.item.join_time, //入职时间
-          hr_name: hr_name,   //对接HR
-          status: '待确认',
-        }; // 待提交元素
+        // 返回查询结果
+        return front;
+      },
+      // 用户提交入职登记表函数
+      async handleConfirm() {
 
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData('bs_entry_job' , elem);
+        //显示加载状态
+        this.loading = true;
 
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${hrinfo.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)
+        //系统编号
+        const id = this.getUrlParam('id');
+
+        //获取相应对接人员信息
+        const front_name = this.item.front_name;
+        const admin_name = this.item.admin_name;
+        const meal_name = this.item.meal_name;
+
+        //获取相应对接人员OA账号
+        let front , admin , meal , queryURL , resp;
+
+        // 返回预览URL
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=`);
+
+        //操作时间
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+        //修改状态为已确认
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_name , admin_name , meal_name });
+
+        //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
+        front = queryUserInfo(front_name);
+        admin = queryUserInfo(admin_name);
+        meal = queryUserInfo(meal_name);
+
+        if(front && admin && meal){
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
                 .set('accept', 'json');
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
+                .set('accept', 'json');
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
+                .set('accept', 'json');
+        } else if(!front){
+
+        } else if(!admin){
+
+        } else if(!meal){
+
+        }
 
         //设置状态
         this.loading = false;
-        this.status = '待确认';
+        this.status = '已确认';
         this.readonly = true;
-
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已经向HR推送入职登记信息！',
-          });
 
       }
     }
