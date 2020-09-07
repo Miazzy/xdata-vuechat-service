@@ -137,7 +137,7 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <van-goods-action  v-show=" status == '' && role == 'hr' ">
+            <van-goods-action  v-show=" status == '待确认' && role == 'hr' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -306,6 +306,9 @@ export default {
           //根据编号查询用户登记数据
           const value = await query.queryTableData(`bs_entry_job` , this.item.id);
 
+          //设置表单状态
+          this.status = value.status;
+
           this.item = {
             id: value.id,
             create_time: dayjs(value.create_time).format('YYYY-MM-DD'),
@@ -331,6 +334,9 @@ export default {
             join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
             hr_name: value.hr_name,   //对接HR
             remark: value.remark,    //备注信息
+            front_name: value.front_account,
+            admin_name: value.admin_account,
+            meal_name: value.meal_account,
             status: '待确认',
           }
 
@@ -379,19 +385,19 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已确认
-        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_name , admin_name , meal_name });
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_account: front_name , admin_account: admin_name , meal_account: meal_name });
 
         //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
-        front = queryUserInfo(front_name);
-        admin = queryUserInfo(admin_name);
-        meal = queryUserInfo(meal_name);
+        front = await this.queryUserInfo(front_name);
+        admin = await this.queryUserInfo(admin_name);
+        meal = await this.queryUserInfo(meal_name);
 
         if(front && admin && meal){
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
                 .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
                 .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
                 .set('accept', 'json');
         } else if(!front){
           //未获取到HR信息
@@ -420,6 +426,12 @@ export default {
         this.loading = false;
         this.status = '已确认';
         this.readonly = true;
+
+        //未获取到HR信息
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: '已将入职登记通知推送至前台、行政、食堂等相关人员！',
+        });
 
       }
     }
