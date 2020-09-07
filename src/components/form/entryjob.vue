@@ -298,9 +298,50 @@ export default {
       // 用户提交入职登记表函数
       async handleConfirm() {
 
+        this.loading = true;
+
+        // 用户对接HR姓名
+        const hr_name = this.item.hr_name;
+        // 查询SQL
+        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,eq,%27${hr_name}%27)&_fields=id,lastname,loginid`;
+
         //预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
+        const resp = await superagent.get(queryURL).set('accept', 'json');
+
+        if(resp){
+
+        }
 
         //第一步 保存用户数据到数据库中
+        const elem = {
+          id: tools.queryUniqueID(),
+          create_time: dayjs().format('YYYY-MM-DD'),
+          create_by: this.item.username,
+          username: this.item.username,
+          position: this.item.position,    //入职岗位
+          picture: this.item.picture,     //员工照片
+          computer: this.item.computer,  //是否需要电脑配置
+          seat: this.item.seat,      //是否需要办公座椅
+          drawer: this.item.drawer,    //是否需要办公抽屉drawer
+          other_equip: this.item.other_equip,//是否需要其他办公配置
+          notebook: this.item.manual,  //是否需要笔记本子
+          manual: this.item.manual,    //是否需要入职手册
+          writingtools: this.item.writingtools,//是否需要签字笔/擦
+          badge: this.item.badge,     //员工工牌
+          othertools: this.item.othertools,//其他用品
+          driving_license: this.item.driving_license,//行驶证
+          driver_license: this.item.driver_license,//驾驶证
+          idcard: this.item.idcard,    //身份证号
+          diploma: this.item.diploma,   //学历编号
+          bachelor: this.item.bachelor,  //学位编号
+          bank_card: this.item.bank_card, //工资银行卡号
+          join_time: this.item.join_time, //入职时间
+          hr_name: hr_name,   //对接HR
+          status: '待确认',
+        }; // 待提交元素
+
+        //第二步，向表单提交form对象数据
+        const result = await manageAPI.postTableData('bs_entry_job' , elem);
 
         //第二步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
 
