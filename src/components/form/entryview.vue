@@ -378,7 +378,7 @@ export default {
       // 查询用户信息
       async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
         // 查询前台人员SQL
-        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,eq,%27${name}%27)&_fields=id,lastname,loginid`;
+        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,like,%27~${name}~%27)~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         resp = await superagent.get(queryURL).set('accept', 'json');

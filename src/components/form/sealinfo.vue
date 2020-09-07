@@ -273,29 +273,39 @@ export default {
         try {
           if(!!manager){
 
-            let user = await manageAPI.queryUserByName(manager.trim());
+            let user = await manageAPI.queryUserByNameHRM(manager.trim());
             let info = await manageAPI.queryUserBySealData(manager.trim());
 
             if(!!user){
-              this.item.dealManager = user.deal_manager || this.item.dealManager;
-              this.item.mobile = user.mobile;
-              this.item.username = user.loginid;
-              this.item.dealMail = user.email;
-              this.item.signman = manager;
-              if(!user.email){
+              if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
+
+              } else {
+                this.item.dealManager = user.deal_manager || this.item.dealManager;
+                this.item.mobile = user.mobile;
+                this.item.username = user.loginid;
+                this.item.dealMail = user.email;
+                this.item.signman = manager;
+                if(!user.email){
+                  this.item.dealMail = info.deal_mail;
+                  this.item.dealDepart = info.deal_depart;
+                }
+                //缓存特定属性
+                this.cacheUserInfo();
+              }
+            } else if(!user && !!info){
+              if(Array.isArray(info)){ //如果是用户数组列表，则展示列表，让用户自己选择
+
+              } else {
+                this.item.mobile = info.mobile;
+                this.item.username = info.username;
+                this.item.signman = manager;
                 this.item.dealMail = info.deal_mail;
                 this.item.dealDepart = info.deal_depart;
+                //缓存特定属性
+                this.cacheUserInfo();
               }
-            } else if(!user){
-              this.item.mobile = info.mobile;
-              this.item.username = info.username;
-              this.item.signman = manager;
-              this.item.dealMail = info.deal_mail;
-              this.item.dealDepart = info.deal_depart;
             }
 
-            //缓存特定属性
-            this.cacheUserInfo();
           }
         } catch (error) {
           console.log(error);
