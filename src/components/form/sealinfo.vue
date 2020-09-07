@@ -46,6 +46,7 @@
               <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
               <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               <van-field required :readonly="readonly" clickable clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager');queryManager();" :error-message="message.dealManager" @click="queryManager();" />
+              <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCreateUser()" />
               <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
               <van-field required :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" @blur="validField('username')" :error-message="message.username" />
               <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
@@ -124,6 +125,10 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
+import { AddressList } from 'vant';
+
+Vue.use(AddressList);
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -152,6 +157,8 @@ export default {
             sealuserid:'',
             message: workconfig.compValidation.seal.message,
             valid: workconfig.compValidation.seal.valid,
+            cuserid:'',
+            cuserList:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -264,6 +271,19 @@ export default {
           console.log(error);
         }
       },
+      //选中当前填报人
+      async selectCreateUser(value){
+        await tools.sleep(0);
+
+        const id = this.cuserid;
+        const user = this.cuserList.find((item,index) => {return id == item.id});
+
+        this.item.dealManager = user.name;
+        this.item.mobile = user.tel;
+        this.item.username = user.id;
+        this.item.signman = user.name;
+
+      },
       //查询经办人基本信息
       async queryManager(){
 
@@ -279,19 +299,37 @@ export default {
             if(!!user){
               if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
 
+                user.map((elem,index) => {
+                  let company = elem.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  this.cuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
+                })
+
               } else {
+
                 this.item.dealManager = user.deal_manager || this.item.dealManager;
                 this.item.mobile = user.mobile;
                 this.item.username = user.loginid;
                 this.item.dealMail = user.email;
                 this.item.signman = manager;
+
                 if(!user.email){
                   this.item.dealMail = info.deal_mail;
                   this.item.dealDepart = info.deal_depart;
                 }
+
                 //缓存特定属性
                 this.cacheUserInfo();
+                let company = user.textfield1.split('||')[0];
+                company = company.slice(company.lastIndexOf('>')+1);
+                this.cuserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , isDefault: !this.cuserList.length });
+
               }
+
+              this.cuserList = this.cuserList.filter((item,index) => {
+                let findex = this.cuserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                return index == findex;
+              })
             } else if(!user && !!info){
               if(Array.isArray(info)){ //如果是用户数组列表，则展示列表，让用户自己选择
 
@@ -528,6 +566,26 @@ export default {
       text-align: left;
       word-wrap: break-word;
       font-size: 0.92rem;
+  }
+  .van-address-item__edit {
+    width:0px;
+    display:none;
+  }
+  .van-address-item__value {
+    padding-right: 0px;
+  }
+  .van-address-item {
+    padding: 2px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
   }
 </style>
 <style scoped>
