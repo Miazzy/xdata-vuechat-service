@@ -389,7 +389,7 @@ export async function queryUserBySealData(name) {
 
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(deal_manager,eq,${name})~and(deal_mail,like,~@~)&_size=1&_p=0`).set('accept', 'json');
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(deal_manager,like,~${name}~)~and(deal_mail,like,~@~)&_size=1&_p=0`).set('accept', 'json');
         //返回用户信息
         return maxinfo.body[0];
     } catch (error) {
