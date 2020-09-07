@@ -125,11 +125,21 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="对接信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="前台员工" v-model="item.front_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <van-field required clearable label="前台员工" v-model="item.front_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('front_name');" :error-message="message.front_name"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="行政员工" v-model="item.admin_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <van-field required clearable label="行政员工" v-model="item.admin_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('admin_name');" :error-message="message.admin_name"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="食堂员工" v-model="item.meal_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <van-field required clearable label="食堂员工" v-model="item.meal_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('meal_name');" :error-message="message.meal_name"/>
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="流程信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="前台确认时间" v-model="item.front_time" placeholder="前台确认时间" v-show="!!item.front_time" />
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="行政确认时间" v-model="item.admin_time" placeholder="行政确认时间" v-show="!!item.admin_time" />
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field required clearable label="食堂确认时间" v-model="item.meal_time" placeholder="食堂确认时间" v-show="!!item.meal_time" />
               </van-cell-group>
 
             </van-form>
@@ -141,7 +151,21 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
+            <van-goods-action  v-show=" status == '已确认' && role == 'front' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="前台确认"  @click="handleFrontConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
+
+            <van-goods-action  v-show=" status == '已确认' && role == 'admin' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="行政确认"  @click="handleAdminConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
+
+            <van-goods-action  v-show=" status == '已确认' && role == 'meal' ">
+              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="食堂确认"  @click="handleMealConfirm();" style="border-radius: 10px 10px 10px 10px;" />
+            </van-goods-action>
+
           </div>
+
+
 
           <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
 
@@ -217,6 +241,9 @@ export default {
               bachelor:'',  //学位编号
               bank_card:'', //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
+              front_time:'',
+              admin_time:'',
+              meal_time:'',
               hr_name:'',   //对接HR
               remark:'',    //备注信息
               prefix: '',   //编号前缀
@@ -337,6 +364,9 @@ export default {
             front_name: value.front_account,
             admin_name: value.admin_account,
             meal_name: value.meal_account,
+            front_time: dayjs(value.front_time).format('YYYY-MM-DD'), //前台时间
+            admin_time: dayjs(value.admin_time).format('YYYY-MM-DD'), //行政时间
+            meal_time: dayjs(value.meal_time).format('YYYY-MM-DD'),   //食堂时间
             status: '待确认',
           }
 
@@ -432,6 +462,27 @@ export default {
           title: '温馨提示',
           message: '已将入职登记通知推送至前台、行政、食堂等相关人员！',
         });
+
+      },
+      async handleFrontConfirm(){
+
+        //设置前台确认时间
+
+        //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
+
+      },
+      async handleAdminConfirm(){
+
+        //设置行政确认时间
+
+        //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
+
+      },
+      async handleMealConfirm(){
+
+        //设置食堂确认时间
+
+        //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
 
       }
     }
