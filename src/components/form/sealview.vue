@@ -266,9 +266,9 @@ export default {
       async queryInfo(){
         try {
           var that = this;
-          that.item.id = this.getUrlParam('id');
-          that.item.status = this.statusType[this.getUrlParam('statustype')];
-          that.item.type = this.getUrlParam('type');
+          that.item.id = tools.getUrlParam('id');
+          that.item.status = this.statusType[tools.getUrlParam('statustype')];
+          that.item.type = tools.getUrlParam('type');
 
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
@@ -333,10 +333,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //领取人OA账户
@@ -401,10 +401,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //领取人OA账户
@@ -458,10 +458,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -503,10 +503,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -568,10 +568,10 @@ export default {
         })
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -638,7 +638,7 @@ export default {
         });
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
 
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -672,10 +672,10 @@ export default {
         var noname = '合同编号';
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
 
         //领取人OA账户
         const username = this.item.username;

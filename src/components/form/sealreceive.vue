@@ -251,9 +251,9 @@ export default {
       async queryInfo(){
         try {
           var that = this;
-          that.item.id = this.getUrlParam('id');
-          that.item.status = this.statusType[this.getUrlParam('statustype')];
-          that.item.type = this.getUrlParam('type');
+          that.item.id = tools.getUrlParam('id');
+          that.item.status = this.statusType[tools.getUrlParam('statustype')];
+          that.item.type = tools.getUrlParam('type');
 
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
@@ -308,7 +308,7 @@ export default {
         })
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息

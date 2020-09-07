@@ -160,14 +160,14 @@ export default {
               dealManager:'',
               dealMail:'',
               username:'',
-              approveType:'',
+              approveType:'OA系统',
               contractId:'',
               signman:'',
               workno:'',
               sealtime:'',
               sealman: '',
               sealtype: '',
-              ordertype:'',
+              ordertype:'常规用印',
               mobile:'',
               send_mobile:'',
               send_location:'',
@@ -278,8 +278,11 @@ export default {
           this.item.username = user.loginid;
           this.item.dealMail = user.email;
 
-          if(!user.email){
+          this.item.signman = manager;
 
+          if(!user.email){
+            let info = await manageAPI.queryUserBySealData(manager.trim());
+            this.item.dealMail = info.deal_mail;
           }
 
         }
