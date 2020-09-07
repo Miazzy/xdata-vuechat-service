@@ -306,6 +306,7 @@ export default {
 
         // 用户对接HR姓名
         const hr_name = this.item.hr_name;
+
         // 对应HR的OA账户信息
         let hrinfo = {};
 

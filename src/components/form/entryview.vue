@@ -137,7 +137,7 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <van-goods-action  v-show=" tag.showPickerCommon == false && tag.showPickerJoinTime == false && status == '' ">
+            <van-goods-action  v-show=" status == '' && role == 'hr' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -179,6 +179,7 @@ export default {
             content:'',
             files:'',
             from:'',
+            role:'',
             tname:'',
             bname:'',
             tasktype:'done',
@@ -300,8 +301,7 @@ export default {
 
           //获取用户编号
           this.item.id = tools.getUrlParam('id');
-
-          debugger;
+          this.role = tools.getUrlParam('role');
 
           //根据编号查询用户登记数据
           const value = await query.queryTableData(`bs_entry_job` , this.item.id);
@@ -362,7 +362,7 @@ export default {
         this.loading = true;
 
         //系统编号
-        const id = this.getUrlParam('id');
+        const id = tools.getUrlParam('id');
 
         //获取相应对接人员信息
         const front_name = this.item.front_name;
