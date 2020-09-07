@@ -298,6 +298,11 @@ export default {
           that.item.front = this.getUrlParam('front');  //用印前台接受组
           that.item.archive = this.getUrlParam('archive'); //用印归档组(财务/档案)
 
+          //如果盖印人填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
+            that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
+          }
+
           if(!that.sealuserid){
             that.sealuserid = this.config[that.item.sealman];
           }

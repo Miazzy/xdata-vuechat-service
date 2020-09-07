@@ -353,6 +353,19 @@ export async function postTableData(tableName, node) {
     }
 }
 
+export async function queryUsernameByID(id) {
+
+    try {
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(loginid,eq,%27${id}%27)&_fields=id,lastname,loginid`).set('accept', 'json');
+        //返回用户信息
+        return maxinfo.body[0][lastname];
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 /**
  * @function 获取当前节点是否有知会或者审批节点信息
  */

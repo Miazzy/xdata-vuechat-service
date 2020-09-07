@@ -356,6 +356,7 @@ export default {
           bank_card: this.item.bank_card, //工资银行卡号
           join_time: this.item.join_time, //入职时间
           hr_name: hr_name,   //对接HR
+          hr_id: hrinfo.id ,  //HR编码信息
           status: '待确认',
         }; // 待提交元素
 

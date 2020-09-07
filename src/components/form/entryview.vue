@@ -132,7 +132,7 @@
                 <van-field required clearable label="食堂员工" v-model="item.meal_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('meal_name');" :error-message="message.meal_name"/>
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;" v-show="item.front_time || item.admin_time || item.meal_time ">
                 <van-cell value="流程信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field required clearable label="前台确认时间" v-model="item.front_time" placeholder="前台确认时间" v-show="!!item.front_time" />
@@ -364,9 +364,9 @@ export default {
             front_name: value.front_account,
             admin_name: value.admin_account,
             meal_name: value.meal_account,
-            front_time: dayjs(value.front_time).format('YYYY-MM-DD'), //前台时间
-            admin_time: dayjs(value.admin_time).format('YYYY-MM-DD'), //行政时间
-            meal_time: dayjs(value.meal_time).format('YYYY-MM-DD'),   //食堂时间
+            front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
+            admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
+            meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
             status: '待确认',
           }
 
@@ -466,24 +466,54 @@ export default {
       },
       async handleFrontConfirm(){
 
+        //系统编号
+        const id = tools.getUrlParam('id');
+
         //设置前台确认时间
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , front_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
+        await this.handleFinaly();
 
       },
       async handleAdminConfirm(){
 
+        //系统编号
+        const id = tools.getUrlParam('id');
+
         //设置行政确认时间
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
+        await this.handleFinaly();
 
       },
       async handleMealConfirm(){
 
+         //系统编号
+        const id = tools.getUrlParam('id');
+
         //设置食堂确认时间
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
+        await this.handleFinaly();
 
+      },
+      async handleFinaly(){
+
+        await tools.sleep(100);
+
+        //系统编号
+        const id = tools.getUrlParam('id');
+
+        //查询归档状态
+        const value = await query.queryTableData(`bs_entry_job` , id);
+
+        //如果三方确认时间无误，则向HR推送最后知会通知，告知流程完毕
+        if(!tools.isNull(value.front_time) && !tools.isNull(value.admin_time) && !tools.isNull(value.meal_time)){
+
+        }
       }
     }
 }
