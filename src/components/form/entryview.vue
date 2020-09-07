@@ -28,7 +28,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">入职登记表</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">入职确认表</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -55,8 +55,12 @@
                 <van-field :readonly="readonly" required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
-                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="对接HR" v-model="item.hr_name" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="前台员工" v-model="item.hr_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="行政管理员工" v-model="item.hr_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 员工岗位（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="食堂管理员工" v-model="item.hr_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
@@ -111,9 +115,9 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
+                <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" v-show="!!item.driving_license" />
                 <!-- 驾驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
+                <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" v-show="!!item.driver_license" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 学历编号（HR需要确认/修改） -->
@@ -234,7 +238,7 @@ export default {
             group: workconfig.group,
             fileList: [],
             currentKey:'',
-            readonly: false,
+            readonly: true,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
         }
