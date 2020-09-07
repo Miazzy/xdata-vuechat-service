@@ -367,6 +367,38 @@ export async function queryUsernameByID(id) {
 }
 
 /**
+ * @function 获取当前名字的用户信息
+ */
+export async function queryUserByName(name) {
+
+    try {
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,eq,%27${name}%27)`).set('accept', 'json');
+        //返回用户信息
+        return maxinfo.body[0];
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
+ * @function 获取当前名字的用户信息
+ */
+export async function queryUserBySealData(name) {
+
+    try {
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(deal_manager,eq,${name})~and(deal_mail,like,~@~)&_size=1&_p=0`).set('accept', 'json');
+        //返回用户信息
+        return maxinfo.body[0];
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
  * @function 获取当前节点是否有知会或者审批节点信息
  */
 export async function queryCurNodePageType(pageType) {

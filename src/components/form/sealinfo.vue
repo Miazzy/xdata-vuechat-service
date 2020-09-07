@@ -46,10 +46,10 @@
               <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
               <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
-              <van-field required :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager')" :error-message="message.dealManager" />
+              <van-field required :readonly="readonly" clickable clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager');queryManager();" :error-message="message.dealManager" @click="queryManager();" />
               <van-field required :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" @blur="validField('username')" :error-message="message.username" />
               <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
-              <van-field required :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
+              <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人的邮箱地址" @blur="validField('dealMail')" :error-message="message.dealMail" />
               <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
               <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
@@ -257,9 +257,33 @@ export default {
       },
 
       getUrlParam(name) {
+        try {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
           var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      //查询经办人基本信息
+      async queryManager(){
+        //获取经办人信息
+        const manager = this.item.dealManager;
+
+        if(!!manager){
+
+          let user = await manageAPI.queryUserByName(manager.trim());
+
+          this.item.mobile = user.mobile;
+          this.item.username = user.loginid;
+          this.item.dealMail = user.email;
+
+          if(!user.email){
+
+          }
+
+        }
+
       },
 
       queryPictureList(files){
@@ -289,14 +313,14 @@ export default {
         try {
           var that = this;
 
-          that.item.sealman = this.getUrlParam('sealman');
-          that.item.status = this.statusType[this.getUrlParam('statustype')];
-          that.sealuserid = this.getUrlParam('sealuserid');
-          that.groupid = this.getUrlParam('groupid') || 'Group_LD';
+          that.item.sealman = tools.getUrlParam('sealman');
+          that.item.status = this.statusType[tools.getUrlParam('statustype')];
+          that.sealuserid = tools.getUrlParam('sealuserid');
+          that.groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
-          that.item.seal = this.getUrlParam('seal'); //用印管理员成员组
-          that.item.front = this.getUrlParam('front');  //用印前台接受组
-          that.item.archive = this.getUrlParam('archive'); //用印归档组(财务/档案)
+          that.item.seal = tools.getUrlParam('seal'); //用印管理员成员组
+          that.item.front = tools.getUrlParam('front');  //用印前台接受组
+          that.item.archive = tools.getUrlParam('archive'); //用印归档组(财务/档案)
 
           //如果盖印人填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
@@ -364,7 +388,7 @@ export default {
         }
 
         //公司工作组
-        const groupid = this.getUrlParam('groupid') || 'Group_LD';
+        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
         //第一步，构造form对象
         const item = this.item;
@@ -392,8 +416,8 @@ export default {
         const archive = item.archive;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
-        const seal_wflow = this.getUrlParam('statustype');
-        const status = this.statusType[this.getUrlParam('statustype')];
+        const seal_wflow = tools.getUrlParam('statustype') || 'none';
+        const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
         const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive}; // 待提交元素
 
