@@ -105,5 +105,51 @@ export const compValidation = {
             username: '请输入经办人的OA账号!',
             contractId: '请输入合同编号！',
         },
+    },
+    entryjob: {
+        message: {
+            username: '',
+            position: '', //入职岗位
+            picture: '', //员工照片
+            computer: '', //是否需要电脑配置
+            seat: '', //是否需要办公座椅
+            drawer: '', //是否需要办公抽屉drawer
+            other_equip: '', //是否需要其他办公配置
+            notebook: '', //是否需要笔记本子
+            manual: '', //是否需要入职手册
+            writingtools: '', //是否需要签字笔/擦
+            badge: '', //员工工牌
+            othertools: '', //其他用品
+            driving_license: '', //行驶证
+            driver_license: '', //驾驶证
+            idcard: '', //身份证号
+            diploma: '', //学历编号
+            bachelor: '', //学位编号
+            join_time: '', //入职时间
+            hr_name: '', //对接HR
+            bank_card: '',
+        },
+        valid: {
+            username: '请输入您的姓名！',
+            position: '请输入您的入职岗位！', //入职岗位
+            picture: '请上传您的一寸照片！', //员工照片
+            computer: '请选择是否需要电脑配置！', //是否需要电脑配置
+            seat: '请选择是否需要办公座椅！', //是否需要办公座椅
+            drawer: '请选择是否是否需要办公抽屉！', //是否需要办公抽屉drawer
+            other_equip: '如果您有其他的办公配置要求，请填写在此处！', //是否需要其他办公配置
+            notebook: '请选择是否需要笔记/记事本等！', //是否需要笔记本子
+            manual: '请选择是否需要入职手册！', //是否需要入职手册
+            writingtools: '请选择是否需要签字笔/擦！', //是否需要签字笔/擦
+            badge: '请选择是否需要制作员工工牌！', //员工工牌
+            othertools: '请输入您的其他办公用品需求！', //其他用品
+            driving_license: '请输入您的行驶证编号！', //行驶证
+            driver_license: '请输入您的驾驶证编号！', //驾驶证
+            idcard: '请输入您的身份证编号！', //身份证号
+            diploma: '请输入您的学历证件编号！', //学历编号
+            bachelor: '请输入您的学位证件编号！', //学位编号
+            join_time: '请选择您的入职时间！', //入职时间
+            hr_name: '请选择您的对接HR姓名！', //对接HR
+            bank_card: '请输入您的工资银行卡号！',
+        },
     }
 }

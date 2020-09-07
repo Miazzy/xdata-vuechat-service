@@ -56,7 +56,7 @@
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
                  <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="对接HR" v-model="item.position" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name')" :error-message="message.hr_name"/>
+                <van-field required clearable label="对接HR" v-model="item.hr_name" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
@@ -86,7 +86,7 @@
                 <!-- 办公电脑（系统自动生成） -->
                 <van-field required clickable clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
                 <!-- 办公座椅（HR需要确认/修改） -->
-                <van-field required clickable clearable label="办公桌椅" v-model="item.username"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
+                <van-field required clickable clearable label="办公桌椅" v-model="item.seat"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
                 <!-- 办公抽屉（HR需要确认/修改） -->
                 <van-field required clickable clearable label="办公抽屉" v-model="item.drawer" placeholder="是否需要配置办公抽屉?" @click="tag.showPickerCommon = true ; currentKey = 'drawer'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
@@ -115,13 +115,13 @@
                 <!-- 驾驶证号（HR需要确认/修改） -->
                 <van-field clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
                 <!-- 身份证号（HR需要确认/修改） -->
-                <van-field required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" />
+                <van-field required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field required clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" />
+                <van-field required clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" />
+                <van-field required clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
-                <van-field required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" />
+                <van-field required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
               </van-cell-group>
 
             </van-form>
@@ -129,7 +129,7 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
+            <van-goods-action  v-show=" tag.showPickerCommon == false && tag.showPickerJoinTime == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -183,19 +183,33 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
-            message: workconfig.compValidation.seal.message,
-            valid: workconfig.compValidation.seal.valid,
+            message: workconfig.compValidation.entryjob.message,
+            valid: workconfig.compValidation.entryjob.valid,
             item:{
               id: '',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               username:'',
-              position:'',  //入职岗位
-              picture:'',   //员工照片
-              computer:'',  //是否需要电脑配置
-              seat:'',      //是否需要办公座椅
-              drawer:'',    //是否需要办公抽屉drawer
-              other_equip:'',//是否需要其他办公配置
+              position:'',    //入职岗位
+              picture:'',     //员工照片
+              computer:'是',  //是否需要电脑配置
+              seat:'是',      //是否需要办公座椅
+              drawer:'是',    //是否需要办公抽屉drawer
+              other_equip:'暂无',//是否需要其他办公配置
+              notebook:'是',  //是否需要笔记本子
+              manual:'是',    //是否需要入职手册
+              writingtools:'是',//是否需要签字笔/擦
+              badge:'是',     //员工工牌
+              othertools:'暂无',//其他用品
+              driving_license:'',//行驶证
+              driver_license:'',//驾驶证
+              idcard:'',    //身份证号
+              diploma:'',   //学历编号
+              bachelor:'',  //学位编号
+              bank_card:'', //工资银行卡号
+              join_time: dayjs().format('YYYY-MM-DD'), //入职时间
+              hr_name:'',   //对接HR
+              remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
               status: '',
@@ -254,6 +268,9 @@ export default {
           file.status = 'failed';
           file.message = '上传成功';
         }, 1000);
+      },
+      displayUserInfo(fieldName){
+
       },
       // 选择入职时间
       joinTimeConfirm(value){
