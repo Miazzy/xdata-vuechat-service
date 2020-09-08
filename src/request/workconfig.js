@@ -90,6 +90,8 @@ export const compValidation = {
             username: '',
             contractId: '',
             sealman: '',
+            front: '',
+            archive: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -106,6 +108,8 @@ export const compValidation = {
             username: '请输入经办人的OA账号!',
             contractId: '请输入合同编号！',
             sealman: '请输入印章管理员(盖印人)！',
+            front: '请输入前台人员名称！',
+            archive: '请输入归档人员名称！',
         },
     },
     entryjob: {

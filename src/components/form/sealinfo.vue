@@ -74,6 +74,8 @@
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
                 <van-field required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
                 <van-address-list v-show="fuserList.length > 0" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -191,6 +193,9 @@ export default {
             suserList:[],
             fuserid:'',
             fuserList:[],
+            auserid:'',
+            auserList:[],
+            agroup:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -214,6 +219,7 @@ export default {
               front:'',    //用印前台接受组
               front_name:'',
               archive: '', //用印归档组(财务/档案)
+              archive_name:[],
               prefix: '',  //编号前缀
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
@@ -250,7 +256,72 @@ export default {
     async mounted() {
       this.queryInfo();
     },
+    watch: {
+      $route(to, from) {
+
+      },
+    },
     methods: {
+      //查询归档人员
+      async queryArchiveMan(){
+        //获取盖章人信息
+        const archive_name = this.item.archive_name;
+
+        try {
+          if(!!archive_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(archive_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.auserList.push({id:elem.loginid , value:`${user.lastname},` , label: user.lastname + ' ' + company + "||" + user.textfield1.split('||')[1] , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //将用户数据推送至对方数组
+                  this.auserList.push({id:user.loginid , value:`${user.lastname},` , label: user.lastname + ' ' + company + "||" + user.textfield1.split('||')[1] , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.auserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.auserList = this.auserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.auserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
@@ -289,7 +360,7 @@ export default {
                   //当前盖印人编号
                   this.item.front = user.loginid;
                   //将用户数据推送至对方数组
-                  this.fuserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.fuserList.length });
+                  this.fuserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.fuserList.length });
                 } catch (error) {
                   console.log(error);
                 }
@@ -453,7 +524,7 @@ export default {
         this.cacheUserInfo();
 
       },
-      //选中当前填报人
+      //选中当前前台人
       async selectFrontUser(value){
         await tools.sleep(0);
         const id = this.fuserid;
@@ -463,7 +534,7 @@ export default {
         //当前盖印人编号
         this.item.front = id;
       },
-      //选中当前填报人
+      //选中当前盖印人
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.suserid;
@@ -473,6 +544,20 @@ export default {
         this.item.seal = id;
         //当前盖印人编号
         this.sealuserid = id;
+      },
+      //选中当前归档人员
+      async selectArchiveUser(values){
+        await tools.sleep(0);
+        let ids = [];
+        let names = [];
+        this.$refs.checkboxGroup.$data.checkboxValues.map((value,index) => {
+          if(value == 1){
+            ids.push(this.auserList[index].id);
+            names.push(this.auserList[index].name);
+          }
+        })
+        this.item.archive_name = names.join(',');
+        this.item.archive = ids.join(',');
       },
       //查询经办人基本信息
       async queryManager(){
@@ -662,6 +747,26 @@ export default {
             })
           }
 
+          //如果前台人候选列表存在
+          if(that.item.archive){
+            let names = [];
+            let ids = [];
+            //获取可选填报人列表
+            let alist = await manageAPI.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            alist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              names.push(elem.lastname);
+              ids.push(elem.loginid);
+              this.auserList.push({id:elem.loginid , value:`${elem.lastname},` , label: elem.lastname + ' ' +  company + "||" + elem.textfield1.split('||')[1]   ,  name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.auserList.length });
+            })
+            this.item.archive = ids.join(',');
+            this.item.archive_name = names.join(',');
+          }
+
           //获取缓存的用户数据
           const temp = storage.getStore('system_user_sealinfo');
           if(!!temp){
@@ -764,12 +869,13 @@ export default {
         const front = item.front;
         const front_name = item.front_name;
         const archive = item.archive;
+        const archive_name = item.archive_name;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
@@ -864,6 +970,14 @@ export default {
     padding-bottom: env(safe-area-inset-bottom);
     background-color: #fff;
     display: none;
+  }
+  .nut-checkboxgroup {
+    padding: 10px 0;
+    margin-left: 11px;
+  }
+  .nut-checkbox.nut-checkbox-size-base .nut-checkbox-label {
+    font-size: 14px;
+    margin-left: 5px;
   }
 </style>
 <style scoped>
