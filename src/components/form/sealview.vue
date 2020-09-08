@@ -203,6 +203,7 @@ export default {
             fuserList:[],
             auserid:'',
             auserList:[],
+            agroup:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -565,7 +566,9 @@ export default {
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
               front: value.front,
               seal: value.seal,
+              front_name: value.front_name,
               archive: value.archive,
+              archive_name: value.archive_name,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
@@ -1013,6 +1016,47 @@ export default {
       text-align: left;
       word-wrap: break-word;
       font-size: 0.92rem;
+  }
+  .van-address-item__edit {
+    width:0px;
+    display:none;
+  }
+  .van-address-item__value {
+    padding-right: 0px;
+  }
+  .van-address-item {
+    padding: 2px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+  }
+  .van-address-list__bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #fff;
+    display: none;
+  }
+  .nut-checkboxgroup {
+    padding: 10px 0;
+    margin-left: 11px;
+  }
+  .nut-checkbox.nut-checkbox-size-base .nut-checkbox-label {
+    font-size: 14px;
+    margin-left: 5px;
   }
 </style>
 <style scoped>
