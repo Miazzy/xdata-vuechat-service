@@ -123,13 +123,24 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
+
                 <van-cell value="对接信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="前台员工" v-model="item.front_name" placeholder="请输入前台人员，以进行办公用品准备！" @blur="validField('front_name');" :error-message="message.front_name"/>
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="行政员工" v-model="item.admin_name" placeholder="请输入资产管理的行政人员，以进行确认！" @blur="validField('admin_name');" :error-message="message.admin_name"/>
-                <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="食堂员工" v-model="item.meal_name" placeholder="请输入食堂管理的工作人员，以进行饭卡及餐补预算准备！" @blur="validField('meal_name');" :error-message="message.meal_name"/>
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-field readonly clearable label="对接HR" v-model="item.hr_name" placeholder="请输入与您对接的HR姓名！" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-address-list v-show="huserList.length > 0" v-model="item.hr_id" :list="huserList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-field required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-address-list v-show="auserList.length > 0" v-model="item.admin_id" :list="auserList" default-tag-text="默认" edit-disabled @select="selectAdminUser()" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-field required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-address-list v-show="fuserList.length > 0" v-model="item.front_id" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-field required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-address-list v-show="muserList.length > 0" v-model="item.meal_id" :list="muserList" default-tag-text="默认" edit-disabled @select="selectMealUser()" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="item.front_time || item.admin_time || item.meal_time ">
@@ -218,6 +229,14 @@ export default {
             sealuserid:'',
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
+            huserid:'',
+            huserList:[],
+            auserid:'',
+            auserList:[],
+            fuserid:'',
+            fuserList:[],
+            muserid:'',
+            muserList:[],
             item:{
               id: '',
               create_time: dayjs().format('YYYY-MM-DD'),
@@ -245,6 +264,16 @@ export default {
               admin_time:'',
               meal_time:'',
               hr_name:'',   //对接HR
+              hr_id: '',
+              front_name:'',
+              front_id:'',
+              admin_name:'',
+              admin_id:'',
+              meal_name:'',
+              meal_id:'',
+              front:'',
+              admin:'',
+              meal:'',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -641,9 +670,12 @@ export default {
             join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
             hr_name: value.hr_name,   //对接HR
             remark: value.remark,    //备注信息
-            front_name: value.front_account,
-            admin_name: value.admin_account,
-            meal_name: value.meal_account,
+            front_name: value.front_name,
+            admin_name: value.admin_name,
+            meal_name: value.meal_name,
+            front_id: value.front_id,
+            admin_id: value.admin_id,
+            meal_id: value.meal_id,
             front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
             admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
             meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
@@ -703,11 +735,11 @@ export default {
         meal = await this.queryUserInfo(meal_name);
 
         if(front && admin && meal){
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id},${this.item.front_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
                 .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id},${this.item.admin_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
                 .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id},${this.item.meal_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
                 .set('accept', 'json');
         } else if(!front){
           //未获取到HR信息
@@ -810,6 +842,47 @@ export default {
       text-align: left;
       word-wrap: break-word;
       font-size: 0.92rem;
+  }
+  .van-address-item__edit {
+    width:0px;
+    display:none;
+  }
+  .van-address-item__value {
+    padding-right: 0px;
+  }
+  .van-address-item {
+    padding: 2px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+  }
+  .van-address-list__bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #fff;
+    display: none;
+  }
+  .nut-checkboxgroup {
+    padding: 10px 0;
+    margin-left: 11px;
+  }
+  .nut-checkbox.nut-checkbox-size-base .nut-checkbox-label {
+    font-size: 14px;
+    margin-left: 5px;
   }
 </style>
 <style scoped>
