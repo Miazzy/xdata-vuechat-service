@@ -366,6 +366,19 @@ export async function queryUsernameByID(id) {
 
 }
 
+export async function queryUsernameByIDs(ids) {
+
+    try {
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(loginid,in,${ids})~and(status,ne,5)`).set('accept', 'json');
+        //返回用户信息
+        return maxinfo.body;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 /**
  * @function 获取当前名字的用户信息
  */

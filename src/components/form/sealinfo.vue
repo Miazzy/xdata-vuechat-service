@@ -67,6 +67,7 @@
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
                 <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+                <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -182,6 +183,8 @@ export default {
             valid: workconfig.compValidation.seal.valid,
             cuserid:'',
             cuserList:[],
+            suserid:'',
+            suserList:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -322,7 +325,9 @@ export default {
         try {
           if(!!manager){
 
+            //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(manager.trim());
+            //从提交的历史数据中获取填报人资料
             let info = await manageAPI.queryUserBySealData(manager.trim());
 
             if(!!user){
@@ -431,7 +436,10 @@ export default {
 
           //如果盖印人填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
+            //获取盖印人姓名
             that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
+            //获取可选填报人列表
+
           }
 
           //获取缓存的用户数据
