@@ -109,7 +109,7 @@
             <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
           </van-cell-group>
 
-          <van-cell-group style="margin-top:10px;">
+          <van-cell-group style="margin-top:10px;" v-show=" active > 0 ">
             <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-steps :active="active">
               <van-step>待用印</van-step>
@@ -316,6 +316,16 @@ export default {
         this.cacheUserInfo();
 
       },
+      //选中当前填报人
+      async selectSealUser(value){
+        await tools.sleep(0);
+        const id = this.suserid;
+        const user = this.suserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.sealman = user.name;
+        //当前盖印人编号
+        this.sealuserid = id;
+      },
       //查询经办人基本信息
       async queryManager(){
 
@@ -439,7 +449,16 @@ export default {
             //获取盖印人姓名
             that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
             //获取可选填报人列表
-
+            let slist = await manageAPI.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            slist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.sealuserid = elem.loginid;
+              this.suserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.suserList.length });
+            })
           }
 
           //获取缓存的用户数据
@@ -630,6 +649,19 @@ export default {
     padding-right: 12px;
     padding-bottom: 12px;
     padding-left: 12px;
+  }
+  .van-address-list__bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #fff;
+    display: none;
   }
 </style>
 <style scoped>
