@@ -40,7 +40,7 @@
           <van-cell-group>
             <van-cell-group style="margin-top:10px;">
               <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-              <van-field clearable label="日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
+              <van-field readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
               <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
               <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
               <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
@@ -48,12 +48,12 @@
             </van-cell-group>
 
             <van-cell-group style="margin-top:10px;">
-                <van-cell value="经办信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
-                <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
-                <van-field :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" />
-                <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
-                <van-field :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" />
+              <van-cell value="经办信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+              <van-field :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" />
+              <van-field :readonly="readonly" clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" />
+              <van-field :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" />
+              <van-field :readonly="readonly" clearable label="经办邮箱" v-model="item.dealMail" placeholder="请输入经办人邮箱" />
+              <van-field :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" />
             </van-cell-group>
 
             <van-cell-group style="margin-top:10px;">
