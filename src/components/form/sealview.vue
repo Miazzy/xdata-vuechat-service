@@ -210,6 +210,9 @@ export default {
               mobile:'',
               send_location:'',
               send_mobile:'',
+              front:'',
+              seal:'',
+              archive:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -316,6 +319,9 @@ export default {
               send_mobile: value.send_mobile,
               send_location: value.send_location,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
+              front: value.front,
+              seal: value.seal,
+              archive: value.archive,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
@@ -385,7 +391,7 @@ export default {
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
                         .set('accept', 'json');
           //通知前台准备接受资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
                        .set('accept', 'json');
         }
 
@@ -554,7 +560,7 @@ export default {
                        .set('accept', 'json');
 
         //通知归档负责人到前台收取资料进行归档(企业微信发送)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].archive},${this.item.archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
                        .set('accept', 'json');
 
         //修改用印状态
@@ -730,7 +736,7 @@ export default {
                          .set('accept', 'json');
 
           //通知前端归档完成，准备生成台账(企业微信消息)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成?rurl=${url}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成?rurl=${url}`)
                          .set('accept', 'json');
 
           //修改状态为已用印
