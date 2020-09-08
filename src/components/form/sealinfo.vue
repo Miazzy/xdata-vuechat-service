@@ -72,6 +72,8 @@
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+                <van-field required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -187,6 +189,8 @@ export default {
             cuserList:[],
             suserid:'',
             suserList:[],
+            fuserid:'',
+            fuserList:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -246,6 +250,11 @@ export default {
       this.queryInfo();
     },
     methods: {
+      //用户选择前台接待
+      async queryFrontMan(){
+
+      },
+      //用户选择盖印人
       async querySealMan(){
 
         //获取盖章人信息
@@ -258,7 +267,9 @@ export default {
             let user = await manageAPI.queryUserByNameHRM(sealman.trim());
 
             if(!!user){
-              if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
 
                 try {
                   user.map((elem,index) => {
@@ -272,13 +283,16 @@ export default {
                   console.log(error);
                 }
 
-              } else {
+              } else { //如果只有一个用户数据，则直接设置
 
                 try {
                   let company = user.textfield1.split('||')[0];
                   company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.sealuserid = user.loginid;
+                  //将用户数据推送至对方数组
                   this.suserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.cuserList.length });
                 } catch (error) {
                   console.log(error);
@@ -380,12 +394,23 @@ export default {
 
       },
       //选中当前填报人
+      async selectFrontUser(value){
+        await tools.sleep(0);
+        const id = this.fuserid;
+        const user = this.fuserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.front_name = user.name;
+        //当前盖印人编号
+        this.item.front = id;
+      },
+      //选中当前填报人
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.suserid;
         const user = this.suserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
         this.item.sealman = user.name;
+        this.item.seal = id;
         //当前盖印人编号
         this.sealuserid = id;
       },
@@ -556,6 +581,20 @@ export default {
             })
           }
 
+          //如果盖印人候选列表存在
+          if(that.item.front){
+            //获取可选填报人列表
+            let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            flist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.suserList.length });
+            })
+          }
+
           //获取缓存的用户数据
           const temp = storage.getStore('system_user_sealinfo');
           if(!!temp){
@@ -656,13 +695,14 @@ export default {
         const mobile = item.mobile;
         const seal = item.seal;
         const front = item.front;
+        const front_name = item.front_name;
         const archive = item.archive;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
