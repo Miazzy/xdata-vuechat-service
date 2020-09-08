@@ -297,6 +297,7 @@ export default {
                   company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
+                  let elem = user;
                   //将用户数据推送至对方数组
                   this.auserList.push({id:user.loginid , value:`${user.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','')  , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.auserList.length });
                 } catch (error) {
