@@ -310,12 +310,16 @@ export default {
         const id = this.cuserid;
         const user = this.cuserList.find((item,index) => {return id == item.id});
 
-        this.item.dealManager = user.name;
-        this.item.mobile = user.tel;
-        this.item.username = user.id;
-        this.item.signman = user.name;
-        this.item.dealDepart = user.department;
-        this.item.dealMail = user.mail;
+        try {
+          this.item.dealManager = user.name;
+          this.item.mobile = user.tel;
+          this.item.username = user.id;
+          this.item.signman = user.name;
+          this.item.dealDepart = user.department;
+          this.item.dealMail = user.mail;
+        } catch (error) {
+          console.log(error);
+        }
 
         //缓存特定属性
         this.cacheUserInfo();
@@ -348,27 +352,44 @@ export default {
             if(!!user){
               if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
 
-                user.map((elem,index) => {
-                  let company = elem.textfield1.split('||')[0];
-                  company = company.slice(company.lastIndexOf('>')+1);
-                  this.cuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
-                })
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    this.cuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
+                  })
+                } catch (error) {
+                  console.log(error);
+                }
 
               } else {
 
-                this.item.dealManager = user.deal_manager || this.item.dealManager;
-                this.item.mobile = user.mobile;
-                this.item.username = user.loginid;
-                this.item.dealMail = user.email;
-                this.item.signman = manager;
-
-                if(!user.email){
-                  this.item.dealMail = info.deal_mail;
-                  this.item.dealDepart = info.deal_depart;
+                try {
+                  this.item.dealManager = user.deal_manager || this.item.dealManager;
+                  this.item.mobile = user.mobile;
+                  this.item.username = user.loginid;
+                  this.item.dealMail = user.email;
+                  this.item.signman = manager;
+                } catch (error) {
+                  console.log(error);
                 }
 
-                //缓存特定属性
-                this.cacheUserInfo();
+                try {
+                  if(!user.email&&!!info){
+                    this.item.dealMail = info.deal_mail;
+                    this.item.dealDepart = info.deal_depart;
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+
+                try {
+                  //缓存特定属性
+                  this.cacheUserInfo();
+                } catch (error) {
+                  console.log(error);
+                }
+
                 try {
                   let company = user.textfield1.split('||')[0];
                   company = company.slice(company.lastIndexOf('>')+1);
@@ -382,22 +403,33 @@ export default {
 
               }
 
-              this.cuserList = this.cuserList.filter((item,index) => {
-                let findex = this.cuserList.findIndex((subitem,index) => { return subitem.id == item.id });
-                return index == findex;
-              })
-            } else if(!user && !!info){
-              if(Array.isArray(info)){ //如果是用户数组列表，则展示列表，让用户自己选择
-
-              } else {
-                this.item.mobile = info.mobile;
-                this.item.username = info.username;
-                this.item.signman = manager;
-                this.item.dealMail = info.deal_mail;
-                this.item.dealDepart = info.deal_depart;
-                //缓存特定属性
-                this.cacheUserInfo();
+              //遍历去重
+              try {
+                this.cuserList = this.cuserList.filter((item,index) => {
+                  let findex = this.cuserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
               }
+
+            } else if(!user && !!info){
+
+              try {
+                //如果是用户数组列表，则展示列表，让用户自己选择
+                if(!Array.isArray(info)) {
+                  this.item.mobile = info.mobile;
+                  this.item.username = info.username;
+                  this.item.signman = manager;
+                  this.item.dealMail = info.deal_mail;
+                  this.item.dealDepart = info.deal_depart;
+                  //缓存特定属性
+                  this.cacheUserInfo();
+                }
+              } catch (error) {
+                console.log(error);
+              }
+
             }
 
           }
