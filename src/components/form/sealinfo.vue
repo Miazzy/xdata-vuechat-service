@@ -66,7 +66,11 @@
                 <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
-                <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
@@ -242,6 +246,9 @@ export default {
       this.queryInfo();
     },
     methods: {
+      querySealMan(){
+
+      },
       validField(fieldName){
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -446,6 +453,10 @@ export default {
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
             //获取盖印人姓名
             that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
+          }
+
+          //如果盖印人候选列表存在
+          if(that.item.seal){
             //获取可选填报人列表
             let slist = await manageAPI.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表

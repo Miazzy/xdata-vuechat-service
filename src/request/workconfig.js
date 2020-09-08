@@ -89,6 +89,7 @@ export const compValidation = {
             mobile: '',
             username: '',
             contractId: '',
+            sealman: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -104,6 +105,7 @@ export const compValidation = {
             mobile: '请输入经办人电话!',
             username: '请输入经办人的OA账号!',
             contractId: '请输入合同编号！',
+            sealman: '请输入印章管理员(盖印人)！',
         },
     },
     entryjob: {
