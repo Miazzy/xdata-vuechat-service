@@ -212,6 +212,7 @@ export default {
               send_location:'',
               seal:'',     //用印管理员成员组
               front:'',    //用印前台接受组
+              front_name:'',
               archive: '', //用印归档组(财务/档案)
               prefix: '',  //编号前缀
               name: '',    //流程组名，即Group_XX
@@ -252,7 +253,65 @@ export default {
     methods: {
       //用户选择前台接待
       async queryFrontMan(){
+        //获取盖章人信息
+        const front_name = this.item.front_name;
 
+        try {
+          if(!!front_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(front_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.item.front = user.loginid;
+                  //将用户数据推送至对方数组
+                  this.fuserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.fuserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.fuserList = this.fuserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.fuserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
       },
       //用户选择盖印人
       async querySealMan(){
@@ -293,7 +352,7 @@ export default {
                   //当前盖印人编号
                   this.sealuserid = user.loginid;
                   //将用户数据推送至对方数组
-                  this.suserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.cuserList.length });
+                  this.suserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
                 } catch (error) {
                   console.log(error);
                 }
@@ -303,6 +362,7 @@ export default {
               //遍历去重
               try {
                 this.suserList = this.suserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
                   let findex = this.suserList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
                 })
@@ -485,6 +545,7 @@ export default {
               //遍历去重
               try {
                 this.cuserList = this.cuserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
                   let findex = this.cuserList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
                 })
@@ -566,6 +627,12 @@ export default {
             that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
           }
 
+          //如果前台人员填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(that.item.front)){
+            //获取盖印人姓名
+            that.item.front_name = await manageAPI.queryUsernameByID(that.item.front);
+          }
+
           //如果盖印人候选列表存在
           if(that.item.seal){
             //获取可选填报人列表
@@ -581,7 +648,7 @@ export default {
             })
           }
 
-          //如果盖印人候选列表存在
+          //如果前台人候选列表存在
           if(that.item.front){
             //获取可选填报人列表
             let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
