@@ -51,12 +51,14 @@
                 <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
-                <!-- 员工岗位（HR需要确认/修改） -->
+                <!-- 入职岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
-                <!-- 员工岗位（HR需要确认/修改） -->
+                <!-- 入职日期（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
-                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="对接HR" v-model="item.hr_name" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name');" :error-message="message.hr_name"/>
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="对接HR" v-model="item.hr_name" placeholder="请输入与您对接的HR姓名！" @blur="validField('hr_name');queryHRMan();" :error-message="message.hr_name" @click="queryHRMan();"/>
+                <!-- 对接HR（HR需要确认/修改） -->
+                <van-address-list v-show="huserList.length > 0" v-model="item.hr_id" :list="huserList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
@@ -183,6 +185,8 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            huserid:'',
+            huserList:[],
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
             item:{
@@ -209,6 +213,16 @@ export default {
               bank_card:'', //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
               hr_name:'',   //对接HR
+              hr_id: '',
+              front_name:'',
+              front_id:'',
+              admin_name:'',
+              admin_id:'',
+              meal_name:'',
+              meal_id:'',
+              front:'',
+              admin:'',
+              meal:'',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -247,6 +261,76 @@ export default {
       this.queryInfo();
     },
     methods: {
+      //查询归档人员
+      async queryHRMan(){
+        //获取盖章人信息
+        const hr_name = this.item.hr_name;
+
+        try {
+          if(!!hr_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(hr_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.huserList.push({id:elem.loginid , value:`${user.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','') , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  let elem = user;
+                  //将用户数据推送至对方数组
+                  this.huserList.push({id:user.loginid , value:`${user.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','')  , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.huserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.huserList = this.huserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.huserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      //选中当前盖印人
+      async selectHRUser(value){
+        await tools.sleep(0);
+        const id = this.item.hr_id;
+        const user = this.huserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.hr_name = user.name;
+        this.item.hr_id = id;
+      },
       validField(fieldName){
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -394,6 +478,47 @@ export default {
       text-align: left;
       word-wrap: break-word;
       font-size: 0.92rem;
+  }
+  .van-address-item__edit {
+    width:0px;
+    display:none;
+  }
+  .van-address-item__value {
+    padding-right: 0px;
+  }
+  .van-address-item {
+    padding: 2px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+  }
+  .van-address-list__bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 16px;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+    background-color: #fff;
+    display: none;
+  }
+  .nut-checkboxgroup {
+    padding: 10px 0;
+    margin-left: 11px;
+  }
+  .nut-checkbox.nut-checkbox-size-base .nut-checkbox-label {
+    font-size: 14px;
+    margin-left: 5px;
   }
 </style>
 <style scoped>

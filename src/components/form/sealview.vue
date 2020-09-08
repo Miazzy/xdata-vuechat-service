@@ -531,13 +531,17 @@ export default {
 
       async queryInfo(){
         try {
+
+          //
           var that = this;
           that.item.id = tools.getUrlParam('id');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];
           that.item.type = tools.getUrlParam('type');
 
+          //
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
+          //设置填报数据
           this.item = {
               id: that.item.id,
               createtime: dayjs().format('YYYY-MM-DD'),
@@ -573,6 +577,43 @@ export default {
               status: value.status,
               type: that.item.type
             }
+
+          //设置别名
+          const that = this;
+
+            //如果前台人候选列表存在
+          if(that.item.front){
+            //获取可选填报人列表
+            let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            flist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.suserList.length });
+            })
+          }
+
+          //如果前台人候选列表存在
+          if(that.item.archive){
+            let names = [];
+            let ids = [];
+            //获取可选填报人列表
+            let alist = await manageAPI.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            alist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              names.push(elem.lastname);
+              ids.push(elem.loginid);
+              this.auserList.push({id:elem.loginid , value:`${elem.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','') ,  name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.auserList.length });
+            })
+            this.item.archive = ids.join(',');
+            this.item.archive_name = names.join(',');
+          }
 
         } catch (error) {
           console.log(error);
@@ -622,7 +663,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name });
 
         //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
