@@ -364,18 +364,7 @@ export default {
 }
 </script>
 <style>
-  .van-field__label {
-      -webkit-box-flex: 0;
-      -webkit-flex: none;
-      flex: none;
-      box-sizing: border-box;
-      width: 30%;
-      margin-right: 12px;
-      color: #646566;
-      text-align: left;
-      word-wrap: break-word;
-      font-size: 0.92rem;
-  }
+    @import "../../assets/css/sealreceive.global.css";
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
