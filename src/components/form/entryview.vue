@@ -863,6 +863,7 @@ export default {
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${elem.username}’入职登记通知已被前台/行政/食堂确认!?rurl=${receiveURL}`)
                 .set('accept', 'json');
         }
+
       }
     }
 }
