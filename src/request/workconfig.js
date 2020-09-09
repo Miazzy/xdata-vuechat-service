@@ -67,7 +67,7 @@ export const compcolumns = {
     archiveTypeColumns: ['财务归档', '档案归档'],
     orderTypeColumns: ['我方先印', '常规用印'],
     sealTypeColumns: ['合同类', '非合同类'],
-    approveColumns: ['OA系统', 'ERP系统', '费控系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
+    approveColumns: ['OA系统', 'ERP系统', '费控系统', '创达OA系统', 'CRM系统', 'EHR系统', '资金系统', '领地HR', '宝瑞商管'],
 }
 
 /**

@@ -402,6 +402,30 @@ export async function queryUserByNameHRM(name) {
 }
 
 /**
+ * @function 获取当前编号前缀的合同的列表信息
+ * @param {*} prefix
+ */
+export async function queryContractInfoByPrefix(prefix) {
+
+    try {
+        //构建查询SQL
+        const sql = `${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(prefix,like,${prefix}~)&_p=0&_size=5&_sort=-create_time`;
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(sql).set('accept', 'json');
+
+        //返回用户信息
+        if (maxinfo && maxinfo.body && maxinfo.body.length >= 1) {
+            return maxinfo.body[0];
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
  * @function 获取当前名字的用户信息
  */
 export async function queryUserBySealData(name) {

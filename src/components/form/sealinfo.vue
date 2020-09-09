@@ -63,7 +63,9 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
-                <van-field clearable label="合同编号" v-model="item.contractId" placeholder="提交时自动生成合同编号" v-show="item.sealtype == '合同类' " readonly />
+                <van-field clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同编号对应的前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' " @blur="queryHContract();" @click="queryHContract();"  />
+                <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请根据最新已有合同编号，填写合同编号序列" v-show="item.sealtype == '合同类' " />
+                <van-address-list v-show="hContractList.length > 0" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
               </van-cell-group>
@@ -195,6 +197,8 @@ export default {
             fuserList:[],
             auserid:'',
             auserList:[],
+            hContractID:'',
+            hContractList:[],
             agroup:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
@@ -262,6 +266,47 @@ export default {
       },
     },
     methods: {
+      //获取合同编号
+      async queryHContract(){
+        //获取盖章人信息
+        const prefix = this.item.prefix;
+
+        try {
+          if(!!prefix){
+
+            //从用户表数据中获取填报人资料
+            let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
+
+            if(!!list && Array.isArray(user)){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              try {
+                list.map((elem,index) => {
+                  this.hContractList.push({id:elem.loginid , value:`${user.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','') , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+              //遍历去重
+              try {
+                this.hContractList = this.hContractList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.hContractList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+
       //查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
@@ -524,6 +569,14 @@ export default {
         //缓存特定属性
         this.cacheUserInfo();
 
+      },
+      //选中当前合同编号
+      async selectHContract(value){
+        await tools.sleep(0);
+        const id = this.hContractID;
+        const item = this.hContractList.find((item,index) => {return id == item.id});
+        //当前盖印人编号
+        this.item.contractId = id;
       },
       //选中当前前台人
       async selectFrontUser(value){
