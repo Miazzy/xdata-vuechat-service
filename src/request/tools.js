@@ -200,6 +200,19 @@ export function randomNumber() {
 }
 
 /**
+ * @function 检查是否为微信
+ */
+export function isWechat() {
+    var ua = navigator.userAgent.toLowerCase();
+    var sua = window.localStorage.getItem('system_navigator_useragent') || '';
+    if (ua.match(/MicroMessenger/i) == "micromessenger" || sua.match(/MicroMessenger/i) == "micromessenger") { //这就是微信用的内置浏览器
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
  * 随机生成字符串
  * @param length 字符串的长度
  * @param chats 可选字符串区间（只会生成传入的字符串中的字符）

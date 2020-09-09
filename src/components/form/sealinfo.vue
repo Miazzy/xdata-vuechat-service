@@ -9,7 +9,7 @@
         </div>
     </header>
 
-    <section>
+    <section v-show="iswechat" >
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -142,6 +142,12 @@
       </div>
 
     </section>
+
+    <setion v-if="!iswechat" >
+      <div class="section-nowechat">
+        请使用微信客户端打开
+      </div>
+    </setion>
   </div>
   </keep-alive>
 </template>
@@ -180,6 +186,7 @@ export default {
             tasktype:'done',
             previewurl:'',
             purl:'',
+            iswechat:false,
             tableInfo:'',
             orderInfo:'',
             status:'',
@@ -265,7 +272,6 @@ export default {
 
       },
       item(to , from) {
-        debugger;
       }
     },
     methods: {
@@ -762,6 +768,8 @@ export default {
         try {
           var that = this;
 
+          this.iswechat = tools.isWechat();
+
           that.item.sealman = tools.getUrlParam('sealman');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];
           that.sealuserid = tools.getUrlParam('sealuserid');
@@ -1070,6 +1078,11 @@ export default {
     margin-right: 20px;
     padding: 5px 0;
     margin-top: 10px;
+  }
+  .section-nowechat {
+    text-align: center;
+    font-size: 18px;
+    padding-top: 28px;
   }
 </style>
 <style scoped>
