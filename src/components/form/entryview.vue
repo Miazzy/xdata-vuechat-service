@@ -784,6 +784,14 @@ export default {
         //设置前台确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , front_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
+        this.status = '已完成';
+
+        //未获取到HR信息
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: '入职登记前台确认完毕！',
+        });
+
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
         await this.handleFinaly();
 
@@ -796,6 +804,14 @@ export default {
         //设置行政确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
+        this.status = '已完成';
+
+        //未获取到HR信息
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: '入职登记行政确认完毕！',
+        });
+
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
         await this.handleFinaly();
 
@@ -807,6 +823,14 @@ export default {
 
         //设置食堂确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+
+        this.status = '已完成';
+
+        //未获取到HR信息
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: '入职登记食堂确认完毕！',
+        });
 
         //检查前台/行政/食堂是否确认完毕，如果确认完毕，则推送消息至HR，知会三方已经确认准备，并设置流程状态为归档
         await this.handleFinaly();
@@ -825,6 +849,12 @@ export default {
         //如果三方确认时间无误，则向HR推送最后知会通知，告知流程完毕
         if(!tools.isNull(value.front_time) && !tools.isNull(value.admin_time) && !tools.isNull(value.meal_time)){
 
+           //设置确认完成时间
+          await manageAPI.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+
+          //向HR推送入职引导完成通知
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${elem.username}’入职登记通知已被前台/行政/食堂确认!?rurl=${receiveURL}`)
+                .set('accept', 'json');
         }
       }
     }
