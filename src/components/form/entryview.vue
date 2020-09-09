@@ -865,6 +865,9 @@ export default {
         //如果三方确认时间无误，则向HR推送最后知会通知，告知流程完毕
         if(!tools.isNull(value.front_time) && !tools.isNull(value.admin_time) && !tools.isNull(value.meal_time)){
 
+           // 返回预览URL
+          const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=done`);
+
            //设置确认完成时间
           await manageAPI.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
