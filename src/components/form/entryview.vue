@@ -682,6 +682,10 @@ export default {
             status: '待确认',
           }
 
+          await this.queryAdminMan();
+          await this.queryFrontMan();
+          await this.queryMealMan();
+
         } catch (error) {
           console.log(error);
         }
@@ -716,6 +720,9 @@ export default {
         const front_name = this.item.front_name;
         const admin_name = this.item.admin_name;
         const meal_name = this.item.meal_name;
+        const front_id = this.item.front_id;
+        const admin_id = this.item.admin_id;
+        const meal_id = this.item.meal_id;
 
         //获取相应对接人员OA账号
         let front , admin , meal , queryURL , resp;
@@ -727,7 +734,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已确认
-        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_account: front_name , admin_account: admin_name , meal_account: meal_name });
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name , meal_account: meal_name });
 
         //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
         front = await this.queryUserInfo(front_name);
