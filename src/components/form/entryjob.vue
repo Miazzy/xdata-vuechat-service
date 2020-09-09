@@ -130,6 +130,8 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="车牌编号" v-model="item.carno" placeholder="请输入您的车牌编号！" />
+                <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
                 <!-- 驾驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
@@ -246,6 +248,7 @@ export default {
               front:'',
               admin:'',
               meal:'',
+              carno:'',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -680,6 +683,7 @@ export default {
           admin_id: this.item.admin_id,
           meal_name: this.item.meal_name,
           meal_id: this.item.meal_id,
+          carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素
 
