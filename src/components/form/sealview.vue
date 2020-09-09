@@ -654,7 +654,7 @@ export default {
         //领取人OA账户
         const username = this.item.username;
         //合同编号
-        const contract_id = item.contractId;
+        const contract_id = this.item.contractId;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
