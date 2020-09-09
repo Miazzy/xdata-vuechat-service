@@ -277,12 +277,15 @@ export default {
             //从用户表数据中获取填报人资料
             let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
 
-            if(!!list && Array.isArray(user)){
+            //清空原数据
+            this.hContractList = [];
+
+            if(!!list && Array.isArray(list) && list.length > 0){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               try {
                 list.map((elem,index) => {
-                  this.hContractList.push({id:elem.loginid , value:`${user.lastname},` , label: elem.lastname + ' ' +  elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心','') , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  this.hContractList.push({id:elem.contract_id , value:`${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , label: `${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , address: elem.deal_manager + " " + elem.deal_depart + " 合同编号: " + elem.contract_id, name:elem.filename , tel:'' , mail: elem.mail , isDefault: !index });
                 })
               } catch (error) {
                 console.log(error);
@@ -299,6 +302,9 @@ export default {
                 console.log(error);
               }
 
+            } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
+              const contract_id = `${prefix}[${dayjs().format('YYYY')}]500`;
+              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]700` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
             }
           }
         } catch (error) {

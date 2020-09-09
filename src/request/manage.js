@@ -415,7 +415,7 @@ export async function queryContractInfoByPrefix(prefix) {
 
         //返回用户信息
         if (maxinfo && maxinfo.body && maxinfo.body.length >= 1) {
-            return maxinfo.body[0];
+            return maxinfo.body;
         } else {
             return [];
         }
