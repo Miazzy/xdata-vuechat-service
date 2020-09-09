@@ -63,8 +63,8 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
-                <van-field clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同编号对应的前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' " @blur="queryHContract();" @click="queryHContract();"  />
-                <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请根据最新已有合同编号，填写合同编号序列" v-show="item.sealtype == '合同类' " />
+                <van-field required clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同对应前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' " @blur="validField('prefix');queryHContract();" :error-message="message.prefix" @click="queryHContract();"  />
+                <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请根据最新已有合同编号填写编号" v-show="item.sealtype == '合同类' " />
                 <van-address-list v-show="hContractList.length > 0" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
@@ -224,7 +224,7 @@ export default {
               front_name:'',
               archive: '', //用印归档组(财务/档案)
               archive_name:[],
-              prefix: '',  //编号前缀
+              prefix: 'LD',  //编号前缀
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
               status: '',
@@ -264,12 +264,15 @@ export default {
       $route(to, from) {
 
       },
+      item(to , from) {
+        debugger;
+      }
     },
     methods: {
       //获取合同编号
       async queryHContract(){
         //获取盖章人信息
-        const prefix = this.item.prefix;
+        const prefix = this.item.prefix = this.item.prefix.toUpperCase();
 
         try {
           if(!!prefix){
@@ -510,6 +513,8 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
+        storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
+
         return tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
@@ -581,8 +586,8 @@ export default {
         await tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
-        //当前盖印人编号
-        this.item.contractId = id;
+        const no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+        this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
       },
       //选中当前前台人
       async selectFrontUser(value){
@@ -829,6 +834,7 @@ export default {
 
           //获取缓存的用户数据
           const temp = storage.getStore('system_user_sealinfo');
+
           if(!!temp){
             this.item.dealManager = temp.dealManager;
             this.item.mobile = temp.mobile;
@@ -838,9 +844,21 @@ export default {
             this.item.dealDepart = temp.dealDepart;
           }
 
+          //是否有最近缓存数据
+          const tempitem = storage.getStore('system_seal_item');
+
+          if(!!tempitem){
+            this.item.filename = tempitem.filename;
+            this.item.count = tempitem.count;
+            this.item.prefix = tempitem.prefix;
+          }
+
           if(!that.sealuserid){
             that.sealuserid = this.config[that.item.sealman];
           }
+
+          //加载最近的同类型合同编号
+          await this.queryHContract();
 
         } catch (error) {
           console.log(error);
@@ -1038,6 +1056,20 @@ export default {
   .nut-checkbox.nut-checkbox-size-base .nut-checkbox-label {
     font-size: 14px;
     margin-left: 5px;
+  }
+  .nut-checkboxgroup .checkbox-item {
+    height: 30px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-right: 20px;
+    padding: 5px 0;
+    margin-top: 10px;
   }
 </style>
 <style scoped>

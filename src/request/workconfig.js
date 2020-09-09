@@ -92,6 +92,7 @@ export const compValidation = {
             sealman: '',
             front: '',
             archive: '',
+            prefix: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -110,6 +111,7 @@ export const compValidation = {
             sealman: '请输入印章管理员(盖印人)！',
             front: '请输入前台人员名称！',
             archive: '请输入归档人员名称！',
+            prefix: '请输入合同对应的编号前缀！',
         },
     },
     entryjob: {

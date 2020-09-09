@@ -1101,6 +1101,20 @@ export default {
     font-size: 14px;
     margin-left: 5px;
   }
+  .nut-checkboxgroup .checkbox-item {
+    height: 30px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-right: 20px;
+    padding: 5px 0;
+    margin-top: 10px;
+  }
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
