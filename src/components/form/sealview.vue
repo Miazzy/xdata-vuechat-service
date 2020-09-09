@@ -60,7 +60,7 @@
             <van-cell-group style="margin-top:10px;">
               <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
               <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
-              <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
+              <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
               <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
@@ -634,7 +634,7 @@ export default {
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印确认',
-          message: '请确认进行‘已用印’处理，确认后推送通知！',
+          message: '请检查合同编号是否需要修改，并确认进行‘已用印’处理，确认后推送通知！',
         })
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
@@ -653,6 +653,8 @@ export default {
         const email = this.item.dealMail;
         //领取人OA账户
         const username = this.item.username;
+        //合同编号
+        const contract_id = item.contractId;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
@@ -662,8 +664,8 @@ export default {
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-        //修改状态为已用印
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name });
+        //修改状态为已用印，保存当前合同编号
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name });
 
         //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
