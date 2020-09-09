@@ -130,15 +130,15 @@
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="huserList.length > 0 && role == 'hr' " v-model="item.hr_id" :list="huserList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role != 'hr'" required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
+                <van-field :readonly="role != 'hr'" :required="role == 'hr'" clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="auserList.length > 0 && role == 'hr' " v-model="item.admin_id" :list="auserList" default-tag-text="默认" edit-disabled @select="selectAdminUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role != 'hr'" required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
+                <van-field :readonly="role != 'hr'" :required="role == 'hr'" clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="fuserList.length > 0 && role == 'hr' " v-model="item.front_id" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role != 'hr'" required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
+                <van-field :readonly="role != 'hr'" :required="role == 'hr'" clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="muserList.length > 0 && role == 'hr' " v-model="item.meal_id" :list="muserList" default-tag-text="默认" edit-disabled @select="selectMealUser()" />
               </van-cell-group>
@@ -146,11 +146,11 @@
               <van-cell-group style="margin-top:10px;" v-show="item.front_time || item.admin_time || item.meal_time ">
                 <van-cell value="流程信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="前台确认时间" v-model="item.front_time" placeholder="前台确认时间" v-show="!!item.front_time" />
+                <van-field readonly clearable label="前台确认时间" v-model="item.front_time" placeholder="前台确认时间" v-show="!!item.front_time" />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="行政确认时间" v-model="item.admin_time" placeholder="行政确认时间" v-show="!!item.admin_time" />
+                <van-field readonly clearable label="行政确认时间" v-model="item.admin_time" placeholder="行政确认时间" v-show="!!item.admin_time" />
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field required clearable label="食堂确认时间" v-model="item.meal_time" placeholder="食堂确认时间" v-show="!!item.meal_time" />
+                <van-field readonly clearable label="食堂确认时间" v-model="item.meal_time" placeholder="食堂确认时间" v-show="!!item.meal_time" />
               </van-cell-group>
 
             </van-form>
@@ -814,7 +814,7 @@ export default {
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
-        this.item.admin_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        this.item.admin_time = dayjs().format('YYYY-MM-DD');
 
         //修改状态
         this.status = '已完成';
@@ -837,7 +837,7 @@ export default {
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
-        this.item.meal_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        this.item.meal_time = dayjs().format('YYYY-MM-DD');
 
         //修改状态
         this.status = '已完成';
@@ -872,7 +872,7 @@ export default {
           await manageAPI.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
           //向HR推送入职引导完成通知
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${value.username}’入职登记通知已被前台/行政/食堂确认!?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${value.username}’入职登记通知已被前台、行政、食堂确认!?rurl=${receiveURL}`)
                 .set('accept', 'json');
         }
 
