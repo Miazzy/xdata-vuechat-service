@@ -5,13 +5,13 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header">
+    <header id="wx-header" v-if="iswechat" >
         <div class="center">
             <span>入职管理</span>
         </div>
     </header>
 
-    <section>
+    <section v-if="iswechat" >
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -185,6 +185,13 @@
       </div>
 
     </section>
+
+    <setion v-if="!iswechat" >
+      <div class="section-nowechat">
+        请使用微信客户端打开
+      </div>
+    </setion>
+
   </div>
   </keep-alive>
 </template>
@@ -227,6 +234,7 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            iswechat:false,
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
             huserid:'',
@@ -635,6 +643,7 @@ export default {
       async queryInfo() {
 
         try {
+          this.iswechat = tools.isWechat();
 
           //获取用户编号
           this.item.id = tools.getUrlParam('id');

@@ -3,13 +3,13 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header">
-        <div class="center">
+    <header id="wx-header" v-if="iswechat" >
+        <div class="center" >
             <span>印章管理</span>
         </div>
     </header>
 
-    <section v-show="iswechat" >
+    <section v-if="iswechat" >
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -148,6 +148,7 @@
         请使用微信客户端打开
       </div>
     </setion>
+
   </div>
   </keep-alive>
 </template>
@@ -186,7 +187,6 @@ export default {
             tasktype:'done',
             previewurl:'',
             purl:'',
-            iswechat:false,
             tableInfo:'',
             orderInfo:'',
             status:'',
@@ -194,6 +194,7 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            iswechat:false,
             message: workconfig.compValidation.seal.message,
             valid: workconfig.compValidation.seal.valid,
             cuserid:'',
@@ -766,9 +767,9 @@ export default {
       async queryInfo(){
 
         try {
-          var that = this;
-
           this.iswechat = tools.isWechat();
+
+          var that = this;
 
           that.item.sealman = tools.getUrlParam('sealman');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];

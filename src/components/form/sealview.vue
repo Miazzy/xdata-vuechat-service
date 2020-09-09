@@ -3,13 +3,13 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header">
+    <header id="wx-header" v-if="iswechat" >
         <div class="center">
             <span>印章管理</span>
         </div>
     </header>
 
-    <section>
+    <section v-if="iswechat" >
 
       <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
@@ -153,6 +153,13 @@
       </div>
 
     </section>
+
+    <setion v-if="!iswechat" >
+      <div class="section-nowechat">
+        请使用微信客户端打开
+      </div>
+    </setion>
+
   </div>
   </keep-alive>
 </template>
@@ -193,6 +200,7 @@ export default {
             status_type:'',
             fields:[],
             sealuserid:'',
+            iswechat:false,
             message: workconfig.compValidation.seal.message,
             valid: workconfig.compValidation.seal.valid,
             cuserid:'',
@@ -530,15 +538,16 @@ export default {
       },
 
       async queryInfo(){
-        try {
 
-          //
+        try {
+          this.iswechat = tools.isWechat();
+
           var that = this;
           that.item.id = tools.getUrlParam('id');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];
           that.item.type = tools.getUrlParam('type');
 
-          //
+          //查询用印数据
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
           //设置填报数据
