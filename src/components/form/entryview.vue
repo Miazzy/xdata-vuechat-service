@@ -130,15 +130,15 @@
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="huserList.length > 0 && role == 'hr' " v-model="item.hr_id" :list="huserList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role == 'hr'" required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
+                <van-field :readonly="role != 'hr'" required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="auserList.length > 0 && role == 'hr' " v-model="item.admin_id" :list="auserList" default-tag-text="默认" edit-disabled @select="selectAdminUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role == 'hr'" required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
+                <van-field :readonly="role != 'hr'" required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="fuserList.length > 0 && role == 'hr' " v-model="item.front_id" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field :readonly="role == 'hr'" required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
+                <van-field :readonly="role != 'hr'" required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="muserList.length > 0 && role == 'hr' " v-model="item.meal_id" :list="muserList" default-tag-text="默认" edit-disabled @select="selectMealUser()" />
               </van-cell-group>
