@@ -830,9 +830,6 @@ export default {
             })
           }
 
-          debugger;
-
-
         } catch (error) {
           console.log(error);
         }
