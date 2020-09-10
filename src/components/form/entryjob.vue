@@ -741,6 +741,16 @@ export default {
             this.item.username = item.username || this.item.username;
             this.item.mobile = item.mobile || this.item.mobile;
             this.item.idcard = item.idcard || this.item.idcard;
+            this.item.position = item.position || this.item.position;
+            this.item.other_equip = item.other_equip || this.item.other_equip;
+            this.item.othertools = item.othertools || this.item.othertools;
+            this.item.carno = item.carno || this.item.carno;
+            this.item.driving_license = item.driving_license || this.item.driving_license;
+            this.item.driver_license = item.driver_license || this.item.driver_license;
+            this.item.idcard = item.idcard || this.item.idcard;
+            this.item.diploma = item.diploma || this.item.diploma;
+            this.item.bachelor = item.bachelor || this.item.bachelor;
+            this.item.bank_card = item.bank_card || this.item.bank_card;
           }
 
           //如果前台人员填写为英文，则查询中文名称
