@@ -11,7 +11,7 @@
         </div>
     </header>
 
-    <section v-if="iswechat" >
+    <section v-if="iswechat && isfirst">
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -32,6 +32,68 @@
             <van-col span="8"></van-col>
           </van-row>
         </div>
+
+      </div>
+
+      <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
+        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+        </div>
+        <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
+
+          <van-cell-group>
+
+            <van-form >
+
+              <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <!-- 员工姓名（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的员工姓名！" @blur="validField('username')" :error-message="message.username"  />
+                <!-- 入职岗位（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="电话号码" v-model="item.mobile" placeholder="请填写您的电话号码！" @blur="validField('mobile')" :error-message="message.mobile"/>
+                <!-- 入职日期（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请填写您的身份证号！" @blur="validField('idcard')" :error-message="message.idcard" />
+
+              </van-cell-group>
+
+            </van-form>
+
+          </van-cell-group>
+
+          <div style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFirstConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >验证</van-button>
+          </div>
+
+          <div style="height:500px;" ></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section v-if="iswechat && !isfirst" >
+
+      <div class="weui-cells" style="margin-top:0px;">
+
+        <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
+          <van-notice-bar
+              v-show=" title!='' && title != null && typeof title != 'undefined' "
+              left-icon="volume-o"
+              color="#1989fa"
+              background="#ecf9ff"
+              :text="title"
+            />
+        </div>
+
+        <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
+          <van-row>
+            <van-col span="8"></van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">入职登记表</van-col>
+            <van-col span="8"></van-col>
+          </van-row>
+        </div>
+
+
 
       </div>
 
@@ -128,13 +190,17 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-                <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="车牌编号" v-model="item.carno" placeholder="请输入您的车牌编号！" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
                 <!-- 驾驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 学历编号（HR需要确认/修改） -->
@@ -220,6 +286,7 @@ export default {
             muserid:'',
             muserList:[],
             iswechat:false,
+            isfirst:true,
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
             item:{
@@ -295,6 +362,46 @@ export default {
       this.queryInfo();
     },
     methods: {
+      //处理验证确认
+      async handleFirstConfirm(){
+
+        //检查姓名、电话号码，身份证号是否填写
+        if(!this.item.username || !this.item.mobile || !this.item.idcard){
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '微信提示',
+            message: '请将您的姓名、电话、身份证号填写完整后进行验证操作！',
+          });
+          return ;
+        }
+
+        //查询URL
+        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})&_fields=id`;
+
+        //获取返回结果
+        const resp = await superagent.get(queryURL).set('accept', 'json');
+
+        if(resp && resp.body && resp.body.length > 0){
+
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '微信提示',
+            message: '验证成功，请填写下一步信息！',
+          });
+
+          this.isfirst = false;
+
+        } else {
+
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '微信提示',
+            message: '验证失败，请向HR确认，是否将您的基础信息录入入职登记中？',
+          });
+
+        }
+
+      },
       //查询归档人员
       async queryHRMan(){
         //获取盖章人信息
@@ -585,6 +692,8 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
+        storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
+
         return tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
@@ -619,6 +728,101 @@ export default {
         try {
           this.iswechat = tools.isWechat();
           this.item.sealman = tools.getUrlParam('sealman');
+
+          const item = storage.getStore('system_entry_job_item');
+
+          this.item.hr = tools.getUrlParam('hr');        //用印管理员成员组
+          this.item.admin = tools.getUrlParam('admin');  //用印前台接受组
+          this.item.front = tools.getUrlParam('front');  //用印归档组(财务/档案)
+          this.item.meal = tools.getUrlParam('meal');  //用印
+
+          //自动回显刚才填写的用户基础信息
+          if(item){
+            this.item.username = item.username || this.item.username;
+            this.item.mobile = item.mobile || this.item.mobile;
+            this.item.idcard = item.idcard || this.item.idcard;
+          }
+
+          //如果前台人员填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(this.item.front)){
+            //获取盖印人姓名
+            this.item.front_name = await manageAPI.queryUsernameByID(this.item.front);
+          }
+          //如果行政人员填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(this.item.admin)){
+            //获取盖印人姓名
+            this.item.admin_name = await manageAPI.queryUsernameByID(this.item.admin);
+          }
+          //如果行政人员填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(this.item.meal)){
+            //获取盖印人姓名
+            this.item.meal_name = await manageAPI.queryUsernameByID(this.item.meal);
+          }
+          //如果行政人员填写为英文，则查询中文名称
+          if(/^[a-zA-Z_0-9]+$/.test(this.item.hr)){
+            //获取盖印人姓名
+            this.item.hr_name = await manageAPI.queryUsernameByID(this.item.hr);
+          }
+
+          //如果行政人候选列表存在
+          if(this.item.admin){
+            //获取可选填报人列表
+            let slist = await manageAPI.queryUsernameByIDs(this.item.admin.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            slist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.auserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.auserList.length });
+            })
+          }
+
+          //如果行政人候选列表存在
+          if(this.item.front){
+            //获取可选填报人列表
+            let slist = await manageAPI.queryUsernameByIDs(this.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            slist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.fuserList.length });
+            })
+          }
+
+          //如果行政人候选列表存在
+          if(this.item.meal){
+            //获取可选填报人列表
+            let slist = await manageAPI.queryUsernameByIDs(this.item.meal.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            slist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.muserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.muserList.length });
+            })
+          }
+
+          //如果行政人候选列表存在
+          if(this.item.hr){
+            //获取可选填报人列表
+            let slist = await manageAPI.queryUsernameByIDs(this.item.hr.split(',').map(item => { return `'${item}'`; }).join(','));
+            //遍历填报人列表
+            slist.map((elem , index) => {
+              let company = elem.textfield1.split('||')[0];
+              company = company.slice(company.lastIndexOf('>')+1);
+              let department = elem.textfield1.split('||')[1];
+              department = department.slice(department.lastIndexOf('>')+1);
+              this.huserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.huserList.length });
+            })
+          }
+
+          debugger;
+
+
         } catch (error) {
           console.log(error);
         }
@@ -692,6 +896,7 @@ export default {
           admin_id: this.item.admin_id,
           meal_name: this.item.meal_name,
           meal_id: this.item.meal_id,
+          mobile: this.item.mobile,
           carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素

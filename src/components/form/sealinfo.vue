@@ -736,7 +736,7 @@ export default {
 
       },
       //缓存填报人信息
-      cacheUserInfo(){
+      async cacheUserInfo(){
         //获取特定属性
         const temp = (({dealManager, mobile, username , dealMail , signman , dealDepart}) => ({dealManager, mobile, username , dealMail , signman , dealDepart}))(this.item)
         //将用户名存放入缓存中，下次打开页面直接填入

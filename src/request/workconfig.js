@@ -136,9 +136,10 @@ export const compValidation = {
             join_time: '', //入职时间
             hr_name: '', //对接HR
             bank_card: '',
+            mobile: '',
         },
         valid: {
-            username: '请输入您的姓名！',
+            username: '请输入您的员工姓名！',
             position: '请输入您的入职岗位！', //入职岗位
             picture: '请上传您的一寸照片！', //员工照片
             computer: '请选择是否需要电脑配置！', //是否需要电脑配置
@@ -158,6 +159,7 @@ export const compValidation = {
             join_time: '请选择您的入职时间！', //入职时间
             hr_name: '请选择您的对接HR姓名！', //对接HR
             bank_card: '请输入您的工资银行卡号！',
+            mobile: '请输入您的电话号码！', //
         },
     }
 }
