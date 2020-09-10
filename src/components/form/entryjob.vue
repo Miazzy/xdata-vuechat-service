@@ -93,8 +93,6 @@
           </van-row>
         </div>
 
-
-
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
@@ -209,6 +207,11 @@
                 <van-field :readonly="readonly" required clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
               </van-cell-group>
 
             </van-form>
