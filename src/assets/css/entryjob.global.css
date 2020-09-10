@@ -64,3 +64,27 @@
     font-size: 18px;
     padding-top: 28px;
 }
+
+.nut-uploader {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}
+
+.van-button {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}
+
+.van-cell-upload .van-cell__title>span {
+    font-size: 14px;
+}

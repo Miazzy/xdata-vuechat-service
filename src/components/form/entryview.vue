@@ -155,6 +155,48 @@
                 <van-field readonly clearable label="食堂确认时间" v-model="item.meal_time" placeholder="食堂确认时间" v-show="!!item.meal_time" />
               </van-cell-group>
 
+              <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadGP"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadXS"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadJS"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadID"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+              </van-cell-group>
+
             </van-form>
           </van-cell-group>
 
@@ -283,11 +325,18 @@ export default {
               admin:'',
               meal:'',
               carno:'',
+              files_gp:'',
+              files_xs:'',
+              files_js:'',
+              files_id:'',
+              files_by:'',
+              files_bk:'',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
               status: '',
             },
+            downloadURL:'https://upload.yunwisdom.club:30443/',
             backPath:'/app',
             workflowlist:[],
             announces:[],
@@ -321,6 +370,31 @@ export default {
       this.queryInfo();
     },
     methods: {
+      async saveAsFile(file , name){
+        try {
+          window.saveAs(file , name);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async downloadGP(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_gp , '工牌附件' + this.item.files_gp.split('/')[1]);
+      },
+      async downloadXS(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_xs , '工牌附件' + this.item.files_xs.split('/')[1]);
+      },
+      async downloadJS(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_js , '工牌附件' + this.item.files_js.split('/')[1]);
+      },
+      async downloadID(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_id , '工牌附件' + this.item.files_id.split('/')[1]);
+      },
+      async downloadBY(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_by , '工牌附件' + this.item.files_by.split('/')[1]);
+      },
+      async downloadBK(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_bk , '工牌附件' + this.item.files_bk.split('/')[1]);
+      },
       //查询归档人员
       async queryHRMan(){
         //获取盖章人信息
@@ -687,11 +761,19 @@ export default {
             admin_id: value.admin_id,
             meal_id: value.meal_id,
             carno: value.carno,
+            files_id: value.files_id,
+            files_by: value.files_by,
+            files_bk: value.files_bk,
+            files_gp: value.files_gp,
+            files_xs: value.files_xs,
+            files_js: value.files_js,
             front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
             admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
             meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
             status: '待确认',
           }
+
+          debugger;
 
           await this.queryAdminMan();
           await this.queryFrontMan();

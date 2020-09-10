@@ -210,7 +210,44 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
+
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessGP"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessID"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk">
+                  <template #right-icon>
+                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
 
               </van-cell-group>
 
@@ -290,6 +327,7 @@ export default {
             muserList:[],
             iswechat:false,
             isfirst:true,
+            uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
             item:{
@@ -327,6 +365,12 @@ export default {
               admin:'',
               meal:'',
               carno:'',
+              files_gp:'',
+              files_xs:'',
+              files_js:'',
+              files_id:'',
+              files_by:'',
+              files_bk:'',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -350,7 +394,7 @@ export default {
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
             group: workconfig.group,
-            fileList: [],
+
             currentKey:'',
             readonly: false,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
@@ -365,6 +409,36 @@ export default {
       this.queryInfo();
     },
     methods: {
+      async uploadSuccessGP(file , res){
+        this.item.files_gp = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
+      async uploadSuccessXS(file , res){
+        this.item.files_xs = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
+      async uploadSuccessJS(file , res){
+        this.item.files_js = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
+      async uploadSuccessID(file , res){
+        this.item.files_id = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
+      async uploadSuccessBY(file , res){
+        this.item.files_by = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
+      async uploadSuccessBK(file , res){
+        this.item.files_bk = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+        debugger;
+      },
       //处理验证确认
       async handleFirstConfirm(){
 
@@ -907,9 +981,17 @@ export default {
           meal_name: this.item.meal_name,
           meal_id: this.item.meal_id,
           mobile: this.item.mobile,
+          files_gp: this.item.files_gp,
+          files_xs: this.item.files_xs,
+          files_js: this.item.files_js,
+          files_id: this.item.files_id,
+          files_by: this.item.files_by,
+          files_bk: this.item.files_bk,
           carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素
+
+        debugger;
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData('bs_entry_job' , elem);
