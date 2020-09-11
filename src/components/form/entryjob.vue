@@ -213,39 +213,39 @@
 
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp">
+                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessGP"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessGP"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs">
+                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js">
+                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id">
+                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessID"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessID"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by">
+                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk">
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
@@ -397,6 +397,7 @@ export default {
 
             currentKey:'',
             readonly: false,
+            acceptType: workconfig.compcolumns.acceptType,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
         }
@@ -412,32 +413,26 @@ export default {
       async uploadSuccessGP(file , res){
         this.item.files_gp = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       async uploadSuccessXS(file , res){
         this.item.files_xs = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       async uploadSuccessJS(file , res){
         this.item.files_js = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       async uploadSuccessID(file , res){
         this.item.files_id = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       async uploadSuccessBY(file , res){
         this.item.files_by = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       async uploadSuccessBK(file , res){
         this.item.files_bk = JSON.parse(res).message;
         this.$toast.success('上传成功');
-        debugger;
       },
       //处理验证确认
       async handleFirstConfirm(){
@@ -991,7 +986,7 @@ export default {
           status: '待确认',
         }; // 待提交元素
 
-        debugger;
+        ;
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData('bs_entry_job' , elem);

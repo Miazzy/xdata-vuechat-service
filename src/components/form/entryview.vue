@@ -159,37 +159,37 @@
 
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp">
+                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadGP"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs">
+                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadXS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js">
+                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadJS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id">
+                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadID"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by">
+                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk">
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
                   </template>
@@ -371,6 +371,11 @@ export default {
     },
     methods: {
       async saveAsFile(file , name){
+        try {
+          window.open(file , '_blank');
+        } catch (error) {
+          console.log(error);
+        }
         try {
           window.saveAs(file , name);
         } catch (error) {
@@ -773,8 +778,6 @@ export default {
             status: '待确认',
           }
 
-          debugger;
-
           await this.queryAdminMan();
           await this.queryFrontMan();
           await this.queryMealMan();
@@ -981,8 +984,18 @@ export default {
 </script>
 <style>
     @import "../../assets/css/entryview.global.css";
+    .van-button[name="file"] {
+      background-image: linear-gradient(to right, #f96033, red);
+      margin: 5px 10px;
+      padding: 1px 20px;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 12px;
+      height: 27px;
+    }
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
+
 </style>
