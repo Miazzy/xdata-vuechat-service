@@ -1130,11 +1130,10 @@ export default {
           files_ssxw: this.item.files_ssxw,
           files_bsby: this.item.files_bsby,
           files_bsxw: this.item.files_bsxw,
+          greatdiploma: this.item.greatdiploma,
           carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素
-
-        ;
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData('bs_entry_job' , elem);
