@@ -908,7 +908,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已确认
-        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name , meal_account: meal_name });
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
 
         //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
         front = await this.queryUserInfo(front_name);
