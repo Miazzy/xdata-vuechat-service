@@ -130,7 +130,7 @@
                 <!-- 食堂账户（HR需要确认/修改） -->
                 <van-cell value="食堂账户" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" v-show=" ( role == 'meal' || role == 'hr' || role == 'done' ) && ( status == '已确认' || status == '已完成' ) " />
                 <!-- 食堂账户（HR需要确认/修改） -->
-                <van-field clearable label="食堂账户" v-model="item.meal_account" placeholder="请输入新员工的食堂账户！" />
+                <van-field required clearable label="食堂账户" v-model="item.meal_account" placeholder="请输入新员工的食堂账户！"  @blur="validField('meal_account')" :error-message="message.meal_account" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">

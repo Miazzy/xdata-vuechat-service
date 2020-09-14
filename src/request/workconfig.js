@@ -95,6 +95,7 @@ export const compValidation = {
             front: '',
             archive: '',
             prefix: '',
+            meal_account: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -114,6 +115,7 @@ export const compValidation = {
             front: '请输入前台人员名称！',
             archive: '请输入归档人员名称！',
             prefix: '请输入合同对应的编号前缀！',
+            meal_account: '请输入新员工的食堂账户！',
         },
     },
     entryjob: {
