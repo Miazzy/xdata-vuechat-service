@@ -359,8 +359,13 @@ export default {
               files_xs:'',
               files_js:'',
               files_id:'',
-              files_by:'',
               files_bk:'',
+              files_by:'',
+              files_xw: '',
+              files_ssby: '',
+              files_ssxw: '',
+              files_bsby: '',
+              files_bsxw: '',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -434,16 +439,16 @@ export default {
         this.saveAsFile(this.downloadURL + this.item.files_xw , '学位证附件' + this.item.files_xw.split('/')[1]);
       },
       async downloadSSBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_by.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_ssby.split('/')[1]);
       },
       async downloadSSXW(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_ssxw , '硕士学位证附件' + this.item.files_bk.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_ssxw , '硕士学位证附件' + this.item.files_ssxw.split('/')[1]);
       },
       async downloadBSBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bsby , '博士毕业证附件' + this.item.files_by.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_bsby , '博士毕业证附件' + this.item.files_bsby.split('/')[1]);
       },
       async downloadBSXW(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bk.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bsxw.split('/')[1]);
       },
       //查询归档人员
       async queryHRMan(){
@@ -840,7 +845,7 @@ export default {
       // 查询用户信息
       async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
         // 查询前台人员SQL
-        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,like,%27~${name}~%27)~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
+        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         resp = await superagent.get(queryURL).set('accept', 'json');
