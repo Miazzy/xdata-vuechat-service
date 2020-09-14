@@ -102,6 +102,8 @@
                 <van-field :readonly="readonly" clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" @click="tag.showPickerCommon = true ; currentKey = 'writingtools'; " />
                 <!-- 员工工牌（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" @click="tag.showPickerCommon = true ; currentKey = 'badge'; " />
+                <!-- 员工门禁卡（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="门禁卡牌" v-model="item.ban_card" placeholder="是否需要配置员工门禁卡?" @click="tag.showPickerCommon = true ; currentKey = 'ban_card'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" clearable label="其他用品" v-model="item.othertools" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" />
               </van-cell-group>
@@ -329,28 +331,29 @@ export default {
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               username:'',
-              position:'',    //入职岗位
-              picture:'',     //员工照片
-              computer:'是',  //是否需要电脑配置
-              seat:'是',      //是否需要办公座椅
-              drawer:'是',    //是否需要办公抽屉drawer
+              position:'',       //入职岗位
+              picture:'',        //员工照片
+              computer:'是',     //是否需要电脑配置
+              seat:'是',         //是否需要办公座椅
+              drawer:'是',       //是否需要办公抽屉drawer
               other_equip:'暂无',//是否需要其他办公配置
-              notebook:'是',  //是否需要笔记本子
-              manual:'是',    //是否需要入职手册
-              writingtools:'是',//是否需要签字笔/擦
-              badge:'是',     //员工工牌
-              othertools:'暂无',//其他用品
+              notebook:'是',     //是否需要笔记本子
+              manual:'是',       //是否需要入职手册
+              writingtools:'是', //是否需要签字笔/擦
+              badge:'是',        //员工工牌
+              ban_card:'否',     //门禁卡牌
+              othertools:'暂无', //其他用品
               driving_license:'',//行驶证
-              driver_license:'',//驾驶证
-              idcard:'',    //身份证号
-              diploma:'',   //学历编号
-              bachelor:'',  //学位编号
-              bank_card:'', //工资银行卡号
+              driver_license:'', //驾驶证
+              idcard:'',         //身份证号
+              diploma:'',        //学历编号
+              bachelor:'',       //学位编号
+              bank_card:'',      //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
               front_time:'',
               admin_time:'',
               meal_time:'',
-              hr_name:'',   //对接HR
+              hr_name:'',        //对接HR
               hr_id: '',
               front_name:'',
               front_id:'',
@@ -374,6 +377,7 @@ export default {
               files_ssxw: '',
               files_bsby: '',
               files_bsxw: '',
+              greatdiploma:'本科',
               remark:'',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -398,7 +402,7 @@ export default {
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
             group: workconfig.group,
-            fileList: [],
+
             currentKey:'',
             readonly: true,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,

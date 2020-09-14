@@ -111,6 +111,8 @@
                 <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
+                <!-- 最高学历（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clickable clearable label="最高学历" v-model="item.greatdiploma"  placeholder="请选择您的最高学历!" @click="tag.showPickerDiploma = true;" />
                 <!-- 入职岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 入职日期（HR需要确认/修改） -->
@@ -139,25 +141,6 @@
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
-                <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
-                  <van-datetime-picker
-                    type="date"
-                    @cancel="tag.showPickerJoinTime = false"
-                    @confirm="joinTimeConfirm"
-                    :min-date="new Date()"
-                    title="选择日期"
-                  />
-                </van-popup>
-
-                <van-popup v-model="tag.showPickerCommon" round position="bottom">
-                  <van-picker
-                    show-toolbar
-                    :columns="commonTypeColumns"
-                    @cancel="tag.showPickerCommon = false"
-                    @confirm="commonTypeConfirm"
-                  />
-                </van-popup>
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -182,6 +165,8 @@
                 <van-field :readonly="readonly" required clearable label="签字笔/擦" v-model="item.writingtools" placeholder="是否需要配置签字笔/擦?" @click="tag.showPickerCommon = true ; currentKey = 'writingtools'; " />
                 <!-- 员工工牌（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="员工工牌" v-model="item.badge" placeholder="是否需要配置员工工牌?" @click="tag.showPickerCommon = true ; currentKey = 'badge'; " />
+                <!-- 员工门禁卡（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="门禁卡牌" v-model="item.ban_card" placeholder="是否需要配置员工门禁卡?" @click="tag.showPickerCommon = true ; currentKey = 'ban_card'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" clearable label="其他用品" v-model="item.othertools" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" show-word-limit />
               </van-cell-group>
@@ -242,37 +227,37 @@
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '专科' || item.greatdiploma == '本科' || item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '本科' || item.greatdiploma == '硕士' || item.greatdiploma == '博士'" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '硕士' || item.greatdiploma == '博士' " title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '博士' " title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                <van-cell v-show="item.greatdiploma == '博士' " title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSXW"  >上传</nut-uploader>
                   </template>
@@ -285,7 +270,35 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
-            <van-goods-action  v-show=" tag.showPickerCommon == false && tag.showPickerJoinTime == false && status == '' ">
+            <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
+              <van-datetime-picker
+                type="date"
+                :min-date="new Date()"
+                @cancel="tag.showPickerJoinTime = false"
+                @confirm="joinTimeConfirm"
+                title="选择日期"
+              />
+            </van-popup>
+
+            <van-popup v-model="tag.showPickerCommon" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="commonTypeColumns"
+                @cancel="tag.showPickerCommon = false"
+                @confirm="commonTypeConfirm"
+              />
+            </van-popup>
+
+            <van-popup v-model="tag.showPickerDiploma" round position="bottom">
+              <van-picker
+                show-toolbar
+                :columns="diplomaType"
+                @cancel="tag.showPickerDiploma = false"
+                @confirm="diplomaTypeConfirm"
+              />
+            </van-popup>
+
+            <van-goods-action  v-show=" tag.showPickerCommon == false && tag.showPickerJoinTime == false  && tag.showPickerDiploma == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -375,6 +388,7 @@ export default {
               manual:'是',    //是否需要入职手册
               writingtools:'是',//是否需要签字笔/擦
               badge:'是',     //员工工牌
+              ban_card:'否',    //否
               othertools:'暂无',//其他用品
               driving_license: '',//行驶证
               driver_license: '',//驾驶证
@@ -406,6 +420,7 @@ export default {
               files_ssxw: '',
               files_bsby: '',
               files_bsxw: '',
+              greatdiploma:'本科',
               remark: '',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
@@ -424,6 +439,7 @@ export default {
               showPickerSealType: false,
               showPickerOrderType: false,
               showPickerJoinTime: false,
+              showPickerDiploma: false,
             },
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
@@ -432,6 +448,7 @@ export default {
 
             currentKey:'',
             readonly: false,
+            diplomaType: workconfig.compcolumns.diplomaTypeColumns,
             acceptType: workconfig.compcolumns.acceptType,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
@@ -575,6 +592,7 @@ export default {
         }
 
       },
+
       //查询归档人员
       async queryHRMan(){
         //获取盖章人信息
@@ -636,6 +654,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryAdminMan(){
         //获取盖章人信息
@@ -697,6 +716,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryFrontMan(){
         //获取盖章人信息
@@ -758,6 +778,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryMealMan(){
         //获取盖章人信息
@@ -819,6 +840,7 @@ export default {
           console.log(error);
         }
       },
+
       //选中当前盖印人
       async selectHRUser(value){
         await tools.sleep(0);
@@ -828,6 +850,7 @@ export default {
         this.item.hr_name = user.name;
         this.item.hr_id = id;
       },
+
       //选中当前盖印人
       async selectAdminUser(value){
         await tools.sleep(0);
@@ -837,6 +860,7 @@ export default {
         this.item.admin_name = user.name;
         this.item.admin_id = id;
       },
+
       //选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);
@@ -846,6 +870,7 @@ export default {
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
+
       //选中当前盖印人
       async selectMealUser(value){
         await tools.sleep(0);
@@ -855,6 +880,7 @@ export default {
         this.item.meal_name = user.name;
         this.item.meal_id = id;
       },
+
       validField(fieldName){
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -869,6 +895,7 @@ export default {
 
         return tools.isNull(this.message[fieldName]);
       },
+
       afterRead(file) {
 
         file.status = 'uploading';
@@ -879,22 +906,35 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
+
       // 显示用户信息，如显示HR信息，显示行政人员信息
       displayUserInfo(fieldName){
 
       },
+
       // 选择入职时间
-      joinTimeConfirm(value){
+      async joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.tag.showPickerJoinTime = false;
         this.validField('join_time');
+        await tools.sleep(100);
+        this.tag.showPickerJoinTime = false;
       },
+
       // 选择是否
-      commonTypeConfirm(value){
+      async commonTypeConfirm(value){
         this.item[this.currentKey] = value;
-        this.tag.showPickerCommon = false;
         this.validField(value);
+        await tools.sleep(100);
+        this.tag.showPickerCommon = false;
       },
+
+      // 选择学历
+      async diplomaTypeConfirm(value){
+        this.item.greatdiploma = value;
+        await tools.sleep(100);
+        this.tag.showPickerDiploma = false;
+      },
+
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -1008,6 +1048,7 @@ export default {
         }
 
       },
+
       // 用户提交入职登记表函数
       async handleConfirm() {
 
@@ -1067,6 +1108,7 @@ export default {
           diploma: this.item.diploma,   //学历编号
           bachelor: this.item.bachelor,  //学位编号
           bank_card: this.item.bank_card, //工资银行卡号
+          ban_card: this.item.ban_card, //门禁卡
           join_time: this.item.join_time, //入职时间
           hr_name: this.item.hr_name,   //对接HR
           hr_id: this.item.hr_id ,  //HR编码信息
