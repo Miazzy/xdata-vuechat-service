@@ -237,15 +237,45 @@
                   </template>
                 </van-cell>
 
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
                 <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                <van-cell title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXW"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSBY"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSXW"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSBY"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
@@ -346,32 +376,37 @@ export default {
               writingtools:'是',//是否需要签字笔/擦
               badge:'是',     //员工工牌
               othertools:'暂无',//其他用品
-              driving_license:'',//行驶证
-              driver_license:'',//驾驶证
-              idcard:'',    //身份证号
-              diploma:'',   //学历编号
-              bachelor:'',  //学位编号
-              bank_card:'', //工资银行卡号
+              driving_license: '',//行驶证
+              driver_license: '',//驾驶证
+              idcard: '',    //身份证号
+              diploma: '',   //学历编号
+              bachelor: '',  //学位编号
+              bank_card: '', //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
-              hr_name:'',   //对接HR
+              hr_name: '',   //对接HR
               hr_id: '',
-              front_name:'',
-              front_id:'',
-              admin_name:'',
-              admin_id:'',
-              meal_name:'',
-              meal_id:'',
-              front:'',
-              admin:'',
-              meal:'',
-              carno:'',
-              files_gp:'',
-              files_xs:'',
-              files_js:'',
-              files_id:'',
-              files_by:'',
-              files_bk:'',
-              remark:'',    //备注信息
+              front_name: '',
+              front_id: '',
+              admin_name: '',
+              admin_id: '',
+              meal_name: '',
+              meal_id: '',
+              front: '',
+              admin: '',
+              meal: '',
+              carno: '',
+              files_gp: '',
+              files_xs: '',
+              files_js: '',
+              files_id: '',
+              files_bk: '',
+              files_by: '',
+              files_xw: '',
+              files_ssby: '',
+              files_ssxw: '',
+              files_bsby: '',
+              files_bsxw: '',
+              remark: '',    //备注信息
               prefix: '',   //编号前缀
               name: '',     //流程组名，即Group_XX
               status: '',
@@ -432,6 +467,22 @@ export default {
       },
       async uploadSuccessBK(file , res){
         this.item.files_bk = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
+      async uploadSuccessSSBY(file , res){
+        this.item.files_ssby = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
+      async uploadSuccessSSXW(file , res){
+        this.item.files_ssxw = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
+      async uploadSuccessBSBY(file , res){
+        this.item.files_bsby = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
+      async uploadSuccessBSXW(file , res){
+        this.item.files_bsxw = JSON.parse(res).message;
         this.$toast.success('上传成功');
       },
       //处理验证确认
@@ -980,8 +1031,13 @@ export default {
           files_xs: this.item.files_xs,
           files_js: this.item.files_js,
           files_id: this.item.files_id,
-          files_by: this.item.files_by,
           files_bk: this.item.files_bk,
+          files_by: this.item.files_by,
+          files_xw: this.item.files_xw,
+          files_ssby: this.item.files_ssby,
+          files_ssxw: this.item.files_ssxw,
+          files_bsby: this.item.files_bsby,
+          files_bsxw: this.item.files_bsxw,
           carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素

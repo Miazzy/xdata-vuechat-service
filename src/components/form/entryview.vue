@@ -767,11 +767,16 @@ export default {
             meal_id: value.meal_id,
             carno: value.carno,
             files_id: value.files_id,
-            files_by: value.files_by,
             files_bk: value.files_bk,
             files_gp: value.files_gp,
             files_xs: value.files_xs,
             files_js: value.files_js,
+            files_by: value.files_by,
+            files_xw: value.files_xw,
+            files_ssby: value.files_ssby,
+            files_ssxw: value.files_ssxw,
+            files_bsby: value.files_bsby,
+            files_bsxw: value.files_bsxw,
             front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
             admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
             meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
