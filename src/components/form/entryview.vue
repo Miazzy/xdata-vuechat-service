@@ -124,9 +124,9 @@
                 <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" v-show=" (role == 'meal' || role == 'hr') && status == '已确认' " >
+              <van-cell-group style="margin-top:10px;" v-show=" ( role == 'meal' || role == 'hr' ) && ( status == '已确认' || status == '已完成' ) " >
                  <!-- 食堂账户（HR需要确认/修改） -->
-                <van-cell value="食堂账户" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" v-show=" (role == 'meal' || role == 'hr') && status == '已确认' " />
+                <van-cell value="食堂账户" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" v-show=" ( role == 'meal' || role == 'hr' ) && ( status == '已确认' || status == '已完成' ) " />
                 <!-- 食堂账户（HR需要确认/修改） -->
                 <van-field clearable label="食堂账户" v-model="item.meal_account" placeholder="请输入新员工的食堂账户！" />
               </van-cell-group>
@@ -988,14 +988,26 @@ export default {
           title: '温馨提示',
           message: '入职登记行政确认完毕！',
         });
+
       },
       async handleMealConfirm(){
 
-         //系统编号
+        //系统编号
         const id = tools.getUrlParam('id');
+        //获取食堂账户
+        const meal_account = this.item.meal_account;
+
+        if(!meal_account){
+          //未获取到HR信息
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请先填写新员工对应的食堂账户，再进行确认!',
+          });
+          return ;
+        }
 
         //设置食堂确认时间
-        await manageAPI.patchTableData(`bs_entry_job` , id , { id , meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , meal_account, meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
         this.item.meal_time = dayjs().format('YYYY-MM-DD');
