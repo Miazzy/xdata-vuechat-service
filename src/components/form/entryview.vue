@@ -159,67 +159,67 @@
 
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
+                <van-cell v-if="item.files_gp" title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadGP"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
+                <van-cell v-if="item.files_xs" title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadXS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
+                <van-cell v-if="item.files_js" title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadJS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
+                <van-cell v-if="item.files_id" title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadID"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                <van-cell v-if="item.files_bk" title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
+                <van-cell v-if="item.files_by" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
+                <van-cell v-if="item.files_xw" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                <van-cell v-if="item.files_ssby" title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                <van-cell v-if="item.files_ssxw" title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                <van-cell v-if="item.files_bsby" title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                <van-cell v-if="item.files_bsxw" title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
@@ -845,7 +845,7 @@ export default {
       // 查询用户信息
       async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
         // 查询前台人员SQL
-        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
+        queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         resp = await superagent.get(queryURL).set('accept', 'json');

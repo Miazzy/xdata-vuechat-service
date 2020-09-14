@@ -439,7 +439,7 @@ export default {
     },
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        //this.queryInfo();
+        this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
