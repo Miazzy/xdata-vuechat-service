@@ -439,7 +439,7 @@ export default {
     },
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        this.queryInfo();
+        //this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
@@ -513,10 +513,12 @@ export default {
           //获取当前入职人员相关信息
           const value = resp.body[0];
 
-          const hr_id = this.item.hr_id = value.hr_id;
-          const admin_id = this.item.admin_id = value.admin_id;
-          const front_id = this.item.front_id = value.front_id;
-          const meal_id = this.item.meal_id = value.meal_id;
+          const hr_id = this.item.hr_id = this.item.hr_name = value.hr_id;
+          const admin_id = this.item.admin_id = this.item.admin_name = value.admin_id;
+          const front_id = this.item.front_id = this.item.front_name = value.front_id;
+          const meal_id = this.item.meal_id = this.item.meal_name = value.meal_id;
+
+          const position = this.item.position = value.position;
 
           if(!hr_id){
             //未获取到HR信息
@@ -1022,7 +1024,7 @@ export default {
         let hrinfo = {};
 
         // 查询SQL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(lastname,like,%27~${hr_name}~%27)~and(status,ne,5)&_fields=id,lastname,loginid`;
+        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${hr_name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         const resp = await superagent.get(queryURL).set('accept', 'json');
