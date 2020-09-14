@@ -138,8 +138,6 @@
                 <van-field v-if="dockFlag"  required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="muserList.length > 0" v-model="item.meal_id" :list="muserList" default-tag-text="默认" edit-disabled @select="selectMealUser()" />
-                <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
               </van-cell-group>
 

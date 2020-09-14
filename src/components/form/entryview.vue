@@ -51,12 +51,12 @@
                 <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
+                <!-- 最高学历（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="最高学历" v-model="item.greatdiploma"  placeholder="请选择您的最高学历!"  />
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" />
-                <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="item.picture" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
 
                 <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
                   <van-datetime-picker
@@ -796,6 +796,8 @@ export default {
           //设置表单状态
           this.status = value.status;
 
+          value.meal_account = this.role == 'meal' && value.status == '已确认' ? '' : value.meal_account ;
+
           this.item = {
             id: value.id,
             create_time: dayjs(value.create_time).format('YYYY-MM-DD'),
@@ -803,6 +805,7 @@ export default {
             username: value.username,
             position: value.position,    //入职岗位
             picture: value.picture,     //员工照片
+            greatdiploma: value.greatdiploma,
             computer: value.computer,  //是否需要电脑配置
             seat: value.seat,      //是否需要办公座椅
             drawer: value.drawer,    //是否需要办公抽屉drawer
