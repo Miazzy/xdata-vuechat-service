@@ -183,15 +183,45 @@
                   </template>
                 </van-cell>
 
+                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
+                  </template>
+                </van-cell>
+
                 <van-cell title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                <van-cell title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
-                    <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
@@ -386,19 +416,34 @@ export default {
         this.saveAsFile(this.downloadURL + this.item.files_gp , '工牌附件' + this.item.files_gp.split('/')[1]);
       },
       async downloadXS(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_xs , '工牌附件' + this.item.files_xs.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_xs , '行驶证附件' + this.item.files_xs.split('/')[1]);
       },
       async downloadJS(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_js , '工牌附件' + this.item.files_js.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_js , '驾驶证附件' + this.item.files_js.split('/')[1]);
       },
       async downloadID(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_id , '工牌附件' + this.item.files_id.split('/')[1]);
-      },
-      async downloadBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_by , '工牌附件' + this.item.files_by.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_id , '身份证附件' + this.item.files_id.split('/')[1]);
       },
       async downloadBK(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bk , '工牌附件' + this.item.files_bk.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_bk , '银行卡附件' + this.item.files_bk.split('/')[1]);
+      },
+      async downloadBY(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_by , '毕业证附件' + this.item.files_by.split('/')[1]);
+      },
+      async downloadXW(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_xw , '学位证附件' + this.item.files_xw.split('/')[1]);
+      },
+      async downloadSSBY(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_by.split('/')[1]);
+      },
+      async downloadSSXW(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_ssxw , '硕士学位证附件' + this.item.files_bk.split('/')[1]);
+      },
+      async downloadBSBY(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_bsby , '博士毕业证附件' + this.item.files_by.split('/')[1]);
+      },
+      async downloadBSXW(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bk.split('/')[1]);
       },
       //查询归档人员
       async queryHRMan(){
@@ -1002,5 +1047,4 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
-
 </style>

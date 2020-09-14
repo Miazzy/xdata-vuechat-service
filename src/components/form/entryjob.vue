@@ -117,7 +117,7 @@
                 <van-field :readonly="readonly" required clickable clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" @click="tag.showPickerJoinTime = true ; "/>
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;" v-if="dockFlag" >
 
                 <van-cell value="对接信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 对接HR（HR需要确认/修改） -->
@@ -125,15 +125,15 @@
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="huserList.length > 0" v-model="item.hr_id" :list="huserList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
+                <van-field v-if="dockFlag"  required clearable label="对接行政" v-model="item.admin_name" placeholder="请输入与您对接的行政人员姓名！" @blur="queryAdminMan();"  @click="queryAdminMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="auserList.length > 0" v-model="item.admin_id" :list="auserList" default-tag-text="默认" edit-disabled @select="selectAdminUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
+                <van-field v-if="dockFlag"  required clearable label="对接前台" v-model="item.front_name" placeholder="请输入与您对接的前台人员姓名！" @blur="queryFrontMan();"  @click="queryFrontMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="fuserList.length > 0" v-model="item.front_id" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <!-- 对接HR（HR需要确认/修改） -->
-                <van-field required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
+                <van-field v-if="dockFlag"  required clearable label="对接食堂" v-model="item.meal_name" placeholder="请输入与您对接的食堂人员姓名！" @blur="queryMealMan();"  @click="queryMealMan();" />
                 <!-- 对接HR（HR需要确认/修改） -->
                 <van-address-list v-show="muserList.length > 0" v-model="item.meal_id" :list="muserList" default-tag-text="默认" edit-disabled @select="selectMealUser()" />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
@@ -356,6 +356,7 @@ export default {
             muserList:[],
             iswechat:false,
             isfirst:true,
+            dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
@@ -468,6 +469,10 @@ export default {
         this.item.files_bk = JSON.parse(res).message;
         this.$toast.success('上传成功');
       },
+      async uploadSuccessXW(file , res){
+        this.item.files_xw = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
       async uploadSuccessSSBY(file , res){
         this.item.files_ssby = JSON.parse(res).message;
         this.$toast.success('上传成功');
@@ -498,12 +503,56 @@ export default {
         }
 
         //查询URL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})&_fields=id`;
+        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})`;
 
         //获取返回结果
         const resp = await superagent.get(queryURL).set('accept', 'json');
 
         if(resp && resp.body && resp.body.length > 0){
+
+          //获取当前入职人员相关信息
+          const value = resp.body[0];
+
+          const hr_id = this.item.hr_id = value.hr_id;
+          const admin_id = this.item.admin_id = value.admin_id;
+          const front_id = this.item.front_id = value.front_id;
+          const meal_id = this.item.meal_id = value.meal_id;
+
+          if(!hr_id){
+            //未获取到HR信息
+            await vant.Dialog.alert({
+              title: '微信提示',
+              message: '未获取到管理后台配置的HR信息，请联系HR处理！',
+            });
+            return false;
+          }
+
+          if(!admin_id){
+            //未获取到HR信息
+            await vant.Dialog.alert({
+              title: '微信提示',
+              message: '未获取到管理后台配置的行政人员信息，请联系HR处理！',
+            });
+            return false;
+          }
+
+          if(!front_id){
+            //未获取到HR信息
+            await vant.Dialog.alert({
+              title: '微信提示',
+              message: '未获取到管理后台配置的前台人员信息，请联系HR处理！',
+            });
+            return false;
+          }
+
+          if(!meal_id){
+            //未获取到HR信息
+            await vant.Dialog.alert({
+              title: '微信提示',
+              message: '未获取到管理后台配置的食堂人员信息，请联系HR处理！',
+            });
+            return false;
+          }
 
           //未获取到HR信息
           await vant.Dialog.alert({
