@@ -245,15 +245,15 @@
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-show=" status == '已确认' && role == 'front' ">
+            <van-goods-action  v-show=" status == '已确认' && role == 'front' && item.front_time == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="前台确认"  @click="handleFrontConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-show=" status == '已确认' && role == 'admin' ">
+            <van-goods-action  v-show=" status == '已确认' && role == 'admin' && item.admin_time == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="行政确认"  @click="handleAdminConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-show=" status == '已确认' && role == 'meal' ">
+            <van-goods-action  v-show=" status == '已确认' && role == 'meal' && item.meal_time == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="食堂确认"  @click="handleMealConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
