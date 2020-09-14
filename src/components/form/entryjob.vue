@@ -1108,7 +1108,7 @@ export default {
           diploma: this.item.diploma,   //学历编号
           bachelor: this.item.bachelor,  //学位编号
           bank_card: this.item.bank_card, //工资银行卡号
-          ban_card: this.item.ban_card, //门禁卡
+          ban_card: this.item.ban_card || '否', //门禁卡
           join_time: this.item.join_time, //入职时间
           hr_name: this.item.hr_name,   //对接HR
           hr_id: this.item.hr_id ,  //HR编码信息
@@ -1130,7 +1130,7 @@ export default {
           files_ssxw: this.item.files_ssxw,
           files_bsby: this.item.files_bsby,
           files_bsxw: this.item.files_bsxw,
-          greatdiploma: this.item.greatdiploma,
+          greatdiploma: this.item.greatdiploma || '本科',
           carno: this.item.carno,
           status: '待确认',
         }; // 待提交元素

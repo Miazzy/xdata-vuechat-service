@@ -812,22 +812,31 @@ export default {
             writingtools: value.writingtools,//是否需要签字笔/擦
             badge: value.badge,     //员工工牌
             othertools: value.othertools,//其他用品
+
             driving_license: value.driving_license,//行驶证
             driver_license: value.driver_license,//驾驶证
+
             idcard: value.idcard,    //身份证号
             diploma: value.diploma,   //学历编号
             bachelor: value.bachelor,  //学位编号
             bank_card: value.bank_card, //工资银行卡号
+            ban_card: value.ban_card, //门禁卡
+
             join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
             hr_name: value.hr_name,   //对接HR
             remark: value.remark,    //备注信息
+
             front_name: value.front_name,
             admin_name: value.admin_name,
             meal_name: value.meal_name,
+            meal_account: value.meal_account,
+
             front_id: value.front_id,
             admin_id: value.admin_id,
             meal_id: value.meal_id,
+
             carno: value.carno,
+
             files_id: value.files_id,
             files_bk: value.files_bk,
             files_gp: value.files_gp,
@@ -835,10 +844,12 @@ export default {
             files_js: value.files_js,
             files_by: value.files_by,
             files_xw: value.files_xw,
+
             files_ssby: value.files_ssby,
             files_ssxw: value.files_ssxw,
             files_bsby: value.files_bsby,
             files_bsxw: value.files_bsxw,
+
             front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
             admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
             meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
