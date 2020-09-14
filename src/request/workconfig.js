@@ -141,6 +141,7 @@ export const compValidation = {
             hr_name: '', //对接HR
             bank_card: '',
             mobile: '',
+            meal_account: '',
         },
         valid: {
             username: '请输入您的员工姓名！',
@@ -162,8 +163,9 @@ export const compValidation = {
             bachelor: '请输入您的学位证件编号！', //学位编号
             join_time: '请选择您的入职时间！', //入职时间
             hr_name: '请选择您的对接HR姓名！', //对接HR
-            bank_card: '请输入您的工资银行卡号！',
+            bank_card: '请输入您的工资银行卡号！', //
             mobile: '请输入您的电话号码！', //
+            meal_account: '请输入新员工的食堂账户！', //
         },
     }
 }
