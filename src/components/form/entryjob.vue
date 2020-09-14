@@ -163,14 +163,13 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="资产配置" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 办公电脑（系统自动生成） -->
-                <van-field :readonly="readonly" required clickable clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
+                <van-field v-if="item.computer == '是' " :readonly="readonly" required clickable clearable label="电脑配置" v-model="item.computer" placeholder="是否需要配置电脑?" @click="tag.showPickerCommon = true ; currentKey = 'computer'; " />
                 <!-- 办公座椅（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clickable clearable label="办公桌椅" v-model="item.seat"  placeholder="是否需要配置办公座椅?" @click="tag.showPickerCommon = true ; currentKey = 'username'; " />
                 <!-- 办公抽屉（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clickable clearable label="办公抽屉" v-model="item.drawer" placeholder="是否需要配置办公抽屉?" @click="tag.showPickerCommon = true ; currentKey = 'drawer'; " />
                 <!-- 员工照片（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" clearable label="其他配置" v-model="item.other_equip" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公配置要求！" show-word-limit />
-
+                <van-field :readonly="readonly" clearable label="资产配置要求" v-model="item.other_equip" rows="2" autosize type="textarea"  maxlength="256"  placeholder="请输入您额外的办公资产配置要求！" show-word-limit />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -367,7 +366,7 @@ export default {
               username:'',
               position:'',    //入职岗位
               picture:'',     //员工照片
-              computer:'是',  //是否需要电脑配置
+              computer:'否',  //是否需要电脑配置
               seat:'是',      //是否需要办公座椅
               drawer:'是',    //是否需要办公抽屉drawer
               other_equip:'暂无',//是否需要其他办公配置
