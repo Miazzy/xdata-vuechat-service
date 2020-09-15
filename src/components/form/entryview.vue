@@ -124,18 +124,22 @@
                 <van-field :readonly="readonly" clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="学历信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="diploma" clearable label="毕业证号" v-model="item.diploma" placeholder="请输入您的毕业证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
+                <van-field :readonly="readonly" v-show="item.diploma" clearable label="毕业证号" v-model="item.diploma" placeholder="请输入您的毕业证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="bachelor" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
+                <van-field :readonly="readonly" v-show="item.bachelor" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="diplomass" clearable label="毕业证号(硕士)" v-model="item.diplomass" placeholder="请输入您的毕业证书编号(硕士)！" @blur="validField('diplomass');" :error-message="message.diplomass" />
+                <van-field :readonly="readonly" v-show="item.diplomass" clearable label="毕业证号(硕士)" v-model="item.diplomass" placeholder="请输入您的毕业证书编号(硕士)！" @blur="validField('diplomass');" :error-message="message.diplomass" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="bachelorss" clearable label="学位编号(硕士)" v-model="item.bachelorss" placeholder="请输入您的学位证书编号(硕士)！" @blur="validField('bachelorss');" :error-message="message.bachelorss" />
+                <van-field :readonly="readonly" v-show="item.bachelorss" clearable label="学位编号(硕士)" v-model="item.bachelorss" placeholder="请输入您的学位证书编号(硕士)！" @blur="validField('bachelorss');" :error-message="message.bachelorss" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="diplomabs" clearable label="毕业证号(博士)" v-model="item.diplomabs" placeholder="请输入您的毕业证书编号(博士)！" @blur="validField('diplomabs');" :error-message="message.diplomabs" />
+                <van-field :readonly="readonly" v-show="item.diplomabs" clearable label="毕业证号(博士)" v-model="item.diplomabs" placeholder="请输入您的毕业证书编号(博士)！" @blur="validField('diplomabs');" :error-message="message.diplomabs" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="bachelorbs" clearable label="学位编号(博士)" v-model="item.bachelorbs" placeholder="请输入您的学位证书编号(博士)！" @blur="validField('bachelorbs');" :error-message="message.bachelorbs" />
+                <van-field :readonly="readonly" v-show="item.bachelorbs" clearable label="学位编号(博士)" v-model="item.bachelorbs" placeholder="请输入您的学位证书编号(博士)！" @blur="validField('bachelorbs');" :error-message="message.bachelorbs" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show=" ( role == 'meal' || role == 'hr' || role == 'done' ) && ( status == '已确认' || status == '已完成' ) " >
@@ -178,7 +182,7 @@
 
               <van-cell-group style="margin-top:10px;">
 
-                <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-cell value="附件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-cell v-if="item.files_gp" title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
@@ -816,17 +820,17 @@ export default {
 
           //如果不是HR，则隐藏身份证号，学位证号，毕业证号，银行卡号
           if(this.role !== 'hr'){
-            value.idcard = value.idcard.slice(0,4) + '**********' + value.idcard.slice(14 - value.idcard.length);
-            value.bank_card = value.bank_card.slice(0,4) + '********' + value.bank_card.slice(12 - value.bank_card.length);
+            value.idcard = value.idcard ? value.idcard.slice(0,4) + '**********' + value.idcard.slice(14 - value.idcard.length) : '';
+            value.bank_card = value.bank_card ? value.bank_card.slice(0,4) + '********' + value.bank_card.slice(12 - value.bank_card.length) : '';
 
-            value.diploma = value.diploma.slice(0,4) + '********' + value.diploma.slice(12 - value.diploma.length);
-            value.bachelor = value.bachelor.slice(0,4) + '********' + value.bachelor.slice(12 - value.bachelor.length);
+            value.diploma = value.diploma ? value.diploma.slice(0,4) + '********' + value.diploma.slice(12 - value.diploma.length) : '';
+            value.bachelor = value.bachelor ? value.bachelor.slice(0,4) + '********' + value.bachelor.slice(12 - value.bachelor.length) : '';
 
-            value.diplomass = value.diplomass.slice(0,4) + '********' + value.diplomass.slice(12 - value.diplomass.length);
-            value.bachelorss = value.bachelorss.slice(0,4) + '********' + value.bachelorss.slice(12 - value.bachelorss.length);
+            value.diplomass = value.diplomass ? value.diplomass.slice(0,4) + '********' + value.diplomass.slice(12 - value.diplomass.length) : '';
+            value.bachelorss = value.bachelorss ? value.bachelorss.slice(0,4) + '********' + value.bachelorss.slice(12 - value.bachelorss.length) : '';
 
-            value.diplomabs = value.diplomabs.slice(0,4) + '********' + value.diplomabs.slice(12 - value.diplomabs.length);
-            value.bachelorbs = value.bachelorbs.slice(0,4) + '********' + value.bachelorbs.slice(12 - value.bachelorbs.length);
+            value.diplomabs = value.diplomabs ? value.diplomabs.slice(0,4) + '********' + value.diplomabs.slice(12 - value.diplomabs.length) : '';
+            value.bachelorbs = value.bachelorbs ? value.bachelorbs.slice(0,4) + '********' + value.bachelorbs.slice(12 - value.bachelorbs.length) : '';
           }
 
           //如果不是HR角色，则身份证号等进行加密显示
