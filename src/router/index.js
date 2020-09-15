@@ -109,6 +109,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealinfo.vue"], resolve)
         }
     }, {
+        path: '/app/seallist',
+        name: "用印进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/seallist.vue"], resolve)
+        }
+    }, {
         path: '/app/sealview',
         name: "用印归档",
         components: {
