@@ -819,7 +819,7 @@ export default {
           value.meal_account = this.role == 'meal' && value.status == '已确认' ? '' : value.meal_account ;
 
           //如果不是HR，则隐藏身份证号，学位证号，毕业证号，银行卡号
-          if(this.role !== 'hr'){
+          if(!(this.role == 'hr' || this.role == 'done')){
             value.idcard = value.idcard ? value.idcard.slice(0,4) + '**********' + value.idcard.slice(14 - value.idcard.length) : '';
             value.bank_card = value.bank_card ? value.bank_card.slice(0,4) + '********' + value.bank_card.slice(12 - value.bank_card.length) : '';
 
