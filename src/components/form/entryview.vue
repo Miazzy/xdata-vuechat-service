@@ -109,17 +109,21 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-                <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="车牌编号" v-model="item.carno" placeholder="请输入您的车牌编号！" v-show="!!item.carno" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" v-show="!!item.driving_license" />
                 <!-- 驾驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" v-show="!!item.driver_license" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+                <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="学历编号" v-model="item.diploma" placeholder="请输入您的学历证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
+                <van-field :readonly="readonly" clearable label="毕业证号" v-model="item.diploma" placeholder="请输入您的毕业证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
@@ -797,6 +801,16 @@ export default {
           this.status = value.status;
 
           value.meal_account = this.role == 'meal' && value.status == '已确认' ? '' : value.meal_account ;
+
+          //如果不是HR，则隐藏身份证号，学位证号，毕业证号，银行卡号
+          if(this.role !== 'hr'){
+            value.idcard = value.idcard.slice(0,4) + '**********' + value.idcard.slice(14 - value.idcard.length);
+            value.diploma = value.diploma.slice(0,4) + '********' + value.diploma.slice(12 - value.diploma.length);
+            value.bachelor = value.bachelor.slice(0,4) + '********' + value.bachelor.slice(12 - value.bachelor.length);
+            value.bank_card = value.bank_card.slice(0,4) + '********' + value.bank_card.slice(12 - value.bank_card.length);
+          }
+
+          //如果不是HR角色，则身份证号等进行加密显示
 
           this.item = {
             id: value.id,
