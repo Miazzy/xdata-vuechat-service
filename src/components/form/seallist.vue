@@ -60,6 +60,7 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
+import * as manageAPI from '@/request/manage';
 
 export default {
     mixins: [window.mixin],
@@ -101,15 +102,21 @@ export default {
         return window.encodeURIComponent(value);
       },
       async queryInfo(){
+        var month = dayjs().subtract(3, 'months').format('YYYY-MM-DD');
         //获取最近三个月的待用印记录
+        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'待用印')~and(create_time,gt,'${month}')`);
 
         //获取最近三个月的已用印记录
+        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已用印')~and(create_time,gt,'${month}')`);
 
         //获取最近三个月的已领取记录
+        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已领取')~and(create_time,gt,'${month}')`);
 
         //获取最近三个月的已移交记录
+        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'移交前台')~and(create_time,gt,'${month}')`);
 
         //获取最近三个月的已归档记录
+        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已完成')~and(create_time,gt,'${month}')`);
       },
       async selectHContract(){
         await tools.sleep(0);

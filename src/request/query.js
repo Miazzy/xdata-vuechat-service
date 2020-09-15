@@ -160,3 +160,24 @@ export async function queryTableData(tableName, id) {
         console.log(err);
     }
 }
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} whereSQL
+ */
+export async function queryTableDataByWhereSQL(tableName, whereSQL) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?${whereSQL}`;
+
+    try {
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body;
+
+    } catch (err) {
+        console.log(err);
+    }
+}
