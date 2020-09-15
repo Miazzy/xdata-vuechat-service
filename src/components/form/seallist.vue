@@ -68,12 +68,13 @@ export default {
             pageName: "用印进度",
             momentNewMsg: true,
             tabname: '1',
+            id:'',
             initContractList:[],
             sealContractList:[],
             receiveContractList:[],
             frontContractList:[],
             doneContractList:[],
-            announces:[],
+            hContractID:'',
             isLoading:false,
             loading:false,
         }
@@ -100,10 +101,21 @@ export default {
         return window.encodeURIComponent(value);
       },
       async queryInfo(){
+        //获取最近三个月的待用印记录
 
+        //获取最近三个月的已用印记录
+
+        //获取最近三个月的已领取记录
+
+        //获取最近三个月的已移交记录
+
+        //获取最近三个月的已归档记录
       },
       async selectHContract(){
-
+        await tools.sleep(0);
+        const id = this.hContractID;
+        const list = [...initContractList , ...sealContractList ,  ...receiveContractList , ...frontContractList , ...doneContractList];
+        const item = list.find((item,index) => {return id == item.id});
       },
     }
 }
