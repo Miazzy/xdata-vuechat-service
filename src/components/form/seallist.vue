@@ -29,19 +29,19 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
-
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 5 && !loading && !isLoading">
-
+          <van-address-list v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
@@ -91,6 +91,9 @@ export default {
     methods: {
       encodeURI(value){
         return window.encodeURIComponent(value);
+      },
+      async selectHContract(){
+
       },
     }
 }
