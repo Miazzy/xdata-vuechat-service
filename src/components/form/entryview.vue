@@ -133,13 +133,13 @@
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" v-show="item.bachelor" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！" @blur="validField('bachelor');" :error-message="message.bachelor" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="item.diplomass" clearable label="毕业证号(硕士)" v-model="item.diplomass" placeholder="请输入您的毕业证书编号(硕士)！" @blur="validField('diplomass');" :error-message="message.diplomass" />
+                <van-field :readonly="readonly" v-show="item.diplomass" clearable label="硕士毕业证" v-model="item.diplomass" placeholder="请输入您的毕业证书编号(硕士)！" @blur="validField('diplomass');" :error-message="message.diplomass" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="item.bachelorss" clearable label="学位编号(硕士)" v-model="item.bachelorss" placeholder="请输入您的学位证书编号(硕士)！" @blur="validField('bachelorss');" :error-message="message.bachelorss" />
+                <van-field :readonly="readonly" v-show="item.bachelorss" clearable label="硕士学位证" v-model="item.bachelorss" placeholder="请输入您的学位证书编号(硕士)！" @blur="validField('bachelorss');" :error-message="message.bachelorss" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="item.diplomabs" clearable label="毕业证号(博士)" v-model="item.diplomabs" placeholder="请输入您的毕业证书编号(博士)！" @blur="validField('diplomabs');" :error-message="message.diplomabs" />
+                <van-field :readonly="readonly" v-show="item.diplomabs" clearable label="博士毕业证" v-model="item.diplomabs" placeholder="请输入您的毕业证书编号(博士)！" @blur="validField('diplomabs');" :error-message="message.diplomabs" />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="item.bachelorbs" clearable label="学位编号(博士)" v-model="item.bachelorbs" placeholder="请输入您的学位证书编号(博士)！" @blur="validField('bachelorbs');" :error-message="message.bachelorbs" />
+                <van-field :readonly="readonly" v-show="item.bachelorbs" clearable label="博士学位证" v-model="item.bachelorbs" placeholder="请输入您的学位证书编号(博士)！" @blur="validField('bachelorbs');" :error-message="message.bachelorbs" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show=" ( role == 'meal' || role == 'hr' || role == 'done' ) && ( status == '已确认' || status == '已完成' ) " >

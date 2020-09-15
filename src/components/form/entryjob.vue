@@ -194,13 +194,13 @@
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" v-show="item.greatdiploma == '本科' || item.greatdiploma == '硕士' || item.greatdiploma == '博士'" clearable label="学位编号" v-model="item.bachelor" placeholder="请输入您的学位证书编号！"  />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" clearable label="毕业证号(硕士)" v-model="item.diplomass" placeholder="请输入您的毕业证书(硕士)编号！"  />
+                <van-field :readonly="readonly" v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" clearable label="硕士毕业证" v-model="item.diplomass" placeholder="请输入您的毕业证书(硕士)编号！"  />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" clearable label="学位编号(硕士)" v-model="item.bachelorss" placeholder="请输入您的学位证书(硕士)编号！" />
+                <van-field :readonly="readonly" v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" clearable label="硕士学位证" v-model="item.bachelorss" placeholder="请输入您的学位证书(硕士)编号！" />
                 <!-- 学历编号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" v-show="item.greatdiploma == '博士'" clearable label="毕业证号(博士)" v-model="item.diplomabs" placeholder="请输入您的毕业证书(博士)编号！"  />
+                <van-field :readonly="readonly" v-show="item.greatdiploma == '博士'" clearable label="博士毕业证" v-model="item.diplomabs" placeholder="请输入您的毕业证书(博士)编号！"  />
                 <!-- 学位编号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" v-show="item.greatdiploma == '博士'" clearable label="学位编号(博士)" v-model="item.bachelorbs" placeholder="请输入您的学位证书(博士)编号！" />
+                <van-field :readonly="readonly" v-show="item.greatdiploma == '博士'" clearable label="博士学位证" v-model="item.bachelorbs" placeholder="请输入您的学位证书(博士)编号！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -213,13 +213,13 @@
                   </template>
                 </van-cell>
 
-                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
+                <van-cell v-show="item.driving_license" title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
+                <van-cell v-show="item.driver_license" title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
                   </template>
