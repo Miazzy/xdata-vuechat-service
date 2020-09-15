@@ -1057,11 +1057,11 @@ export default {
 }
 </script>
 <style>
-    @import "../../assets/css/sealview.global.css";
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealview.css";
+    @import "../../assets/css/sealview.global.css";
 </style>
 
 

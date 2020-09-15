@@ -1013,9 +1013,9 @@ export default {
 }
 </script>
 <style>
-    @import "../../assets/css/sealinfo.global.css";
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
+    @import "../../assets/css/sealinfo.global.css";
 </style>

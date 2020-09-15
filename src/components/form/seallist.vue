@@ -1,5 +1,6 @@
 <template>
 
+<keep-alive>
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
@@ -52,6 +53,7 @@
     </section>
 
   </div>
+</keep-alive>
 
 </template>
 
@@ -89,6 +91,7 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
+        this.queryInfo();
     },
     mounted() {
       this.queryInfo();
@@ -109,8 +112,16 @@ export default {
         return window.encodeURIComponent(value);
       },
       async queryInfo(){
+
+        //强制渲染
+        this.$forceUpdate();
+
+        //获取tabname
+        this.tabname = storage.getStore('system_seal_list_tabname') || '1';
+
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+
         //获取最近6个月的待用印记录
         this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})`);
 
@@ -163,20 +174,38 @@ export default {
 
       },
       async selectHContract(){
+
+        //等待N毫秒
         await tools.sleep(0);
+
         //查询当前用印信息
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
 
-        //跳转到相应的用印界面
-
+        //根据当前状态，跳转到不同页面
+        if(this.tabname == '1'){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${id}&statustype=none`);
+        } else if(this.tabname == '2' && item.seal_type == '非合同类'){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive`);
+        } else if(this.tabname == '2' || this.tabname == '3'){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front`);
+        } else if(this.tabname == '4' ){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+        }
       },
     }
 }
 </script>
-
-<style>
+<style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
 </style>

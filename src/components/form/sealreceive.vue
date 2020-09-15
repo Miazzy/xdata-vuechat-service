@@ -364,11 +364,11 @@ export default {
 }
 </script>
 <style>
-    @import "../../assets/css/sealreceive.global.css";
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealreceive.css";
+    @import "../../assets/css/sealreceive.global.css";
 </style>
 
 
