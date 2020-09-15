@@ -65,7 +65,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "公告",
+            pageName: "用印进度",
             momentNewMsg: true,
             tabname: '1',
             initContractList:[],
