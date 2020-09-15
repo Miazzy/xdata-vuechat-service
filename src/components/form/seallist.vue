@@ -1,12 +1,16 @@
 <template>
+
   <!--首页组件-->
-  <div id="news" style="margin-top: 0px; background: #fdfdfd;" >
+  <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
+
     <header id="wx-header">
         <div class="center">
             <span>用印进度</span>
         </div>
     </header>
+
     <section>
+
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -29,24 +33,26 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 5 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="hContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
     </section>
+
   </div>
+
 </template>
 
 <script>
@@ -62,10 +68,11 @@ export default {
             pageName: "公告",
             momentNewMsg: true,
             tabname: '1',
-            alist:[],
-            hlist:[],
-            nlist:[],
-            tlist:[],
+            initContractList:[],
+            sealContractList:[],
+            receiveContractList:[],
+            frontContractList:[],
+            doneContractList:[],
             announces:[],
             isLoading:false,
             loading:false,
@@ -92,6 +99,9 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+      async queryInfo(){
+
+      },
       async selectHContract(){
 
       },
@@ -107,5 +117,18 @@ export default {
       -webkit-flex: 1;
       flex: 1;
       font-size: 15px;
+    }
+    .van-address-list__bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 999;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 16px;
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
+      background-color: #fff;
+      display: none;
     }
 </style>
