@@ -350,8 +350,12 @@ export default {
               driving_license:'',//行驶证
               driver_license:'', //驾驶证
               idcard:'',         //身份证号
-              diploma:'',        //学历编号
+              diploma:'',        //毕业编号
               bachelor:'',       //学位编号
+              diplomass: '',     //毕业编号(硕士)
+              bachelorss: '',    //学位编号(硕士)
+              diplomabs: '',     //毕业编号(博士)
+              bachelorbs: '',    //学位编号(博士)
               bank_card:'',      //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
               front_time:'',
