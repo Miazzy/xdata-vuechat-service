@@ -73,12 +73,9 @@ export default {
     },
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
-        this.queryAnnounce();
-        this.queryEach();
     },
     mounted() {
-      this.queryAnnounce();
-      this.queryEach();
+
     },
     watch: {
       $route(to, from) {
