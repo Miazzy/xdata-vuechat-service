@@ -76,6 +76,13 @@ export default {
             frontContractList:[],
             doneContractList:[],
             hContractID:'',
+            tabmap:{
+              '1': 'initContractList',
+              '2': 'sealContractList',
+              '3': 'receiveContractList',
+              '4': 'frontContractList',
+              '5': 'doneContractList',
+            },
             isLoading:false,
             loading:false,
         }
@@ -84,7 +91,7 @@ export default {
         this.$store.commit("toggleTipsStatus", -1);
     },
     mounted() {
-
+      this.queryInfo();
     },
     watch: {
       $route(to, from) {
@@ -102,27 +109,68 @@ export default {
         return window.encodeURIComponent(value);
       },
       async queryInfo(){
-        var month = dayjs().subtract(3, 'months').format('YYYY-MM-DD');
-        //获取最近三个月的待用印记录
-        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'待用印')~and(create_time,gt,'${month}')`);
+        //获取最近6个月对应的日期
+        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        //获取最近6个月的待用印记录
+        this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})`);
 
-        //获取最近三个月的已用印记录
-        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已用印')~and(create_time,gt,'${month}')`);
+        this.initContractList.map((item , index) => {
+          item.name = item.filename ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
 
-        //获取最近三个月的已领取记录
-        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已领取')~and(create_time,gt,'${month}')`);
+        //获取最近6个月的已用印记录
+        this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})`);
 
-        //获取最近三个月的已移交记录
-        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'移交前台')~and(create_time,gt,'${month}')`);
+        this.sealContractList.map((item , index) => {
+          item.name = item.filename ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
 
-        //获取最近三个月的已归档记录
-        manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,'已完成')~and(create_time,gt,'${month}')`);
+        //获取最近6个月的已领取记录
+        this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})`);
+
+        this.receiveContractList.map((item , index) => {
+          item.name = item.filename ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
+
+        //获取最近6个月的已移交记录
+        this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})`);
+
+        this.frontContractList.map((item , index) => {
+          item.name = item.filename ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
+
+        //获取最近6个月的已归档记录
+        this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
+
+        this.doneContractList.map((item , index) => {
+          item.name = item.filename ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
+
       },
       async selectHContract(){
         await tools.sleep(0);
+        //查询当前用印信息
         const id = this.hContractID;
-        const list = [...initContractList , ...sealContractList ,  ...receiveContractList , ...frontContractList , ...doneContractList];
+        const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
+
+        //跳转到相应的用印界面
+
       },
     }
 }
@@ -131,23 +179,4 @@ export default {
 <style>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
-    .weui-cell__bd {
-      -webkit-box-flex: 1;
-      -webkit-flex: 1;
-      flex: 1;
-      font-size: 15px;
-    }
-    .van-address-list__bottom {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 999;
-      box-sizing: border-box;
-      width: 100%;
-      padding: 0 16px;
-      padding-bottom: constant(safe-area-inset-bottom);
-      padding-bottom: env(safe-area-inset-bottom);
-      background-color: #fff;
-      display: none;
-    }
 </style>
