@@ -36,24 +36,26 @@
       </div>
 
       <div class="wechat-list">
+        <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 5 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 6 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
         </template>
+        </van-pull-refresh>
       </div>
 
     </section>
@@ -118,6 +120,16 @@ export default {
     methods: {
       encodeURI(value){
         return window.encodeURIComponent(value);
+      },
+      async queryFresh(){
+        //刷新相应表单
+        this.queryTabList(this.tabname);
+        //等待一下
+        await tools.sleep(300);
+        //显示刷新消息
+        vant.Toast('刷新成功');
+        //设置加载状态
+        this.isLoading = false;
       },
       async queryTabList(tabname){
 
