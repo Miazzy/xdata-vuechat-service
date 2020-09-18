@@ -60,7 +60,9 @@
             <van-cell-group style="margin-top:10px;">
               <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
               <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
+              <van-field required clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同对应前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' " @blur="validField('prefix');queryHContract();" :error-message="message.prefix" @click="queryHContract();"  />
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
+              <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
               <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
@@ -230,6 +232,7 @@ export default {
             auserid:'',
             auserList:[],
             agroup:[],
+            hContractID:'',
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -260,6 +263,7 @@ export default {
               archive: '', //用印归档组(财务/档案)
               archive_name:[],
               confirmStatus: '',//财务确认/档案确认
+              prefix: '',
               status: '',
               message: '同意' , //用印说明
             },
@@ -274,6 +278,7 @@ export default {
             fileList:[],
             loading:false,
             officeList:[],
+            hContractList:[],
             tag:{
               showPicker: false,
               showPickerSealType:false,
@@ -302,6 +307,67 @@ export default {
         storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
+      },
+       //选中当前合同编号
+      async selectHContract(value){
+        await tools.sleep(0);
+        const id = this.hContractID;
+        const item = this.hContractList.find((item,index) => {return id == item.id});
+        let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+        no = `00000${no}`.slice(-3);
+        this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+      },
+      //获取合同编号
+      async queryHContract(){
+        //获取盖章人信息
+        const prefix = this.item.prefix = this.item.prefix.toUpperCase();
+
+        try {
+          if(!!prefix){
+
+            //从用户表数据中获取填报人资料
+            let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
+
+            //清空原数据
+            this.hContractList = [];
+
+            if(!!list && Array.isArray(list) && list.length > 0){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              try {
+                list.map((elem,index) => {
+                  this.hContractList.push({id:elem.contract_id , value:`${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , label: `${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , address: elem.deal_manager + " " + elem.deal_depart + " 合同编号: " + elem.contract_id, name:elem.filename , tel:'' , mail: elem.mail , isDefault: !index });
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+              //遍历去重
+              try {
+                this.hContractList = this.hContractList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.hContractList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+
+                const id = this.hContractList[0].id;
+                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+
+              } catch (error) {
+                console.log(error);
+              }
+
+            } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
+              const contract_id = `${prefix}[${dayjs().format('YYYY')}]500`;
+              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]700` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
       },
       //查询归档人员
       async queryArchiveMan(){
@@ -612,6 +678,7 @@ export default {
               archive: value.archive,
               archive_name: value.archive_name,
               confirmStatus: '',//财务确认/档案确认
+              prefix: value.prefix,
               status: value.status,
               type: that.item.type,
               message: '同意',
@@ -620,7 +687,7 @@ export default {
           //设置别名
           const that = this;
 
-            //如果前台人候选列表存在
+          //如果前台人候选列表存在
           if(that.item.front){
             //获取可选填报人列表
             let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
@@ -652,6 +719,11 @@ export default {
             })
             this.item.archive = ids.join(',');
             this.item.archive_name = names.join(',');
+          }
+
+          //如果前缀编号存在，则查询一下最近合同单号
+          if(that.item.prefix){
+            await this.queryHContract();
           }
 
         } catch (error) {

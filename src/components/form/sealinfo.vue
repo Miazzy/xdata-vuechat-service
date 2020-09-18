@@ -224,7 +224,7 @@ export default {
               workno:'',
               sealtime:'',
               sealman: '',
-              sealtype: '非合同类',
+              sealtype: '',
               ordertype:'常规用印',
               mobile:'',
               send_mobile:'',
@@ -970,6 +970,7 @@ export default {
         const seal_time = item.sealtime;
         const seal_man = item.sealman;
         const contract_id = item.contractId;
+        const prefix = item.prefix;
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
@@ -983,7 +984,7 @@ export default {
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
