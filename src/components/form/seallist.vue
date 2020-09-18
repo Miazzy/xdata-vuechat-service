@@ -14,20 +14,23 @@
 
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(1);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待用印
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已用印
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已领取
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已移交
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ;" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已归档
+          </div>
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+            已作废
           </div>
         </div>
       </div>
@@ -47,6 +50,9 @@
         </template>
         <template v-show="tabname == 5 && !loading && !isLoading">
           <van-address-list v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
+        </template>
+        <template v-show="tabname == 6 && !loading && !isLoading">
+          <van-address-list v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
@@ -77,6 +83,7 @@ export default {
             receiveContractList:[],
             frontContractList:[],
             doneContractList:[],
+            failContractList:[],
             hContractID:'',
             tabmap:{
               '1': 'initContractList',
@@ -84,6 +91,7 @@ export default {
               '3': 'receiveContractList',
               '4': 'frontContractList',
               '5': 'doneContractList',
+              '6': 'failContractList',
             },
             isLoading:false,
             loading:false,
@@ -111,6 +119,73 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+      async queryTabList(tabname){
+
+        //获取最近6个月对应的日期
+        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+
+        if(tabname == 1){
+          //获取最近6个月的待用印记录
+          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})`);
+
+          this.initContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        } else if(tabname == 2){
+          //获取最近6个月的已用印记录
+          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})`);
+
+          this.sealContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        } else if(tabname == 3){
+          //获取最近6个月的已领取记录
+          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})`);
+
+          this.receiveContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        } else if(tabname == 4){
+          //获取最近6个月的已移交记录
+          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})`);
+
+          this.frontContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        } else if(tabname == 5){
+          //获取最近6个月的已归档记录
+          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
+
+          this.doneContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        } else if(tabname == 6){
+          //获取最近6个月的已归档记录
+          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})`);
+
+          this.failContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.isDefault = true;
+          })
+        }
+      },
       async queryInfo(){
 
         //强制渲染
@@ -126,7 +201,7 @@ export default {
         this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})`);
 
         this.initContractList.map((item , index) => {
-          item.name = item.filename ,
+          item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
           item.isDefault = true;
@@ -136,7 +211,7 @@ export default {
         this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})`);
 
         this.sealContractList.map((item , index) => {
-          item.name = item.filename ,
+          item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
           item.isDefault = true;
@@ -146,7 +221,7 @@ export default {
         this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})`);
 
         this.receiveContractList.map((item , index) => {
-          item.name = item.filename ,
+          item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
           item.isDefault = true;
@@ -156,7 +231,7 @@ export default {
         this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})`);
 
         this.frontContractList.map((item , index) => {
-          item.name = item.filename ,
+          item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
           item.isDefault = true;
@@ -166,7 +241,17 @@ export default {
         this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
 
         this.doneContractList.map((item , index) => {
-          item.name = item.filename ,
+          item.name = item.filename.slice(0,16) ,
+          item.tel = '';
+          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.isDefault = true;
+        })
+
+        //获取最近6个月的已归档记录
+        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})`);
+
+        this.failContractList.map((item , index) => {
+          item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
           item.isDefault = true;
@@ -200,7 +285,16 @@ export default {
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+        } else if(this.tabname == '5' ){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+        } else if(this.tabname == '6' ){
+          storage.setStore('system_seal_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
         }
+
       },
     }
 }

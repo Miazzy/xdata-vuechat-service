@@ -105,14 +105,19 @@
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
-            <van-field
+            <van-cell value="用印说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <van-field required
               v-model="item.message"
               rows="2"
               autosize
+              clickable
+              clearable
               label="备注说明"
               type="textarea"
               maxlength="500"
               placeholder="请印章管理员输入用印意见或备注说明！"
+              @blur="validField('message')"
+              :error-message="message.message"
               show-word-limit
             />
           </van-cell-group>
@@ -288,6 +293,16 @@ export default {
       this.queryInfo();
     },
     methods: {
+      validField(fieldName){
+        //邮箱验证正则表达式
+        const regMail = workconfig.system.config.regexp.mail;
+
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+
+        storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
+
+        return tools.isNull(this.message[fieldName]);
+      },
       //查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
@@ -598,7 +613,8 @@ export default {
               archive_name: value.archive_name,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
-              type: that.item.type
+              type: that.item.type,
+              message: '同意',
             }
 
           //设置别名
@@ -651,6 +667,8 @@ export default {
       },
 
       async handleAgree(){
+
+        this.validField('message');
 
         var noname = '合同编号';
 
@@ -722,10 +740,12 @@ export default {
 
       async handleDisagree(){
 
+        this.validField('message');
+
         var noname = '合同编号';
 
         //作废用印申请时，必须填写备注信息，以便用印经办人知晓错误原因！
-        if(!this.item.message && this.item.message != '同意'){
+        if(!this.item.message || this.item.message == '同意'){
             //提示确认用印操作
             await vant.Dialog.confirm({
               title: '用印作废',
@@ -762,7 +782,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //领取地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done&res=edit`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
         //修改状态为已作废
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , message , seal_time: time});

@@ -96,6 +96,7 @@ export const compValidation = {
             archive: '',
             prefix: '',
             meal_account: '',
+            message: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -116,6 +117,7 @@ export const compValidation = {
             archive: '请输入归档人员名称！',
             prefix: '请输入合同对应的编号前缀！',
             meal_account: '请输入新员工的食堂账户！',
+            message: '请印章管理员输入用印意见或备注说明！',
         },
     },
     entryjob: {
