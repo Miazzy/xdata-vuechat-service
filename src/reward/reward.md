@@ -20,3 +20,10 @@ $('#rightBox>#null_box').find('.e8_btn_top').after('<input type="button" class="
     }
   })
 </script>
+
+### add request pages
+
+#健康申报
+http://oa.leading-group.com:90/workflow/request/AddRequest.jsp?workflowid=3465&isagent=0&beagenter=0&f_weaver_belongto_userid=
+#设计修改费用立项
+http://oa.leading-group.com:90/workflow/request/AddRequest.jsp?workflowid=3379&isagent=0&beagenter=0&f_weaver_belongto_userid=

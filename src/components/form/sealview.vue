@@ -738,7 +738,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //领取地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done&res=edit`);
 
         //修改状态为已作废
         await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
