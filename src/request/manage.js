@@ -434,7 +434,7 @@ export async function queryContractInfoByPrefix(prefix) {
 
     try {
         //构建查询SQL
-        const sql = `${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(contract_id,like,${prefix}~)~and(status,in,已用印,已领取,移交前台,已完成,财务归档,档案归档)&_p=0&_size=10&_sort=-create_time`;
+        const sql = `${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(contract_id,like,${prefix}~)~and(status,in,已用印,已领取,移交前台,已完成,财务归档,档案归档,已归档)&_p=0&_size=10&_sort=-create_time`;
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(sql).set('accept', 'json');
 
