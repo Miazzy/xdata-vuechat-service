@@ -289,6 +289,8 @@ export default {
         this.item.filename = '';
         this.item.count = '';
         this.item.workno = '';
+        this.item.sealtype = '';
+        this.item.ordertype = '';
       },
       //获取合同编号
       async queryHContract(){
