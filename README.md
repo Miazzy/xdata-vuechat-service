@@ -44,3 +44,8 @@ http://app.shengtai.club/#/app
 
 
 
+### 泛微在线文档
+https://e-cloudstore.com/doc.html#ecode%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E
+
+### 泛微e8流程首页
+http://oa.leading-group.com:90/workflow/request/RequestTypeShow.jsp?offical=&colnum4show=mulitcol&fromadvancedmenu=0&selectedContent=&infoId=0&needPopupNewPage=true&needall=0&prjid=&docid=&crmid=&hrmid=&topage=&isec=&usedtodo=-1
