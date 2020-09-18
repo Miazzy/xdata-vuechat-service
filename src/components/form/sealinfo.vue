@@ -27,7 +27,9 @@
           <van-row>
             <van-col span="8"></van-col>
             <van-col span="8" style="text-align: center;font-size:1.15rem;">用印登记表</van-col>
-            <van-col span="8"></van-col>
+            <van-col span="8">
+              <van-icon style="float:right;cursor:pointer;" name="delete" color="#1989fa" @click="deleteForm()" />
+            </van-col>
           </van-row>
         </div>
 
@@ -74,10 +76,10 @@
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
-                <van-field required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
-                <van-address-list v-show="fuserList.length > 0" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
-                <van-field required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
-                <nut-checkboxgroup ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup v-show="item.sealtype == '合同类' " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -222,7 +224,7 @@ export default {
               workno:'',
               sealtime:'',
               sealman: '',
-              sealtype: '合同类',
+              sealtype: '非合同类',
               ordertype:'常规用印',
               mobile:'',
               send_mobile:'',
@@ -276,6 +278,18 @@ export default {
       }
     },
     methods: {
+      //删除原表单数据
+      async deleteForm(){
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '清空表单',
+          message: '将进行‘清空表单’处理，清空后请重新填写用印申请！',
+        })
+
+        this.item.filename = '';
+        this.item.count = '';
+        this.item.workno = '';
+      },
       //获取合同编号
       async queryHContract(){
         //获取盖章人信息
@@ -308,6 +322,12 @@ export default {
                   let findex = this.hContractList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
                 })
+
+                const id = this.hContractList[0].id;
+                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+
               } catch (error) {
                 console.log(error);
               }
@@ -593,7 +613,8 @@ export default {
         await tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
-        const no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+        let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+        no = `00000${no}`.slice(-3);
         this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
       },
       //选中当前前台人

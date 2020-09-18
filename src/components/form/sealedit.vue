@@ -74,10 +74,10 @@
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
-                <van-field required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
-                <van-address-list v-show="fuserList.length > 0" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
-                <van-field required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
-                <nut-checkboxgroup ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup v-show="item.sealtype == '合同类' " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -112,6 +112,19 @@
             <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
             <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
+          </van-cell-group>
+
+          <van-cell-group style="margin-top:10px;">
+            <van-field
+              v-model="item.message"
+              rows="2"
+              autosize
+              label="备注说明"
+              type="textarea"
+              maxlength="500"
+              placeholder="请印章管理员输入用印意见或备注说明！"
+              show-word-limit
+            />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;display:none;">
@@ -767,33 +780,52 @@ export default {
       async queryInfo(){
 
         try {
+          const that = this;
           this.iswechat = tools.isWechat();
+          this.groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
-          var that = this;
+          //获取ID，然后获取到相应的原用印登记信息
+          const value = await query.queryTableData(`bs_seal_regist` , tools.getUrlParam('id'));
 
-          that.item.sealman = tools.getUrlParam('sealman');
-          that.item.status = this.statusType[tools.getUrlParam('statustype')];
-          that.sealuserid = tools.getUrlParam('sealuserid');
-          that.groupid = tools.getUrlParam('groupid') || 'Group_LD';
-
-          that.item.seal = tools.getUrlParam('seal'); //用印管理员成员组
-          that.item.front = tools.getUrlParam('front');  //用印前台接受组
-          that.item.archive = tools.getUrlParam('archive'); //用印归档组(财务/档案)
-
-          //如果盖印人填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
-            //获取盖印人姓名
-            that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
-          }
-
-          //如果前台人员填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(that.item.front)){
-            //获取盖印人姓名
-            that.item.front_name = await manageAPI.queryUsernameByID(that.item.front);
-          }
+          this.item = {
+              id: value.id,
+              createtime: dayjs().format('YYYY-MM-DD'),
+              filename: value.filename,
+              count: value.count,
+              dealDepart: value.deal_depart,
+              dealManager: value.deal_manager,
+              dealMail: value.deal_mail,
+              approveType: value.approve_type,
+              contractId: value.contract_id,
+              signman: value.sign_man,
+              workno: value.workno,
+              sealtime: value.seal_time ? dayjs(value.seal_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              finance_time: value.finance_time ? dayjs(value.finance_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              doc_time: value.doc_time ? dayjs(value.doc_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              receive_time: value.receive_time ? dayjs(value.receive_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              done_time: value.done_time ? dayjs(value.done_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              send_time: value.send_time ? dayjs(value.send_time).format('YYYY-MM-DD HH:mm:ss') : '',
+              sealman: value.seal_man,
+              username: value.username,
+              sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
+              ordertype: value.order_type,
+              mobile: value.mobile,
+              send_mobile: value.send_mobile,
+              send_location: value.send_location,
+              front: value.front,
+              seal: value.seal,
+              front_name: value.front_name,
+              archive: value.archive,
+              archive_name: value.archive_name,
+              message: value.message,
+              confirmStatus: '',//财务确认/档案确认
+              status: value.status,
+              type: that.item.type
+            }
 
           //如果盖印人候选列表存在
-          if(that.item.seal){
+          if(that.item.sealman){
             //获取可选填报人列表
             let slist = await manageAPI.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
@@ -898,7 +930,7 @@ export default {
         if(invalidKey != '' && invalidKey != null){
           await vant.Dialog.alert({
             title: '温馨提示',
-            message: '请检查表单填写内容，确认内容是否填写完整无误！',
+            message: '请检查表单填写内容，确认内容是否填写完整无误及修改正确！',
           });
           return false;
         }
@@ -906,7 +938,7 @@ export default {
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印申请',
-          message: '确认提交用印登记申请？',
+          message: '请确认修改用印申请无误，将提交用印登记申请？',
         })
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
@@ -934,7 +966,7 @@ export default {
         //第一步，构造form对象
         const item = this.item;
         const no = maxinfo.maxno + 1;
-        const id = tools.queryUniqueID();
+        const id = item.id;
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const filename = item.filename;
@@ -962,24 +994,24 @@ export default {
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , message : item.message }; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
-        const result = await manageAPI.postTableData('bs_seal_regist' , elem);
+        const result = await manageAPI.patchTableData('bs_seal_regist' , id , elem);
 
         //第三步，回显当前用印登记信息，并向印章管理员推送消息
         this.loading = false;
         let message = null;
 
-        if(result.protocol41 == true && result.affectedRows > 0){
-          message = '已成功提交用印登记信息！';
+        if(result.protocol41 == true && result.affectedRows > 0 && result.changedRows > 0 ){
+          message = '已成功提交修改后的用印登记信息！';
 
           this.status = 'none';
           this.readonly = true;
 
-          const title = '用印登记申请';
-          const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
+          const title = '用印登记申请(已修改)';
+          const description = `@印章管理员 @${seal_man} ，${create_by}已修改用印登记信息，请及时处理修改后的用印申请！流程编号：${workno}`;
 
           const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=none`);
           const signmail = this.mailconfig[seal_man];
@@ -992,11 +1024,11 @@ export default {
                       .set('accept', 'json');
 
           //通知签收人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
                        .set('accept', 'json');
 
           //通知印章人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
                        .set('accept', 'json');
 
         } else {

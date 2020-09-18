@@ -68,10 +68,10 @@
             <van-cell-group style="margin-top:10px;">
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field readonly required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" />
-                <van-field required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="queryFrontMan();" @click="queryFrontMan();" />
-                <van-address-list v-show="fuserList.length > 0" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
-                <van-field required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
-                <nut-checkboxgroup ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="queryFrontMan();" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup v-show="item.sealtype == '合同类' " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -102,6 +102,19 @@
             <van-cell value="寄件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-field :readonly="readonly" clearable label="寄送地址" v-model="item.send_location" placeholder="请输入对方公司/单位/组织的寄送地址" />
             <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
+          </van-cell-group>
+
+          <van-cell-group style="margin-top:10px;">
+            <van-field
+              v-model="item.message"
+              rows="2"
+              autosize
+              label="备注说明"
+              type="textarea"
+              maxlength="500"
+              placeholder="请印章管理员输入用印意见或备注说明！"
+              show-word-limit
+            />
           </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -243,6 +256,7 @@ export default {
               archive_name:[],
               confirmStatus: '',//财务确认/档案确认
               status: '',
+              message: '同意' , //用印说明
             },
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
@@ -710,6 +724,16 @@ export default {
 
         var noname = '合同编号';
 
+        //作废用印申请时，必须填写备注信息，以便用印经办人知晓错误原因！
+        if(!this.item.message && this.item.message != '同意'){
+            //提示确认用印操作
+            await vant.Dialog.confirm({
+              title: '用印作废',
+              message: '进行‘作废’处理时，必须填写备注信息，说明用印错误原因！',
+            })
+            return;
+        }
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印作废',
@@ -733,7 +757,7 @@ export default {
         //领取人OA账户
         const username = this.item.username;
         //提示信息
-        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
+        const message = this.item.message;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
@@ -741,14 +765,14 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done&res=edit`);
 
         //修改状态为已作废
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , seal_time: time});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , message , seal_time: time});
 
         //通知签收人领取资料(email邮件通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId}/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
                       .set('accept', 'json');
 
         //通知签收人领取资料(企业微信通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId}?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}?rurl=${receiveURL}`)
                        .set('accept', 'json');
 
         //修改用印状态
@@ -758,7 +782,7 @@ export default {
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
-          message: message,
+          message: `已向用印申请人@${this.item.dealManager}推送通知！`,
         });
 
       },

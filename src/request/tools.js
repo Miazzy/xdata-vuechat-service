@@ -208,7 +208,7 @@ export function isWechat() {
     if (ua.match(/MicroMessenger/i) == "micromessenger" || sua.match(/MicroMessenger/i) == "micromessenger") { //这就是微信用的内置浏览器
         return true;
     } else {
-        return false;
+        return true;
     }
 }
 
