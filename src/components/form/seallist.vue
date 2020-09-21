@@ -7,11 +7,11 @@
     <header id="wx-header" >
         <div class="center" style="position:relative;">
             <span>用印进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" style="position: absolute; width: 30px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
-              <van-icon name="weapp-nav" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b; " />
-              <van-icon name="replay" size="1.05rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 16px; opacity: 1; background:#1b1b1b;display:none; "  />
-              <van-icon name="search" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b; "  />
-              <van-dropdown-item v-model="dropMenuValue" :options="dropMenuOption" />
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 30px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-icon name="replay" size="1.05rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000;display:none; "  />
+              <van-icon name="search" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
+              <van-dropdown-item v-model="dropMenuValue" :options="dropMenuOption" @change="headDropMenu();" />
             </van-dropdown-menu>
         </div>
     </header>
@@ -101,6 +101,7 @@ export default {
               '5': 'doneContractList',
               '6': 'failContractList',
             },
+            dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
               { text: '合同类', value: 0 , icon: 'records' },
@@ -134,6 +135,7 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+      //刷新页面
       async queryFresh(){
         //刷新相应表单
         this.queryTabList(this.tabname);
@@ -144,6 +146,28 @@ export default {
         //设置加载状态
         this.isLoading = false;
       },
+      //点击右侧菜单
+      async headDropMenu(value){
+        const val = this.dropMenuValue;
+        switch (val) {
+          case 0: //只显示合同类信息
+            this.dropMenuOldValue = val;
+            break;
+          case 1: //只显示非合同类信息
+            this.dropMenuOldValue = val;
+            break;
+          case 2: //刷新数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.queryFresh();
+            break;
+          case 3: //查询数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            break;
+          default:
+            console.log(`no operate. out of switch. `);
+        }
+      },
+      //点击Tab栏
       async queryTabList(tabname){
 
         //获取最近6个月对应的日期
