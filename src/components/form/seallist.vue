@@ -4,9 +4,15 @@
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
-    <header id="wx-header">
-        <div class="center">
+    <header id="wx-header" >
+        <div class="center" style="position:relative;">
             <span>用印进度</span>
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" style="position: absolute; width: 30px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b; " />
+              <van-icon name="replay" size="1.05rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 16px; opacity: 1; background:#1b1b1b;display:none; "  />
+              <van-icon name="search" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b; "  />
+              <van-dropdown-item v-model="dropMenuValue" :options="dropMenuOption" />
+            </van-dropdown-menu>
         </div>
     </header>
 
@@ -95,6 +101,13 @@ export default {
               '5': 'doneContractList',
               '6': 'failContractList',
             },
+            dropMenuValue:'',
+            dropMenuOption: [
+              { text: '合同类', value: 0 , icon: 'records' },
+              { text: '非合同', value: 1 , icon: 'description' },
+              { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '搜索', value: 3 , icon: 'search' },
+            ],
             isLoading:false,
             loading:false,
         }
@@ -311,7 +324,40 @@ export default {
     }
 }
 </script>
+<style>
+.header-drop-menu .van-dropdown-menu__title:after {
+      position: absolute;
+      top: 50%;
+      right: -4px;
+      margin-top: -5px;
+      border: 3px solid;
+      border-color: transparent transparent #dcdee0 #dcdee0;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      opacity: .8;
+      content: '';
+      display:none;
+    }
+.header-drop-menu .van-dropdown-menu__bar {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    height: 48px;
+    background-color: #1b1b1b;
+    box-shadow: 0 2px 12px rgba(100,101,102,.08);
+}
+
+.header-drop-menu .van-popup--top {
+    top: 0;
+    left:auto;
+    width: 40%;
+    right: 0;
+    text-align: center;
+}
+</style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
+
 </style>
