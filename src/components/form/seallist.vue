@@ -7,11 +7,10 @@
     <header id="wx-header" class="header-menu" v-show="!searchFlag" >
         <div class="center" style="position:relative;">
             <span>用印进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 30px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
-              <van-icon name="weapp-nav" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
-              <van-icon name="replay" size="1.05rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000;display:none; "  />
-              <van-icon name="search" size="1.2rem" @click="searchFlag = true;" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" :options="dropMenuOption" @change="headDropMenu();" />
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
             </van-dropdown-menu>
         </div>
     </header>
@@ -126,6 +125,7 @@ export default {
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
             ],
+            menuCssValue:'',
             isLoading:false,
             loading:false,
         }
@@ -162,6 +162,10 @@ export default {
         vant.Toast('刷新成功');
         //设置加载状态
         this.isLoading = false;
+      },
+      //点击显示或者隐藏菜单
+      async headMenuToggle(){
+        this.$refs.headMenuItem.toggle();
       },
       //点击顶部搜索
       async headMenuSearch(){
