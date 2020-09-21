@@ -4,15 +4,28 @@
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
-    <header id="wx-header" >
+    <header id="wx-header" class="header-menu" v-show="!searchFlag" >
         <div class="center" style="position:relative;">
             <span>用印进度</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 30px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="replay" size="1.05rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000;display:none; "  />
-              <van-icon name="search" size="1.2rem" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
+              <van-icon name="search" size="1.2rem" @click="searchFlag = true;" style="position: absolute; width: 30px; height: auto; right: 30px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" :options="dropMenuOption" @change="headDropMenu();" />
             </van-dropdown-menu>
+        </div>
+    </header>
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+       <div>
+          <van-search
+            v-model="searchWord"
+            show-action
+            placeholder="请输入搜索关键词"
+          >
+            <template #action>
+              <div @click="headMenuSearch();" >搜索</div>
+            </template>
+          </van-search>
         </div>
     </header>
 
@@ -101,6 +114,9 @@ export default {
               '5': 'doneContractList',
               '6': 'failContractList',
             },
+            sealType:'',
+            searchWord:'',
+            searchFlag: false,
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
@@ -108,6 +124,7 @@ export default {
               { text: '非合同', value: 1 , icon: 'description' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
+              { text: '重置', value: 4 , icon: 'aim' },
             ],
             isLoading:false,
             loading:false,
@@ -146,15 +163,30 @@ export default {
         //设置加载状态
         this.isLoading = false;
       },
+      //点击顶部搜索
+      async headMenuSearch(){
+        if(this.searchWord){
+          //刷新相应表单
+          this.queryTabList(this.tabname);
+          //显示搜索状态
+          vant.Toast('搜索...');
+          //等待一下
+          await tools.sleep(300);
+        }
+        //显示刷新消息
+        this.searchFlag = false;
+      },
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
           case 0: //只显示合同类信息
-            this.dropMenuOldValue = val;
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
             break;
           case 1: //只显示非合同类信息
-            this.dropMenuOldValue = val;
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
             break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
@@ -162,6 +194,15 @@ export default {
             break;
           case 3: //查询数据
             this.dropMenuValue = this.dropMenuOldValue;
+            this.searchFlag = true;
+            break;
+          case 4: //重置数据
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
+            this.sealType = '';
+            this.searchFlag = false;
+            this.searchWord = '';
+            await this.queryFresh();
             break;
           default:
             console.log(`no operate. out of switch. `);
@@ -171,11 +212,24 @@ export default {
       async queryTabList(tabname){
 
         //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let sealTypeSql = '';
+        let searchSql = '';
+
+        if(this.sealType === 0) {
+          sealTypeSql = `~and(seal_type,like,合同类)`;
+        } else if(this.sealType === 1) {
+          sealTypeSql = `~and(seal_type,like,非合同类)`;
+        }
+
+        //如果存在搜索关键字
+        if(this.searchWord) {
+          searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~))`;
+        }
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -185,7 +239,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -195,7 +249,7 @@ export default {
           })
         } else if(tabname == 3){
           //获取最近6个月的已领取记录
-          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -205,7 +259,7 @@ export default {
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -215,7 +269,7 @@ export default {
           })
         } else if(tabname == 5){
           //获取最近6个月的已归档记录
-          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -225,7 +279,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})&_sort=-create_time`);
+          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -375,7 +429,7 @@ export default {
 .header-drop-menu .van-popup--top {
     top: 0;
     left:auto;
-    width: 40%;
+    width: 38%;
     right: 0;
     text-align: center;
 }
