@@ -228,7 +228,7 @@ export default {
 
         //如果存在搜索关键字
         if(this.searchWord) {
-          searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~))`;
+          searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~))`;
         }
 
         if(tabname == 1){
@@ -238,7 +238,7 @@ export default {
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 2){
@@ -248,7 +248,7 @@ export default {
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 3){
@@ -258,17 +258,17 @@ export default {
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
+          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 5){
@@ -278,7 +278,7 @@ export default {
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 6){
@@ -288,7 +288,7 @@ export default {
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         }
@@ -310,7 +310,7 @@ export default {
         this.initContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -320,7 +320,7 @@ export default {
         this.sealContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -330,17 +330,17 @@ export default {
         this.receiveContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
         //获取最近6个月的已移交记录
-        this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,移交前台)~and(create_time,gt,${month})&_sort=-create_time`);
+        this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})&_sort=-create_time`);
 
         this.frontContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -350,7 +350,7 @@ export default {
         this.doneContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -360,7 +360,7 @@ export default {
         this.failContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.create_by + ' ' + item.filename + ' ' + item.contract_id;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -407,39 +407,8 @@ export default {
 }
 </script>
 <style>
-.header-drop-menu .van-dropdown-menu__title:after {
-      position: absolute;
-      top: 50%;
-      right: -4px;
-      margin-top: -5px;
-      border: 3px solid;
-      border-color: transparent transparent #dcdee0 #dcdee0;
-      -webkit-transform: rotate(-45deg);
-      transform: rotate(-45deg);
-      opacity: .8;
-      content: '';
-      display:none;
-    }
-.header-drop-menu .van-dropdown-menu__bar {
-    position: relative;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    height: 48px;
-    background-color: #1b1b1b;
-    box-shadow: 0 2px 12px rgba(100,101,102,.08);
-}
-
-.header-drop-menu .van-popup--top {
-    top: 0;
-    left:auto;
-    width: 38%;
-    right: 0;
-    text-align: center;
-}
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
-
 </style>
