@@ -214,7 +214,7 @@
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     background-color: #fff;
-    z-index: 10000;
+    z-index: 10;
 }
 
 .van-goods-action-button--danger {

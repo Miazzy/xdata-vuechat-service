@@ -9,6 +9,10 @@
                 <span>返回</span>
             </router-link>
             <span>印章管理</span>
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 15px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+            </van-dropdown-menu>
         </div>
     </header>
 
@@ -260,6 +264,15 @@ export default {
             fileList: [],
             readonly: false,
             active:0,
+            searchFlag: false,
+            dropMenuOldValue:'',
+            dropMenuValue:'',
+            dropMenuOption: [
+              { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '重置', value: 4 , icon: 'aim' },
+              { text: '应用', value: 5 , icon: 'apps-o' },
+              { text: '首页', value: 6 , icon: 'wap-home-o' },
+            ],
             archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
@@ -281,6 +294,89 @@ export default {
       }
     },
     methods: {
+      //点击显示或者隐藏菜单
+      async headMenuToggle(){
+        this.$refs.headMenuItem.toggle();
+      },
+      //点击顶部搜索
+      async headMenuSearch(){
+        if(this.searchWord){
+          //刷新相应表单
+          this.queryTabList(this.tabname);
+          //显示搜索状态
+          vant.Toast('搜索...');
+          //等待一下
+          await tools.sleep(300);
+        }
+        //显示刷新消息
+        this.searchFlag = false;
+      },
+      //点击右侧菜单
+      async headDropMenu(value){
+        const val = this.dropMenuValue;
+        switch (val) {
+          case 0: //只显示合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 1: //只显示非合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 2: //刷新数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 3: //查询数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 4: //重置数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 5: //返回应用
+            this.$router.push(`/app`);
+            break;
+          case 6: //返回首页
+            this.$router.push(`/explore`);
+            break;
+          default:
+            console.log(`no operate. out of switch. `);
+        }
+      },
+      // 设置重置
+      async reduction(){
+        this.item = {
+              createtime: dayjs().format('YYYY-MM-DD'),
+              filename:'',
+              count:'',
+              dealDepart:'',
+              dealManager:'',
+              dealMail:'',
+              username:'',
+              approveType:'',
+              contractId:'',
+              signman:'',
+              workno:'',
+              sealtime:'',
+              sealman: '',
+              sealtype: '',
+              ordertype:'',
+              mobile:'',
+              send_mobile:'',
+              send_location:'',
+              seal:'',     //用印管理员成员组
+              front:'',    //用印前台接受组
+              front_name:'',
+              archive: '', //用印归档组(财务/档案)
+              archive_name:[],
+              prefix: '',  //编号前缀
+              name: '',    //流程组名，即Group_XX
+              confirmStatus: '',//财务确认/档案确认
+              status: '',
+            };
+      },
       //删除原表单数据
       async deleteForm(){
         //提示确认用印操作
