@@ -86,7 +86,7 @@
               物品
             </div>
           </div>
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" @click="$router.push('/app/sealinfo');">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
             <div class="weui-cell_app_bd">
               用章

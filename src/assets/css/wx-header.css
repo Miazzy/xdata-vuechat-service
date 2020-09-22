@@ -28,11 +28,11 @@
 #wx-header .center .icon-left {
     left: 10px;
     position: absolute;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 #wx-header .center .icon-left span {
-    font-size: 16px;
+    font-size: 15px;
     vertical-align: baseline;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -40,7 +40,7 @@
     position: absolute;
     width: 50px;
     text-align: left;
-    top: 1px;
+    top: -0.01rem;
 }
 
 #wx-header .other {

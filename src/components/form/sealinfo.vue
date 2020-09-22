@@ -5,6 +5,9 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
+            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
             <span>印章管理</span>
         </div>
     </header>
