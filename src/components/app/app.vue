@@ -155,6 +155,41 @@
         </div>
       </div>
 
+      <div class="weui-cells">
+        <div class="weui-cell-title">用印管理</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+
+          <div class="weui-cell_app_hd" @click="sealApply();">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
+            <div class="weui-cell_app_bd" >
+              申请
+            </div>
+          </div>
+
+          <div class="weui-cell_app_hd" @click="sealApprove();">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+            <div class="weui-cell_app_bd">
+              审批
+            </div>
+          </div>
+
+          <div class="weui-cell_app_hd" @click="sealFront();" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
+            <div class="weui-cell_app_bd" >
+              移交
+            </div>
+          </div>
+
+          <div class="weui-cell_app_hd" @click="sealArchive();">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
+            <div class="weui-cell_app_bd" >
+              归档
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <div class="weui-cells" style="margin-top:80px;height:0px;">
       </div>
 
@@ -263,7 +298,19 @@ export default {
             console.log(error);
           }
 
-        }
+        },
+        async sealApply(){
+          this.$router.push(`/app/sealinfo`);
+        },
+        async sealApprove(){
+          this.$router.push(`/app/seallist`);
+        },
+        async sealFront(){
+          this.$router.push(`/app/sealfrontlist`);
+        },
+        async sealArchive(){
+          this.$router.push(`/app/sealarchivelist`);
+        },
     }
 }
 </script>

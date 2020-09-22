@@ -123,8 +123,22 @@ const routes = [{
             "subPage": resolve => require(["../components/form/seallist.vue"], resolve)
         }
     }, {
-        path: '/app/sealview',
+        path: '/app/sealfrontlist',
+        name: "用印移交",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealfrontlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/sealarchivelist',
         name: "用印归档",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealarchivelist.vue"], resolve)
+        }
+    }, {
+        path: '/app/sealview',
+        name: "用印处理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/sealview.vue"], resolve)
