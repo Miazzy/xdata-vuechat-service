@@ -104,6 +104,8 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
+              { text: '应用', value: 5 , icon: 'apps-o' },
+              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             menuCssValue:'',
             isLoading:false,
@@ -187,6 +189,12 @@ export default {
             this.searchFlag = false;
             this.searchWord = '';
             await this.queryFresh();
+            break;
+          case 5: //返回应用
+            this.$router.push(`/app`);
+            break;
+          case 6: //返回首页
+            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
