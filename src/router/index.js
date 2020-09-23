@@ -95,6 +95,10 @@ const routes = [{
         name: "应用",
         component: resolve => require(["../components/app/app.vue"], resolve)
     }, {
+        path: '/reward',
+        name: "奖惩管理",
+        component: resolve => require(["../components/reward/home.vue"], resolve)
+    }, {
         path: '/app/moments',
         name: "圈子",
         components: {
