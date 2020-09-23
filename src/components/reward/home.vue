@@ -1,7 +1,8 @@
 <template>
-  <div id="app">
+  <div id="reward-home">
       <div>
       <a-row :gutter="24">
+
         <keep-alive>
           <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
 
@@ -75,6 +76,7 @@
 
           </a-col>
         </keep-alive>
+
       </a-row>
     </div>
   </div>
@@ -295,5 +297,5 @@ export default {
 </script>
 <style scoped >
     @import "../../assets/css/reward.home.css";
-    
+
 </style>
