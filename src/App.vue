@@ -61,12 +61,12 @@
                 if (toDepth === fromDepth) {
                     return;
                 }
-                this.enterAnimate = toDepth > fromDepth ? "animated fadeInRight" : "animated fadeInLeft"
-                this.leaveAnimate = toDepth > fromDepth ? "animated fadeOutLeft" : "animated fadeOutRight"
-                    // 从店面页进入店内页 需要对店内页重新设置离开动效 因为他们处于不同 name 的 router-view
-                if (toDepth === 3) {
-                    this.leaveAnimate = "animated fadeOutRight"
-                }
+                // this.enterAnimate = toDepth > fromDepth ? "animated fadeInRight" : "animated fadeInLeft"
+                // this.leaveAnimate = toDepth > fromDepth ? "animated fadeOutLeft" : "animated fadeOutRight"
+                // 从店面页进入店内页 需要对店内页重新设置离开动效 因为他们处于不同 name 的 router-view
+                //if (toDepth === 3) {
+                    //this.leaveAnimate = "animated fadeOutRight"
+                //}
             }
         }
     }
@@ -79,7 +79,7 @@
     /*阿里 fonticon*/
     @import "assets/css/lib/iconfont.css";
     /*过渡效果需要的动画库*/
-    @import "assets/css/lib/animate.css";
+    /* @import "assets/css/lib/animate.css"; */
     /*weui 样式库*/
     @import "assets/css/lib/weui.min.css";
 </style>

@@ -171,3 +171,275 @@ export const compValidation = {
         },
     }
 }
+
+/**
+ * @description 左侧菜单列表
+ */
+export function getPaneflows(this_) {
+    return [{
+            id: 0,
+            name: "我的待办",
+            ename: "mytodolist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png`,
+            href: "/account/mytodolist",
+            description: "查看待处理的奖惩申请流程",
+            show: true,
+            css: "",
+            all: '全部',
+            tabs: ['全部', '待处理', '抄送我'],
+            dataSource: [{
+                    title: '关于行政人力中心的奖罚申请【2020年8月】',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['待处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                },
+                {
+                    title: 'Alipay',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['已处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                }
+            ],
+            click: () => {
+                this_.panename = 'mytodolist';
+            },
+        },
+        {
+            id: 1,
+            name: "我的已办",
+            ename: "mydonelist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png`,
+            href: "/account/mydonelist",
+            description: "查看已处理的奖惩申请流程",
+            show: true,
+            css: "",
+            all: '全部',
+            tabs: ['全部', '待处理', '抄送我'],
+            dataSource: [{
+                    title: '关于财务共享中心的奖罚申请【2020年7月】',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['待处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                },
+                {
+                    title: '关于财务共享中心的奖罚申请【2020年6月】',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['已处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                }
+            ],
+            click: () => {
+                this_.panename = 'mydonelist';
+            },
+        },
+        {
+            id: 2,
+            name: "我的奖惩",
+            ename: "myrewardslist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/绩效管理.png`,
+            href: "/account/myrewardslist",
+            description: "查看涉及自己的奖惩明细",
+            show: true,
+            css: "",
+            all: '全部',
+            tabs: ['全部', '待处理', '已处理', '抄送我'],
+            dataSource: [{
+                    title: '关于财务共享中心的奖罚申请【2020年7月】',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['待处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                },
+                {
+                    title: '关于财务共享中心的奖罚申请【2020年6月】',
+                    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+                    description: '那是一种内在的东西， 他们到达不了，也无法触及的',
+                    owner: '付晓晓',
+                    startAt: '2018-07-26 22:44',
+                    all: '全部',
+                    tabs: ['已处理', '抄送我'],
+                    progress: {
+                        value: 90
+                    }
+                }
+            ],
+            click: () => {
+                this_.panename = 'myrewardslist';
+            },
+        },
+        {
+            id: 3,
+            name: "统计分析",
+            ename: "myanalyselist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png`,
+            href: "/account/myanalyselist",
+            description: "查看自己的奖惩月/季度报表",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myanalyselist';
+            },
+        },
+        {
+            id: 4,
+            name: "月度奖惩报表",
+            ename: "mymonthlist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png`,
+            href: "/account/mymonthlist",
+            description: "查看/导出月度奖惩明细及汇总",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'mymonthlist';
+            },
+        },
+        {
+            id: 5,
+            name: "季度奖惩报表",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png`,
+            href: "/account/myquanterlist",
+            description: "查看/导出月度奖惩明细及汇总",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myquanterlist';
+            },
+        },
+        {
+            id: 6,
+            name: "奖惩部门分布",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png`,
+            href: "/account/mydepartmentlist",
+            description: "查看按部门/中心/区域分配的奖惩报表",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'mydepartmentlist';
+            },
+        },
+        {
+            id: 7,
+            name: "奖惩类别分布",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png`,
+            href: "/account/myrewardtypelist",
+            description: "查看按奖惩类别/名称分布的奖惩报表",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myrewardtypelist';
+            },
+        },
+        {
+            id: 8,
+            name: "月度奖惩排行榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png`,
+            href: "/account/mymonthrank",
+            description: "查看月度奖惩汇总的排行榜",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'mymonthrank';
+            },
+        },
+        {
+            id: 9,
+            name: "季度奖惩排行榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhoubao.png`,
+            href: "/account/myquarterrank",
+            description: "查看季度奖惩汇总的排行榜",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myquarterrank';
+            },
+        },
+        {
+            id: 10,
+            name: "年度奖惩排行榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png`,
+            href: "/account/myyearrank",
+            description: "查看年度奖惩汇总的排行榜",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myyearrank';
+            },
+        },
+        {
+            id: 11,
+            name: "区域奖惩排行榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/commun.png`,
+            href: "/account/myzonerank",
+            description: "查看按照区奖惩汇总的排行榜",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myzonerank';
+            },
+        },
+        {
+            id: 12,
+            name: "奖惩年度个人榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png`,
+            href: "/account/myyearperson",
+            description: "查看年度获奖/罚前三甲的个人",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myyearperson';
+            },
+        },
+        {
+            id: 13,
+            name: "奖惩年度团队榜",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png`,
+            href: "/account/myyearteam",
+            description: "查看年度获奖/罚前三甲的团队",
+            show: true,
+            css: "",
+            tabs: ['全部', '待处理', '抄送我'],
+            click: () => {
+                this_.panename = 'myyearteam';
+            },
+        },
+    ];
+}

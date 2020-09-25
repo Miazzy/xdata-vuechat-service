@@ -99,6 +99,13 @@ const routes = [{
         name: "奖惩管理",
         component: resolve => require(["../components/reward/home.vue"], resolve)
     }, {
+        path: '/reward/workspace',
+        name: "奖惩管理",
+        components: {
+            "default": resolve => require(["../components/reward/home.vue"], resolve),
+            "subPage": resolve => require(["../components/reward/workspace.vue"], resolve)
+        }
+    }, {
         path: '/reward/message',
         name: "奖惩管理",
         components: {

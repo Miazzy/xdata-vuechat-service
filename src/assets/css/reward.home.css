@@ -16,6 +16,20 @@
     font-family: cursive;
 }
 
+.app-header {
+    position: relative;
+    transition: 0.3s;
+    width: 100%;
+    z-index: 3;
+    height: 45px;
+    line-height: 45px;
+    font-size: 17px;
+    background: linear-gradient(180deg, #303036, #3c3b40);
+    color: #fff;
+    text-align: center;
+    display: none;
+}
+
 .pane-right-avatar>img {
     display: block;
     width: 100%;
@@ -41,8 +55,18 @@
 }
 
 .pane-flow-card {
-    margin-bottom: 24px;
+    margin-bottom: 0px;
     border: 0px solid #cecece;
+    border-left: 1px solid #f0f0f0;
+}
+
+.pane-flow-card-middle {
+    margin-bottom: 0px;
+    background-color: #fafafa;
+    border: 0px solid rgb(254, 254, 254);
+    line-height: 1.0;
+    height: 30px;
+    border-left: 1px solid #f0f0f0;
 }
 
 .pane-flow-card-meta {
@@ -71,4 +95,8 @@
     margin-left: 10px;
     font-size: 12px;
     font-weight: 300;
+}
+
+.pane-right-item-group-tag {
+    margin-bottom: 10px;
 }
