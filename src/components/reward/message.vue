@@ -6,11 +6,11 @@
           <a-col :xl="1" :lg="24" :md="24" :sm="24" :xs="24">
             <van-sidebar v-model="activeTabKey">
               <van-sidebar-item title="消息" :to="`/reward/message`" />
-              <van-sidebar-item title="云文档" />
-              <van-sidebar-item title="联系人" />
+              <van-sidebar-item title="云文档" :to="`/reward/netdisk`" />
+              <van-sidebar-item title="联系人" :to="`/reward/contact`" />
               <van-sidebar-item title="工作台" :to="`/reward/workspace`" />
-              <van-sidebar-item title="收藏" />
-              <van-sidebar-item title="设置" />
+              <van-sidebar-item title="收藏" :to="`/reward/collect`" />
+              <van-sidebar-item title="设置" :to="`/reward/setup`" />
             </van-sidebar>
           </a-col>
         </keep-alive>

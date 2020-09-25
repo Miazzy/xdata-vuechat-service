@@ -119,7 +119,7 @@ export default {
   mixins: [window.mixin],
   data() {
     return {
-      activeTabKey: 2,
+      activeTabKey: 5,
       pageName: "联系人",
       momentNewMsg: true,
       paneflowcard: "",
@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     async init() {
-      this.activeTabKey = 2;
+      this.activeTabKey = 5;
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
       debugger;
     },

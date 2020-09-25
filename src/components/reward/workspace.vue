@@ -7,11 +7,11 @@
           <a-col :xl="1" :lg="24" :md="24" :sm="24" :xs="24">
             <van-sidebar v-model="activeTabKey">
               <van-sidebar-item title="消息" :to="`/reward/message`" />
-              <van-sidebar-item title="云文档" />
-              <van-sidebar-item title="联系人" />
-              <van-sidebar-item title="工作台" :to="`/reward/workspace`"/>
-              <van-sidebar-item title="收藏" />
-              <van-sidebar-item title="设置" />
+              <van-sidebar-item title="云文档" :to="`/reward/netdisk`" />
+              <van-sidebar-item title="联系人" :to="`/reward/contact`" />
+              <van-sidebar-item title="工作台" :to="`/reward/workspace`" />
+              <van-sidebar-item title="收藏" :to="`/reward/collect`" />
+              <van-sidebar-item title="设置" :to="`/reward/setup`" />
             </van-sidebar>
           </a-col>
         </keep-alive>
@@ -37,7 +37,7 @@
                   </a-card-grid>
                 </template>
               </a-card>
-              <a-card v-if="index == 0" :key="pane.id + pane.title" :title="' '" class="pane-flow-card-middle" >
+              <a-card v-if="index <= 1" :key="pane.id + pane.title" :title="' '" class="pane-flow-card-middle" >
               </a-card>
             </template>
           </a-col>
@@ -130,6 +130,44 @@ export default {
               avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png`,
               href: "/account/myanalyse",
               description: '查看自己的奖惩月/季度报表',
+              click: () => {
+
+              },
+            }
+          ],
+        },{
+          id: 'task-pane',
+          title: '奖罚申请',
+          taskflows:[
+            {
+              name: "业绩考核奖罚",
+              avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png`,
+              href: "/account/todolist",
+              description: '业绩考核奖罚申请流程',
+              click: () => {
+
+              }
+            },{
+              name: "总经理/总裁专项奖",
+              avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png`,
+              href: "/account/donelist",
+              description: '总经理/总裁专项奖申请流程',
+              click: () => {
+
+              }
+            },{
+              name: "特殊贡献奖",
+              avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/finance.png`,
+              href: "/account/myrewards",
+              description: '特殊贡献奖申请流程',
+              click: () => {
+
+              },
+            },{
+              name: "其他奖罚",
+              avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png`,
+              href: "/account/myanalyse",
+              description: '其他奖罚申请流程',
               click: () => {
 
               },

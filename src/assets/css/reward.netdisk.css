@@ -1,0 +1,10 @@
+.mod-logo a {
+    display: block;
+    width: 160px;
+    height: 36px;
+    margin: 0 0 0 24px;
+    background-image: url(https://qzonestyle.gtimg.cn/qz-proj/wy-pc-v3/static/img/svg/logo-v2.svg);
+    background-repeat: no-repeat;
+    line-height: 100px;
+    overflow: hidden;
+}
