@@ -15,7 +15,7 @@
           </a-col>
         </keep-alive>
         <keep-alive>
-          <a-col :xl="6" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-col :xl="5" :lg="24" :md="24" :sm="24" :xs="24">
 
             <a-card class="pane-flow-card" :style="paneflowcard">
               <div style="margin:10px 15px 10px 25px;">
@@ -34,9 +34,10 @@
                   v-show="item.show"
                   @click="menuCardClick(item.id);"
                   :style="item.css"
+                  style="border-bottom: 1px solid #f9f9f9; border-radius: 15px;"
                 >
                   <a-card-meta>
-                    <div slot="title" class="card-title pane-flow-card-meta" @click="item.click">
+                    <div slot="title" class="card-title pane-flow-card-meta"  @click="item.click">
                       <div class="pane-flow-card-meta-icon">
                         <a-avatar size="large" :src="item.avatar" />
                       </div>
@@ -46,6 +47,7 @@
                       </div>
                     </div>
                   </a-card-meta>
+                  <div ></div>
                 </a-card-grid>
               </template>
             </a-card>
