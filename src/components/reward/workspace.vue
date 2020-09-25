@@ -42,8 +42,9 @@
             </template>
           </a-col>
         </keep-alive>
+
         <keep-alive>
-          <a-col style="padding: 0 12px" :xl="7" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-col style="padding: 0 12px 0 0;" :xl="7" :lg="24" :md="24" :sm="24" :xs="24">
             <a-card
               title="便捷导航"
               style="margin-bottom: 24px"
