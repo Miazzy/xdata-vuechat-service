@@ -67,6 +67,7 @@
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
+              <van-field clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" />
               <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
 
@@ -268,6 +269,7 @@ export default {
               confirmStatus: '',//财务确认/档案确认
               prefix: '',
               status: '',
+              company:'',
               message: '同意' , //用印说明
             },
             statusType: workconfig.statusType,
@@ -684,6 +686,7 @@ export default {
               prefix: value.prefix,
               status: value.status,
               type: that.item.type,
+              company: value.company,
               message: '同意',
             }
 
