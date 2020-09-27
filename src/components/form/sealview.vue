@@ -67,7 +67,7 @@
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
-              <van-field clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" />
+              <van-field required clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" />
               <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
 
@@ -743,12 +743,17 @@ export default {
           console.log(error);
         }
       },
-
+      /**
+       * @function 处理同意操作
+       */
       async handleAgree(){
 
         this.validField('message');
 
         var noname = '合同编号';
+
+        //获取公司名称
+        const company = this.item.company;
 
         //提示确认用印操作
         await vant.Dialog.confirm({
@@ -761,6 +766,16 @@ export default {
           noname = '合同编号';
         } else {
           noname = '流水编号';
+        }
+
+        //如果没有输入公司名称，则提示用户先输入用印公司名称
+        if(!company){
+          //提示确认用印操作
+          await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '请输入用印公司名称后，在进行确认操作！',
+          })
+          return;
         }
 
         //公司工作组
@@ -784,7 +799,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印，保存当前合同编号
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name });
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , company});
 
         //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
@@ -815,12 +830,27 @@ export default {
         });
 
       },
-
+      /**
+       * @function 处理作废操作
+       */
       async handleDisagree(){
 
         this.validField('message');
 
         var noname = '合同编号';
+
+        //获取公司名称
+        const company = this.item.company;
+
+        //如果没有输入公司名称，则提示用户先输入用印公司名称
+        if(!company){
+          //提示确认用印操作
+          await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '请输入用印公司名称后，在进行确认操作！',
+          })
+          return;
+        }
 
         //作废用印申请时，必须填写备注信息，以便用印经办人知晓错误原因！
         if(!this.item.message || this.item.message == '同意'){
@@ -863,7 +893,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
         //修改状态为已作废
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , message , seal_time: time});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , message , company , seal_time: time});
 
         //通知签收人领取资料(email邮件通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
@@ -929,7 +959,9 @@ export default {
         });
 
       },
-
+      /**
+       * @function 处理移交前台操作
+       */
       async handleConfirm(){
 
         var noname = '合同编号';
@@ -994,7 +1026,9 @@ export default {
         });
 
       },
-
+      /**
+       * @function 处理归档操作
+       */
       async handleArchive(){
 
         if(this.item.archiveType == '' || this.item.archiveType == null) {
@@ -1073,7 +1107,9 @@ export default {
         this.item.type = '';
 
       },
-
+      /**
+       * @function 处理归档完成操作
+       */
       async handleFinaly(){
 
         //提示确认用印操作
@@ -1111,7 +1147,9 @@ export default {
         this.item.type = '';
 
       },
-
+      /**
+       * @function 处理推送消息操作
+       */
       async handleMessage(email , url){
 
         var noname = '合同编号';
