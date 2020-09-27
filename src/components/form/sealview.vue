@@ -325,6 +325,13 @@ export default {
 
         return tools.isNull(this.message[fieldName]);
       },
+      validFieldConfirm(fieldName){
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        if(fieldName == 'dealMail'){
+          this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        }
+        return tools.isNull(this.message[fieldName]);
+      },
        //选中当前合同编号
       async selectHContract(value){
         await tools.sleep(0);
@@ -471,7 +478,7 @@ export default {
             let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM(this.item.finance.trim());
+            let user_ = await manageAPI.queryUserByNameHRM((this.item.finance || '').trim());
 
             if(!!user){
 
@@ -548,7 +555,7 @@ export default {
             let user = await manageAPI.queryUserByNameHRM(record_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM(this.item.record.trim());
+            let user_ = await manageAPI.queryUserByNameHRM((this.item.record||'').trim());
 
             if(!!user){
 
@@ -982,11 +989,23 @@ export default {
         //获取公司名称
         const company = this.item.company;
 
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印确认',
-          message: '请检查合同编号是否需要修改，并确认进行‘已用印’处理，确认后推送通知！',
-        })
+        //先验证是否合法
+        const keys = this.item.sealtype == '合同类' ?
+          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
+          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
+
+        const invalidKey =  keys.find(key => {
+          this.validField();
+          return !this.validFieldConfirm(key);
+        });
+
+        if(invalidKey != '' && invalidKey != null){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请检查表单填写内容，确认内容是否填写完整无误！',
+          });
+          return false;
+        }
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
@@ -1004,6 +1023,12 @@ export default {
           })
           return;
         }
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印确认',
+          message: '请检查合同编号是否需要修改，并确认进行‘已用印’处理，确认后推送通知！',
+        })
 
         //公司工作组
         const groupid = tools.getUrlParam('groupid') || 'Group_LD';
