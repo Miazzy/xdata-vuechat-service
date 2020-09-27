@@ -580,7 +580,7 @@ export default {
     }
 
     .van-goods-action {
-        position: fixed;
+        position: relative;
         right: 0;
         bottom: 0;
         left: 0;
