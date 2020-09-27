@@ -441,7 +441,12 @@ export default {
 
             } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
               const contract_id = `${prefix}[${dayjs().format('YYYY')}]500`;
-              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]700` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
+              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]500` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
+
+              const id = this.hContractList[0].id;
+              let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+              no = `00000${no}`.slice(-3);
+              this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
             }
           }
         } catch (error) {
@@ -1018,7 +1023,7 @@ export default {
         this.cacheUserInfo();
 
         //先验证是否合法
-        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'',})
+        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'',})
         const invalidKey = keys.find(key => {
           return !this.validField(key);
         });
