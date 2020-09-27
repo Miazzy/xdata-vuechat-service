@@ -128,7 +128,7 @@
             />
           </van-cell-group>
 
-          <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;" >
 
             <div v-show=" fileList.length > 0 " style="margin-top:15px;margin-left:7px;">
               图片附件
@@ -789,6 +789,8 @@ export default {
         const username = this.item.username;
         //合同编号
         const contract_id = this.item.contractId;
+        //前缀编号
+        const prefix = this.item.prefix;
         //提示信息
         const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
@@ -799,7 +801,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印，保存当前合同编号
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , company});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , prefix , company});
 
         //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)

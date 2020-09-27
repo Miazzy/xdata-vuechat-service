@@ -70,6 +70,7 @@
                 <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请根据最新已有合同编号填写编号" v-show="item.sealtype == '合同类' " />
                 <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
+                <van-field required :readonly="readonly" clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" @blur="validField('company')" :error-message="message.company" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
               </van-cell-group>
 
@@ -249,6 +250,7 @@ export default {
               archive: '', //用印归档组(财务/档案)
               archive_name:[],
               prefix: 'LD',  //编号前缀
+              company:'',
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
               status: '',
@@ -822,6 +824,8 @@ export default {
               archive: value.archive,
               archive_name: value.archive_name,
               message: value.message,
+              prefix: value.prefix,
+              company: value.company,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
@@ -916,7 +920,9 @@ export default {
           console.log(error);
         }
       },
-
+      /**
+       * @function 处理提交操作
+       */
       async handleConfirm(){
 
         //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
@@ -994,10 +1000,12 @@ export default {
         const archive_name = item.archive_name;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
+        const prefix = item.prefix;
+        const company = item.company;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , message : item.message }; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , message : item.message }; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;

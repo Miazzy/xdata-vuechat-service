@@ -64,6 +64,7 @@
                 <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
                 <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
                 <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
+                <van-field :readonly="readonly" clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称"  />
                 <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
                 <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             </van-cell-group>
@@ -315,6 +316,7 @@ export default {
               mobile: value.mobile,
               send_mobile: value.send_mobile,
               send_location: value.send_location,
+              company: value.company,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type

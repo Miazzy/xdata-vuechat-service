@@ -139,10 +139,14 @@
             </van-steps>
           </van-cell-group>
 
-          <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;" >
             <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
+          </div>
+
+          <div style="height:100px;">
+
           </div>
 
           <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
@@ -1084,6 +1088,7 @@ export default {
         const archive_name = item.archive_name;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
+        //const prefix = item.prefix;
         const company = item.company;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
