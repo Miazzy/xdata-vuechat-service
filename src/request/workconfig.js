@@ -106,6 +106,8 @@ export const compValidation = {
             meal_account: '',
             message: '',
             company: '',
+            finance: '',
+            record: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -128,6 +130,8 @@ export const compValidation = {
             meal_account: '请输入新员工的食堂账户！',
             message: '请印章管理员输入用印意见或备注说明！',
             company: '请输入公司名称！',
+            finance: '请输入财务归档人员！',
+            record: '请输入档案归档人员！',
         },
     },
     entryjob: {

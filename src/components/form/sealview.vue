@@ -76,8 +76,12 @@
                 <van-field readonly required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" />
                 <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="queryFrontMan();" @click="queryFrontMan();" />
                 <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
-                <nut-checkboxgroup v-show="item.sealtype == '合同类' " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' && false " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup v-show="item.sealtype == '合同类' && false " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="queryFinanceArchiveMan();"  @click="queryFinanceArchiveMan();" />
+                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="queryRecordArchiveMan();"  @click="queryRecordArchiveMan();" />
+                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -235,6 +239,10 @@ export default {
             fuserList:[],
             auserid:'',
             auserList:[],
+            financeUserid:'',
+            financeuserList:[],
+            recordUserid:'',
+            recorduserList:[],
             agroup:[],
             hContractID:'',
             item:{
@@ -266,6 +274,10 @@ export default {
               front_name:'',
               archive: '', //用印归档组(财务/档案)
               archive_name:[],
+              finance:'',    //用印财务接受组
+              finance_name:'',
+              record:'',    //用印档案接受组
+              record_name:'',
               confirmStatus: '',//财务确认/档案确认
               prefix: '',
               status: '',
@@ -441,6 +453,145 @@ export default {
           console.log(error);
         }
       },
+      async queryFinanceArchiveMan(){
+        //获取盖章人信息financeuserList
+        const finance_name = this.item.finance || this.item.finance_name;
+
+        try {
+          if(!!finance_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.financeuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  });
+
+                   //获取盖印人姓名
+                  this.item.finance_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.finance = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.item.finance = user.loginid;
+                  //获取盖印人姓名
+                  this.item.finance_name = user.lastname;
+                  //将用户数据推送至对方数组
+                  this.financeuserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.financeuserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.financeuserList = this.financeuserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.financeuserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      //用户选择前台接待
+      async queryRecordArchiveMan(){
+        //获取盖章人信息
+        const record_name = this.item.record || this.item.record_name;
+
+        try {
+          if(!!record_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(record_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.recorduserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  });
+
+                   //获取盖印人姓名
+                  this.item.record_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.record = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.item.record = user.loginid;
+                  //获取盖印人姓名
+                  this.item.record_name = user.lastname;
+                  //将用户数据推送至对方数组
+                  this.recorduserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.recorduserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.recorduserList = this.recorduserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.recorduserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
@@ -578,7 +729,32 @@ export default {
         //当前盖印人编号
         this.item.front = id;
       },
-
+      //选中当前前台人
+      async selectFinanceUser(value){
+        await tools.sleep(0);
+        const id = this.financeUserid;
+        const user = this.financeuserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.finance_name = user.name;
+        //当前盖印人编号
+        this.item.finance = id;
+        //设置归档组
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.archive = `${this.item.finance},${this.item.record}`;
+      },
+      //选中当前档案人
+      async selectRecordUser(value){
+        await tools.sleep(0);
+        const id = this.recordUserid;
+        const user = this.recorduserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.record_name = user.name;
+        //当前盖印人编号
+        this.item.record = id;
+        //设置归档组
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.archive = `${this.item.finance},${this.item.record}`;
+      },
       //选中当前盖印人
       async selectSealUser(value){
         await tools.sleep(0);
@@ -688,6 +864,10 @@ export default {
               front_name: value.front_name,
               archive: value.archive,
               archive_name: value.archive_name,
+              finance: value.finance,
+              finance_name: value.finance_name,
+              record: value.record,
+              record_name: value.record_name,
               confirmStatus: '',//财务确认/档案确认
               prefix: value.prefix,
               status: value.status,
@@ -740,6 +920,9 @@ export default {
 
           //如果合同编号存在
           this.item.contractId = value.contract_id || this.item.contractId;
+
+          await this.queryFinanceArchiveMan();
+          await this.queryRecordArchiveMan();
 
         } catch (error) {
           console.log(error);
@@ -810,7 +993,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
         //修改状态为已用印，保存当前合同编号
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , prefix , company});
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
 
         //通知签收人领取资料(email通知)
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)

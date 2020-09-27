@@ -86,8 +86,12 @@
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
                 <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
                 <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
-                <nut-checkboxgroup v-show="item.sealtype == '合同类' " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' && false" required clearable label="档案归档" v-model="item.archive_name" placeholder="请输入档案归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
+                <nut-checkboxgroup v-show="item.sealtype == '合同类' && false " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="validField('finance');queryFinanceArchiveMan();" :error-message="message.finance" @click="queryFinanceArchiveMan();" />
+                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
+                <van-field v-show="item.sealtype == '合同类' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="validField('record');queryRecordArchiveMan();"  :error-message="message.record" @click="queryRecordArchiveMan();" />
+                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -221,6 +225,10 @@ export default {
             auserList:[],
             hContractID:'',
             hContractList:[],
+            financeUserid:'',
+            financeuserList:[],
+            recordUserid:'',
+            recorduserList:[],
             agroup:[],
             noname:'合同编号',
             item:{
@@ -247,6 +255,10 @@ export default {
               front_name:'',
               archive: '', //用印归档组(财务/档案)
               archive_name:[],
+              finance:'',    //用印财务接受组
+              finance_name:'',
+              record:'',    //用印档案接受组
+              record_name:'',
               prefix: 'LD',  //编号前缀
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
@@ -517,6 +529,145 @@ export default {
           console.log(error);
         }
       },
+      async queryFinanceArchiveMan(){
+        //获取盖章人信息financeuserList
+        const finance_name = this.item.finance_name;
+
+        try {
+          if(!!finance_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.financeuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  });
+
+                   //获取盖印人姓名
+                  this.item.finance_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.finance = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.item.finance = user.loginid;
+                  //获取盖印人姓名
+                  this.item.finance_name = user.lastname;
+                  //将用户数据推送至对方数组
+                  this.financeuserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.financeuserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.financeuserList = this.financeuserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.financeuserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      //用户选择前台接待
+      async queryRecordArchiveMan(){
+        //获取盖章人信息
+        const record_name = this.item.record_name;
+
+        try {
+          if(!!record_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(record_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.recorduserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  });
+
+                   //获取盖印人姓名
+                  this.item.record_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.record = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //当前盖印人编号
+                  this.item.record = user.loginid;
+                  //获取盖印人姓名
+                  this.item.record_name = user.lastname;
+                  //将用户数据推送至对方数组
+                  this.recorduserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.recorduserList.length });
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.recorduserList = this.recorduserList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.recorduserList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
@@ -660,6 +811,9 @@ export default {
 
       },
       async validField(fieldName){
+
+        await tools.sleep(0);
+
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
@@ -688,6 +842,13 @@ export default {
 
         storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
+        return tools.isNull(this.message[fieldName]);
+      },
+      validFieldConfirm(fieldName){
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        if(fieldName == 'dealMail'){
+          this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        }
         return tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
@@ -772,6 +933,32 @@ export default {
         this.item.front_name = user.name;
         //当前盖印人编号
         this.item.front = id;
+      },
+      //选中当前前台人
+      async selectFinanceUser(value){
+        await tools.sleep(0);
+        const id = this.financeUserid;
+        const user = this.financeuserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.finance_name = user.name;
+        //当前盖印人编号
+        this.item.finance = id;
+        //设置归档组
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.archive = `${this.item.finance},${this.item.record}`;
+      },
+      //选中当前档案人
+      async selectRecordUser(value){
+        await tools.sleep(0);
+        const id = this.recordUserid;
+        const user = this.recorduserList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.record_name = user.name;
+        //当前盖印人编号
+        this.item.record = id;
+        //设置归档组
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.archive = `${this.item.finance},${this.item.record}`;
       },
       //选中当前盖印人
       async selectSealUser(value){
@@ -1057,9 +1244,13 @@ export default {
         this.cacheUserInfo();
 
         //先验证是否合法
-        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'',})
-        const invalidKey = keys.find(key => {
-          return !this.validField(key);
+        const keys = this.item.sealtype == '合同类' ?
+          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
+          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
+
+        const invalidKey =  keys.find(key => {
+          this.validField();
+          return !this.validFieldConfirm(key);
         });
 
         if(invalidKey != '' && invalidKey != null){
@@ -1069,12 +1260,6 @@ export default {
           });
           return false;
         }
-
-        //提示确认用印操作
-        await vant.Dialog.confirm({
-          title: '用印申请',
-          message: '确认提交用印登记申请？',
-        })
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
@@ -1087,13 +1272,10 @@ export default {
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
-          //maxno = (maxinfo.maxno + 100001).toString().slice(-3);
-          //this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${maxno}`;
           this.noname = '合同编号';
         } else {
-          // maxno = (maxinfo.caxno + 100001).toString().slice(-3);
-          // this.item.contractId = `PTID[${dayjs().format('YYYY')}]${maxno}`;
           this.noname = '流水编号';
+          //设置非合同类前缀编号
           this.item.prefix = 'PTID';
           //加载最近的同类型合同编号
           await this.queryHContract();
@@ -1127,6 +1309,10 @@ export default {
         const seal = item.seal;
         const front = item.front;
         const front_name = item.front_name;
+        const finance = item.finance;
+        const finance_name = item.finance_name;
+        const record = item.record;
+        const record_name = item.record_name;
         const archive = item.archive;
         const archive_name = item.archive_name;
         const send_location = item.send_location;
@@ -1136,7 +1322,22 @@ export default {
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name}; // 待提交元素
+        if((!finance || !finance_name || !record || !record_name) && this.item.sealtype == '合同类'){
+           //提示确认用印操作
+          await vant.Dialog.confirm({
+            title: '用印申请',
+            message: '请输入并选择财务/档案归档人员！',
+          })
+          return false;
+        }
+
+        //提示确认用印操作
+        await vant.Dialog.confirm({
+          title: '用印申请',
+          message: '确认提交用印登记申请？',
+        })
+
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name }; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
