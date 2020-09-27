@@ -43,6 +43,8 @@
                     </router-link>
                 </div>
             </template>
+            <div style="height:100px;">
+            </div>
 </section>
 <!--检索-->
 <div class="initial-bar"><span @click="toPs(i)" v-for="i in contactsInitialList">{{i}}</span></div>

@@ -4,11 +4,12 @@
     margin-right: 10px
 }
 
-#self .weui-cell__hd img {
-    width: 28px;
-    margin-right: 8px;
-    display: block;
-    border-radius: 4px;
+#self .weui-cell__ft img {
+    height: 25px;
+    vertical-align: middle;
+    margin-right: 10px;
+    border: 1px solid #cecece;
+    opacity: 0.75;
 }
 
 #self img.self-header {

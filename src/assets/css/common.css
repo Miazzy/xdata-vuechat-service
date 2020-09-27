@@ -81,10 +81,12 @@ body {
 }
 
 .app-footer {
-    bottom: 0;
+    bottom: 4rem;
     left: 0 !important;
     width: 100%;
     position: fixed;
+    line-height: 4.25rem;
+    padding-bottom: 0rem;
     z-index: 3;
 }
 
@@ -201,8 +203,9 @@ a:hover {
 }
 
 .weui-cell__hd img {
-    width: 40px;
+    width: 28px;
     border-radius: 8px;
+    margin-top: 0.32rem;
 }
 
 .weui-cell_app_hd {
