@@ -732,6 +732,9 @@ export default {
             await this.queryHContract();
           }
 
+          //如果合同编号存在
+          this.item.contractId = value.contract_id || this.item.contractId;
+
         } catch (error) {
           console.log(error);
         }

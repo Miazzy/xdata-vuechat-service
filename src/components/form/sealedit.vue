@@ -908,6 +908,9 @@ export default {
           //加载最近的同类型合同编号
           await this.queryHContract();
 
+          //如果合同编号存在
+          this.item.contractId = value.contract_id || this.item.contractId;
+
         } catch (error) {
           console.log(error);
         }
