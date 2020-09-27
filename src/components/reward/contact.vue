@@ -15,7 +15,7 @@
           </a-col>
         </keep-alive>
         <keep-alive>
-          <a-col :xl="6" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-col :xl="5" :lg="24" :md="24" :sm="24" :xs="24">
 
             <a-card class="pane-flow-card" :style="paneflowcard">
               <div style="margin:10px 15px 10px 25px;">
@@ -27,9 +27,13 @@
                 />
               </div>
 
+              <div style="margin: 0px 1.5rem;">
+                <van-divider style="padding: auto 10px;" />
+              </div>
+
               <template v-for="item in paneflows" :style="paneflowcard">
                 <a-card-grid
-                  class="pane-flow-card-grid"
+                  class="pane-flow-card-grid pane-flow-contact-grid"
                   :key="item.href"
                   v-show="item.show"
                   @click="menuCardClick(item.id);"
@@ -38,11 +42,10 @@
                   <a-card-meta>
                     <div slot="title" class="card-title pane-flow-card-meta" @click="item.click">
                       <div class="pane-flow-card-meta-icon">
-                        <a-avatar size="large" :src="item.avatar" />
+                        <a-avatar size="middle" :src="item.avatar" style="border-radius: 4px;" />
                       </div>
-                      <div class="pane-flow-card-meta-title">
+                      <div class="pane-flow-card-meta-uname">
                         <a class="pane-flow-card-meta-tname">{{ item.name }}</a>
-                        <div class="pane-flow-card-meta-description">{{ item.description }}</div>
                       </div>
                     </div>
                   </a-card-meta>
@@ -187,4 +190,5 @@ export default {
 <style scoped >
 @import "../../assets/css/reward.home.css";
 @import "../../assets/css/reward.message.css";
+@import "../../assets/css/reward.contact.css";
 </style>
