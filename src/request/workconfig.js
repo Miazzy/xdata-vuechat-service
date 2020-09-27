@@ -60,6 +60,14 @@ export const statusType = {
 }
 
 /**
+ * @description 合同类别对应编号名称
+ */
+export const sealTypeNoName = {
+    '合同类': '合同编号',
+    '非合同类': '流水编号',
+}
+
+/**
  * @description 下拉组件选择类型
  */
 export const compcolumns = {

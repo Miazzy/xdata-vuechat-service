@@ -73,7 +73,7 @@
                 <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required readonly clickable clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @blur="validField('approveType')" :error-message="message.approveType" @click="tag.showPicker = true" />
                 <van-field required clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同对应前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' " @blur="validField('prefix');queryHContract();" :error-message="message.prefix" @click="queryHContract();"  />
-                <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请根据最新已有合同编号填写编号" v-show="item.sealtype == '合同类' " />
+                <van-field required clearable :label="noname" v-model="item.contractId" placeholder="请根据最新已有合同编号填写编号" />
                 <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" @blur="validField('company')" :error-message="message.company" />
@@ -222,6 +222,7 @@ export default {
             hContractID:'',
             hContractList:[],
             agroup:[],
+            noname:'合同编号',
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               filename:'',
@@ -539,7 +540,13 @@ export default {
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
                     this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
-                  })
+                  });
+
+                   //获取盖印人姓名
+                  this.item.front_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.front = user[0].loginid;
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -553,6 +560,8 @@ export default {
                   department = department.slice(department.lastIndexOf('>')+1);
                   //当前盖印人编号
                   this.item.front = user.loginid;
+                  //获取盖印人姓名
+                  this.item.front_name = user.lastname;
                   //将用户数据推送至对方数组
                   this.fuserList.push({id:user.loginid , name:`${user.lastname}` , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.fuserList.length });
                 } catch (error) {
@@ -603,6 +612,12 @@ export default {
                     department = department.slice(department.lastIndexOf('>')+1);
                     this.suserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
+
+                  //获取盖印人姓名
+                  this.item.sealman = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.seal = this.sealuserid = user[0].loginid;
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -614,10 +629,12 @@ export default {
                   company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
-                  //当前盖印人编号
-                  this.sealuserid = user.loginid;
                   //将用户数据推送至对方数组
                   this.suserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  //获取盖印人姓名
+                  this.item.sealman = user.lastname;
+                  //当前盖印人编号
+                  this.item.seal = this.sealuserid = user.loginid;
                 } catch (error) {
                   console.log(error);
                 }
@@ -642,7 +659,7 @@ export default {
         }
 
       },
-      validField(fieldName){
+      async validField(fieldName){
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
@@ -650,6 +667,23 @@ export default {
 
         if(fieldName == 'dealMail'){
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        }
+
+        //修改合同列表时，切换编号名称
+        if(fieldName == 'sealtype'){
+          //设置编号名称
+          this.noname = workconfig.sealTypeNoName[this.item[fieldName]];
+          if(this.item[fieldName] == '非合同类'){
+            //设置流水编号前缀为PTID
+            this.item.prefix = 'PTID';
+            //加载最近的同类型合同编号
+            await this.queryHContract();
+          } else {
+            //设置流水编号前缀为LD
+            this.item.prefix = 'LD';
+            //加载最近的同类型合同编号
+            await this.queryHContract();
+          }
         }
 
         storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
@@ -1044,21 +1078,25 @@ export default {
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
+
         maxinfo = maxinfo.body[0];
         var maxno = '';
-        var noname = '合同编号';
+        this.noname = '合同编号';
 
         //根据用户选择的印章实体公司来设置印章编码
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
-          maxno = (maxinfo.maxno + 100001).toString().slice(-3);
-          this.item.contractId = `${workconfig.group[this.groupid].prefix}[${dayjs().format('YYYY')}]${maxno}`;
-          noname = '合同编号';
+          //maxno = (maxinfo.maxno + 100001).toString().slice(-3);
+          //this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${maxno}`;
+          this.noname = '合同编号';
         } else {
-          maxno = (maxinfo.caxno + 100001).toString().slice(-3);
-          this.item.contractId = `NM[${dayjs().format('YYYY')}]${maxno}`;
-          noname = '流水编号';
+          // maxno = (maxinfo.caxno + 100001).toString().slice(-3);
+          // this.item.contractId = `PTID[${dayjs().format('YYYY')}]${maxno}`;
+          this.noname = '流水编号';
+          this.item.prefix = 'PTID';
+          //加载最近的同类型合同编号
+          await this.queryHContract();
         }
 
         //公司工作组
