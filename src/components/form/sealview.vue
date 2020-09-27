@@ -395,7 +395,7 @@ export default {
       //查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
-        const archive_name = this.item.archive_name;
+        const archive_name = this.item.archive_name || this.item.archive;
 
         try {
           if(!!archive_name){
@@ -403,10 +403,17 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(archive_name.trim());
 
+            //从用户表数据中获取填报人资料
+            let user_ = await manageAPI.queryUserByNameHRM(this.item.archive.trim());
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
+
+                if(!!user_){
+                  user = [...user , ...user_];
+                }
 
                 try {
                   user.map((elem,index) => {
@@ -455,7 +462,7 @@ export default {
       },
       async queryFinanceArchiveMan(){
         //获取盖章人信息financeuserList
-        const finance_name = this.item.finance || this.item.finance_name;
+        const finance_name =  this.item.finance_name || this.item.finance;
 
         try {
           if(!!finance_name){
@@ -463,10 +470,17 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
 
+            //从用户表数据中获取填报人资料
+            let user_ = await manageAPI.queryUserByNameHRM(this.item.finance.trim());
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
+
+                if(!!user_){
+                  user = [...user , ...user_];
+                }
 
                 try {
                   user.map((elem,index) => {
@@ -525,7 +539,7 @@ export default {
       //用户选择前台接待
       async queryRecordArchiveMan(){
         //获取盖章人信息
-        const record_name = this.item.record || this.item.record_name;
+        const record_name =  this.item.record_name || this.item.record ;
 
         try {
           if(!!record_name){
@@ -533,10 +547,17 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(record_name.trim());
 
+            //从用户表数据中获取填报人资料
+            let user_ = await manageAPI.queryUserByNameHRM(this.item.record.trim());
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
+
+                if(!!user_){
+                  user = [...user , ...user_];
+                }
 
                 try {
                   user.map((elem,index) => {
@@ -595,7 +616,7 @@ export default {
       //用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
-        const front_name = this.item.front_name;
+        const front_name = this.item.front_name || this.item.front;
 
         try {
           if(!!front_name){
@@ -603,10 +624,17 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(front_name.trim());
 
+            //从用户表数据中获取填报人资料
+            let user_ = await manageAPI.queryUserByNameHRM(this.item.front.trim());
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
+
+                if(!!user_){
+                  user = [...user , ...user_];
+                }
 
                 try {
                   user.map((elem,index) => {
@@ -658,7 +686,7 @@ export default {
       async querySealMan(){
 
         //获取盖章人信息
-        const sealman = this.item.sealman;
+        const sealman = this.item.sealman || this.item.seal;
 
         try {
           if(!!sealman){
@@ -666,10 +694,17 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await manageAPI.queryUserByNameHRM(sealman.trim());
 
+            //从用户表数据中获取填报人资料
+            let user_ = await manageAPI.queryUserByNameHRM(this.item.seal.trim());
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
+
+                if(!!user_){
+                  user = [...user , ...user_];
+                }
 
                 try {
                   user.map((elem,index) => {

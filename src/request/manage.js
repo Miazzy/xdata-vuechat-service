@@ -395,7 +395,7 @@ export async function queryUserByNameHRM(name) {
         if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
             return maxinfo.body;
         } else if (maxinfo && maxinfo.body && maxinfo.body.length == 1) {
-            return maxinfo.body[0];
+            return maxinfo.body;
         } else {
             return '';
         }
