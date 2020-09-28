@@ -210,15 +210,13 @@ export default {
         }
     },
     activated() {
-      this.weworkLogin();
-      this.userStatus();
       this.$store.commit("toggleTipsStatus", -1);
+      this.weworkLogin();
       this.changeStyle();
       this.displayFoot();
     },
     mounted() {
       this.weworkLogin();
-      this.userStatus();
       this.changeStyle();
       this.displayFoot();
     },
