@@ -210,11 +210,15 @@ export default {
         }
     },
     activated() {
+      this.weworkLogin();
+      this.userStatus();
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
     },
     mounted() {
+      this.weworkLogin();
+      this.userStatus();
       this.changeStyle();
       this.displayFoot();
     },
@@ -235,6 +239,24 @@ export default {
         },
         displayFoot() {
           $('.app-footer').css('display','block');
+        },
+        /**
+         * @function 企业微信登录处理函数
+         * @description https://api.yunwisdom.club:30443/api/v2/wework_user_code/6asBC1NWc1X_mXckfORq-MncHF7ALSLvBAV_A-jeGxw
+         */
+        async weworkLogin(){
+          //获取用户CODE
+          let code = tools.queryUrlString('code' , 'search');
+
+          //获取用户信息
+          var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
+
+          //设置system_userinfo
+          storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);
+          storage.setStore('system_userinfo' , JSON.stringify(response.body.userinfo) , 3600 * 24 * 30);
+          storage.setStore('system_token' , JSON.stringify(code) , 3600 * 24 * 30);
+          storage.setStore('system_department' , JSON.stringify(response.body.userinfo.department) , 3600 * 24 * 30);
+          storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
         },
         async userLogin(){
 
@@ -298,6 +320,18 @@ export default {
             console.log(error);
           }
 
+        },
+        async userStatus(){
+          try {
+            let info = await storage.getStore('system_userinfo');
+            if( tools.isNull(info) ){
+              vant.Toast('尚未登录！');
+              await this.clearLoginInfo();
+              this.$router.push(`/login`);
+            }
+          } catch (error) {
+            console.log(error);
+          }
         },
         async sealApply(){
           this.$router.push(`/app/sealinfo`);

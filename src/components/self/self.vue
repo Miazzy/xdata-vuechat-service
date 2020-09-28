@@ -140,7 +140,7 @@ export default {
             } else {
               this.username = info.username;
               this.realname = info.realname;
-              this.avatar = window._CONFIG['uploaxURL'] + '/' + info.avatar;
+              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
             }
           } catch (error) {
             console.log(error);
