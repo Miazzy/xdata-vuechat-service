@@ -227,7 +227,7 @@ export default {
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 2){
@@ -237,7 +237,7 @@ export default {
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 3){
@@ -247,7 +247,7 @@ export default {
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 4){
@@ -257,7 +257,7 @@ export default {
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 5){
@@ -267,7 +267,7 @@ export default {
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         } else if(tabname == 6){
@@ -277,7 +277,7 @@ export default {
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
         }
@@ -308,7 +308,7 @@ export default {
         this.initContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -318,7 +318,7 @@ export default {
         this.sealContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -328,7 +328,7 @@ export default {
         this.receiveContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -338,7 +338,7 @@ export default {
         this.frontContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -348,7 +348,7 @@ export default {
         this.doneContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
@@ -358,7 +358,7 @@ export default {
         this.failContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno ;
+          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
           item.isDefault = true;
         })
 
