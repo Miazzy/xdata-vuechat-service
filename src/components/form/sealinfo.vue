@@ -1344,6 +1344,12 @@ export default {
         this.loading = true;
         const result = await manageAPI.postTableData('bs_seal_regist' , elem);
 
+        //sleep一下
+        await tools.sleep(0);
+
+        //发送自动设置排序号请求
+        const patchResp = await superagent.get(workconfig.queryAPI.autoSerialAPI).set('accept', 'json');
+
         //第三步，回显当前用印登记信息，并向印章管理员推送消息
         this.loading = false;
         let message = null;
@@ -1375,9 +1381,6 @@ export default {
           //通知印章人领取资料(企业微信发送)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
                        .set('accept', 'json');
-
-          //发送自动设置排序号请求
-          const patchResp = await superagent.get(workconfig.queryAPI.patchSerialAPI).set('accept', 'json');
 
           //查询数据
           const value = await query.queryTableData(`bs_seal_regist` , id);
