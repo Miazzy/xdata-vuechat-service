@@ -9,7 +9,7 @@ import * as manage from '@/request/manage';
 export async function queryPRLogHistoryByDataID(business_data_id) {
 
     //提交URL
-    var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
+    var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
     var cache = storage.getStore(`sys_workflow_cache@$history&id${business_data_id}`);
@@ -39,7 +39,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
  */
 export async function queryPRLogByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
     var cache = storage.getStore(`sys_workflow_cache@$now&id${business_data_id}`);
@@ -69,7 +69,7 @@ export async function queryPRLogByDataID(business_data_id) {
  */
 export async function queryPRLogInformedByDataID(business_data_id) {
     //提交URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_informed?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_informed?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
     var cache = storage.getStore(`sys_workflow_cache@$informed&id${business_data_id}`);

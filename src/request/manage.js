@@ -56,7 +56,7 @@ export async function queryUserName() {
             userlist.length == 0
         ) {
             while (index < 10000) {
-                queryURL = `${window.requestAPIConfig.restapi}/api/v_uname?_p=${index++}&_size=99`;
+                queryURL = `${window.requestAPIConfig.restapi}/api/v_uname?_p=${index++}&_size=1000`;
                 var res = await superagent.get(queryURL).set('accept', 'json');
                 result = result.concat(res.body);
                 //如果返回结果数据小于size，则表示查询到末页，不在查询

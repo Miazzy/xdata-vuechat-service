@@ -5988,7 +5988,7 @@ try {
      */
     var queryPRLogHistoryByDataID = async(business_data_id, tools = window.tools) => {
         //提交URL
-        var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=99`;
+        var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
         try {
             var res = await superagent.get(queryURL).set('accept', 'json');
