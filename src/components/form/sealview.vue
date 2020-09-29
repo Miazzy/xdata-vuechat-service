@@ -1077,6 +1077,8 @@ export default {
         this.item.status = '已用印';
         this.item.sealtime = time;
 
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
@@ -1161,6 +1163,8 @@ export default {
         this.item.status = '已退回';
         this.item.sealtime = time;
 
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
@@ -1211,6 +1215,8 @@ export default {
           title: '温馨提示',
           message: message,
         });
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
 
       },
       /**
@@ -1278,6 +1284,8 @@ export default {
           title: '温馨提示',
           message: message,
         });
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
 
       },
       /**
@@ -1360,6 +1368,8 @@ export default {
 
         this.item.type = '';
 
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+
       },
       /**
        * @function 处理归档完成操作
@@ -1400,7 +1410,10 @@ export default {
 
         this.item.type = '';
 
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+
       },
+
       /**
        * @function 处理推送消息操作
        */
