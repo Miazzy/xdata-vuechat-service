@@ -81,6 +81,14 @@ export const compcolumns = {
 }
 
 /**
+ * @description 暴露查询API接口
+ */
+export const queryAPI = {
+    autoSerialAPI: 'https://api.yunwisdom.club:30443/api/v2/mysql/serial/bs_seal_regist/serialid/id',
+    patchSerialAPI: 'https://api.yunwisdom.club:30443/api/v2/mysql/patchserial/bs_seal_regist/serialid/id',
+}
+
+/**
  * @description 表单验证说明
  */
 export const compValidation = {

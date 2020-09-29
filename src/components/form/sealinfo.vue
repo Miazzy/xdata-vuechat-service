@@ -1376,6 +1376,7 @@ export default {
         } else {
           message = '提交用印登记信息失败，请稍后再试！';
         }
+
         await vant.Dialog.alert({
           title: '温馨提示',
           message: message,
