@@ -51,6 +51,7 @@
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field v-show="item.serialid" clearable label="用印序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <van-field clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
                 <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                 <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
@@ -232,6 +233,7 @@ export default {
             noname:'合同编号',
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
+              serialid:'',
               filename:'',
               count:'2',
               dealDepart:'',
@@ -1347,6 +1349,7 @@ export default {
         let message = null;
 
         if(result.protocol41 == true && result.affectedRows > 0){
+
           message = '已成功提交用印登记信息！';
 
           this.status = 'none';
@@ -1372,6 +1375,17 @@ export default {
           //通知印章人领取资料(企业微信发送)
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
                        .set('accept', 'json');
+
+          //发送自动设置排序号请求
+          const patchResp = await superagent.get(workconfig.queryAPI.patchSerialAPI).set('accept', 'json');
+
+          //查询数据
+          const value = await query.queryTableData(`bs_seal_regist` , id);
+
+          //显示序列号
+          this.item.serialid = value.serialid;
+
+          message = `${message} 排序号为:${value.serialid},请将序号书写在用印文件上！`
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';
