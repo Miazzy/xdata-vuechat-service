@@ -984,7 +984,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1126,7 +1126,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1243,7 +1243,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1326,7 +1326,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1435,7 +1435,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1542,7 +1542,7 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        if( tools.isNull(info) ){
+        if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
