@@ -46,6 +46,7 @@
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field v-show="item.serialid" clearable label="用印序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <van-field clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
                 <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                 <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
@@ -227,6 +228,7 @@ export default {
             agroup:[],
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
+              serialid:'',
               filename:'',
               count:'2',
               dealDepart:'',
@@ -282,9 +284,11 @@ export default {
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
+        this.userStatus();
     },
     async mounted() {
       this.queryInfo();
+      this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -294,6 +298,18 @@ export default {
       }
     },
     methods: {
+      async userStatus(){
+        try {
+          let info = await storage.getStore('system_userinfo');
+          if( tools.isNull(info) ){
+            vant.Toast('尚未登录！');
+            await this.clearLoginInfo();
+            this.$router.push(`/login`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //获取合同编号
       async queryHContract(){
         //获取盖章人信息
@@ -806,7 +822,8 @@ export default {
 
           this.item = {
               id: value.id,
-              createtime: dayjs().format('YYYY-MM-DD'),
+              serialid: value.serialid,
+              createtime: value.create_time ? dayjs(value.create_time).format('YYYY-MM-DD HH:mm:ss') : '',
               filename: value.filename,
               count: value.count,
               dealDepart: value.deal_depart,

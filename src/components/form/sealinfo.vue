@@ -302,9 +302,11 @@ export default {
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
+        this.userStatus();
     },
     async mounted() {
       this.queryInfo();
+      this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -314,6 +316,22 @@ export default {
       }
     },
     methods: {
+      async userStatus(){
+        try {
+          let info = await storage.getStore('system_userinfo');
+          if( tools.isNull(info) ){
+            vant.Toast('尚未登录！');
+            await this.clearLoginInfo();
+            this.$router.push(`/login`);
+          } else {
+            this.username = info.username;
+            this.realname = info.realname;
+            this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -1097,28 +1115,6 @@ export default {
         //将用户名存放入缓存中，下次打开页面直接填入
         storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
       },
-      queryPictureList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item, isImage: true };
-        });
-        return list;
-      },
-
-      queryOfficeList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
-        });
-        return list;
-      },
-
       async queryInfo(){
 
         try {

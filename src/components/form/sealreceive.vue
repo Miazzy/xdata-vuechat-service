@@ -43,6 +43,7 @@
           <van-cell-group>
             <van-cell-group style="margin-top:10px;">
               <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+              <van-field v-show="item.serialid" clearable label="用印序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
               <van-field readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
               <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
               <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
@@ -185,6 +186,7 @@ export default {
             valid: workconfig.compValidation.seal.valid,
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
+              serialid:'',
               filename:'',
               count:'',
               dealDepart:'',
@@ -235,12 +237,25 @@ export default {
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
+        this.userStatus();
     },
     mounted() {
       this.queryInfo();
+      this.userStatus();
     },
     methods: {
-
+      async userStatus(){
+        try {
+          let info = await storage.getStore('system_userinfo');
+          if( tools.isNull(info) ){
+            vant.Toast('尚未登录！');
+            await this.clearLoginInfo();
+            this.$router.push(`/login`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       archiveTypeConfirm(value) {
         this.item.archiveType = value;
         this.tag.showPicker = false;
@@ -292,7 +307,8 @@ export default {
 
           this.item = {
               id: that.item.id,
-              createtime: dayjs().format('YYYY-MM-DD'),
+              serialid: value.serialid,
+              createtime: value.create_time ? dayjs(value.create_time).format('YYYY-MM-DD HH:mm:ss') : '',
               filename: value.filename,
               count: value.count,
               dealDepart: value.deal_depart,

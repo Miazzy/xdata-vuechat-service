@@ -44,6 +44,7 @@
 
             <van-cell-group style="margin-top:10px;">
               <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+              <van-field v-show="item.serialid" clearable label="用印序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
               <van-field readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
               <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
               <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
@@ -247,6 +248,7 @@ export default {
             hContractID:'',
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
+              serialid:'',
               filename:'',
               count:'',
               dealDepart:'',
@@ -310,9 +312,11 @@ export default {
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
+        this.userStatus();
     },
     mounted() {
       this.queryInfo();
+      this.userStatus();
     },
     methods: {
       validField(fieldName){
@@ -839,28 +843,6 @@ export default {
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
 
-      queryPictureList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item, isImage: true };
-        });
-        return list;
-      },
-
-      queryOfficeList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
-        });
-        return list;
-      },
-
       async queryInfo(){
 
         try {
@@ -877,7 +859,8 @@ export default {
           //设置填报数据
           this.item = {
               id: that.item.id,
-              createtime: dayjs().format('YYYY-MM-DD'),
+              serialid: value.serialid,
+              createtime: value.create_time ? dayjs(value.create_time).format('YYYY-MM-DD HH:mm:ss') : '',
               filename: value.filename,
               count: value.count,
               dealDepart: value.deal_depart,
@@ -977,6 +960,18 @@ export default {
           console.log(error);
         }
       },
+      async userStatus(){
+        try {
+          let info = await storage.getStore('system_userinfo');
+          if( tools.isNull(info) ){
+            vant.Toast('尚未登录！');
+            await this.clearLoginInfo();
+            this.$router.push(`/login`);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
       /**
        * @function 处理同意操作
        */
@@ -985,6 +980,15 @@ export default {
         this.validField('message');
 
         var noname = '合同编号';
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
 
         //获取公司名称
         const company = this.item.company;
@@ -1078,6 +1082,30 @@ export default {
         this.item.sealtime = time;
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : this.item.message + '[已用印]',//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -1094,6 +1122,15 @@ export default {
         this.validField('message');
 
         var noname = '合同编号';
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
 
         //获取公司名称
         const company = this.item.company;
@@ -1171,11 +1208,46 @@ export default {
           message: `已向用印申请人@${this.item.dealManager}推送通知！`,
         });
 
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '驳回'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : this.item.message + '[已退回]',//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
+
       },
 
       async handleSending(){
 
         var noname = '合同编号';
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
 
         //提示确认用印操作
         await vant.Dialog.confirm({
@@ -1217,6 +1289,31 @@ export default {
         });
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : '寄送合同资料[已寄送]' ,//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
       },
       /**
@@ -1225,6 +1322,15 @@ export default {
       async handleConfirm(){
 
         var noname = '合同编号';
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
 
         //提示确认用印操作
         await vant.Dialog.confirm({
@@ -1286,6 +1392,30 @@ export default {
         });
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : '移交合同资料至前台[移交前台]' ,//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
       },
       /**
@@ -1300,6 +1430,15 @@ export default {
             message: '请选择归档类型！',
           });
           return false;
+        }
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
         }
 
         //提示确认用印操作
@@ -1369,12 +1508,45 @@ export default {
         this.item.type = '';
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : `归档合同资料[${this.item.archiveType}]` ,//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')  ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
       },
       /**
        * @function 处理归档完成操作
        */
       async handleFinaly(){
+
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
 
         //提示确认用印操作
         await vant.Dialog.confirm({
@@ -1411,6 +1583,31 @@ export default {
         this.item.type = '';
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : `归档合同资料完成[已归档]` ,//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')  ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
       },
 

@@ -325,3 +325,14 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
     return result;
 
 }
+
+/**
+ * @function 记录企业申请的审批记录
+ * @description 记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+ */
+export async function approveViewProcessLog(prLogHisNode) {
+    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+    const result = await manage.postProcessLogHistory(prLogHisNode);
+    //返回数据
+    return result;
+}
