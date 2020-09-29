@@ -51,7 +51,7 @@
             已归档
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已作废
+            已退回
           </div>
         </div>
       </div>
@@ -74,7 +74,7 @@
             <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 6 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
         </template>
         </van-pull-refresh>
       </div>
@@ -294,7 +294,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -366,7 +366,7 @@ export default {
         })
 
         //获取最近6个月的已归档记录
-        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
+        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
 
         this.failContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,

@@ -272,7 +272,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -353,7 +353,7 @@ export default {
         })
 
         //获取最近6个月的已归档记录
-        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已作废)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
+        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
 
         this.failContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,

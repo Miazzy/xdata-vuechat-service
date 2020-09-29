@@ -1118,8 +1118,8 @@ export default {
 
         //提示确认用印操作
         await vant.Dialog.confirm({
-          title: '用印作废',
-          message: '请确认进行‘已作废’处理，提交后推送通知！',
+          title: '用印退回',
+          message: '请确认进行‘已退回’处理，提交后推送通知！',
         })
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
@@ -1146,19 +1146,19 @@ export default {
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
-        //修改状态为已作废
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已作废' , message , company , seal_time: time});
+        //修改状态为已退回
+        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
 
         //通知签收人领取资料(email邮件通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
                       .set('accept', 'json');
 
         //通知签收人领取资料(企业微信通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已作废，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}?rurl=${receiveURL}`)
                        .set('accept', 'json');
 
         //修改用印状态
-        this.item.status = '已作废';
+        this.item.status = '已退回';
         this.item.sealtime = time;
 
         //弹出用印推送成功提示
