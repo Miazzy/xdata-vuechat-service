@@ -302,11 +302,11 @@ export default {
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        //this.userStatus();
+        this.userStatus();
     },
     async mounted() {
       this.queryInfo();
-      //this.userStatus();
+      this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -1237,6 +1237,15 @@ export default {
 
         //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
 
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
+        if( tools.isNull(info) ){
+          vant.Toast('尚未登录！');
+          await this.clearLoginInfo();
+          this.$router.push(`/login`);
+        }
+
         // 缓存填报人信息
         this.cacheUserInfo();
 
@@ -1385,6 +1394,32 @@ export default {
           this.item.serialid = value.serialid;
 
           message = `${message} 排序号为:${value.serialid},请将序号书写在用印文件上！`
+
+          //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+          const prLogHisNode = {
+            id: tools.queryUniqueID(),
+            table_name: 'bs_seal_regist',
+            main_value: id,
+            proponents: username,
+            business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+            business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+            process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+            employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+            approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+            action         : '发起'    ,//varchar(100)  null comment '操作动作',
+            action_opinion : '发起用印申请[待用印]',//text          null comment '操作意见',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+            functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+            process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+            business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+            content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+            process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+            relate_data       : '',//text          null comment '关联数据',
+            origin_data       : '',
+          }
+
+          await workflow.approveViewProcessLog(prLogHisNode);
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';
