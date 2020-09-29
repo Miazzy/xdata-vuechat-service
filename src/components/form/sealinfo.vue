@@ -302,11 +302,11 @@ export default {
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        this.userStatus();
+        //this.userStatus();
     },
     async mounted() {
       this.queryInfo();
-      this.userStatus();
+      //this.userStatus();
     },
     watch: {
       $route(to, from) {
