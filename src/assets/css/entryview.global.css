@@ -64,3 +64,13 @@
     font-size: 18px;
     padding-top: 28px;
 }
+
+.van-button[name="file"] {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}

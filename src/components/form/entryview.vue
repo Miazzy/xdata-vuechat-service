@@ -1137,18 +1137,9 @@ export default {
 }
 </script>
 <style>
-    @import "../../assets/css/entryview.global.css";
-    .van-button[name="file"] {
-      background-image: linear-gradient(to right, #f96033, red);
-      margin: 5px 10px;
-      padding: 1px 20px;
-      border-radius: 8px;
-      color: #f0f0f0;
-      font-size: 12px;
-      height: 27px;
-    }
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
+    @import "../../assets/css/entryview.global.css";
 </style>
