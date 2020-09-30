@@ -113,6 +113,8 @@
                 <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
                 <!-- 最高学历（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clickable clearable label="最高学历" v-model="item.greatdiploma"  placeholder="请选择您的最高学历!" @click="tag.showPickerDiploma = true;" />
+                <!-- 入职部门（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="入职部门" v-model="item.department" placeholder="请输入入职部门！" @blur="validField('department')" :error-message="message.department"/>
                 <!-- 入职岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 入职日期（HR需要确认/修改） -->
@@ -388,6 +390,7 @@ export default {
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               username:'',
+              department:'',  //入职部门
               position:'',    //入职岗位
               picture:'',     //员工照片
               computer:'否',  //是否需要电脑配置
@@ -550,6 +553,7 @@ export default {
           const meal_id = this.item.meal_id = this.item.meal_name = value.meal_id;
 
           const position = this.item.position = value.position;
+          const department = this.item.department = value.department;
 
           if(!hr_id){
             //未获取到HR信息
