@@ -13,17 +13,17 @@
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">账号</div>
-                    <div class="weui-cell__ft">zhaohd</div>
+                    <div class="weui-cell__ft">{{realname}}</div>
                 </div>
             </div>
             <div class="weui-cells">
                 <div class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">手机号</div>
-                    <div class="weui-cell__ft">18845268536</div>
+                    <div class="weui-cell__ft">{{mobile}}</div>
                 </div>
                 <div class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">邮箱地址</div>
-                    <div class="weui-cell__ft">zhaohaodang@gmail.com</div>
+                    <div class="weui-cell__ft">{{mail}}</div>
                 </div>
             </div>
             <div class="weui-cells">
@@ -49,6 +49,88 @@
     </div>
 </template>
 <script>
-    export default {}
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
 
+export default {
+    mixins: [window.mixin],
+    data() {
+      return {
+          pageName: "我的",
+          username:'',
+          realname:'',
+          mobile:'',
+          avatar:'',
+          qrcode:'',
+          mail:'',
+      }
+    },
+    mounted() {
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+      this.userStatus();
+    },
+    activated() {
+      $('#return[tag=div]').remove();
+      this.$store.commit("toggleTipsStatus", -1);
+      this.changeStyle();
+      this.displayFoot();
+      this.userStatus();
+    },
+    methods: {
+        changeStyle(name){
+          try {
+            var name = window.location.hash.slice(2);
+            name = name.includes('?') ? name.split('?')[0] : name;
+            name = name.includes('/') ? name.split('/')[0] : name;
+            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+            $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+            $(`#wx-nav-${name}`).addClass('router-link-active');
+            console.log(name);
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        displayFoot(){
+          $('.app-footer').css('display','block');
+        },
+        async clearLoginInfo(){
+
+          try {
+            let info = await storage.getStore('system_linfo');
+
+            this.username = info.username;
+            this.password = info.password;
+
+            storage.clearStore('system_userinfo');
+            storage.clearStore('system_token');
+            storage.clearStore('system_department');
+            storage.clearStore('system_login_time');
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        async userStatus(){
+          try {
+            let info = await storage.getStore('system_userinfo');
+            if( tools.isNull(info) ){
+              vant.Toast('尚未登录！');
+              await this.clearLoginInfo();
+              this.$router.push(`/login`);
+            } else {
+              this.username = info.username;
+              this.realname = info.realname;
+              this.mobile = info.mobile;
+              this.qrcode = info.qr_code;
+              this.mail = info.mail;
+              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+    }
+}
 </script>
