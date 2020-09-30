@@ -137,6 +137,10 @@ export default {
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
               this.$router.push(`/login`);
+            } else {
+              this.username = info.username;
+              this.realname = info.realname;
+              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
             }
           } catch (error) {
             console.log(error);
@@ -145,10 +149,6 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     @import "../../assets/css/self.css";
-
-    .app-footer {
-      display:block;
-    }
 </style>

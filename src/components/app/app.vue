@@ -166,21 +166,21 @@
             </div>
           </div>
 
-          <div class="weui-cell_app_hd" @click="sealApprove();">
+          <div v-show="userinfo.grouplimits.seal.length > 0" class="weui-cell_app_hd" @click="sealApprove();">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
             <div class="weui-cell_app_bd">
               审批
             </div>
           </div>
 
-          <div class="weui-cell_app_hd" @click="sealFront();" >
+          <div v-show="userinfo.grouplimits.front.length > 0"  class="weui-cell_app_hd" @click="sealFront();" >
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
             <div class="weui-cell_app_bd" >
               移交
             </div>
           </div>
 
-          <div class="weui-cell_app_hd" @click="sealArchive();">
+          <div v-show="userinfo.grouplimits.archive.length > 0"  class="weui-cell_app_hd" @click="sealArchive();">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
             <div class="weui-cell_app_bd" >
               归档
@@ -206,7 +206,14 @@ export default {
     data() {
         return {
             pageName: "应用",
-            momentNewMsg: true
+            momentNewMsg: true,
+            userinfo:{
+              grouplimits: {
+                archive:[],
+                seal:[],
+                front:[],
+              },
+            },
         }
     },
     activated() {
@@ -248,6 +255,8 @@ export default {
 
           //获取用户信息
           var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
+
+          this.userinfo = response.body.userinfo;
 
           //设置system_userinfo
           storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);

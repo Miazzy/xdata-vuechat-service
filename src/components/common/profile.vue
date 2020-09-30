@@ -15,7 +15,7 @@
                     <p>头像</p>
                 </div>
                 <div class="weui-cell__ft">
-                    <img src="https://sinacloud.net/vue-wechat/images/headers/header01.png" style="width: 50px;height: 50px;border-radius: 4px;">
+                    <img :src="avatar" style="width: 50px;height: 50px;border-radius: 4px;">
                 </div>
             </div>
             <div class="weui-cell">

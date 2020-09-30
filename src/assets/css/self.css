@@ -28,3 +28,7 @@
 #self .self-wxid {
     font-size: 13px
 }
+
+.app-footer {
+    display: block;
+}
