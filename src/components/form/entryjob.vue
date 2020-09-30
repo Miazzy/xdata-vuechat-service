@@ -174,22 +174,24 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="车牌编号" v-model="item.carno" placeholder="请输入您的车牌编号！" />
+                <van-field class="cardno-field-name" :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" error-message="如非本人车辆请在附件中上传关系证明！"  />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
+                <van-field :readonly="readonly" v-show="item.driving_license != '0000000000' " clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" />
                 <!-- 驾驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
+                <van-field :readonly="readonly" v-show="item.driver_license != '0000000000' " clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
+                <!-- 开户银行（1寸照片，用于制作工牌） -->
+                <van-field readonly required clearable label="开户银行" v-model="item.bank_name" placeholder="请输入您的开户银行名称！"/>
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
-                <van-field :readonly="readonly" required clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
+                <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！"  />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;display:none;">
                 <van-cell value="学历信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 学历编号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" v-show="item.greatdiploma == '专科' || item.greatdiploma == '本科' || item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" clearable label="毕业证号" v-model="item.diploma" placeholder="请输入您的毕业证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
@@ -209,21 +211,27 @@
 
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <van-cell title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
+                <van-cell title="电子证件照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessGP"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.driving_license" title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
+                <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.driver_license" title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
+                <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell title="关系证明附件" class="van-cell-upload" :label="item.files_gxzm.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessGXZM"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
@@ -239,37 +247,37 @@
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '专科' || item.greatdiploma == '本科' || item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '专科' || item.greatdiploma == '本科' || item.greatdiploma == '硕士' ||  item.greatdiploma == '博士') && false" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '本科' || item.greatdiploma == '硕士' || item.greatdiploma == '博士'" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '本科' || item.greatdiploma == '硕士' || item.greatdiploma == '博士') && false" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '硕士' ||  item.greatdiploma == '博士'" title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '硕士' ||  item.greatdiploma == '博士') && false " title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '硕士' || item.greatdiploma == '博士' " title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '硕士' || item.greatdiploma == '博士') && false " title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '博士' " title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '博士') && false " title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
-                <van-cell v-show="item.greatdiploma == '博士' " title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                <van-cell style="display:none;" v-show="(item.greatdiploma == '博士') && false " title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSXW"  >上传</nut-uploader>
                   </template>
@@ -403,8 +411,8 @@ export default {
               badge:'是',     //员工工牌
               ban_card:'否',    //否
               othertools:'暂无',//其他用品
-              driving_license: '',//行驶证
-              driver_license: '',//驾驶证
+              driving_license: '0000000000',//行驶证
+              driver_license: '0000000000',//驾驶证
               idcard: '',      //身份证号
               diploma: '',     //毕业编号
               bachelor: '',    //学位编号
@@ -412,6 +420,7 @@ export default {
               bachelorss: '',  //学位编号(硕士)
               diplomabs: '',   //毕业编号(博士)
               bachelorbs: '',  //学位编号(博士)
+              bank_name: '中国农业银行',   //开户银行
               bank_card: '',   //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
               hr_name: '',   //对接HR
@@ -433,6 +442,7 @@ export default {
               files_bk: '',
               files_by: '',
               files_xw: '',
+              files_gxzm: '',
               files_ssby: '',
               files_ssxw: '',
               files_bsby: '',
@@ -497,6 +507,10 @@ export default {
       },
       async uploadSuccessBY(file , res){
         this.item.files_by = JSON.parse(res).message;
+        this.$toast.success('上传成功');
+      },
+      async uploadSuccessGXZM(file , res){
+        this.item.files_gxzm = JSON.parse(res).message;
         this.$toast.success('上传成功');
       },
       async uploadSuccessBK(file , res){
@@ -1104,52 +1118,52 @@ export default {
         }
 
         //验证专科证书编号
-        if(this.item.greatdiploma == '专科' && !this.item.diploma){
+        // if(this.item.greatdiploma == '专科' && !this.item.diploma){
 
-          //弹出确认提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请输入毕业证书编号(专科)！',
-          });
+        //   //弹出确认提示
+        //   await vant.Dialog.alert({
+        //     title: '温馨提示',
+        //     message: '请输入毕业证书编号(专科)！',
+        //   });
 
-          return;
-        }
+        //   return;
+        // }
 
         //验证本科证书编号
-        if((this.item.greatdiploma == '本科' || this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && (!this.item.bachelor || !this.item.diploma)){
+        // if((this.item.greatdiploma == '本科' || this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && (!this.item.bachelor || !this.item.diploma)){
 
-          //弹出确认提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请输入毕业证书编号或学位证书编号(本科)！',
-          });
+        //   //弹出确认提示
+        //   await vant.Dialog.alert({
+        //     title: '温馨提示',
+        //     message: '请输入毕业证书编号或学位证书编号(本科)！',
+        //   });
 
-          return;
-        }
+        //   return;
+        // }
 
         //验证硕士证书编号
-        if((this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && ( !this.item.bachelorss || !this.item.diplomass) ){
+        // if((this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && ( !this.item.bachelorss || !this.item.diplomass) ){
 
-          //弹出确认提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请输入毕业证书编号或学位证书编号(硕士)！',
-          });
+        //   //弹出确认提示
+        //   await vant.Dialog.alert({
+        //     title: '温馨提示',
+        //     message: '请输入毕业证书编号或学位证书编号(硕士)！',
+        //   });
 
-          return;
-        }
+        //   return;
+        // }
 
         //验证博士证书编号
-        if((this.item.greatdiploma == '博士') && ( !this.item.bachelorbs || !this.item.diplomabs) ){
+        // if((this.item.greatdiploma == '博士') && ( !this.item.bachelorbs || !this.item.diplomabs) ){
 
-          //弹出确认提示
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请输入毕业证书编号或学位证书编号(博士)！',
-          });
+        //   //弹出确认提示
+        //   await vant.Dialog.alert({
+        //     title: '温馨提示',
+        //     message: '请输入毕业证书编号或学位证书编号(博士)！',
+        //   });
 
-          return;
-        }
+        //   return;
+        // }
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -1157,6 +1171,7 @@ export default {
           create_time: dayjs().format('YYYY-MM-DD'),
           create_by: this.item.username,
           username: this.item.username,
+          department: this.item.department, //入职部门
           position: this.item.position,    //入职岗位
           picture: this.item.picture,     //员工照片
           computer: this.item.computer,  //是否需要电脑配置
@@ -1177,6 +1192,7 @@ export default {
           bachelorss: this.item.bachelorss,  //学位编号(硕士)
           diplomabs: this.item.diplomabs,   //毕业编号(博士)
           bachelorbs: this.item.bachelorbs,  //学位编号(博士)
+          bank_name: this.item.bank_name,  //开户银行名称
           bank_card: this.item.bank_card, //工资银行卡号
           ban_card: this.item.ban_card || '否', //门禁卡
           join_time: this.item.join_time, //入职时间
@@ -1196,6 +1212,7 @@ export default {
           files_bk: this.item.files_bk,
           files_by: this.item.files_by,
           files_xw: this.item.files_xw,
+          files_gxzm: this.item.files_gxzm,
           files_ssby: this.item.files_ssby,
           files_ssxw: this.item.files_ssxw,
           files_bsby: this.item.files_bsby,
@@ -1229,9 +1246,9 @@ export default {
 }
 </script>
 <style>
-    @import "../../assets/css/entryjob.global.css";
 </style>
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
+    @import "../../assets/css/entryjob.global.css";
 </style>

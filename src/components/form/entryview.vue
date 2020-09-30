@@ -111,11 +111,11 @@
               <van-cell-group style="margin-top:10px;" v-show="!!item.carno || !!item.driving_license || !!item.driver_license">
                 <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="车牌编号" v-model="item.carno" placeholder="请输入您的车牌编号！" v-show="!!item.carno" />
+                <van-field :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" v-show="!!item.carno" />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！" v-show="!!item.driving_license" />
+                <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' || false " label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！"  />
                 <!-- 驾驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" v-show="!!item.driver_license" />
+                <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' || false " label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -347,6 +347,7 @@ export default {
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               username:'',
+              department:'',
               position:'',       //入职岗位
               picture:'',        //员工照片
               computer:'是',     //是否需要电脑配置
@@ -359,8 +360,8 @@ export default {
               badge:'是',        //员工工牌
               ban_card:'否',     //门禁卡牌
               othertools:'暂无', //其他用品
-              driving_license:'',//行驶证
-              driver_license:'', //驾驶证
+              driving_license:'0000000000',//行驶证
+              driver_license:'0000000000', //驾驶证
               idcard:'',         //身份证号
               diploma:'',        //毕业编号
               bachelor:'',       //学位编号

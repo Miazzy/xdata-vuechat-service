@@ -145,6 +145,7 @@ export const compValidation = {
     entryjob: {
         message: {
             username: '',
+            department: '', //入职岗位
             position: '', //入职岗位
             picture: '', //员工照片
             computer: '', //是否需要电脑配置
@@ -169,6 +170,7 @@ export const compValidation = {
         },
         valid: {
             username: '请输入您的员工姓名！',
+            department: '请输入您的入职部门！', //入职部门
             position: '请输入您的入职岗位！', //入职岗位
             picture: '请上传您的一寸照片！', //员工照片
             computer: '请选择是否需要电脑配置！', //是否需要电脑配置

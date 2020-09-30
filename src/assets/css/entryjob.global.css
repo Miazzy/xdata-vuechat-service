@@ -78,3 +78,11 @@
 .van-cell-upload .van-cell__title>span {
     font-size: 14px;
 }
+
+.cardno-field-name .van-field__error-message {
+    margin-top: 10px;
+    margin-left: -112px;
+    color: #ee0a24;
+    font-size: 12px;
+    text-align: left;
+}
