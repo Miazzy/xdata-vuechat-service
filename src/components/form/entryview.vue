@@ -53,6 +53,8 @@
                 <van-field :readonly="readonly" clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的姓名！" @blur="validField('username')" :error-message="message.username"  />
                 <!-- 最高学历（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="最高学历" v-model="item.greatdiploma"  placeholder="请选择您的最高学历!"  />
+                 <!-- 入职部门（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="入职部门" v-model="item.department" placeholder="请输入入职部门！" @blur="validField('department')" :error-message="message.department"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
@@ -113,15 +115,17 @@
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" v-show="!!item.carno" />
                 <!-- 行驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' || false " label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！"  />
+                <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' && false " label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！"  />
                 <!-- 驾驶证号（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' || false " label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
+                <van-field :readonly="readonly" clearable v-show="item.driver_license != '0000000000' && false " label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
+                <!-- 开户银行（1寸照片，用于制作工牌） -->
+                <van-field readonly required clearable label="开户银行" v-model="item.bank_name" placeholder="请输入您的开户银行名称！" />
                 <!-- 银行卡号（1寸照片，用于制作工牌） -->
                 <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
               </van-cell-group>
@@ -184,7 +188,7 @@
 
                 <van-cell value="附件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <van-cell v-if="item.files_gp" title="工牌寸照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
+                <van-cell v-if="item.files_gp" title="电子证件照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadGP"  >下载</van-button>
                   </template>
@@ -202,6 +206,12 @@
                   </template>
                 </van-cell>
 
+                <van-cell v-if="item.files_gxzm" title="关系证明附件" class="van-cell-upload" :label="item.files_gxzm.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" :url="uploadURL" @click="downloadGXZM"  >下载</van-button>
+                  </template>
+                </van-cell>
+
                 <van-cell v-if="item.files_id" title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadID"  >下载</van-button>
@@ -214,37 +224,37 @@
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_by" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
+                <van-cell v-if="item.files_by && false " title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_xw" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
+                <van-cell v-if="item.files_xw && false " title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_ssby" title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
+                <van-cell v-if="item.files_ssby && false " title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_ssxw" title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
+                <van-cell v-if="item.files_ssxw && false " title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_bsby" title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
+                <van-cell v-if="item.files_bsby && false " title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_bsxw" title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
+                <van-cell v-if="item.files_bsxw && false " title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBY"  >下载</van-button>
                   </template>
@@ -369,6 +379,7 @@ export default {
               bachelorss: '',    //学位编号(硕士)
               diplomabs: '',     //毕业编号(博士)
               bachelorbs: '',    //学位编号(博士)
+              bank_name: '中国农业银行',     //
               bank_card:'',      //工资银行卡号
               join_time: dayjs().format('YYYY-MM-DD'), //入职时间
               front_time:'',
@@ -451,7 +462,7 @@ export default {
         }
       },
       async downloadGP(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_gp , '工牌附件' + this.item.files_gp.split('/')[1]);
+        this.saveAsFile(this.downloadURL + this.item.files_gp , '电子证件照' + this.item.files_gp.split('/')[1]);
       },
       async downloadXS(file , res){
         this.saveAsFile(this.downloadURL + this.item.files_xs , '行驶证附件' + this.item.files_xs.split('/')[1]);
@@ -470,6 +481,9 @@ export default {
       },
       async downloadXW(file , res){
         this.saveAsFile(this.downloadURL + this.item.files_xw , '学位证附件' + this.item.files_xw.split('/')[1]);
+      },
+      async downloadGXZM(file , res){
+        this.saveAsFile(this.downloadURL + this.item.files_gxzm , '关系证明附件' + this.item.files_gxzm.split('/')[1]);
       },
       async downloadSSBY(file , res){
         this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_ssby.split('/')[1]);
@@ -840,6 +854,7 @@ export default {
             create_time: dayjs(value.create_time).format('YYYY-MM-DD'),
             create_by: value.create_by,
             username: value.username,
+            department: value.department,
             position: value.position,    //入职岗位
             picture: value.picture,     //员工照片
             greatdiploma: value.greatdiploma,
@@ -847,30 +862,31 @@ export default {
             seat: value.seat,      //是否需要办公座椅
             drawer: value.drawer,    //是否需要办公抽屉drawer
             other_equip: value.other_equip,//是否需要其他办公配置
-            notebook: value.notebook,  //是否需要笔记本子
-            manual: value.manual,    //是否需要入职手册
+            notebook: value.notebook,      //是否需要笔记本子
+            manual: value.manual,          //是否需要入职手册
             writingtools: value.writingtools,//是否需要签字笔/擦
-            badge: value.badge,     //员工工牌
-            othertools: value.othertools,//其他用品
+            badge: value.badge,              //员工工牌
+            othertools: value.othertools,    //其他用品
 
             driving_license: value.driving_license,//行驶证
-            driver_license: value.driver_license,//驾驶证
+            driver_license: value.driver_license,  //驾驶证
 
-            idcard: value.idcard,    //身份证号
+            idcard: value.idcard,          //身份证号
 
-            diploma: value.diploma,   //学历编号
-            bachelor: value.bachelor,  //学位编号
-            diplomass: value.diplomass,   //学历编号(硕士)
+            diploma: value.diploma,        //学历编号
+            bachelor: value.bachelor,      //学位编号
+            diplomass: value.diplomass,    //学历编号(硕士)
             bachelorss: value.bachelorss,  //学位编号(硕士)
-            diplomabs: value.diplomabs,   //学历编号(博士)
+            diplomabs: value.diplomabs,    //学历编号(博士)
             bachelorbs: value.bachelorbs,  //学位编号(博士)
 
-            bank_card: value.bank_card, //工资银行卡号
-            ban_card: value.ban_card, //门禁卡
+            bank_name: value.bank_name,  //银行名称
+            bank_card: value.bank_card,  //工资银行卡号
+            ban_card: value.ban_card,    //门禁卡
 
             join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
             hr_name: value.hr_name,   //对接HR
-            remark: value.remark,    //备注信息
+            remark: value.remark,     //备注信息
 
             front_name: value.front_name,
             admin_name: value.admin_name,
@@ -891,6 +907,7 @@ export default {
             files_by: value.files_by,
             files_xw: value.files_xw,
 
+            files_gxzm: value.files_gxzm,
             files_ssby: value.files_ssby,
             files_ssxw: value.files_ssxw,
             files_bsby: value.files_bsby,
@@ -899,6 +916,7 @@ export default {
             front_time: value.front_time ? dayjs(value.front_time).format('YYYY-MM-DD') : '', //前台时间
             admin_time: value.admin_time ? dayjs(value.admin_time).format('YYYY-MM-DD') : '', //行政时间
             meal_time: value.meal_time ? dayjs(value.meal_time).format('YYYY-MM-DD') : '',   //食堂时间
+
             status: '待确认',
           }
 
