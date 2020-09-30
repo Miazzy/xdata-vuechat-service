@@ -1,7 +1,6 @@
 <template>
     <div class="security">
         <header id="wx-header">
-            <!--<div class="other"><span>添加朋友</span></div>-->
             <div class="center">
                 <router-link to="/self/settings" tag="div" class="iconfont icon-left">
                     <span>设置</span>
