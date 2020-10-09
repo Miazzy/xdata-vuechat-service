@@ -73,7 +73,7 @@
         <template v-show="tabname == 5 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
-        <template v-show="tabname == 6 && !loading && !isLoading">
+        <template v-show="(tabname == 6 || tabname == 0)&& !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
         </template>
         </van-pull-refresh>
@@ -332,7 +332,7 @@ export default {
           })
 
           this.doneContractList.sort();
-        } else if(tabname == 6){
+        } else if(tabname == 6 || tabname == 0){
           //获取最近6个月的已归档记录
           this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`);
 
@@ -352,7 +352,11 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_seal_list_tabname') || '1';
+        this.tabname = (storage.getStore('system_seal_list_tabname') || '1') % 10 ;
+
+        if(this.tabname > 6){
+          this.tabname =  1;
+        }
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -432,27 +436,27 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=seallist`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive`);
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=seallist`);
         } else if(this.tabname == '2' || this.tabname == '3'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=seallist`);
         } else if(this.tabname == '4' ){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
         } else if(this.tabname == '5' ){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
         } else if(this.tabname == '6' ){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
         }
 
       },

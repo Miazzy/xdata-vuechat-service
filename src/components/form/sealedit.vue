@@ -996,8 +996,6 @@ export default {
             message: message,
           });
 
-        }
-
       },
       /**
        * @function 处理提交操作
@@ -1131,7 +1129,9 @@ export default {
           message: message,
         });
 
-      }
+      },
+
+    }
 
 }
 </script>

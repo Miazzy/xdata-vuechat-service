@@ -5,7 +5,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center">
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>印章管理</span>
@@ -169,7 +169,7 @@
               </van-cell-group>
             </div>
 
-            <van-goods-action v-if="item.status =='待用印' " >
+            <van-goods-action v-if="item.status =='待用印' && item.type !== 'finish' " >
               <van-goods-action-button type="warning" text="作废" @click="handleDisagree();" />
               <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
             </van-goods-action>
@@ -259,6 +259,7 @@ export default {
             recordUserid:'',
             recorduserList:[],
             agroup:[],
+            back:'/app',
             hContractID:'',
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
@@ -317,6 +318,7 @@ export default {
               showPicker: false,
               showPickerSealType:false,
             },
+            view:'',
             readonly: true,
             archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
@@ -867,6 +869,10 @@ export default {
           that.item.id = tools.getUrlParam('id');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];
           that.item.type = tools.getUrlParam('type');
+
+          //获取view状态
+          this.view = tools.getUrlParam('view');
+          this.back = tools.getUrlParam('back') || '/app';
 
           //查询用印数据
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
