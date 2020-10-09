@@ -1145,12 +1145,18 @@ export default {
 
         await workflow.approveViewProcessLog(prLogHisNode);
 
+        //查询当前所有待办记录
+        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //同时删除本条待办记录当前(印章管理员)
+        await workflow.deleteViewProcessLog(tlist);
+
         //同时推送一条待办记录给前台用户
         const prLogNode = {
           id: tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
-          proponents: seal,
+          proponents: front,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
@@ -1170,12 +1176,6 @@ export default {
         }
 
         await workflow.taskViewProcessLog(prLogNode);
-
-        //查询当前所有待办记录
-        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
