@@ -133,6 +133,15 @@
             />
           </van-cell-group>
 
+          <div>
+            <van-steps direction="vertical" :active="0">
+              <van-step>
+                <h3>【城市】物流状态1</h3>
+                <p>2016-07-12 12:40</p>
+              </van-step>
+            </van-steps>
+          </div>
+
           <div style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;" >
 
             <div v-show=" fileList.length > 0 " style="margin-top:15px;margin-left:7px;">
