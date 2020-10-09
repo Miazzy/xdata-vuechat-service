@@ -5,7 +5,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center">
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>印章管理</span>
@@ -231,6 +231,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             backPath:'/app',
+            back:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -295,6 +296,10 @@ export default {
           that.item.id = tools.getUrlParam('id');
           that.item.status = this.statusType[tools.getUrlParam('statustype')];
           that.item.type = tools.getUrlParam('type');
+
+          //获取view状态
+          this.view = tools.getUrlParam('view');
+          this.back = tools.getUrlParam('back') || '/app';
 
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
