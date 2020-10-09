@@ -64,7 +64,7 @@
             <van-cell-group style="margin-top:10px;">
               <van-cell value="审批信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
               <van-field readonly clearable  label="审批类型" v-model="item.approveType" placeholder="选择审批类型" @click="tag.showPicker = true" />
-              <van-field required clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同对应前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' || item.sealtype == '非合同类' " @blur="validField('prefix');queryHContract();" :error-message="message.prefix" @click="queryHContract();"  />
+              <van-field required clearable label="编号前缀" v-model="item.prefix" placeholder="请输入合同对应前缀，如LD、SD、CD等" v-show="item.sealtype == '合同类' || item.sealtype == '合同类' " @blur="validField('prefix');queryHContract();" :error-message="message.prefix" @click="queryHContract();"  />
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
@@ -1271,6 +1271,8 @@ export default {
         const email = this.item.dealMail;
         //提示信息
         const message = `用印资料寄送成功！`;
+        //领取人OA账户
+        const username = this.item.username;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
@@ -1456,6 +1458,8 @@ export default {
         const email = this.item.dealMail;
         //提示信息
         const message = `已向财务/档案相关人员推送邮件通知！`;
+        //领取人OA账户
+        const username = this.item.username;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
@@ -1556,6 +1560,9 @@ export default {
 
         //系统编号
         const id = tools.getUrlParam('id');
+
+        //领取人OA账户
+        const username = this.item.username;
 
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');

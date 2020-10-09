@@ -253,17 +253,21 @@ export default {
           //获取用户CODE
           let code = tools.queryUrlString('code' , 'search');
 
-          //获取用户信息
-          var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
+          if(code){
+            //获取用户信息
+            var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
 
-          this.userinfo = response.body.userinfo;
+            this.userinfo = response.body.userinfo;
 
-          //设置system_userinfo
-          storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);
-          storage.setStore('system_userinfo' , JSON.stringify(response.body.userinfo) , 3600 * 24 * 30);
-          storage.setStore('system_token' , JSON.stringify(code) , 3600 * 24 * 30);
-          storage.setStore('system_department' , JSON.stringify(response.body.userinfo.department) , 3600 * 24 * 30);
-          storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+            //设置system_userinfo
+            storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);
+            storage.setStore('system_userinfo' , JSON.stringify(response.body.userinfo) , 3600 * 24 * 30);
+            storage.setStore('system_token' , JSON.stringify(code) , 3600 * 24 * 30);
+            storage.setStore('system_department' , JSON.stringify(response.body.userinfo.department) , 3600 * 24 * 30);
+            storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+          } else {
+            this.userinfo = storage.getStore('system_userinfo');
+          }
         },
         async userLogin(){
 

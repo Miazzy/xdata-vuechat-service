@@ -352,6 +352,9 @@ export default {
 
       async handleConfirm(){
 
+        //获取用户信息
+        let userinfo = await storage.getStore('system_userinfo');
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印资料领取',
@@ -362,6 +365,8 @@ export default {
         const id = tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
+        //领取人OA账户
+        const username = this.item.username;
         //提示信息
         const message = `已完成资料领取！`;
         //操作时间
@@ -378,6 +383,33 @@ export default {
           title: '温馨提示',
           message: message,
         });
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: 'bs_seal_regist',
+          main_value: id,
+          proponents: username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '同意'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : `资料领取[已领取]` ,//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')  ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : this.item.filename + ' #经办人: ' + this.item.username ,//text          null comment '业务内容',
+          process_audit     : this.item.workno + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
 
       },
 
