@@ -522,7 +522,12 @@ export default {
         this.timetasks = tlist;
       },
       async clickTaskDone(item){
-        this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)
+        if(item.tname == 'bs_seal_regist'){
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
+        } else {
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)
+        }
       }
     }
 }
