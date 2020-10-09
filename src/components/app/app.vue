@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="display:none;">
         <div class="weui-cell-title">财务管理</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
           <div class="weui-cell_app_hd">
@@ -131,7 +131,7 @@
         </div>
       </div>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="display:none;">
         <div class="weui-cell-title">差旅商旅</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
           <div class="weui-cell_app_hd">
