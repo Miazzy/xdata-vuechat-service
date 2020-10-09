@@ -235,3 +235,7 @@
     right: 0;
     text-align: center;
 }
+
+.pagination-div .van-pagination__item {
+    height: 43px;
+}
