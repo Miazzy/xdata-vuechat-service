@@ -147,6 +147,20 @@
             </van-steps>
           </van-cell-group>
 
+          <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
+            <van-cell value="处理记录" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <div>
+              <van-steps direction="vertical" :active="processLogList.length - 1">
+                <template v-for="value in processLogList">
+                  <van-step :key="value.id">
+                    <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                    <p>{{ value.create_time }}</p>
+                  </van-step>
+                </template>
+              </van-steps>
+            </div>
+          </van-cell-group>
+
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
@@ -263,6 +277,7 @@ export default {
             informList:[],
             loading:false,
             officeList:[],
+            processLogList:[],
             tag:{
               showPicker: false,
               showPickerSealType:false,
@@ -788,27 +803,7 @@ export default {
         //将用户名存放入缓存中，下次打开页面直接填入
         storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
       },
-      queryPictureList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item, isImage: true };
-        });
-        return list;
-      },
 
-      queryOfficeList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
-        });
-        return list;
-      },
 
       async queryInfo(){
 
@@ -936,6 +931,7 @@ export default {
 
           //加载最近的同类型合同编号
           await this.queryHContract();
+          await this.queryProcessLog();
 
           //如果合同编号存在
           this.item.contractId = value.contract_id || this.item.contractId;
@@ -944,7 +940,19 @@ export default {
           console.log(error);
         }
       },
-
+      /**
+       * @function 获取处理日志
+       */
+      async queryProcessLog(){
+        const id = tools.getUrlParam('id');
+        try {
+          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.sort();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       async saveAsFile(file , name){
         try {
           window.saveAs(file , name);

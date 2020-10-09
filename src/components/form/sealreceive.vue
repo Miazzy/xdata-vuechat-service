@@ -99,6 +99,20 @@
             <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
           </van-cell-group>
 
+          <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
+            <van-cell value="处理记录" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <div>
+              <van-steps direction="vertical" :active="processLogList.length - 1">
+                <template v-for="value in processLogList">
+                  <van-step :key="value.id">
+                    <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                    <p>{{ value.create_time }}</p>
+                  </van-step>
+                </template>
+              </van-steps>
+            </div>
+          </van-cell-group>
+
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
 
             <div v-show=" fileList.length > 0 " style="margin-top:15px;margin-left:7px;">
@@ -223,6 +237,7 @@ export default {
             fileList:[],
             loading:false,
             officeList:[],
+            processLogList:[],
             tag:{
               showPicker: false,
               showPickerSealType:false,
@@ -271,28 +286,6 @@ export default {
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
 
-      queryPictureList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(png|svg|gif|jpg|jpeg|bmp|tif|pcx|tga|exif|fpx|webp)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item, isImage: true };
-        });
-        return list;
-      },
-
-      queryOfficeList(files){
-        let list = files.split(',');
-        list = list.filter((item)=>{
-          return /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|zip|rar)$/.test(item);
-        })
-        list = list.map((item)=>{
-          return { url:`https://upload.yunwisdom.club:30443/` + item , name : item.split('/')[1].split('_')[1] , isImage: true };
-        });
-        return list;
-      },
-
       async queryInfo(){
 
         try {
@@ -337,6 +330,8 @@ export default {
               status: value.status,
               type: that.item.type
             }
+
+          await this.queryProcessLog();
 
         } catch (error) {
           console.log(error);
@@ -411,6 +406,19 @@ export default {
 
         await workflow.approveViewProcessLog(prLogHisNode);
 
+      },
+      /**
+       * @function 获取处理日志
+       */
+      async queryProcessLog(){
+        const id = tools.getUrlParam('id');
+        try {
+          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.sort();
+        } catch (error) {
+          console.log(error);
+        }
       },
 
     }
