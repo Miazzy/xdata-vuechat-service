@@ -327,11 +327,11 @@ export default {
     activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        this.userStatus();
+        //this.userStatus();
     },
     mounted() {
       this.queryInfo();
-      this.userStatus();
+      //this.userStatus();
     },
     methods: {
       validField(fieldName){
