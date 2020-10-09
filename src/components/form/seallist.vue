@@ -187,7 +187,7 @@ export default {
       //刷新页面
       async queryFresh(){
         //刷新相应表单
-        this.queryTabList(this.tabname);
+        this.queryTabList(this.tabname , this.currentPage - 1);
         //等待一下
         await tools.sleep(300);
         //显示刷新消息
