@@ -137,7 +137,7 @@ export const compValidation = {
             prefix: '请输入合同对应的编号前缀！',
             meal_account: '请输入新员工的食堂账户！',
             message: '请印章管理员输入用印意见或备注说明！',
-            company: '请输入公司名称！',
+            company: '请输入用印公司名称！',
             finance: '请输入财务归档人员！',
             record: '请输入档案归档人员！',
         },

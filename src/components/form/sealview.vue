@@ -68,7 +68,7 @@
               <van-field clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
-              <van-field required clearable label="公司名称" v-model="item.company" placeholder="请输入公司名称" />
+              <van-field required clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" />
               <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
 
@@ -990,7 +990,7 @@ export default {
           this.$router.push(`/login`);
         }
 
-        //获取公司名称
+        //获取用印公司
         const company = this.item.company;
 
         //先验证是否合法
@@ -1018,7 +1018,7 @@ export default {
           noname = '流水编号';
         }
 
-        //如果没有输入公司名称，则提示用户先输入用印公司名称
+        //如果没有输入用印公司名称，则提示用户先输入用印公司名称
         if(!company){
           //提示确认用印操作
           await vant.Dialog.confirm({
@@ -1132,10 +1132,10 @@ export default {
           this.$router.push(`/login`);
         }
 
-        //获取公司名称
+        //获取用印公司名称
         const company = this.item.company;
 
-        //如果没有输入公司名称，则提示用户先输入用印公司名称
+        //如果没有输入用印公司名称，则提示用户先输入用印公司名称
         if(!company){
           //提示确认用印操作
           await vant.Dialog.confirm({
