@@ -53,6 +53,9 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已退回
           </div>
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 7 ; queryTabList(7);" :style="tabname == 7 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+            已作废
+          </div>
         </div>
       </div>
 
@@ -75,6 +78,9 @@
         </template>
         <template v-show="tabname == 6 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
+        </template>
+        <template v-show="tabname == 7 && !loading && !isLoading">
+            <van-address-list style="min-height:500px;" v-show="tabname == 7 && !loading && !isLoading" v-model="hContractID" :list="endContractList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
         </template>
         </van-pull-refresh>
       </div>
@@ -107,6 +113,7 @@ export default {
             frontContractList:[],
             doneContractList:[],
             failContractList:[],
+            endContractList:[],
             hContractID:'',
             tabmap:{
               '1': 'initContractList',
@@ -115,6 +122,7 @@ export default {
               '4': 'frontContractList',
               '5': 'doneContractList',
               '6': 'failContractList',
+              '7': 'endContractList',
             },
             sealType:'',
             searchWord:'',
@@ -314,6 +322,16 @@ export default {
           this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
+            item.isDefault = true;
+          })
+        } else if(tabname == 7){
+          //获取最近6个月的已归档记录
+          this.endContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,已作废,已测试)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+
+          this.endContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
             item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
