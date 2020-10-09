@@ -5,7 +5,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>印章管理</span>
@@ -273,6 +273,7 @@ export default {
               status: '',
             },
             backPath:'/app',
+            back:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -812,6 +813,10 @@ export default {
           const that = this;
           this.iswechat = tools.isWechat();
           this.groupid = tools.getUrlParam('groupid') || 'Group_LD';
+
+          //获取view状态
+          this.view = tools.getUrlParam('view');
+          this.back = tools.getUrlParam('back') || '/app';
 
           //获取ID，然后获取到相应的原用印登记信息
           const value = await query.queryTableData(`bs_seal_regist` , tools.getUrlParam('id'));

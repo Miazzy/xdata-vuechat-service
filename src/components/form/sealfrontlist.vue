@@ -399,27 +399,27 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealfrontlist`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive`);
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealfrontlist`);
         } else if(this.tabname == '2' || this.tabname == '3'){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealfrontlist`);
         } else if(this.tabname == '4' ){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '5' ){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '6' ){
           storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         }
 
       },
