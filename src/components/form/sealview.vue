@@ -1156,12 +1156,12 @@ export default {
           id: tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
-          proponents: front,
+          proponents: this.item.front,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : front_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : front ,//varchar(100)  null comment '审批人员',
+          employee       : this.item.front_name ,//varchar(1000) null comment '操作职员',
+          approve_user   : this.item.front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
           action_opinion : '用印申请[待移交]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
@@ -1493,6 +1493,12 @@ export default {
         }
 
         await workflow.approveViewProcessLog(prLogHisNode);
+
+        //查询当前所有待办记录
+        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //同时删除本条待办记录当前(印章管理员)
+        await workflow.deleteViewProcessLog(tlist);
 
       },
       /**

@@ -531,8 +531,9 @@ export default {
       },
       async clickTaskDoing(item){
         if(item.tname == 'bs_seal_regist' && item.topic.includes('#待用印')){
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=seal&view=edit&back=/explore`);
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=seal&view=edit&back=/explore`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_seal_regist' && item.topic.includes('#待移交')){
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }

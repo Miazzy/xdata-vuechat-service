@@ -79,7 +79,7 @@
         </van-pull-refresh>
       </div>
 
-      <div class="pagination-div" v-show="!loading && !isLoading" style="margin-top:10px;margin-bottom:10px;">
+      <div class="pagination-div" v-show="!loading && !isLoading && totalpages > 0" style="margin-top:10px;margin-bottom:10px;">
         <van-pagination v-model="currentPage" prev-text="<" next-text=">" @change="changePage" :items-per-page="10" :total-items="totalpages" :show-page-size="5">
           <template #prev-text>
             <van-icon name="arrow-left" />
