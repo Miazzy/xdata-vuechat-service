@@ -1200,6 +1200,17 @@ export default {
             this.item.dealDepart = temp.dealDepart;
           }
 
+          //获取用户信息
+          let userinfo = await storage.getStore('system_userinfo');
+
+          if( !tools.isNull(userinfo) ){
+            this.item.dealManager = userinfo.systemuserinfo.realname;
+            this.item.mobile = userinfo.systemuserinfo.mobile;
+            this.item.username = userinfo.systemuserinfo.username;
+            this.item.signman = userinfo.systemuserinfo.realname;
+            this.item.dealDepart = userinfo.systemuserinfo.textfield1.split('||')[1];
+          }
+
           //是否有最近缓存数据
           const tempitem = storage.getStore('system_seal_item');
 
