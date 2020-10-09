@@ -1209,6 +1209,9 @@ export default {
             this.item.username = userinfo.systemuserinfo.username;
             this.item.signman = userinfo.systemuserinfo.realname;
             this.item.dealDepart = userinfo.systemuserinfo.textfield1.split('||')[1];
+            if(this.item.dealDepart.includes('>')){
+              this.item.dealDepart = this.item.dealDepart.split('>')[1]
+            }
           }
 
           //是否有最近缓存数据
