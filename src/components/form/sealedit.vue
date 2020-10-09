@@ -163,6 +163,7 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-goods-action  v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
+              <van-goods-action-button type="warning" text="作废" @click="handleEnd();" />
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="提交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
           </div>
@@ -961,11 +962,47 @@ export default {
         }
       },
       /**
+       * @function 处理作废操作
+       */
+      async handleEnd(){
+
+          // 缓存填报人信息
+          this.cacheUserInfo();
+
+          //第一步，构造form对象
+          const item = this.item;
+          const id = item.id;
+          const status = '已作废';
+
+          const elem = {id , status }; // 待提交元素
+
+          //第二步，向表单提交form对象数据
+          const result = await manageAPI.patchTableData('bs_seal_regist' , id , elem);
+
+          //第三步，回显当前用印登记信息，并向印章管理员推送消息
+          this.loading = false;
+          let message = null;
+
+          if(result.protocol41 == true && result.affectedRows > 0 && result.changedRows > 0 ){
+            message = '已作废用印登记信息！';
+            this.status = 'none';
+            this.readonly = true;
+          } else {
+            message = '作废用印登记信息失败，请稍后再试！';
+          }
+
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: message,
+          });
+
+        }
+
+      },
+      /**
        * @function 处理提交操作
        */
       async handleConfirm(){
-
-        //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
 
         // 缓存填报人信息
         this.cacheUserInfo();
@@ -1000,13 +1037,17 @@ export default {
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {
-          maxno = (maxinfo.maxno + 100001).toString().slice(-3);
-          this.item.contractId = `${workconfig.group[this.groupid].prefix}[${dayjs().format('YYYY')}]${maxno}`;
+          // maxno = (maxinfo.maxno + 100001).toString().slice(-3);
+          // this.item.contractId = `${workconfig.group[this.groupid].prefix}[${dayjs().format('YYYY')}]${maxno}`;
           noname = '合同编号';
         } else {
-          maxno = (maxinfo.caxno + 100001).toString().slice(-3);
-          this.item.contractId = `NM[${dayjs().format('YYYY')}]${maxno}`;
+          // maxno = (maxinfo.caxno + 100001).toString().slice(-3);
+          // this.item.contractId = `NM[${dayjs().format('YYYY')}]${maxno}`;
           noname = '流水编号';
+          //设置非合同类前缀编号
+          this.item.prefix = 'PTID';
+          //加载最近的同类型合同编号
+          await this.queryHContract();
         }
 
         //公司工作组
@@ -1029,7 +1070,7 @@ export default {
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
         const seal_man = item.sealman;
-        const contract_id = item.contractId;
+        //const contract_id = item.contractId;
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
@@ -1045,7 +1086,7 @@ export default {
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , message : item.message }; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , message : item.message }; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
