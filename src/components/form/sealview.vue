@@ -133,14 +133,19 @@
             />
           </van-cell-group>
 
-          <div>
-            <van-steps direction="vertical" :active="0">
-              <van-step>
-                <h3>【城市】物流状态1</h3>
-                <p>2016-07-12 12:40</p>
-              </van-step>
-            </van-steps>
-          </div>
+          <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
+            <van-cell value="处理记录" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+            <div>
+              <van-steps direction="vertical" :active="processLogList.length - 1">
+                <template v-for="value in processLogList">
+                  <van-step :key="value.id">
+                    <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                    <p>{{ value.create_time }}</p>
+                  </van-step>
+                </template>
+              </van-steps>
+            </div>
+          </van-cell-group>
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;" >
 
@@ -307,6 +312,7 @@ export default {
             loading:false,
             officeList:[],
             hContractList:[],
+            processLogList:[],
             tag:{
               showPicker: false,
               showPickerSealType:false,
@@ -957,6 +963,7 @@ export default {
 
           await this.queryFinanceArchiveMan();
           await this.queryRecordArchiveMan();
+          await this.queryProcessLog();
 
         } catch (error) {
           console.log(error);
@@ -969,6 +976,9 @@ export default {
           console.log(error);
         }
       },
+      /**
+       * @function 检查用户状态
+       */
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
@@ -977,6 +987,19 @@ export default {
             await this.clearLoginInfo();
             this.$router.push(`/login`);
           }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      /**
+       * @function 获取处理日志
+       */
+      async queryProcessLog(){
+        const id = tools.getUrlParam('id');
+        try {
+          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.sort();
         } catch (error) {
           console.log(error);
         }
