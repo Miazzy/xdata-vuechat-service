@@ -347,3 +347,22 @@ export async function taskViewProcessLog(prLogNode) {
     //返回数据
     return result;
 }
+
+/**
+ * @function 添加待办记录审批记录
+ * @description 记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+ */
+export async function deleteViewProcessLog(node) {
+    //替换ID编号
+    node.map(item => {
+        item.oid = item.id;
+        item.id = item.pid;
+    });
+    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+    const result = await manage.deleteProcessLog(
+        '',
+        node
+    );
+    //返回数据
+    return result;
+}
