@@ -447,7 +447,7 @@ export default {
         let result = storage.getStore(`system_task_done_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogDone(username , realname , 0 , 99);
+          tlist = await task.queryProcessLogDone(username , realname , 0 , 1000);
           storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
@@ -459,8 +459,6 @@ export default {
         });
 
         this.donetasks = tlist;
-
-        debugger;
       },
       async queryTaskDoing(){
         let info = await storage.getStore('system_userinfo');
@@ -472,7 +470,7 @@ export default {
         let result = storage.getStore(`system_task_doing_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 1000);
           storage.setStore(`system_task_doing_by_user@${username}` , tlist , 10);
         } else {
           tlist = result;
@@ -503,7 +501,7 @@ export default {
         let result = storage.getStore(`system_task_time_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          tlist = await task.queryProcessLogWait(username , realname , 0 , 1000);
           storage.setStore(`system_task_time_by_user@${username}` , tlist , 10);
         } else {
           tlist = result;
