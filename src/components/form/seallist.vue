@@ -79,9 +79,8 @@
         </van-pull-refresh>
       </div>
 
-
       <div class="pagination-div" style="margin-top:10px;margin-bottom:10px;">
-        <van-pagination v-model="currentPage" prev-text="<" next-text=">" @change="changePage" :items-per-page="10" :total-items="1000" :show-page-size="5">
+        <van-pagination v-model="currentPage" prev-text="<" next-text=">" @change="changePage" :items-per-page="10" :total-items="10000" :show-page-size="5">
           <template #prev-text>
             <van-icon name="arrow-left" />
           </template>
@@ -254,10 +253,13 @@ export default {
       //点击Tab栏
       async queryTabList(tabname , page = 0){
 
-        //获取最近6个月对应的日期
+        // 获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
+
+        // 设置当前页为第一页
+        this.currentPage = page + 1;
 
         if(this.sealType === 0) {
           sealTypeSql = `~and(seal_type,like,合同类)`;
