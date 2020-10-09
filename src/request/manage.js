@@ -431,6 +431,27 @@ export async function queryTableData(tableName, whereSQL) {
 }
 
 /**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} whereSQL
+ */
+export async function queryTableDataCount(tableName, whereSQL) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}/count?${whereSQL}`;
+
+    try {
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body[0]['no_of_rows'];
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * @function 获取当前编号前缀的合同的列表信息
  * @param {*} prefix
  */
