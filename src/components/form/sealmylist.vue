@@ -241,7 +241,7 @@ export default {
       async queryTabList(tabname){
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -326,6 +326,9 @@ export default {
         //强制渲染
         this.$forceUpdate();
 
+        //获取用户信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         //获取tabname
         this.tabname = storage.getStore('system_seal_list_tabname') || '1';
 
@@ -407,15 +410,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive`);
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=done`);
         } else if(this.tabname == '2' || this.tabname == '3'){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done`);
         } else if(this.tabname == '4' ){
           storage.setStore('system_seal_list_tabname' , this.tabname);
           //跳转到相应的用印界面

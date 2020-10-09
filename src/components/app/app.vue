@@ -187,6 +187,13 @@
             </div>
           </div>
 
+          <div class="weui-cell_app_hd" @click="sealMyList();" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+            <div class="weui-cell_app_bd" >
+              历史
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -355,6 +362,9 @@ export default {
         },
         async sealArchive(){
           this.$router.push(`/app/sealarchivelist`);
+        },
+        async sealMyList(){
+          this.$router.push(`/app/sealmylist`);
         },
     }
 }
