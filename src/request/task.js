@@ -1,5 +1,6 @@
 import * as tools from '@/request/tools';
 import * as storage from '@/request/storage';
+import * as query from '@/request/query';
 
 //计时待办任务常量数组
 export const TIME_TASK_NAME = ['请假申请表', '外出申请表', '加班申请表', '出差申请表', '车补申请表'];
@@ -41,6 +42,13 @@ export async function queryProcessLogDone(
             //返回结果
             return flag;
         });
+
+        for (let item of result) {
+            if (tools.isNull(item['sponsor'])) {
+                const temp = await query.queryUserInfoByAccount(item.proponents);
+                item['sponsor'] = temp.realname;
+            }
+        };
 
         //根据ID编号去掉重复的数据
         result = window.__.uniq(result, false, 'id');
@@ -88,6 +96,13 @@ export async function queryProcessLogWait(
             //返回结果
             return flag;
         });
+
+        for (let item of result) {
+            if (tools.isNull(item['sponsor'])) {
+                const temp = await query.queryUserInfoByAccount(item.proponents);
+                item['sponsor'] = temp.realname;
+            }
+        };
 
         return result;
     } catch (err) {

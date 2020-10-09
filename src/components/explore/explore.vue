@@ -459,6 +459,8 @@ export default {
         });
 
         this.donetasks = tlist;
+
+        debugger;
       },
       async queryTaskDoing(){
         let info = await storage.getStore('system_userinfo');

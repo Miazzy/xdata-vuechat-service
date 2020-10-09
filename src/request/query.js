@@ -181,3 +181,35 @@ export async function queryTableDataByWhereSQL(tableName, whereSQL) {
         console.log(err);
     }
 }
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} whereSQL
+ */
+export async function queryUserInfoByAccount(userid) {
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/queryemployee/${userid}`;
+
+    //获取缓存中的数据
+    var cache = storage.getStore(`sys_user_cache_account#queryemployee#@${userid}`);
+
+    //返回缓存值
+    if (typeof cache != 'undefined' && cache != null && cache != '') {
+        return cache;
+    }
+
+    try {
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.body, 3600 * 24 * 31);
+        }
+
+        return res.body;
+
+    } catch (err) {
+        console.log(err);
+    }
+}
