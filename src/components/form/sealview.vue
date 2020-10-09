@@ -1145,6 +1145,10 @@ export default {
 
         await workflow.approveViewProcessLog(prLogHisNode);
 
+        //同时推送一条待办记录给前台用户 TODO
+
+        //同时删除本条待办记录当前(印章管理员) TODO
+
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
@@ -1271,6 +1275,8 @@ export default {
         }
 
         await workflow.approveViewProcessLog(prLogHisNode);
+
+        //同时删除本条待办记录当前(印章管理员) TODO
 
       },
 

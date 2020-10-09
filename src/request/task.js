@@ -88,13 +88,15 @@ export async function queryProcessLogWait(
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名，且已处理用户中，不含登录用户
-            var flag =
-                (window.__.contains(item['username'], username) ||
-                    window.__.contains(item['username'], realname)) &&
-                !item.user.includes(username);
-
-            //返回结果
-            return flag;
+            if (item.tname !== 'bs_seal_regist') {
+                var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname)) && (!item.user.includes(username));
+                //返回结果
+                return flag;
+            } else if (item.tname === 'bs_seal_regist') {
+                var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+                //返回结果
+                return flag;
+            }
         });
 
         for (let item of result) {
