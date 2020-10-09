@@ -205,9 +205,11 @@ export async function queryUserInfoByAccount(userid) {
 
         if (res.body != null && res.body.length > 0) {
             storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.body, 3600 * 24 * 31);
+            return res.body;
+        } else if (!tools.isNull(res.text)) {
+            storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.text, 3600 * 24 * 31);
+            return JSON.parse(res.text)
         }
-
-        return res.body;
 
     } catch (err) {
         console.log(err);
