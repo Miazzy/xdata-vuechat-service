@@ -434,7 +434,7 @@ export default {
           if(!!prefix){
 
             //从用户表数据中获取填报人资料
-            let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
+            let list = await manageAPI.queryContractInfoByPrefixAll(prefix.trim());
 
             //清空原数据
             this.hContractList = [];

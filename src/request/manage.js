@@ -476,6 +476,30 @@ export async function queryContractInfoByPrefix(prefix) {
 }
 
 /**
+ * @function 获取当前编号前缀的合同的列表信息
+ * @param {*} prefix
+ */
+export async function queryContractInfoByPrefixAll(prefix) {
+
+    try {
+        //构建查询SQL
+        const sql = `${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(contract_id,like,${prefix}~)~and(status,in,待用印,已退回,已废弃,已用印,已领取,移交前台,已完成,财务归档,档案归档,已归档)&_p=0&_size=10&_sort=-create_time`;
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(sql).set('accept', 'json');
+
+        //返回用户信息
+        if (maxinfo && maxinfo.body && maxinfo.body.length >= 1) {
+            return maxinfo.body;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
  * @function 获取当前名字的用户信息
  */
 export async function queryUserBySealData(name) {
