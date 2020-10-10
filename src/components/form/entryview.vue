@@ -130,7 +130,7 @@
                 <van-field :readonly="readonly" clearable label="银行卡号" v-model="item.bank_card" placeholder="请输入您的工资卡对应银行卡号！" @blur="validField('bank_card');" :error-message="message.bank_card" />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;display:none;" >
                 <van-cell value="学历信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 学历编号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" v-show="item.diploma" clearable label="毕业证号" v-model="item.diploma" placeholder="请输入您的毕业证书编号！" @blur="validField('diploma');" :error-message="message.diploma" />
