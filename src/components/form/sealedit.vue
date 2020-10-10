@@ -352,13 +352,25 @@ export default {
                 console.log(error);
               }
 
+              try {
+                this.hContractList = this.hContractList.sort((n1 , n2) => {
+                  const year = `[${dayjs().format('YYYY')}]`;
+                  const value1 =  n1.id.split(year)[1] ;
+                  const value2 = n2.id.split(year)[1];
+                  return value2 - value1;
+                });
+              } catch (error) {
+                console.log(error);
+              }
+
               //遍历去重
               try {
+
                 this.hContractList = this.hContractList.filter((item,index) => {
                   item.isDefault = index == 0 ? true : false;
                   let findex = this.hContractList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
-                })
+                });
 
                 const id = this.hContractList[0].id;
                 let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;

@@ -110,7 +110,7 @@
                 <van-field :readonly="readonly" clearable label="其他用品" v-model="item.othertools" autosize type="textarea"  maxlength="256"  placeholder="请输入您的其他办公用品要求！" />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" v-show="!!item.carno || !!item.driving_license || !!item.driver_license">
+              <van-cell-group style="margin-top:10px;" v-show="(!!item.carno || !!item.driving_license || !!item.driver_license) && (role == 'hr' || role == 'front')">
                 <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" v-show="!!item.carno" />
@@ -120,7 +120,7 @@
                 <van-field :readonly="readonly" clearable v-show="item.driver_license != '0000000000' && false " label="驾驶证号" v-model="item.driver_license"  placeholder="请输入您的驾驶证编号！" />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;" v-show="role == 'hr'">
                 <van-cell value="证件信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 身份证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="身份证号" v-model="item.idcard" placeholder="请输入您的身份证编号！" @blur="validField('idcard');" :error-message="message.idcard" />
@@ -194,31 +194,31 @@
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_xs" title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
+                <van-cell v-show="item.files_xs && (role == 'hr' || role == 'front') " title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadXS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_js" title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
+                <van-cell v-if="item.files_js && (role == 'hr' || role == 'front') " title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadJS"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_gxzm" title="关系证明附件" class="van-cell-upload" :label="item.files_gxzm.slice(0,30)">
+                <van-cell v-if="item.files_gxzm && (role == 'hr' || role == 'front') " title="关系证明附件" class="van-cell-upload" :label="item.files_gxzm.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadGXZM"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_id" title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
+                <van-cell v-if="item.files_id && (role == 'hr' ) " title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadID"  >下载</van-button>
                   </template>
                 </van-cell>
 
-                <van-cell v-if="item.files_bk" title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
+                <van-cell v-if="item.files_bk && (role == 'hr' ) " title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
                   <template #right-icon>
                     <van-button name="file" :url="uploadURL" @click="downloadBK"  >下载</van-button>
                   </template>
