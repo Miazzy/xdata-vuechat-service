@@ -24,6 +24,88 @@ export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY';
 /**
  * 查询审批处理页面的记录
  */
+export const queryWorkUserList = async() => {
+
+    //查询URL
+    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/employee`;
+    var result = {};
+
+    try {
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        //遍历并设置属性
+        window.__.each(res.body, item => {
+            try {
+                item['wxid'] = item['username'];
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                item["initial"] = item['username'].slice(0, 1).toLowerCase();
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                if (tools.isNull(item.avatar)) {
+                    item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
+                } else {
+                    item['headerUrl'] = window._CONFIG['uploaxURL'] + '/' + item.avatar;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                item["nickname"] = item['realname'];
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                item["remark"] = item['realname'];
+            } catch (error) {
+                console.log(error);
+            }
+            item["signature"] = "";
+            item["album"] = [{
+                imgSrc: ""
+            }];
+            item["area"] = ["中国", "四川", "成都"];
+            item["from"] = "通过企业联系人添加";
+            item["tag"] = "";
+            item["desc"] = {
+                "title": "",
+                "picUrl": ""
+            }
+            item['status'] = '1';
+            item['orgCode'] = '';
+            item['updateBy'] = '';
+            item['createTime'] = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            item['createBy'] = 'admin';
+            item['workNo'] = '';
+            item['delFlag'] = '0';
+            item['status_dictText'] = '';
+            item['birthday'] = tools.formatDate(item['birthday'], 'yyyy-MM-dd');
+            item['updateTime'] = item['createTime'];
+            item['telephone'] = item['phone'];
+            item['activitiSync'] = '';
+            item['sex'] = '1';
+            item['sex_dictText'] = '';
+        });
+
+        result.records = res.body;
+        result.total = res.body.length;
+
+        return result;
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+/**
+ * 查询审批处理页面的记录
+ */
 export const queryUserList = async(params) => {
 
     //pageNo从0开始计算
@@ -128,7 +210,8 @@ export const queryContacts = async() => {
 
     if (tools.isNull(cache) || cache.length <= 0) {
         for (var i = 1; i < 10; i++) {
-            let userlist = await queryUserList({ pageNo: i, pageSize: 99, order: 'desc', column: 'create_time' });
+            let userlist = await queryWorkUserList({ pageNo: i, pageSize: 99, order: 'desc', column: 'create_time' });
+            debugger;
             userlist = userlist.records;
             count = userlist.total;
             if (tools.isNull(userlist) || userlist.length <= 0) {

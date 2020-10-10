@@ -116,6 +116,8 @@ export default {
             var initialList = [];
             var contactsList = storage.getStore(ALL_CONTACT_CACHE_LIST) || {};
 
+            debugger;
+
             if(tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};
               var allContacts = await contact.queryContacts();
