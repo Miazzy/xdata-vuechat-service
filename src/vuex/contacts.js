@@ -19,7 +19,9 @@ const contact = { contacts: null };
 
 export default contact;
 
-export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY';
+export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V1';
+
+export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V1';
 
 /**
  * 查询审批处理页面的记录
@@ -29,6 +31,12 @@ export const queryWorkUserList = async() => {
     //查询URL
     var queryURL = `${window.requestAPIConfig.restapi}/api/v2/employee`;
     var result = {};
+
+    const cache = await storage.getStoreDB(ALL_USER_CACHE_WORK_KEY);
+
+    if (!tools.isNull(cache)) {
+        return cache;
+    }
 
     try {
 
@@ -94,6 +102,8 @@ export const queryWorkUserList = async() => {
 
         result.records = res.body;
         result.total = res.body.length;
+
+        storage.setStoreDB(ALL_USER_CACHE_WORK_KEY, result, 3600 * 24 * 3);
 
         return result;
 
@@ -206,12 +216,11 @@ export const queryUserList = async(params) => {
 export const queryContacts = async() => {
     var all = [];
     var count = 0;
-    var cache = storage.getStore(ALL_USER_CACHE_KEY);
+    var cache = await storage.getStoreDB(ALL_USER_CACHE_KEY);
 
     if (tools.isNull(cache) || cache.length <= 0) {
         for (var i = 1; i < 10; i++) {
             let userlist = await queryWorkUserList({ pageNo: i, pageSize: 99, order: 'desc', column: 'create_time' });
-            debugger;
             userlist = userlist.records;
             count = userlist.total;
             if (tools.isNull(userlist) || userlist.length <= 0) {
@@ -220,7 +229,7 @@ export const queryContacts = async() => {
                 all = [...all, ...userlist];
             }
         }
-        storage.setStore(ALL_USER_CACHE_KEY, all, 3600 * 24);
+        storage.setStoreDB(ALL_USER_CACHE_KEY, all, 3600 * 24);
     } else {
         all = cache;
     }
@@ -228,11 +237,11 @@ export const queryContacts = async() => {
     return all;
 }
 
-export const getUserInfo = (wxid) => {
+export const getUserInfo = async(wxid) => {
     if (!wxid) {
         return;
     } else {
-        var contacts = storage.getStore(ALL_USER_CACHE_KEY);
+        var contacts = await storage.getStore(ALL_USER_CACHE_KEY);
         for (var index in contacts) {
             if (contacts[index].wxid === wxid) {
                 return contacts[index]

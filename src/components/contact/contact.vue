@@ -55,8 +55,8 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
 
-const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST';
-const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST';
+const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V1';
+const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V1';
 
 export default {
     mixins: [window.mixin],
@@ -96,7 +96,7 @@ export default {
 
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
-            var initialList = storage.getStore(ALL_CONTACT_INIT_CACHE_LIST) || [];
+            var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST) || [];
             if(tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
               var max = allContacts.length;
@@ -106,7 +106,7 @@ export default {
                   }
               }
               initialList = initialList.sort();
-              storage.setStore(ALL_CONTACT_INIT_CACHE_LIST , initialList , 3600 * 24);
+              storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST , initialList , 3600 * 24);
             }
             return initialList;
         },
@@ -114,7 +114,7 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsList() {
             var initialList = [];
-            var contactsList = storage.getStore(ALL_CONTACT_CACHE_LIST) || {};
+            var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST) || {};
 
             debugger;
 
@@ -134,7 +134,7 @@ export default {
                   }
               }
               let cache = JSON.stringify(contactsList);
-              storage.setStore(ALL_CONTACT_CACHE_LIST , cache , 3600 * 24);
+              storage.setStoreDB(ALL_CONTACT_CACHE_LIST , cache , 3600 * 24);
             }
             return contactsList;
         },
