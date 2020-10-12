@@ -59,6 +59,11 @@
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 领用人员（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
@@ -66,6 +71,12 @@
                 <van-field :readonly="readonly" required clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="情况说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="备注说明" v-model="item.remark"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
