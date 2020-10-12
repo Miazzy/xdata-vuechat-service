@@ -228,7 +228,10 @@
           async punchWork(){
             this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
             if(this.location!=''&&this.location!=null){
-              alert(`打卡成功，位置：${this.location}！`);
+              await vant.Dialog.alert({
+                title: '打卡成功',
+                message: `打卡成功，位置：${this.location}！`,
+              });
             }
           },
           async getMapIP(){

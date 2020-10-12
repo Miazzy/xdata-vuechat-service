@@ -316,10 +316,13 @@ export default {
       },
 
       // 用户提交入职登记表函数
-      async handleConfirm() {
+      async handleApply() {
 
         //显示加载状态
         this.loading = true;
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
 
         //表单ID
         const id = tools.queryUniqueID();
@@ -331,8 +334,7 @@ export default {
         const elem = {
           id,
           create_time: dayjs().format('YYYY-MM-DD'),
-          create_by : this.item.username,
-          create_by : this.item.create_by,
+          create_by : userinfo.username,
           name : this.item.name,
           amount : this.item.amount,
           receive_name:this.item.receive_name ,
@@ -350,7 +352,7 @@ export default {
         const result = await manageAPI.postTableData(this.tablename , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625/物品领用登记通知：员工‘${elem.username}’物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${elem.username}’物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         //设置状态
