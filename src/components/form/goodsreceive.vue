@@ -52,9 +52,9 @@
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 领用时间（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
+                <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="true" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
@@ -79,7 +79,7 @@
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="备注说明" v-model="item.remark"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
 
               </van-cell-group>
 
@@ -194,9 +194,10 @@ export default {
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
             group: workconfig.group,
-
             currentKey:'',
+            tablename:'bs_goods_receive',
             readonly: false,
+            goodstype: workconfig.goodstype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,
             acceptType: workconfig.compcolumns.acceptType,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
@@ -211,70 +212,6 @@ export default {
       this.queryInfo();
     },
     methods: {
-      //处理验证确认
-      async handleFirstConfirm(){
-
-        //检查姓名、电话号码，身份证号是否填写
-        if(!this.item.username || !this.item.mobile || !this.item.idcard){
-          //未获取到HR信息
-          await vant.Dialog.alert({
-            title: '微信提示',
-            message: '请将您的姓名、电话、身份证号填写完整后进行验证操作！',
-          });
-          return ;
-        }
-
-        //查询URL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})`;
-
-        //获取返回结果
-        const resp = await superagent.get(queryURL).set('accept', 'json');
-
-        if(resp && resp.body && resp.body.length > 0){
-
-          //获取当前入职人员相关信息
-          const value = resp.body[0];
-
-          const position = this.item.position = value.position;
-          const department = this.item.department = value.department;
-
-          //未获取到HR信息
-          await vant.Dialog.alert({
-            title: '微信提示',
-            message: '验证成功，请填写下一步信息！',
-          });
-
-        } else {
-
-          //未获取到HR信息
-          await vant.Dialog.alert({
-            title: '微信提示',
-            message: '验证失败，请向HR确认，是否将您的基础信息录入入职登记中？',
-          });
-
-        }
-
-      },
-
-      //选中当前盖印人
-      async selectHRUser(value){
-        await tools.sleep(0);
-        const id = this.item.hr_id;
-        const user = this.huserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.hr_name = user.name;
-        this.item.hr_id = id;
-      },
-
-      //选中当前盖印人
-      async selectAdminUser(value){
-        await tools.sleep(0);
-        const id = this.item.admin_id;
-        const user = this.auserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.admin_name = user.name;
-        this.item.admin_id = id;
-      },
 
       //选中当前盖印人
       async selectFrontUser(value){
@@ -284,16 +221,6 @@ export default {
         //获取盖印人姓名
         this.item.front_name = user.name;
         this.item.front_id = id;
-      },
-
-      //选中当前盖印人
-      async selectMealUser(value){
-        await tools.sleep(0);
-        const id = this.item.meal_id;
-        const user = this.muserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.meal_name = user.name;
-        this.item.meal_id = id;
       },
 
       validField(fieldName){
@@ -306,7 +233,7 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
+        storage.setStore(`system_${this.tablename}_item` , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -348,107 +275,27 @@ export default {
 
         try {
           this.iswechat = tools.isWechat();
-          this.item.sealman = tools.getUrlParam('sealman');
 
-          const item = storage.getStore('system_entry_job_item');
+          let info = await storage.getStore('system_userinfo');
 
-          this.item.type = tools.getUrlParam('type');        //用印管理员成员组
-          this.item.admin = tools.getUrlParam('admin');  //用印前台接受组
-          this.item.front = tools.getUrlParam('front');  //用印归档组(财务/档案)
-          this.item.meal = tools.getUrlParam('meal');  //用印
+          const item = storage.getStore(`system_${this.tablename}_item`);
+
+          this.item.type = this.goodstype[tools.getUrlParam('type')];  //用印管理员成员组
 
           //自动回显刚才填写的用户基础信息
           if(item){
-            this.item.username = item.username || this.item.username;
-            this.item.mobile = item.mobile || this.item.mobile;
-            this.item.idcard = item.idcard || this.item.idcard;
-            this.item.position = item.position || this.item.position;
-            this.item.other_equip = item.other_equip || this.item.other_equip;
-            this.item.othertools = item.othertools || this.item.othertools;
-            this.item.carno = item.carno || this.item.carno;
-            this.item.driving_license = item.driving_license || this.item.driving_license;
-            this.item.driver_license = item.driver_license || this.item.driver_license;
-            this.item.idcard = item.idcard || this.item.idcard;
-            this.item.diploma = item.diploma || this.item.diploma;
-            this.item.bachelor = item.bachelor || this.item.bachelor;
-            this.item.bank_card = item.bank_card || this.item.bank_card;
-          }
-
-          //如果前台人员填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(this.item.front)){
-            //获取盖印人姓名
-            this.item.front_name = await manageAPI.queryUsernameByID(this.item.front);
-          }
-          //如果行政人员填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(this.item.admin)){
-            //获取盖印人姓名
-            this.item.admin_name = await manageAPI.queryUsernameByID(this.item.admin);
-          }
-          //如果行政人员填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(this.item.meal)){
-            //获取盖印人姓名
-            this.item.meal_name = await manageAPI.queryUsernameByID(this.item.meal);
-          }
-          //如果行政人员填写为英文，则查询中文名称
-          if(/^[a-zA-Z_0-9]+$/.test(this.item.hr)){
-            //获取盖印人姓名
-            this.item.hr_name = await manageAPI.queryUsernameByID(this.item.hr);
-          }
-
-          //如果行政人候选列表存在
-          if(this.item.admin){
-            //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(this.item.admin.split(',').map(item => { return `'${item}'`; }).join(','));
-            //遍历填报人列表
-            slist.map((elem , index) => {
-              let company = elem.textfield1.split('||')[0];
-              company = company.slice(company.lastIndexOf('>')+1);
-              let department = elem.textfield1.split('||')[1];
-              department = department.slice(department.lastIndexOf('>')+1);
-              this.auserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.auserList.length });
-            })
-          }
-
-          //如果行政人候选列表存在
-          if(this.item.front){
-            //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(this.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
-            //遍历填报人列表
-            slist.map((elem , index) => {
-              let company = elem.textfield1.split('||')[0];
-              company = company.slice(company.lastIndexOf('>')+1);
-              let department = elem.textfield1.split('||')[1];
-              department = department.slice(department.lastIndexOf('>')+1);
-              this.fuserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.fuserList.length });
-            })
-          }
-
-          //如果行政人候选列表存在
-          if(this.item.meal){
-            //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(this.item.meal.split(',').map(item => { return `'${item}'`; }).join(','));
-            //遍历填报人列表
-            slist.map((elem , index) => {
-              let company = elem.textfield1.split('||')[0];
-              company = company.slice(company.lastIndexOf('>')+1);
-              let department = elem.textfield1.split('||')[1];
-              department = department.slice(department.lastIndexOf('>')+1);
-              this.muserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.muserList.length });
-            })
-          }
-
-          //如果行政人候选列表存在
-          if(this.item.hr){
-            //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(this.item.hr.split(',').map(item => { return `'${item}'`; }).join(','));
-            //遍历填报人列表
-            slist.map((elem , index) => {
-              let company = elem.textfield1.split('||')[0];
-              company = company.slice(company.lastIndexOf('>')+1);
-              let department = elem.textfield1.split('||')[1];
-              department = department.slice(department.lastIndexOf('>')+1);
-              this.huserList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email, isDefault: !this.huserList.length });
-            })
+            this.item.create_by = item.create_by || this.item.create_by;
+            this.item.name = item.name || this.item.name;
+            this.item.amount = item.amount || this.item.amount;
+            this.item.receive_name = item.receive_name || this.item.receive_name;
+            this.item.department = item.department || this.item.department;
+            this.item.remark = item.remark || this.item.remark;
+            this.item.type = item.type || this.item.type;
+            this.item.company = item.company || this.item.company;
+            this.item.approve_name = item.approve_name || this.item.approve_name;
+            this.item.workflow = item.workflow || this.item.workflow;
+            this.item.approve = item.approve || this.item.approve;
+            this.item.status = item.status || this.item.status;
           }
 
         } catch (error) {
