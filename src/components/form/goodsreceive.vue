@@ -236,7 +236,7 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        storage.setStore(`system_${this.tablename}_item` , JSON.stringify(this.item) , 3600 * 2 );
+        storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -284,7 +284,7 @@ export default {
           const userinfo = await storage.getStore('system_userinfo');
 
           //获取缓存信息
-          const item = storage.getStore(`system_${this.tablename}_item`);
+          const item = storage.getStore(`system_${this.tablename}_item@${userinfo.realname}`);
 
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
