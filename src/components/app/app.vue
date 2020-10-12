@@ -201,28 +201,28 @@
         <div class="weui-cell-title">领用借用</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
 
-          <div class="weui-cell_app_hd" @click="sealApply();">
+          <div class="weui-cell_app_hd" @click="goodsReceive('office');">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
             <div class="weui-cell_app_bd" >
               办公
             </div>
           </div>
 
-          <div class="weui-cell_app_hd" @click="sealApprove();">
+          <div class="weui-cell_app_hd" @click="goodsReceive('drug');">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
             <div class="weui-cell_app_bd">
               药品
             </div>
           </div>
 
-          <div class="weui-cell_app_hd" @click="sealFront();" >
+          <div class="weui-cell_app_hd" @click="goodsReceive('prevent');" >
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
             <div class="weui-cell_app_bd" >
               防疫
             </div>
           </div>
 
-           <div class="weui-cell_app_hd" @click="sealFront();" >
+           <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
             <div class="weui-cell_app_bd" >
               借用
@@ -400,6 +400,12 @@ export default {
         },
         async sealMyList(){
           this.$router.push(`/app/sealmylist`);
+        },
+        async goodsReceive(type){
+          this.$router.push(`/app/goodsreceive?type=${type}`);
+        },
+        async goodsBorrow(type){
+          this.$router.push(`/app/goodsborrow?type=${type}`);
         },
     }
 }

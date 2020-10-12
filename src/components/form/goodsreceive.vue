@@ -6,9 +6,10 @@
   <div id="content" style="margin-top: 0px;" >
 
     <header id="wx-header" v-if="iswechat" >
-        <div class="center">
-            <span>物品领用</span>
-        </div>
+        <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+        </router-link>
+        <span>物品领用</span>
     </header>
 
     <section v-if="iswechat">
