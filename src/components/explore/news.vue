@@ -3,7 +3,7 @@
   <div id="news" style="margin-top: 0px; background: #fdfdfd;" >
     <header id="wx-header">
         <div class="center">
-            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>公告</span>
@@ -297,6 +297,7 @@ export default {
             announces:[],
             isLoading:false,
             loading:false,
+            back:'/app',
         }
     },
     activated() {
@@ -361,6 +362,9 @@ export default {
         }
 
         this.announces = temp.slice(0,30);
+
+        //获取返回页面
+        this.back = tools.getUrlParam('back') || '/app';
       },
       async queryEach(){
         this.alist = await announce.queryAnnounceList(0,30);

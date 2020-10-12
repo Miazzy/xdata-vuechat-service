@@ -14,7 +14,7 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
-          <router-link to="/explore/news" tag="dl">
+          <router-link to="/explore/news?back=/explore" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
             <div class="weui-cell_app_bd">
               公告

@@ -30,7 +30,7 @@
               已办
             </div>
           </div>
-          <div class="weui-cell_app_hd" @click="$router.push(`/app/news`)">
+          <div class="weui-cell_app_hd" @click="$router.push(`/app/news?back=/app`)">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
             <div class="weui-cell_app_bd">
               公告
