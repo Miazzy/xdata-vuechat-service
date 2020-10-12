@@ -257,7 +257,7 @@ const routes = [{
         name: "公告",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/app/news.vue"], resolve)
+            "subPage": resolve => require(["../components/explore/news.vue"], resolve)
         }
     }, {
         path: '/app/donetask',
@@ -300,7 +300,7 @@ const routes = [{
         }
     }, {
         path: '/explore/news',
-        name: "新闻",
+        name: "公告",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
             "subPage": resolve => require(["../components/explore/news.vue"], resolve)
