@@ -204,11 +204,25 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealmylist.vue"], resolve)
         }
     }, {
-        path: '/app/entryjob',
-        name: "入职引导",
+        path: '/app/sealmylist',
+        name: "用印历史",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/entryjob.vue"], resolve)
+            "subPage": resolve => require(["../components/form/sealmylist.vue"], resolve)
+        }
+    }, {
+        path: '/app/goodsreceive',
+        name: "物品领用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/goodsreceive.vue"], resolve)
+        }
+    }, {
+        path: '/app/goodslist',
+        name: "领用进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/goodslist.vue"], resolve)
         }
     }, {
         path: '/app/entryview',
