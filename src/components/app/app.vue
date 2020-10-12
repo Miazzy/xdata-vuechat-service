@@ -45,13 +45,19 @@
         </div>
       </div>
 
-      <div class="weui-cells" style="display:none;">
+      <div class="weui-cells" style="display:block;">
         <div class="weui-cell-title">人事管理</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd" @click="$router.push(`/app/sign`)">
+          <div class="weui-cell_app_hd" @click="$router.push(`/explore/sign?back=/app`)">
            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
             <div class="weui-cell_app_bd" >
               签到
+            </div>
+          </div>
+          <div class="weui-cell_app_hd">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
+            <div class="weui-cell_app_bd" >
+              考勤
             </div>
           </div>
           <div class="weui-cell_app_hd">
@@ -66,18 +72,12 @@
               外出
             </div>
           </div>
+        </div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
           <div class="weui-cell_app_hd">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
             <div class="weui-cell_app_bd">
               加班
-            </div>
-          </div>
-        </div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
-            <div class="weui-cell_app_bd" >
-              考勤
             </div>
           </div>
           <div class="weui-cell_app_hd">
@@ -412,29 +412,5 @@ export default {
 </script>
 <style>
     @import "../../assets/css/explore.css";
-
-    .weui-cell-title{
-      margin-left: 20px;
-      margin-top: 2px;
-      padding-top: 4px;
-      border: 0px solid #fefefe;
-      width: 100px;
-      font-size: 16px;
-    }
-
-    #search {
-      display:none;
-    }
-
-    .app-footer {
-      display:block;
-    }
-
-    .my-swipe .van-swipe-item {
-      color: #fff;
-      font-size: 20px;
-      line-height: 180px;
-      text-align: center;
-      background-color: #39a9ed;
-    }
+    @import "../../assets/css/app.css";
 </style>

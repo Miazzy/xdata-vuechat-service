@@ -384,7 +384,6 @@ export default {
     }
 
     .app-header {
-        /* position: absolute; */
         position: relative;
         transition: 0.3s;
         width: 100%;

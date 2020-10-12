@@ -3,7 +3,7 @@
   <div id="punch" style="margin-top: 0px;" >
     <header id="wx-header">
         <div class="center">
-            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>签到</span>
@@ -86,22 +86,25 @@ export default {
             locationFlag:'',
             ip:'',
             peer:null,
+            back:'/app',
             company:'领地集团',
-            ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
+            ipaddrs:['118.114.247.236' , '118.114.237.201' ,'118.114.247.208', '222.212.88.71', '125.70.13.126' , '101.206.168.248'],
         }
     },
     async activated() {
-      this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-      this.cdate = dayjs().format('YYYY-MM-DD');
       this.$store.commit("toggleTipsStatus", -1);
-      this.amapGeo();
-      this.getMapIP();
+      try {
+        this.relocation();
+      } catch (error) {
+        console.log(error);
+      }
     },
     async mounted() {
-      this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-      this.cdate = dayjs().format('YYYY-MM-DD');
-      this.amapGeo();
-      this.getMapIP();
+      try {
+        this.relocation();
+      } catch (error) {
+        console.log(error);
+      }
     },
     methods: {
       encodeURI(value){
@@ -113,8 +116,6 @@ export default {
           if (r != null) return decodeURI(r[2]); return null; //返回参数值
       },
       relocation() {
-        this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-        this.baiduGeo();
         this.amapGeo();
         this.getMapIP();
       },
@@ -158,7 +159,7 @@ export default {
                   if(vpage.ipaddrs.includes(vpage.ip)){
                     vpage.location = '四川省成都市高新西区西芯大道蓝光集团';
                     vpage.locationTips = '中国四川省成都市郫县西芯大道11号';
-                    vpage.locationFlag = '√ 已进入考勤范围 ';
+                    vpage.locationFlag = '√ 当前位置 ';
                   }
                 }
             });
@@ -178,44 +179,47 @@ export default {
           if(vpage.ipaddrs.includes(vpage.ip)){
             vpage.location = '中国四川省成都市高新西区西芯大道11号蓝光集团';
             vpage.locationTips = '中国四川省成都市郫县西芯大道11号';
-            vpage.locationFlag = '√ 已进入考勤范围 ';
+            vpage.locationFlag = '√ 当前位置 ';
           }
         });
       },
       async punchWork(){
         this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
         if(this.location!=''&&this.location!=null){
-          alert(`签到成功，完成拜访/出席活动的签到，位置：${this.location}！`);
+          await vant.Dialog.alert({
+            title: '签到成功',
+            message: `签到成功，位置：${this.location}！`,
+          });
         }
       },
       async getMapIP(){
 
+        //设置当前日期
+        this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+        this.cdate = dayjs().format('YYYY-MM-DD');
+
         var ipInfo = localStorage.getItem(`system_location_info`);
         //此处后端代码为node-spider-api
-        var response = await superagent.get('http://app.shengtai.club/ip/');
-        var ipLocation = response.body.ip;
 
         if(ipInfo != null && ipInfo != ''){
           ipInfo = JSON.parse(ipInfo);
-        }
-
-        if(ipInfo.result.ip == ipLocation){
           this.ip = ipInfo.result.ip;
-        } else {
-          this.ip = ipLocation;
         }
 
         if(this.ipaddrs.includes(this.ip)){
-            this.ip = `${this.ip} (蓝光集团内网)`
-          this.location = '四川省成都市高新西区西芯大道蓝光集团';
-          this.locationTips = '中国四川省成都市郫县西芯大道11号';
-          this.locationFlag = '√ 已进入考勤范围 ';
+            this.ip = `${this.ip} (集团内网)`
+          this.location = '四川省成都市高新区天府二街环球金融中心领地集团';
+          this.locationTips = '四川省成都市高新区天府二街环球金融中心领地集团';
+          this.locationFlag = '√ 当前位置 ';
         } else {
           this.location = ipInfo.result.ad_info.nation + ipInfo.result.ad_info.province +  ipInfo.result.ad_info.city +  ipInfo.result.ad_info.district;
           this.locationTips = this.location;
-          this.locationFlag = '请确认签到地址 ';
+          this.locationFlag = '× 当前位置 ';
         }
-        console.log('ip location : ' + response.body.ip);
+
+        //获取返回页面
+        this.back = tools.getUrlParam('back') || '/app';
+
       },
       getIPs(callback){
           var ip_dups = {};

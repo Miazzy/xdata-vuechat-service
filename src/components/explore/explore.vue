@@ -30,7 +30,7 @@
           </router-link>
           </div>
           <div class="weui-cell_app_hd">
-          <router-link to="/explore/sign" tag="dl">
+          <router-link to="/explore/sign?back=/explore" tag="dl">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
             <div class="weui-cell_app_bd">
               签到

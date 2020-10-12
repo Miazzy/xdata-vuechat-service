@@ -278,14 +278,14 @@ const routes = [{
         name: "签到",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/app/sign.vue"], resolve)
+            "subPage": resolve => require(["../components/explore/sign.vue"], resolve)
         }
     }, {
         path: '/app/punch',
         name: "打卡",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/app/punch.vue"], resolve)
+            "subPage": resolve => require(["../components/explore/punch.vue"], resolve)
         }
     }, {
         path: '/explore',
