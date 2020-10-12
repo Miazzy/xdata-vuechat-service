@@ -223,7 +223,10 @@ export default {
         this.item.front_id = id;
       },
 
-      validField(fieldName){
+      async validField(fieldName){
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
@@ -328,13 +331,18 @@ export default {
         const elem = {
           id,
           create_time: dayjs().format('YYYY-MM-DD'),
-          create_by: this.item.username,
-          username: this.item.username,
-          department: this.item.department, //入职部门
-          position: this.item.position,    //入职岗位
-          picture: this.item.picture,     //员工照片
-          computer: this.item.computer,  //是否需要电脑配置
-          seat: this.item.seat,      //是否需要办公座椅
+          create_by : this.item.username,
+          create_by : this.item.create_by,
+          name : this.item.name,
+          amount : this.item.amount,
+          receive_name:this.item.receive_name ,
+          department : this.item.department,
+          remark : this.item.remark,
+          type : this.item.type,
+          company : this.item.company,
+          approve_name : this.item.approve_name,
+          workflow : this.item.workflow,
+          approve : this.item.approve,
           status: '待处理',
         }; // 待处理元素
 
