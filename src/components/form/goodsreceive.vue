@@ -51,6 +51,9 @@
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
+                 <!-- 员工姓名（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.username"  placeholder="请填写领用类别！" @blur="validField('username')" :error-message="message.username"  />
+
                 <!-- 员工姓名（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的员工姓名！" @blur="validField('username')" :error-message="message.username"  />
                 <!-- 入职岗位（HR需要确认/修改） -->
