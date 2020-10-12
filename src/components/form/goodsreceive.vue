@@ -301,6 +301,8 @@ export default {
             this.item.status = item.status || this.item.status;
           } else {
             this.item.receive_name = userinfo.realname || this.item.receive_name ;
+            this.item.department = userinfo.department.name;
+            this.item.company = userinfo.parent_company.name;
           }
 
         } catch (error) {
