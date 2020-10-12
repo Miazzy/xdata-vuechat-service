@@ -14,7 +14,7 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
-            考勤组：鹏程晟泰建筑有限公司
+            考勤组：领地集团
           </div>
         </div>
       </div>
@@ -133,13 +133,12 @@
                 locationFlag:'',
                 ip:'',
                 peer:null,
-                ipaddrs:['118.114.247.236' , '118.114.237.201' ,'118.114.247.208'
-                , '125.70.13.126' , '101.206.168.248'],
+                ipaddrs:['118.114.247.236' , '118.114.237.201' ,'118.114.247.208', '222.212.88.71', '125.70.13.126' , '101.206.168.248'],
             }
         },
         async activated() {
-          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.$store.commit("toggleTipsStatus", -1);
+          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
           this.amapGeo();
           this.getMapIP();
         },
@@ -236,30 +235,22 @@
 
             var ipInfo = localStorage.getItem(`system_location_info`);
             //此处后端代码为node-spider-api
-            var response = await superagent.get('http://app.shengtai.club/ip/');
-            var ipLocation = response.body.ip;
 
             if(ipInfo != null && ipInfo != ''){
               ipInfo = JSON.parse(ipInfo);
-            }
-
-            if(ipInfo.result.ip == ipLocation){
               this.ip = ipInfo.result.ip;
-            } else {
-              this.ip = ipLocation;
             }
 
             if(this.ipaddrs.includes(this.ip)){
-               this.ip = `${this.ip} (蓝光集团内网)`
-              this.location = '四川省成都市高新西区西芯大道蓝光集团';
-              this.locationTips = '中国四川省成都市郫县西芯大道11号';
+               this.ip = `${this.ip} (集团内网)`
+              this.location = '四川省成都市高新区天府二街环球金融中心领地集团';
+              this.locationTips = '四川省成都市高新区天府二街环球金融中心领地集团';
               this.locationFlag = '√ 已进入考勤范围 ';
             } else {
               this.location = ipInfo.result.ad_info.nation + ipInfo.result.ad_info.province +  ipInfo.result.ad_info.city +  ipInfo.result.ad_info.district;
               this.locationTips = this.location;
               this.locationFlag = '× 未进入考勤范围 ';
             }
-            console.log('ip location : ' + response.body.ip);
           },
           getIPs(callback){
               var ip_dups = {};
