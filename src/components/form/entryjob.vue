@@ -173,6 +173,8 @@
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <!-- 员工门禁卡（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="是否停车" v-model="item.stop_flag" placeholder="请选择是否在公司停车！" @click="tag.showPickerCommon = true ; currentKey = 'stop_flag'; " />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field class="cardno-field-name" :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" error-message="如非本人车辆请在附件中上传关系证明！"  />
                 <!-- 行驶证号（HR需要确认/修改） -->
@@ -398,6 +400,8 @@ export default {
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               username:'',
+              idcard:'',
+              mobile:'',
               department:'',  //入职部门
               position:'',    //入职岗位
               picture:'',     //员工照片
@@ -411,6 +415,7 @@ export default {
               badge:'是',     //员工工牌
               ban_card:'是',    //门禁卡牌
               othertools:'暂无',//其他用品
+              stop_flag:'否',   //默认选择否
               driving_license: '0000000000',//行驶证
               driver_license: '0000000000',//驾驶证
               idcard: '',      //身份证号

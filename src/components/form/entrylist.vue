@@ -5,17 +5,31 @@
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
-    <header id="wx-header">
+    <header id="wx-header" v-show="!searchFlag">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>入职进度</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
-              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
-              <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
+              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
             </van-dropdown-menu>
+        </div>
+    </header>
+
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+       <div>
+          <van-search
+            v-model="searchWord"
+            show-action
+            placeholder="请输入搜索关键词"
+          >
+            <template #action>
+              <div @click="headMenuSearch();" >搜索</div>
+            </template>
+          </van-search>
         </div>
     </header>
 
@@ -83,8 +97,7 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              { text: '合同类', value: 0 , icon: 'records' },
-              { text: '非合同', value: 1 , icon: 'description' },
+              //{ text: '入职引导', value: 0 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -118,6 +131,58 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
+      //点击显示或者隐藏菜单
+      async headMenuToggle(){
+        this.$refs.headMenuItem.toggle();
+      },
+      //点击顶部搜索
+      async headMenuSearch(){
+        if(this.searchWord){
+          //刷新相应表单
+          this.queryTabList(this.tabname);
+          //显示搜索状态
+          vant.Toast('搜索...');
+          //等待一下
+          await tools.sleep(300);
+        }
+        //显示刷新消息
+        this.searchFlag = false;
+      },
+      //点击右侧菜单
+      async headDropMenu(value){
+        const val = this.dropMenuValue;
+        switch (val) {
+          case 0: //只显示合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            break;
+          case 1: //只显示非合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            break;
+          case 2: //刷新数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            break;
+          case 3: //查询数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            this.searchFlag = true;
+            break;
+          case 4: //重置数据
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
+            this.sealType = '';
+            this.searchFlag = false;
+            this.searchWord = '';
+            await this.queryFresh();
+            break;
+          case 5: //返回应用
+            this.$router.push(`/app`);
+            break;
+          case 6: //返回首页
+            this.$router.push(`/explore`);
+            break;
+          default:
+            console.log(`no operate. out of switch. `);
+        }
+      },
       async queryInfo(){
 
         //强制渲染
@@ -128,6 +193,19 @@ export default {
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+
+
+
+        //获取返回页面
+        this.back = tools.getUrlParam('back') || '/app';
+
+      },
+      async queryTabList(tabname , page){
+
+        //如果存在搜索关键字
+        if(this.searchWord) {
+          searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))`;
+        }
 
         //获取最近6个月的待用印记录
         this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})`);
@@ -158,10 +236,6 @@ export default {
           item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
           item.isDefault = true;
         });
-
-        //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
-
       },
       async selectHContract(){
 
@@ -194,5 +268,5 @@ export default {
 </script>
 <style scoped>
     @import "../../assets/css/explore.css";
-    @import "../../assets/css/seallist.css";
+    @import "../../assets/css/entrylist.css";
 </style>

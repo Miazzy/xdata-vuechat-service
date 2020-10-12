@@ -61,7 +61,9 @@
                 <!-- 员工岗位（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="入职岗位" v-model="item.position" placeholder="请输入入职岗位！" @blur="validField('position')" :error-message="message.position"/>
                 <!-- 员工岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" />
+                <van-field :readonly="role === 'hr' ? false : readonly" clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" />
+                <!-- 电话号码（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="电话号码" v-model="item.mobile" placeholder="请填写您的电话号码！" @blur="validField('mobile')" :error-message="message.mobile" v-show="role == 'hr' || role == 'front'"/>
 
                 <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
                   <van-datetime-picker
@@ -859,6 +861,7 @@ export default {
             username: value.username,
             department: value.department,
             position: value.position,    //入职岗位
+            mobile: value.mobile,
             picture: value.picture,     //员工照片
             greatdiploma: value.greatdiploma,
             computer: value.computer,  //是否需要电脑配置
@@ -968,6 +971,9 @@ export default {
         const admin_id = this.item.admin_id;
         const meal_id = this.item.meal_id;
 
+        //入职日期需要HR再次确认
+        const join_time = this.item.join_time;
+
         //获取相应对接人员OA账号
         let front , admin , meal , queryURL , resp;
 
@@ -978,7 +984,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已确认
-        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , join_time , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
 
         //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
         front = await this.queryUserInfo(front_name);
