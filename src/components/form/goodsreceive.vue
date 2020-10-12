@@ -51,15 +51,24 @@
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                 <!-- 员工姓名（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.username"  placeholder="请填写领用类别！" @blur="validField('username')" :error-message="message.username"  />
+                <!-- 领用类别（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <!-- 领用时间（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
+                <!-- 物品名称（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <!-- 领用数量（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
-                <!-- 员工姓名（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="员工姓名" v-model="item.username"  placeholder="请填写您的员工姓名！" @blur="validField('username')" :error-message="message.username"  />
-                <!-- 入职岗位（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="电话号码" v-model="item.mobile" placeholder="请填写您的电话号码！" @blur="validField('mobile')" :error-message="message.mobile"/>
-                <!-- 入职日期（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="身份证号" v-model="item.idcard" placeholder="请填写您的身份证号！" @blur="validField('idcard')" :error-message="message.idcard" />
+                <!-- 领用人员（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <!-- 单位名称（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
+                <!-- 部门名称（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+
+                <!-- 备注说明（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="备注说明" v-model="item.remark"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
 
               </van-cell-group>
 
