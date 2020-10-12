@@ -19,21 +19,14 @@ const contact = { contacts: null };
 
 export default contact;
 
-export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V2';
-export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V2';
-export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V2';
+export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V8';
+export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V8';
+export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V8';
 
 /**
  * 查询审批处理页面的记录
  */
 export const queryDepartUserList = async() => {
-
-    const userinfo = await storage.getStore('system_userinfo');
-
-    //查询URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_depart_user/${userinfo.main_department}/1`
-
-    var result = {};
 
     const cache = await storage.getStoreDB(ALL_USER_CACHE_DEPART_KEY);
 
@@ -41,19 +34,37 @@ export const queryDepartUserList = async() => {
         return cache;
     }
 
+    //获取当前登录用户信息
+    const userinfo = await storage.getStore('system_userinfo');
+
+    //查询部门URL
+    const queryDepartURL = `https://api.yunwisdom.club:30443/api/v2/wework_depart_list/${userinfo.main_department}`;
+    //获取上级部门编号
+    const respDepart = await superagent.get(queryDepartURL).set('accept', 'json');
+    //获取部门信息
+    const department = respDepart.body.department.find(item => {
+        return item.id = userinfo.main_department;
+    });
+    debugger;
+
+    //查询URL
+    const queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_depart_user/${department.parentid}/1`
+
+    var result = {};
+
     try {
 
         var res = await superagent.get(queryURL).set('accept', 'json');
 
         //遍历并设置属性
-        window.__.each(res.body, item => {
+        window.__.each(res.body.userlist, item => {
             try {
-                item['wxid'] = item['username'];
+                item['wxid'] = item['userid'];
             } catch (error) {
                 console.log(error);
             }
             try {
-                item["initial"] = item['username'].slice(0, 1).toLowerCase();
+                item["initial"] = item['name'].slice(0, 1).toLowerCase();
             } catch (error) {
                 console.log(error);
             }
@@ -67,12 +78,12 @@ export const queryDepartUserList = async() => {
                 console.log(error);
             }
             try {
-                item["nickname"] = item['realname'];
+                item["nickname"] = item['name'];
             } catch (error) {
                 console.log(error);
             }
             try {
-                item["remark"] = item['realname'];
+                item["remark"] = item['name'];
             } catch (error) {
                 console.log(error);
             }
@@ -103,8 +114,8 @@ export const queryDepartUserList = async() => {
             item['sex_dictText'] = '';
         });
 
-        result.records = res.body;
-        result.total = res.body.length;
+        result.records = res.body.userlist;
+        result.total = res.body.userlist.length;
 
         storage.setStoreDB(ALL_USER_CACHE_DEPART_KEY, result, 3600 * 24 * 3);
 

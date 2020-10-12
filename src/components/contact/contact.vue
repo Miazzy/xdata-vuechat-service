@@ -30,12 +30,12 @@
             <!--联系人集合-->
             <template v-for="(value,key) in contactsList">
                 <!--首字母-->
-                <div :ref="`key_${key}`" class="weui-cells__title">{{key}}</div>
-                <div class="weui-cells">
+                <div :key="value.avatar" :ref="`key_${key}`" class="weui-cells__title">{{key}}</div>
+                <div :key="value.name" class="weui-cells">
                     <router-link :key="item.wxid" :to="{path:'/contact/details',query:{wxid:item.wxid}}" class="weui-cell weui-cell_access" v-for="item in value"
                         tag="div">
                         <div class="weui-cell__hd">
-                            <img :src="item.headerUrl" onerror="javascript:this.src='https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png';" class="home__mini-avatar___1nSrW">
+                            <img :src="item.avatar" onerror="javascript:this.src='https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png';" class="home__mini-avatar___1nSrW">
                         </div>
                         <div class="weui-cell__bd">
                             {{item.remark?item.remark:item.nickname}}
@@ -45,18 +45,24 @@
             </template>
             <div style="height:100px;">
             </div>
-</section>
-<!--检索-->
-<div class="initial-bar"><span @click="toPs(i)" v-for="i in contactsInitialList">{{i}}</span></div>
-</div>
+      </section>
+
+      <!--检索-->
+      <div class="initial-bar">
+        <span @click="toPs(i)" v-for="i in contactsInitialList" :key="i" >
+          {{i}}
+        </span>
+      </div>
+
+  </div>
 </template>
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
 
-const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V1';
-const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V1';
+const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V6';
+const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V6';
 
 export default {
     mixins: [window.mixin],
@@ -115,8 +121,6 @@ export default {
         async queryContactsList() {
             var initialList = [];
             var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST) || {};
-
-            debugger;
 
             if(tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};

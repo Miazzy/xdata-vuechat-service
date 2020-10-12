@@ -409,7 +409,7 @@ export default {
               manual:'是',    //是否需要入职手册
               writingtools:'是',//是否需要签字笔/擦
               badge:'是',     //员工工牌
-              ban_card:'否',    //否
+              ban_card:'是',    //门禁卡牌
               othertools:'暂无',//其他用品
               driving_license: '0000000000',//行驶证
               driver_license: '0000000000',//驾驶证
