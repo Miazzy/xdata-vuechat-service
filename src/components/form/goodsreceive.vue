@@ -51,10 +51,10 @@
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
+                <!-- 领用类别（HR需要确认/修改） -->
+                <van-field :readonly="readonly" required clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
@@ -352,7 +352,7 @@ export default {
 
           const item = storage.getStore('system_entry_job_item');
 
-          this.item.hr = tools.getUrlParam('hr');        //用印管理员成员组
+          this.item.type = tools.getUrlParam('type');        //用印管理员成员组
           this.item.admin = tools.getUrlParam('admin');  //用印前台接受组
           this.item.front = tools.getUrlParam('front');  //用印归档组(财务/档案)
           this.item.meal = tools.getUrlParam('meal');  //用印

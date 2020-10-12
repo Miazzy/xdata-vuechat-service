@@ -81,6 +81,15 @@ export const compcolumns = {
 }
 
 /**
+ * @description 物品领用管理
+ */
+export const goodstype = {
+    'office': '办公用品',
+    'drug': '药品',
+    'prevent': '防疫物资',
+};
+
+/**
  * @description 领用物品说明
  */
 export const objects = {
