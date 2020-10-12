@@ -274,16 +274,17 @@ export default {
       async queryInfo() {
 
         try {
+          //查询当前是否微信端
           this.iswechat = tools.isWechat();
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
+          //获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item`);
 
-          this.item.type = this.goodstype[tools.getUrlParam('type')];  //用印管理员成员组
-
-          debugger;
+          //根据URL参数查询物资类型
+          this.item.type = this.goodstype[tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){
@@ -320,32 +321,8 @@ export default {
         //表单ID
         const id = tools.queryUniqueID();
 
-        // 用户对接HR姓名
-        const hr_name = this.item.hr_name;
-
-        // 对应HR的OA账户信息
-        let hrinfo = {};
-
-        // 查询SQL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${hr_name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid`;
-
-        // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
-        const resp = await superagent.get(queryURL).set('accept', 'json');
-
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=hr`);
-
-        // 如果没有获取到返回信息，说明填写的HR姓名有误，如果有获取到HR的返回信息，则执行转换
-        if(resp && resp.body && resp.body.length > 0){
-          hrinfo = resp.body.length > 1 ? {id: resp.body.map(obj => {return obj.id}).join(',')} : resp.body[0];
-        } else {
-          //未获取到HR信息
-          await vant.Dialog.alert({
-            title: '异常提示',
-            message: 'HR的姓名填写有误，未获取到相应信息，请修改后重试！',
-          });
-          return ;
-        }
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsreceive?id=${id}&statustype=${this.item.type}&role=front`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -358,63 +335,19 @@ export default {
           picture: this.item.picture,     //员工照片
           computer: this.item.computer,  //是否需要电脑配置
           seat: this.item.seat,      //是否需要办公座椅
-          drawer: this.item.drawer,    //是否需要办公抽屉drawer
-          other_equip: this.item.other_equip,//是否需要其他办公配置
-          notebook: this.item.manual,  //是否需要笔记本子
-          manual: this.item.manual,    //是否需要入职手册
-          writingtools: this.item.writingtools,//是否需要签字笔/擦
-          badge: this.item.badge,     //员工工牌
-          othertools: this.item.othertools,//其他用品
-          driving_license: this.item.driving_license,//行驶证
-          driver_license: this.item.driver_license,//驾驶证
-          idcard: this.item.idcard,    //身份证号
-          diploma: this.item.diploma,   //毕业编号
-          bachelor: this.item.bachelor,  //学位编号
-          diplomass: this.item.diplomass,   //毕业编号(硕士)
-          bachelorss: this.item.bachelorss,  //学位编号(硕士)
-          diplomabs: this.item.diplomabs,   //毕业编号(博士)
-          bachelorbs: this.item.bachelorbs,  //学位编号(博士)
-          bank_name: this.item.bank_name,  //开户银行名称
-          bank_card: this.item.bank_card, //工资银行卡号
-          ban_card: this.item.ban_card || '否', //门禁卡
-          join_time: this.item.join_time, //入职时间
-          hr_name: this.item.hr_name,   //对接HR
-          hr_id: this.item.hr_id ,  //HR编码信息
-          front_name: this.item.front_name,
-          front_id: this.item.front_id,
-          admin_name: this.item.admin_name,
-          admin_id: this.item.admin_id,
-          meal_name: this.item.meal_name,
-          meal_id: this.item.meal_id,
-          mobile: this.item.mobile,
-          files_gp: this.item.files_gp,
-          files_xs: this.item.files_xs,
-          files_js: this.item.files_js,
-          files_id: this.item.files_id,
-          files_bk: this.item.files_bk,
-          files_by: this.item.files_by,
-          files_xw: this.item.files_xw,
-          files_gxzm: this.item.files_gxzm,
-          files_ssby: this.item.files_ssby,
-          files_ssxw: this.item.files_ssxw,
-          files_bsby: this.item.files_bsby,
-          files_bsxw: this.item.files_bsxw,
-          greatdiploma: this.item.greatdiploma || '本科',
-          carno: this.item.carno,
-          status: '待确认',
-        }; // 待提交元素
-
+          status: '待处理',
+        }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData('bs_entry_job' , elem);
+        const result = await manageAPI.postTableData(this.tablename , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${hrinfo.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627/物品领用登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         //设置状态
         this.loading = false;
-        this.status = '待确认';
+        this.status = elem.status;
         this.readonly = true;
 
         //弹出确认提示
