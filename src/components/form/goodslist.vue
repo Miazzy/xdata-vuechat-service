@@ -29,10 +29,10 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待确认" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已确认" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
@@ -57,7 +57,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "入职进度",
+            pageName: "领用进度",
             momentNewMsg: true,
             tabname: '1',
             id:'',
@@ -65,7 +65,7 @@ export default {
             confirmList:[],
             doneList:[],
             hContractID:'',
-            tname: 'bs_entry_job',
+            tname: 'bs_goods_receive',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
@@ -103,13 +103,13 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
+        this.tabname = storage.getStore('system_goodsreceive_list_tabname') || '1';
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
         //获取最近6个月的待用印记录
-        this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})`);
+        this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})`);
 
         this.initList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
@@ -119,7 +119,7 @@ export default {
         })
 
         //获取最近6个月的已用印记录
-        this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})`);
+        this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})`);
 
         this.confirmList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
@@ -151,15 +151,15 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done`);
         }
