@@ -276,7 +276,8 @@ export default {
         try {
           this.iswechat = tools.isWechat();
 
-          let info = await storage.getStore('system_userinfo');
+          //获取用户基础信息
+          const userinfo = await storage.getStore('system_userinfo');
 
           const item = storage.getStore(`system_${this.tablename}_item`);
 
@@ -290,7 +291,7 @@ export default {
             this.item.receive_name = item.receive_name || this.item.receive_name;
             this.item.department = item.department || this.item.department;
             this.item.remark = item.remark || this.item.remark;
-            this.item.type = item.type || this.item.type;
+            this.item.type = this.item.type || item.type || '办公用品';
             this.item.company = item.company || this.item.company;
             this.item.approve_name = item.approve_name || this.item.approve_name;
             this.item.workflow = item.workflow || this.item.workflow;
