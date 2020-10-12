@@ -7,7 +7,7 @@
 
     <header id="wx-header">
         <div class="center">
-            <span>入职进度</span>
+            <span>领用进度</span>
         </div>
     </header>
 
