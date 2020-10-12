@@ -118,6 +118,8 @@
               <van-cell-group style="margin-top:10px;" v-show="(!!item.carno || !!item.driving_license || !!item.driver_license) && (role == 'hr' || role == 'front')">
                 <van-cell value="车辆信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 行驶证号（HR需要确认/修改） -->
+                <van-field :readonly="readonly" clearable label="是否停车" v-model="item.stop_flag" placeholder="请输入您的车牌号！" v-show="!!item.stop_flag" />
+                <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="车牌号" v-model="item.carno" placeholder="请输入您的车牌号！" v-show="!!item.carno" />
                 <!-- 行驶证号（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable v-show="item.driving_license != '0000000000' && false " label="行驶证号" v-model="item.driving_license" placeholder="请输入您的行驶证编号！"  />
