@@ -69,7 +69,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in timetasks.slice(0,8)">
+          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in timetasks.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -77,7 +77,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=1`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="clickTaskDoing(item , 1);">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -88,7 +88,7 @@
               </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in timetasks.slice(8)">
+          <div class="list-info" style="margin-top:0px;" v-show="tabname == 1 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in timetasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -96,7 +96,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=1`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="clickTaskDoing(item , 1);">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -118,7 +118,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in doingtasks.slice(0,8)">
+          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in doingtasks.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -126,7 +126,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="clickTaskDoing(item)">
+              <div class="desc-box" @click="clickTaskDoing(item , 2);">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -137,7 +137,7 @@
               </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in doingtasks.slice(8)">
+          <div class="list-info" v-show="tabname == 2 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in doingtasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -145,7 +145,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="clickTaskDoing(item)">
+              <div class="desc-box" @click="clickTaskDoing(item , 2)">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -167,7 +167,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in donetasks.slice(0,8)">
+          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in donetasks.slice(0,8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -175,7 +175,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="clickTaskDone(item);">
+            <div class="desc-box" @click="clickTaskDone(item , 3);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -186,7 +186,7 @@
             </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in donetasks.slice(8)">
+          <div class="list-info" v-show="tabname == 3 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in donetasks.slice(8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -194,7 +194,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="clickTaskDone(item);">
+            <div class="desc-box" @click="clickTaskDone(item , 3);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -216,7 +216,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in announces.slice(0,8)">
+          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in announces.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -235,7 +235,7 @@
               </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id" v-for=" (item , index) in announces.slice(8)">
+          <div class="list-info" v-show="tabname == 4 && !loading && !isLoading" :key="item.id + '' + index" v-for=" (item , index) in announces.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -521,138 +521,26 @@ export default {
 
         this.timetasks = tlist;
       },
-      async clickTaskDone(item){
+      async clickTaskDone(item, tabname = 1){
         if(item.tname == 'bs_seal_regist'){
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
         } else {
-          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
       },
-      async clickTaskDoing(item){
+      async clickTaskDoing(item , tabname = 1){
         if(item.tname == 'bs_seal_regist' && item.topic.includes('#待用印')){
           this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=seal&view=edit&back=/explore`); //跳转到相应的用印界面
         } else if(item.tname == 'bs_seal_regist' && item.topic.includes('#待移交')){
           this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else {
-          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
       }
     }
 }
 </script>
-<style>
+<style scoped>
     @import "../../assets/css/explore.css";
-    #explore {
-      margin-top: 28px;
-    }
-    .app-footer {
-      display:block;
-    }
-    .weui-cell_tab {
-      height: 30px;text-align:center;float:left;width:24.5%;margin:0px 0px;
-    }
-    .wechat-list .list-info {
-        position: relative;
-        z-index: 2;
-        left: 0;
-        width: 100%;
-        height: 64px;
-        padding: 8px;
-        background-color: #fff;
-    }
-    .wechat-list .list-info .header-box {
-        position: relative;
-        float: left;
-        width: 48px;
-        height: 48px;
-        margin-right: 10px;
-        margin-left: 0px;
-    }
-    .wechat-list .new-msg-count {
-        position: absolute;
-        font-style: normal;
-        font-family: PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Helvetica;
-        right: -9px;
-        top: -5px;
-        z-index: 2;
-        padding: 0 4px;
-        width: auto;
-        min-width: 18px;
-        height: 18px;
-        line-height: 18px;
-        border-radius: 9px;
-        color: #fff;
-        text-align: center;
-        font-size: 14px;
-        background-color: #f43531;
-    }
-    .wechat-list .new-msg-dot {
-        position: absolute;
-        right: -4px;
-        top: -3px;
-        width: 10px;
-        height: 10px;
-        z-index: 2;
-        border-radius: 50%;
-        color: #ffffff;
-        text-align: center;
-        background-color: red;
-        background-color: #f43531;
-        font-size: 0;
-    }
-    .wechat-list .list-info .header-box .header {
-        height: 100%;
-        border-radius: 5px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        display: -webkit-flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-        -webkit-box-align: start;
-        -webkit-align-items: flex-start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-        overflow: hidden;
-        background: #dddbdb;
-    }
-    .wechat-list .list-info .header-box .header img {
-        width: 10%;
-        height: auto;
-        -webkit-box-flex: 2;
-        -webkit-flex-grow: 2;
-        -ms-flex-positive: 2;
-        flex-grow: 2;
-        border: 0;
-    }
-    .wechat-list .list-info .desc-box {
-        overflow: hidden;
-    }
-    .wechat-list .list-info .desc-box .desc-time {
-        float: right;
-        color: #b8b8b8;
-    }
-    .wechat-list .list-info .desc-box .desc-author {
-        height: 25px;
-        line-height: 25px;
-        font-size: 16px;
-        color: #000;
-    }
-    .wechat-list .list-info .desc-box .desc-msg {
-        height: 23px;
-        line-height: 23px;
-        font-size: 14px;
-        color: #888;
-    }
-    .wechat-list .list-info .desc-box .desc-msg .desc-mute {
-        float: right;
-        color: #b8b8b8;
-    }
 </style>

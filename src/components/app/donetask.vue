@@ -33,7 +33,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/app/donetask?tabname=1`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="clickTaskDone(item, 1);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -55,7 +55,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/app/donetask?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="clickTaskDone(item, 2);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -199,6 +199,23 @@ export default {
         });
 
       },
+      async clickTaskDone(item , tabname = 1){
+        if(item.tname == 'bs_seal_regist'){
+          //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=finish&view=view&back=/app/donetask?tabname=${tabname}`);
+        } else {
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/app/donetask?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)
+        }
+      },
+      async clickTaskDoing(item , tabname){
+        if(item.tname == 'bs_seal_regist' && item.topic.includes('#待用印')){
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=seal&view=edit&back=/app/doingtask?tabname=${tabname}`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_seal_regist' && item.topic.includes('#待移交')){
+          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=front&view=edit&back=/app/doingtask?tabname=${tabname}`); //跳转到相应的用印界面
+        } else {
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/app/doingtask?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
+        }
+      }
     }
 }
 </script>
@@ -344,6 +361,4 @@ export default {
         float: right;
         color: #b8b8b8;
     }
-
-
 </style>
