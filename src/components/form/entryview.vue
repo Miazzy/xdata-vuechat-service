@@ -376,6 +376,7 @@ export default {
               writingtools:'是', //是否需要签字笔/擦
               badge:'是',        //员工工牌
               ban_card:'否',     //门禁卡牌
+              stop_flag:'',
               othertools:'暂无', //其他用品
               driving_license:'0000000000',//行驶证
               driver_license:'0000000000', //驾驶证
@@ -891,6 +892,7 @@ export default {
             bank_name: value.bank_name,  //银行名称
             bank_card: value.bank_card,  //工资银行卡号
             ban_card: value.ban_card,    //门禁卡
+            stop_flag: value.stop_flag,
 
             join_time: dayjs(value.join_time).format('YYYY-MM-DD'), //入职时间
             hr_name: value.hr_name,   //对接HR

@@ -1222,6 +1222,7 @@ export default {
           files_ssxw: this.item.files_ssxw,
           files_bsby: this.item.files_bsby,
           files_bsxw: this.item.files_bsxw,
+          stop_flag: this.item.stop_flag,
           greatdiploma: this.item.greatdiploma || '本科',
           carno: this.item.carno,
           status: '待确认',

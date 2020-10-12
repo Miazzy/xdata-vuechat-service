@@ -191,16 +191,17 @@ export default {
         //获取tabname
         this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
 
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
-
-
+        //查询员工信息列表
+        await this.queryTabList(this.tabname ,0);
 
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
 
       },
       async queryTabList(tabname , page){
+
+        //获取最近6个月对应的日期
+        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
         //如果存在搜索关键字
         if(this.searchWord) {
