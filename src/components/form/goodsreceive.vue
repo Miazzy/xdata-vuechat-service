@@ -283,12 +283,14 @@ export default {
 
           this.item.type = this.goodstype[tools.getUrlParam('type')];  //用印管理员成员组
 
+          debugger;
+
           //自动回显刚才填写的用户基础信息
           if(item){
             this.item.create_by = item.create_by || this.item.create_by;
             this.item.name = item.name || this.item.name;
             this.item.amount = item.amount || this.item.amount;
-            this.item.receive_name = item.receive_name || this.item.receive_name;
+            this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
             this.item.department = item.department || this.item.department;
             this.item.remark = item.remark || this.item.remark;
             this.item.type = this.item.type || item.type || '办公用品';
@@ -297,6 +299,8 @@ export default {
             this.item.workflow = item.workflow || this.item.workflow;
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
+          } else {
+            this.item.receive_name = userinfo.realname || this.item.receive_name ;
           }
 
         } catch (error) {
