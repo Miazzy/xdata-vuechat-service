@@ -76,7 +76,7 @@
 
               <van-cell-group style="margin-top:10px;">
 
-                <van-cell value="情况说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="备注说明" v-model="item.remark"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
@@ -162,6 +162,17 @@ export default {
               id: '',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
+              receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
+              name:'', //领用物品名称
+              amount:'',//领用数量
+              receive_name:'',//领用人员名称
+              department:'',//领用部门名称
+              remark:'',//备注说明
+              type:'',//领用类别
+              company:'',//单位名称
+              approve_name:'',//领用审批人员
+              workflow:'',//关联流程
+              approve:'',//领用审批人员
               status: '',
             },
             backPath:'/app',
