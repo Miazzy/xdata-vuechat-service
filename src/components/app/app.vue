@@ -60,39 +60,39 @@
               考勤
             </div>
           </div>
+          <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app');" style="width:24.8%;" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
+            <div class="weui-cell_app_bd">
+              入职
+            </div>
+          </div>
           <div class="weui-cell_app_hd">
            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
             <div class="weui-cell_app_bd">
               请假
             </div>
           </div>
+        </div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell" style="display:none;">
           <div class="weui-cell_app_hd">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
             <div class="weui-cell_app_bd">
               外出
             </div>
           </div>
-        </div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" style="width:24.8%;" >
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
             <div class="weui-cell_app_bd">
               加班
             </div>
           </div>
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" style="width:24.8%;" >
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
             <div class="weui-cell_app_bd">
               物品
             </div>
           </div>
-          <div class="weui-cell_app_hd" @click="$router.push('/app/sealinfo');">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
-            <div class="weui-cell_app_bd">
-              用章
-            </div>
-          </div>
-          <div class="weui-cell_app_hd">
+          <div class="weui-cell_app_hd" style="width:24.8%; display:block;">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
             <div class="weui-cell_app_bd">
               档案

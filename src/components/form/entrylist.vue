@@ -7,6 +7,9 @@
 
     <header id="wx-header">
         <div class="center">
+            <router-link :to="back" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
             <span>入职进度</span>
         </div>
     </header>
@@ -73,6 +76,7 @@ export default {
             },
             isLoading:false,
             loading:false,
+            back:'/app',
         }
     },
     activated() {
@@ -116,7 +120,7 @@ export default {
           item.tel = '';
           item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
           item.isDefault = true;
-        })
+        });
 
         //获取最近6个月的已用印记录
         this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})`);
@@ -126,7 +130,7 @@ export default {
           item.tel = '';
           item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
           item.isDefault = true;
-        })
+        });
 
         //获取最近6个月的已领取记录
         this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
@@ -136,7 +140,10 @@ export default {
           item.tel = '';
           item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
           item.isDefault = true;
-        })
+        });
+
+        //获取返回页面
+        this.back = tools.getUrlParam('back') || '/app';
 
       },
       async selectHContract(){
