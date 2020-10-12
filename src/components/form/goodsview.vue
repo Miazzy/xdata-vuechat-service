@@ -88,7 +88,7 @@
           </van-cell-group>
 
           <div style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >提交</van-button>
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -315,7 +315,7 @@ export default {
       },
 
       // 用户提交入职登记表函数
-      async handleApply() {
+      async handleConfirm() {
 
         //显示加载状态
         this.loading = true;
