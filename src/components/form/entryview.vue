@@ -7,6 +7,9 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center">
+            <router-link :to="back" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
             <span>入职管理</span>
         </div>
     </header>
@@ -416,7 +419,7 @@ export default {
               status: '',
             },
             downloadURL:'https://upload.yunwisdom.club:30443/',
-            backPath:'/app',
+            back:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -923,6 +926,9 @@ export default {
           await this.queryAdminMan();
           await this.queryFrontMan();
           await this.queryMealMan();
+
+          //获取返回页面
+          this.back = tools.getUrlParam('back') || '/app';
 
         } catch (error) {
           console.log(error);

@@ -160,15 +160,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
+          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr&back=/app/entrylist`);
         } else if(this.tabname == '2'){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
+          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr&back=/app/entrylist`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done`);
+          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=/app/entrylist`);
         }
 
       },
