@@ -197,6 +197,41 @@
         </div>
       </div>
 
+       <div class="weui-cells">
+        <div class="weui-cell-title">领用借用</div>
+        <div class="weui-cell weui-cell-app_access" id="scanCell">
+
+          <div class="weui-cell_app_hd" @click="sealApply();">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
+            <div class="weui-cell_app_bd" >
+              办公
+            </div>
+          </div>
+
+          <div class="weui-cell_app_hd" @click="sealApprove();">
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
+            <div class="weui-cell_app_bd">
+              药品
+            </div>
+          </div>
+
+          <div class="weui-cell_app_hd" @click="sealFront();" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
+            <div class="weui-cell_app_bd" >
+              防疫
+            </div>
+          </div>
+
+           <div class="weui-cell_app_hd" @click="sealFront();" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
+            <div class="weui-cell_app_bd" >
+              借用
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <div class="weui-cells" style="margin-top:80px;height:0px;">
       </div>
 
