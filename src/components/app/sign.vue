@@ -82,7 +82,7 @@ export default {
             locationFlag:'',
             ip:'',
             peer:null,
-            company:'成都鹏程晟泰建筑公司',
+            company:'领地集团',
             ipaddrs:['118.114.247.236', '125.70.13.126' , '101.206.168.248'],
         }
     },

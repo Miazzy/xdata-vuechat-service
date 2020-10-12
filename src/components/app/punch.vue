@@ -13,7 +13,7 @@
       <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cell punch-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;margin-top:5px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 0px solid #329ff0;text-align:left;` : `border-bottom: 0px solid #329ff0;text-align:left;` ">
-            考勤组：鹏程晟泰建筑有限公司
+            考勤组：领地集团
           </div>
         </div>
       </div>

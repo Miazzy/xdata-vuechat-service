@@ -197,7 +197,7 @@
         </div>
       </div>
 
-       <div class="weui-cells">
+      <div class="weui-cells">
         <div class="weui-cell-title">领用借用</div>
         <div class="weui-cell weui-cell-app_access" id="scanCell">
 

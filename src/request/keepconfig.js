@@ -47,7 +47,7 @@ window._CONFIG['ipLocationURL'] = `https://apis.map.qq.com/ws/location/v1/ip?key
 //查询天气预报URL
 window._CONFIG['weatherURL'] = `https://weather.shengtai.club`;
 //设置公式名称
-window._CONFIG['company'] = '鹏程';
+window._CONFIG['company'] = '领地集团';
 //文档转换时间
 window._CONFIG['office_expire_time'] = 10000;
 
