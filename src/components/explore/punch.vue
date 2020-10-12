@@ -3,7 +3,7 @@
   <div id="punch" style="margin-top: 0px;" >
     <header id="wx-header">
         <div class="center">
-            <router-link to="/explore" @click="$router.push(`/explore`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(back)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>打卡</span>
@@ -133,19 +133,30 @@
                 locationFlag:'',
                 ip:'',
                 peer:null,
+                back:'/app',
                 ipaddrs:['118.114.247.236' , '118.114.237.201' ,'118.114.247.208', '222.212.88.71', '125.70.13.126' , '101.206.168.248'],
             }
         },
         async activated() {
           this.$store.commit("toggleTipsStatus", -1);
-          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-          this.amapGeo();
-          this.getMapIP();
+          try {
+            this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+            this.amapGeo();
+            this.getMapIP();
+          } catch (error) {
+            console.log(error);
+          }
+          this.back = tools.getUrlParam('back') || '/app';
         },
         async mounted() {
-          this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
-          this.amapGeo();
-          this.getMapIP();
+          try {
+            this.ctime =  dayjs().format('YYYY-MM-DD HH:mm:ss');
+            this.amapGeo();
+            this.getMapIP();
+          } catch (error) {
+            console.log(error);
+          }
+          this.back = tools.getUrlParam('back') || '/app';
         },
         methods: {
           encodeURI(value){
@@ -254,6 +265,7 @@
               this.locationTips = this.location;
               this.locationFlag = '× 未进入考勤范围 ';
             }
+
           },
           getIPs(callback){
               var ip_dups = {};
