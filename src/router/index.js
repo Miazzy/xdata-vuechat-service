@@ -218,6 +218,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/goodsreceive.vue"], resolve)
         }
     }, {
+        path: '/app/goodsview',
+        name: "领用确认",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/goodsview.vue"], resolve)
+        }
+    }, {
         path: '/app/goodslist',
         name: "领用进度",
         components: {

@@ -10,7 +10,7 @@
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>物品领用</span>
+            <span>物品领用确认</span>
         </div>
     </header>
 
@@ -56,9 +56,9 @@
                 <!-- 领用类别（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="false" clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -66,15 +66,15 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 领用人员（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-field :readonly="readonly" :required="false" clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
                 <!-- 单位名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
+                <van-field :readonly="readonly" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+                <van-field :readonly="readonly" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
 
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
@@ -283,8 +283,11 @@ export default {
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
-          //获取缓存信息
-          const item = storage.getStore(`system_${this.tablename}_item@${userinfo.realname}`);
+          //查询编号
+          const id = tools.getUrlParam('id');
+
+           //查询用印数据
+          const item = await query.queryTableData(this.tablename , id);
 
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
@@ -297,16 +300,12 @@ export default {
             this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
             this.item.department = item.department || this.item.department;
             this.item.remark = item.remark || this.item.remark;
-            this.item.type = this.item.type || item.type || '办公用品';
+            this.item.type = item.type || this.item.type || '办公用品';
             this.item.company = item.company || this.item.company;
             this.item.approve_name = item.approve_name || this.item.approve_name;
             this.item.workflow = item.workflow || this.item.workflow;
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
-          } else {
-            this.item.receive_name = userinfo.realname || this.item.receive_name ;
-            this.item.department = userinfo.department.name;
-            this.item.company = userinfo.parent_company.name;
           }
 
         } catch (error) {
