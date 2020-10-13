@@ -376,6 +376,7 @@ export default {
         //表单ID
         const id = this.item.id;
         const type = tools.getUrlParam('statustype');
+        const pid = tools.getUrlParam('pid');
 
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${type}&role=receive`);
@@ -411,7 +412,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist.filter(item => {
-          return item.main_value == id;
+          return item.main_value == id && item.id == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
@@ -494,6 +495,7 @@ export default {
 
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
+        const pid = tools.getUrlParam('pid');
 
         //表单ID
         const id = this.item.id;
@@ -514,7 +516,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist.filter(item => {
-          return item.main_value == id;
+          return item.main_value == id && item.id == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)

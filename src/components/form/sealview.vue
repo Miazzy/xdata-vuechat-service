@@ -1033,6 +1033,7 @@ export default {
 
         //获取用户信息
         const userinfo = await storage.getStore('system_userinfo');
+        const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1162,7 +1163,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist.filter(item => {
-          return item.main_value == id;
+          return item.main_value == id && item.id == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
@@ -1212,6 +1213,7 @@ export default {
 
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
+        const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1326,7 +1328,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist.filter(item => {
-          return item.main_value == id;
+          return item.main_value == id && item.id == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
@@ -1424,6 +1426,7 @@ export default {
 
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
+        const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1521,7 +1524,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist.filter(item => {
-          return item.main_value == id;
+          return item.main_value == id && item.id == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)

@@ -527,22 +527,22 @@ export default {
       },
       async clickTaskDone(item, tabname = 1){
         if(item.tname == 'bs_seal_regist'){ //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore`);
         } else if(item.tname == 'bs_goods_receive'){ //跳转到相应的物品领用界面
-          this.$router.push(`/app/goodsview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore`);
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
       },
       async clickTaskDoing(item , tabname = 1){
         if(item.tname == 'bs_seal_regist' && item.topic.includes('#待用印')){
-          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=seal&view=edit&back=/explore`); //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=seal&view=edit&back=/explore`); //跳转到相应的用印界面
         } else if(item.tname == 'bs_seal_regist' && item.topic.includes('#待移交')){
-          this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=front&view=edit&back=/explore`); //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else if(item.tname == 'bs_goods_receive' && item.topic.includes('#待处理')){
-          this.$router.push(`/app/goodsview?id=${item.id}&statustype=none&type=none&role=front&view=edit&back=/explore`); //跳转到相应的用印界面
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else if(item.tname == 'bs_goods_receive' && item.topic.includes('#已领取')){
-          this.$router.push(`/app/goodsview?id=${item.id}&statustype=none&type=none&role=receive&view=edit&back=/explore`); //跳转到相应的用印界面
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=receive&view=edit&back=/explore`); //跳转到相应的用印界面
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
