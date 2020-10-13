@@ -84,11 +84,20 @@
 
               </van-cell-group>
 
+              <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
+
+                <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <!-- 流程状态（HR需要确认/修改） -->
+                <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
+
+              </van-cell-group>
+
             </van-form>
 
           </van-cell-group>
 
-          <div style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div v-show="item.status ==='待处理' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
           </div>
 
@@ -296,6 +305,7 @@ export default {
 
           //自动回显刚才填写的用户基础信息
           if(item){
+            this.item.id = id;
             this.item.serialid = item.serialid || this.item.serialid;
             this.item.create_by = item.create_by || this.item.create_by;
             this.item.name = item.name || this.item.name;
@@ -327,7 +337,7 @@ export default {
         const userinfo = await storage.getStore('system_userinfo');
 
         //表单ID
-        const id = tools.queryUniqueID();
+        const id = this.item.id;
 
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${this.item.type}&role=front`);
@@ -346,7 +356,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , elem);
+        const result = await manageAPI.patchTableData(this.tablename , id , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
@@ -356,6 +366,7 @@ export default {
         this.loading = false;
         this.status = elem.status;
         this.readonly = true;
+        this.item.status = elem.status;
 
         //弹出确认提示
         await vant.Dialog.alert({
