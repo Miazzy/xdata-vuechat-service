@@ -202,6 +202,8 @@ export default {
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        //设置查询语句
+        var searchSql = '';
 
         //如果存在搜索关键字
         if(this.searchWord) {
@@ -209,7 +211,7 @@ export default {
         }
 
         //获取最近6个月的待用印记录
-        this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})`);
+        this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
 
         this.initList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
@@ -219,7 +221,7 @@ export default {
         });
 
         //获取最近6个月的已用印记录
-        this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})`);
+        this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
 
         this.confirmList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
@@ -229,7 +231,7 @@ export default {
         });
 
         //获取最近6个月的已领取记录
-        this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
+        this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
 
         this.doneList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,

@@ -171,4 +171,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
+    @import "../../assets/css/goodslist.css";
 </style>

@@ -374,4 +374,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
+    @import "../../assets/css/goodsview.css";
 </style>
