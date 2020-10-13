@@ -414,7 +414,7 @@ export default {
           employee       : front_name ,//varchar(1000) null comment '操作职员',
           approve_user   : front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已领取]',//text          null comment '操作意见',
+          action_opinion : '审批领用申请',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : '前台',//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
