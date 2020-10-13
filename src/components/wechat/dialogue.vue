@@ -1,9 +1,13 @@
 <template>
     <div class="dialogue">
         <header id="wx-header">
-            <div class="other">
-                <router-link :to="{path:'/wechat/dialogue/dialogue-info',query: { msgInfo: msgInfo}}" tag="span" class="iconfont icon-chat-group" v-show="$route.query.group_num&&$route.query.group_num!=1"></router-link>
-                <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: msgInfo}}" tag="span" class="iconfont icon-chat-friends" v-show="$route.query.group_num==1"></router-link>
+            <div class="other" style="right:0px;">
+                <router-link :to="{path:'/wechat/dialogue/dialogue-info',query: { msgInfo: msgInfo}}" tag="span" class="iconfont" v-show="$route.query.group_num&&$route.query.group_num!=1">
+                  <van-icon name="weapp-nav" size="1.3rem" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+                </router-link>
+                <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: msgInfo}}" tag="span" class="iconfont" v-show="$route.query.group_num==1">
+                  <van-icon name="weapp-nav" size="1.3rem" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+                </router-link>
             </div>
             <div class="center">
                 <router-link to="/wechat" tag="div" class="iconfont icon-left">
@@ -14,7 +18,7 @@
             </div>
         </header>
         <section class="dialogue-section clearfix" v-on:click="MenuOutsideClick">
-            <div class="row clearfix" v-for="item in msgInfo.msg">
+            <div class="row clearfix" :key="item.headerUrl" v-for="item in msgInfo.msg">
                 <img :src="item.headerUrl" class="header">
                 <p class="text" v-more>{{item.text}}</p>
             </div>
@@ -27,8 +31,12 @@
         </section>
         <footer class="dialogue-footer">
             <div class="component-dialogue-bar-person">
-                <span class="iconfont icon-dialogue-jianpan" v-show="!currentChatWay" v-on:click="currentChatWay=true"></span>
-                <span class="iconfont icon-dialogue-voice" v-show="currentChatWay" v-on:click="currentChatWay=false"></span>
+                <span class="iconfont " v-show="!currentChatWay" v-on:click="currentChatWay=true">
+                  <van-icon name="volume" style="margin-top: 5px;    transform: scale(.85);"/>
+                </span>
+                <span class="iconfont " v-show="currentChatWay" v-on:click="currentChatWay=false">
+                  <van-icon name="volume-o" style="margin-top: 5px;    transform: scale(.85);"/>
+                </span>
                 <div class="chat-way" v-show="!currentChatWay">
                     <div class="chat-say" v-press>
                         <span class="one">按住 说话</span>
@@ -38,8 +46,12 @@
                 <div class="chat-way" v-show="currentChatWay">
                     <input class="chat-txt" type="text" v-on:focus="focusIpt" v-on:blur="blurIpt"/>
                 </div>
-                <span class="expression iconfont icon-dialogue-smile"></span>
-                <span class="more iconfont icon-dialogue-jia"></span>
+                <span class="expression iconfont">
+                  <van-icon name="smile-o" style="margin-top: 5px;margin-left:2px;"/>
+                </span>
+                <span class="more iconfont ">
+                  <van-icon name="add-o" style="margin-top: 5px;"/>
+                </span>
                 <div class="recording" style="display: none;" id="recording">
                     <div class="recording-voice" style="display: none;" id="recording-voice">
                         <div class="voice-inner">
@@ -74,7 +86,7 @@
                 pageName: this.$route.query.name,
                 currentChatWay: true, //ture为键盘打字 false为语音输入
                 timer: null
-                    // sayActive: false // false 键盘打字 true 语音输入
+                // sayActive: false // false 键盘打字 true 语音输入
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -190,7 +202,15 @@
 </script>
 <style>
     @import "../../assets/css/dialogue.css";
-    .say-active {
-        background: #c6c7ca;
+    .dialogue-section {
+        height: 100%;
+        background: #fefefe;
+        padding: 2%;
+    }
+    .dialogue-section .row {
+        width: 80%;
+        margin-top: 30px;
+        margin-bottom: -10px;
+        margin-left: 0px;
     }
 </style>

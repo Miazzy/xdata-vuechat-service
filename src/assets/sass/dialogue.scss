@@ -5,76 +5,78 @@
 //      top: 0;
 //      width: 100%;
 // }
-.dialogue-section {
-    // margin-top: 45px;
-    height: 100%;
-    // background: url("https://sinacloud.net/vue-wechat/images/bg/alarm.jpg") center center;
-    padding: 2%;
-    .row {
-        width: 80%;
-        margin-top: 30px;
-        margin-bottom: -10px;
-        .header {
-            width: 35px;
-            float: left;
-            display: block;
-            margin-left: 2px;
+.dialogue {
+    #wx-header .other {
+        position: absolute;
+        cursor: pointer;
+        right: 0px;
+    }
+    .dialogue-section {
+        height: 100%;
+        padding: 2%;
+        .row {
+            width: 80%;
+            margin-top: 30px;
+            margin-bottom: -10px;
+            .header {
+                width: 35px;
+                float: left;
+                display: block;
+                margin-left: 2px;
+            }
+            .text {
+                float: left;
+                background: #fff;
+                padding: 8px;
+                box-sizing: border-box;
+                margin-left: 10px;
+                position: relative;
+                border-radius: 4px;
+                max-width: 80%;
+                font-size: 14px;
+                &:before {
+                    width: 0;
+                    height: 0;
+                    position: absolute;
+                    left: -12px;
+                    top: 11px;
+                    content: "";
+                    border: 6px solid transparent;
+                    border-right-color: #fff;
+                }
+            }
         }
-        .text {
-            float: left;
-            /* line-height: 40px; */
-            background: #fff;
-            /* display: block; */
-            padding: 8px;
-            box-sizing: border-box;
-            /* height: 40px; */
-            margin-left: 10px;
-            position: relative;
+        .msg-more {
+            position: absolute;
+            display: none;
+            width: 190px;
+            padding: 3px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            top: 20px;
+            left: 20px;
             border-radius: 4px;
-            max-width: 80%;
-            font-size: 14px;
-            &:before {
+            &:after {
                 width: 0;
                 height: 0;
                 position: absolute;
-                left: -12px;
-                top: 11px;
+                left: 18px;
+                top: 25px;
                 content: "";
                 border: 6px solid transparent;
-                border-right-color: #fff;
+                border-top-color: #000;
             }
-        }
-    }
-    .msg-more {
-        position: absolute;
-        display: none;
-        width: 190px;
-        padding: 3px;
-        left: 0;
-        background: #000;
-        color: #fff;
-        top: 20px;
-        left: 20px;
-        border-radius: 4px;
-        &:after {
-            width: 0;
-            height: 0;
-            position: absolute;
-            left: 18px;
-            top: 25px;
-            content: "";
-            border: 6px solid transparent;
-            border-top-color: #000;
-        }
-        ul {
-            li {
-                float: left;
-                width: 46px;
-                /* margin-right: 1px; */
-                border-right: 1px solid #fff;
-                text-align: center;
-                &:last-child {
-                    border-right-width: 0;
+            ul {
+                li {
+                    float: left;
+                    width: 46px;
+                    /* margin-right: 1px; */
+                    border-right: 1px solid #fff;
+                    text-align: center;
+                    &:last-child {
+                        border-right-width: 0;
+                    }
                 }
             }
         }
@@ -397,4 +399,8 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
+}
+
+.say-active {
+    background: #c6c7ca;
 }
