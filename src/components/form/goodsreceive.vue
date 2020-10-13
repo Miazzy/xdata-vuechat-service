@@ -370,6 +370,10 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
+        //获取后端配置前端管理员组
+        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
+        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
+
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
           id: tools.queryUniqueID(),
@@ -403,12 +407,12 @@ export default {
           id: tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
-          proponents: seal,
+          proponents: front,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : seal_man ,//varchar(1000) null comment '操作职员',
-          approve_user   : seal ,//varchar(100)  null comment '审批人员',
+          employee       : front_name ,//varchar(1000) null comment '操作职员',
+          approve_user   : front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
           action_opinion : '审批领用申请[已领取]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
