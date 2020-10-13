@@ -93,6 +93,7 @@ export default {
               '2': 'confirmList',
               '3': 'doneList',
             },
+            searchWord:'',
             searchFlag: false,
             dropMenuOldValue:'',
             dropMenuValue:'',
@@ -171,7 +172,6 @@ export default {
           case 4: //重置数据
             this.dropMenuValue = '';
             this.dropMenuOldValue = '';
-            this.sealType = '';
             this.searchFlag = false;
             this.searchWord = '';
             await this.queryTabList(this.tabname , 0);
