@@ -180,9 +180,6 @@ export default {
         //获取tabname
         this.tabname = storage.getStore('system_goodsreceive_list_tabname') || '1';
 
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
-
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
@@ -191,6 +188,9 @@ export default {
 
       },
       async queryTabList(tabname , page){
+
+        //获取最近6个月对应的日期
+        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
