@@ -1163,7 +1163,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
-          return item.main_value == id && item.id == pid;
+          return item.id == id && item.pid == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
@@ -1328,7 +1328,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
-          return item.main_value == id && item.id == pid;
+          return item.id == id && item.pid == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
@@ -1524,7 +1524,7 @@ export default {
 
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
-          return item.main_value == id && item.id == pid;
+          return item.id == id && item.pid == pid;
         });
 
         //同时删除本条待办记录当前(印章管理员)
