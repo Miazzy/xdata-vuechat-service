@@ -154,12 +154,15 @@ export default {
         switch (val) {
           case 0: //只显示合同类信息
             this.dropMenuOldValue = this.sealType = val;
+            await this.queryTabList(this.tabname , 0);
             break;
           case 1: //只显示非合同类信息
             this.dropMenuOldValue = this.sealType = val;
+            await this.queryTabList(this.tabname , 0);
             break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
+            await this.queryTabList(this.tabname , 0);
             break;
           case 3: //查询数据
             this.dropMenuValue = this.dropMenuOldValue;
@@ -171,7 +174,7 @@ export default {
             this.sealType = '';
             this.searchFlag = false;
             this.searchWord = '';
-            await this.queryFresh();
+            await this.queryTabList(this.tabname , 0);
             break;
           case 5: //返回应用
             this.$router.push(`/app`);
