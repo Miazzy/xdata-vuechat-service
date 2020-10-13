@@ -102,7 +102,7 @@
           </div>
 
           <div v-show="item.status ==='已领取' && role == 'receive' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >完成</van-button>
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >完成</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -378,6 +378,40 @@ export default {
         await vant.Dialog.alert({
             title: '温馨提示',
             message: '已确认物品领用申请！',
+          });
+
+      },
+      // 用户提交入职登记表函数
+      async handleFinaly() {
+
+        //显示加载状态
+        this.loading = true;
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        //表单ID
+        const id = this.item.id;
+
+        //第一步 保存用户数据到数据库中
+        const elem = {
+          id,
+          status: '已完成',
+        }; // 待处理元素
+
+        //第二步，向表单提交form对象数据
+        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+
+        //设置状态
+        this.loading = false;
+        this.status = elem.status;
+        this.readonly = true;
+        this.item.status = elem.status;
+
+        //弹出确认提示
+        await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '已完成物品领用申请！',
           });
 
       }
