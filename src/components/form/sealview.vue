@@ -1160,6 +1160,11 @@ export default {
         //查询当前所有待办记录
         const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
+        //过滤出只关联当前流程的待办数据
+        tlist.filter(item => {
+          return item.main_value == id;
+        });
+
         //同时删除本条待办记录当前(印章管理员)
         await workflow.deleteViewProcessLog(tlist);
 
@@ -1318,6 +1323,11 @@ export default {
 
         //查询当前所有待办记录
         const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist.filter(item => {
+          return item.main_value == id;
+        });
 
         //同时删除本条待办记录当前(印章管理员)
         await workflow.deleteViewProcessLog(tlist);
@@ -1508,6 +1518,11 @@ export default {
 
         //查询当前所有待办记录
         const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist.filter(item => {
+          return item.main_value == id;
+        });
 
         //同时删除本条待办记录当前(印章管理员)
         await workflow.deleteViewProcessLog(tlist);
