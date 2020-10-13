@@ -97,8 +97,12 @@
 
           </van-cell-group>
 
-          <div v-show="item.status ==='待处理' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
+          </div>
+
+          <div v-show="item.status ==='已领取' && role == 'receive' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >完成</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -165,6 +169,7 @@ export default {
             iswechat:false,
             isfirst:true,
             dockFlag: false,
+            role:'front',
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
@@ -296,6 +301,7 @@ export default {
 
           //查询编号
           const id = tools.getUrlParam('id');
+          this.role = tools.getUrlParam('role');
 
            //查询用印数据
           const item = await query.queryTableData(this.tablename , id);
@@ -340,7 +346,7 @@ export default {
         const id = this.item.id;
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${this.item.type}&role=front`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${this.item.type}&role=receive`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -359,7 +365,7 @@ export default {
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         //设置状态
