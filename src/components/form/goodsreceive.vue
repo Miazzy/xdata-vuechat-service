@@ -351,6 +351,9 @@ export default {
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
 
+        //发送自动设置排序号请求
+        const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');

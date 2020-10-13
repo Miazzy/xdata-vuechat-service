@@ -5,7 +5,7 @@
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
-    <header id="wx-header">
+    <header id="wx-header" v-show="!searchFlag">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
@@ -16,6 +16,19 @@
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
             </van-dropdown-menu>
+        </div>
+    </header>
+     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+       <div>
+          <van-search
+            v-model="searchWord"
+            show-action
+            placeholder="请输入搜索关键词"
+          >
+            <template #action>
+              <div @click="headMenuSearch();" >搜索</div>
+            </template>
+          </van-search>
         </div>
     </header>
 
