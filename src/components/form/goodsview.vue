@@ -408,10 +408,10 @@ export default {
         const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
 
         //查询当前所有待办记录
-        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
         //过滤出只关联当前流程的待办数据
-        tlist.filter(item => {
+        tlist = tlist.filter(item => {
           return item.main_value == id && item.id == pid;
         });
 
@@ -512,10 +512,10 @@ export default {
         /************************  工作流程日志(开始)  ************************/
 
         //查询当前所有待办记录
-        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
         //过滤出只关联当前流程的待办数据
-        tlist.filter(item => {
+        tlist = tlist.filter(item => {
           return item.main_value == id && item.id == pid;
         });
 
