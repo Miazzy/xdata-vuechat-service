@@ -360,7 +360,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已经向前台客户推送物品领用申请！',
+            message: '已确认物品领用申请！',
           });
 
       }
