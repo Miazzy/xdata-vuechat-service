@@ -180,6 +180,7 @@ export default {
             fuserList:[],
             muserid:'',
             muserList:[],
+            processLogList:[],
             iswechat:false,
             isfirst:true,
             dockFlag: false,
