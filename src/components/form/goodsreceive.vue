@@ -331,7 +331,7 @@ export default {
         const type = tools.getUrlParam('type');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${type}&role=front`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${type}&type=${type}&role=front`);
 
         //第一步 保存用户数据到数据库中
         const elem = {

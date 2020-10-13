@@ -344,7 +344,7 @@ export default {
 
         //表单ID
         const id = this.item.id;
-        const type = tools.getUrlParam('type');
+        const type = tools.getUrlParam('statustype');
 
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${type}&role=receive`);
