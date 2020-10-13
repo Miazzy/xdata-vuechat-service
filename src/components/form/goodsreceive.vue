@@ -328,7 +328,7 @@ export default {
         const id = tools.queryUniqueID();
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsreceive?id=${id}&statustype=${this.item.type}&role=front`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=${this.item.type}&role=front`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
