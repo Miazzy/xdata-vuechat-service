@@ -71,45 +71,54 @@ export async function queryProcessLogWait(
 
     try {
         var res = await superagent.get(queryURL).set('accept', 'json');
-        console.log(res);
         result = res.body;
-        result = window.__.filter(result, function(item) {
-            //格式化日期
-            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-            var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
-            item['createtime'] = dtime;
-            item['timestamp'] = time;
-            item['operate_time'] = optime;
-            item['create_time'] = ctime;
-            item['username'] = tools.deNull(item['username']).split(',');
-            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
-            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
-            //查询是否存在此用户名，且已处理用户中，不含登录用户
-            if (item.tname === 'bs_seal_regist') {
-                var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
-                //返回结果
-                return flag;
-            } else if (item.tname === 'bs_goods_receive') {
-                var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
-                //返回结果
-                return flag;
-            } else {
-                var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname)) && (!item.user.includes(username));
-                //返回结果
-                return flag;
-            }
+        try {
+            result = window.__.filter(result, function(item) {
+                //格式化日期
+                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                item['createtime'] = dtime;
+                item['timestamp'] = time;
+                item['operate_time'] = optime;
+                item['create_time'] = ctime;
+                item['username'] = tools.deNull(item['username']).split(',');
+                item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+                item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
-        });
+                //查询是否存在此用户名，且已处理用户中，不含登录用户
+                if (item.tname === 'bs_seal_regist') {
+                    var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+                    //返回结果
+                    return flag;
+                } else if (item.tname === 'bs_goods_receive') {
+                    var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+                    //返回结果
+                    return flag;
+                } else {
+                    var flag = (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname)) && (!item.user.includes(username));
+                    //返回结果
+                    return flag;
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
 
-        for (let item of result) {
-            if (tools.isNull(item['sponsor'])) {
-                const temp = await query.queryUserInfoByAccount(item.proponents);
-                item['sponsor'] = temp.realname;
-            }
-        };
+        try {
+            for (let item of result) {
+                if (tools.isNull(item['sponsor'])) {
+                    if (!item.proponents.includes(',')) {
+                        const temp = await query.queryUserInfoByAccount(item.proponents);
+                        item['sponsor'] = temp.realname;
+                    }
+                }
+            };
+        } catch (error) {
+            console.log(error);
+        }
 
         return result;
     } catch (err) {
@@ -129,39 +138,50 @@ export async function queryProcessLogWaitSeal(
 
     try {
         var res = await superagent.get(queryURL).set('accept', 'json');
-        console.log(res);
         result = res.body;
-        result = window.__.filter(result, function(item) {
-            //格式化日期
-            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-            var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
-            item['createtime'] = dtime;
-            item['timestamp'] = time;
-            item['operate_time'] = optime;
-            item['create_time'] = ctime;
-            item['username'] = tools.deNull(item['username']).split(',');
-            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
-            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
-            //查询是否存在此用户名，且已处理用户中，不含登录用户
-            if (item.tname === 'bs_seal_regist') {
-                return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
-            } else if (item.tname === 'bs_goods_receive') {
-                return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
-            } else {
-                return false;
-            }
+        try {
 
-        });
+            result = window.__.filter(result, function(item) {
+                //格式化日期
+                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                item['createtime'] = dtime;
+                item['timestamp'] = time;
+                item['operate_time'] = optime;
+                item['create_time'] = ctime;
+                item['username'] = tools.deNull(item['username']).split(',');
+                item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
+                item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
-        for (let item of result) {
-            if (tools.isNull(item['sponsor'])) {
-                const temp = await query.queryUserInfoByAccount(item.proponents);
-                item['sponsor'] = temp.realname;
-            }
-        };
+                //查询是否存在此用户名，且已处理用户中，不含登录用户
+                if (item.tname === 'bs_seal_regist') {
+                    return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+                } else if (item.tname === 'bs_goods_receive') {
+                    return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+                } else {
+                    return false;
+                }
+
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            for (let item of result) {
+                if (tools.isNull(item['sponsor'])) {
+                    if (!item.proponents.includes(',')) {
+                        const temp = await query.queryUserInfoByAccount(item.proponents);
+                        item['sponsor'] = temp.realname;
+                    }
+                }
+            };
+        } catch (error) {
+            console.log(error);
+        }
 
         return result;
     } catch (err) {
