@@ -471,15 +471,19 @@ export default {
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 1000);
+          debugger;
           storage.setStore(`system_task_doing_by_user@${username}` , tlist , 10);
         } else {
           tlist = result;
+          debugger;
         }
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
           storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
         });
+
+        debugger;
 
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
@@ -489,6 +493,7 @@ export default {
         tlist = tlist.slice(0,30);
 
         this.doingtasks = tlist;
+        debugger;
       },
       async queryTaskTiming(){
 
