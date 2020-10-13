@@ -7,7 +7,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>物品领用确认</span>
@@ -206,7 +206,7 @@ export default {
               approve:'',//领用审批人员
               status: '',
             },
-            backPath:'/app',
+            back:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -243,6 +243,19 @@ export default {
       this.queryInfo();
     },
     methods: {
+      /**
+       * @function 获取处理日志
+       */
+      async queryProcessLog(){
+        const id = tools.getUrlParam('id');
+        try {
+          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.sort();
+        } catch (error) {
+          console.log(error);
+        }
+      },
 
       //选中当前盖印人
       async selectFrontUser(value){
@@ -317,6 +330,7 @@ export default {
           //查询编号
           const id = tools.getUrlParam('id');
           this.role = tools.getUrlParam('role');
+          this.back = tools.getUrlParam('back') || '/app';
 
            //查询用印数据
           const item = await query.queryTableData(this.tablename , id);
@@ -341,6 +355,8 @@ export default {
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
           }
+
+          await this.queryProcessLog();
 
         } catch (error) {
           console.log(error);
@@ -407,7 +423,7 @@ export default {
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '发起'    ,//varchar(100)  null comment '操作动作',
+          action         : '确认'    ,//varchar(100)  null comment '操作动作',
           action_opinion : '审批领用申请[已领用]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
@@ -441,7 +457,7 @@ export default {
           functions_station : '经办人',//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by,//text          null comment '业务内容',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已领取 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -488,10 +504,6 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
-        //获取后端配置前端管理员组
-        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
-        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
-
         //查询当前所有待办记录
         const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
@@ -509,13 +521,13 @@ export default {
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '发起'    ,//varchar(100)  null comment '操作动作',
+          action         : '完成'    ,//varchar(100)  null comment '操作动作',
           action_opinion : '审批领用申请[已完成]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',

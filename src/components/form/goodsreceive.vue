@@ -7,7 +7,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>物品领用</span>
@@ -192,7 +192,7 @@ export default {
               approve:'',//领用审批人员
               status: '',
             },
-            backPath:'/app',
+            back:'/app',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -229,6 +229,19 @@ export default {
       this.queryInfo();
     },
     methods: {
+      /**
+       * @function 获取处理日志
+       */
+      async queryProcessLog(){
+        const id = tools.getUrlParam('id');
+        try {
+          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.sort();
+        } catch (error) {
+          console.log(error);
+        }
+      },
 
       //选中当前盖印人
       async selectFrontUser(value){
@@ -296,6 +309,9 @@ export default {
         try {
           //查询当前是否微信端
           this.iswechat = tools.isWechat();
+
+          //查询上一页
+          this.back = tools.getUrlParam('back') || '/app';
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
@@ -434,7 +450,7 @@ export default {
           functions_station : '前台',//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username,//text          null comment '业务内容',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',

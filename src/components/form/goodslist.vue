@@ -260,15 +260,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '2'){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         }
 
       },
