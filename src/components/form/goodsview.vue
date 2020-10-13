@@ -67,11 +67,11 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 领用人员（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-field :readonly="true" :required="false" clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
                 <!-- 单位名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
+                <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+                <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
 
               </van-cell-group>
 
@@ -335,23 +335,18 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          create_time: dayjs().format('YYYY-MM-DD'),
-          create_by : userinfo.username,
           name : this.item.name,
           amount : this.item.amount,
-          receive_name:this.item.receive_name ,
-          department : this.item.department,
           remark : this.item.remark,
           type : this.item.type,
-          company : this.item.company,
           approve_name : this.item.approve_name,
           workflow : this.item.workflow,
           approve : this.item.approve,
-          status: '待处理',
+          status: '已领取',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData(this.tablename , elem);
+        const result = await manageAPI.patchTableData(this.tablename , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
