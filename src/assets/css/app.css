@@ -51,3 +51,16 @@
 .van-goods-action-button--warning {
     border-radius: 10px 0px 0px 10px;
 }
+
+#flex-layout-van .weui-cell_app_hd {
+    margin-right: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.flex-layout-content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}

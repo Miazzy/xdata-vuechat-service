@@ -17,93 +17,127 @@
 
       <div class="weui-cells">
         <div class="weui-cell-title">常用应用</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd" @click="$router.push(`/app/doingtask`)">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
-            <div class="weui-cell_app_bd" >
-              待办
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" @click="$router.push(`/app/donetask`)">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
-            <div class="weui-cell_app_bd">
-              已办
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" @click="$router.push(`/app/news?back=/app`)">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
-            <div class="weui-cell_app_bd">
-              公告
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" @click="$router.push(`/explore/punch?back=/app`)">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
-            <div class="weui-cell_app_bd">
-              打卡
-            </div>
-          </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/doingtask`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png" >
+                <div class="weui-cell_app_bd" >
+                  待办
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/donetask`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png" >
+                <div class="weui-cell_app_bd">
+                  已办
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/news?back=/app`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
+                <div class="weui-cell_app_bd">
+                  公告
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/explore/punch?back=/app`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/daka.png" >
+                <div class="weui-cell_app_bd">
+                  打卡
+                </div>
+              </div>
+            </van-col>
+          </van-row>
         </div>
       </div>
 
       <div class="weui-cells" style="display:block;">
         <div class="weui-cell-title">人事管理</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
-          <div class="weui-cell_app_hd" @click="$router.push(`/explore/sign?back=/app`)">
-           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
-            <div class="weui-cell_app_bd" >
-              签到
-            </div>
-          </div>
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
-            <div class="weui-cell_app_bd" >
-              考勤
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app');" style="width:24.8%;" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
-            <div class="weui-cell_app_bd">
-              入职
-            </div>
-          </div>
-          <div class="weui-cell_app_hd">
-           <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
-            <div class="weui-cell_app_bd">
-              请假
-            </div>
-          </div>
+
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/explore/sign?back=/app`)">
+              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
+                <div class="weui-cell_app_bd" >
+                  签到
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
+                <div class="weui-cell_app_bd" >
+                  考勤
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
+                <div class="weui-cell_app_bd">
+                  入职
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd">
+              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+                <div class="weui-cell_app_bd">
+                  请假
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
+
+        <div class="flex-layout-content" id="scanCell" style="display: none;">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
+                <div class="weui-cell_app_bd">
+                  外出
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd"  >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
+                <div class="weui-cell_app_bd">
+                  加班
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd"  >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+                <div class="weui-cell_app_bd">
+                  物品
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" style="display: none;">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+                <div class="weui-cell_app_bd">
+                  档案
+                </div>
+              </div>
+            </van-col>
+          </van-row>
         </div>
         <div class="weui-cell weui-cell-app_access" id="scanCell" style="display:none;">
-          <div class="weui-cell_app_hd">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png" >
-            <div class="weui-cell_app_bd">
-              外出
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" style="width:24.8%;" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/overtime.png" >
-            <div class="weui-cell_app_bd">
-              加班
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" style="width:24.8%;" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
-            <div class="weui-cell_app_bd">
-              物品
-            </div>
-          </div>
-          <div class="weui-cell_app_hd" style="width:24.8%; display:block;">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
-            <div class="weui-cell_app_bd">
-              档案
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="weui-cells" style="display:none;">
         <div class="weui-cell-title">财务管理</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
+        <div class="flex-layout-content" id="scanCell">
           <div class="weui-cell_app_hd">
            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
             <div class="weui-cell_app_bd" >
@@ -133,7 +167,7 @@
 
       <div class="weui-cells" style="display:none;">
         <div class="weui-cell-title">差旅商旅</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
+        <div class="flex-layout-content" id="scanCell">
           <div class="weui-cell_app_hd">
            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/trip.png" >
             <div class="weui-cell_app_bd" >
@@ -157,77 +191,103 @@
 
       <div class="weui-cells">
         <div class="weui-cell-title">用印管理</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
-
-          <div class="weui-cell_app_hd" @click="sealApply();">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
-            <div class="weui-cell_app_bd" >
-              申请
-            </div>
-          </div>
-
-          <div v-show="userinfo.grouplimits.seal.length > 0" class="weui-cell_app_hd" @click="sealApprove();">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
-            <div class="weui-cell_app_bd">
-              审批
-            </div>
-          </div>
-
-          <div v-show="userinfo.grouplimits.front.length > 0"  class="weui-cell_app_hd" @click="sealFront();" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
-            <div class="weui-cell_app_bd" >
-              移交
-            </div>
-          </div>
-
-          <div v-show="userinfo.grouplimits.archive.length > 0"  class="weui-cell_app_hd" @click="sealArchive();">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
-            <div class="weui-cell_app_bd" >
-              归档
-            </div>
-          </div>
-
-          <div class="weui-cell_app_hd" @click="sealMyList();" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
-            <div class="weui-cell_app_bd" >
-              历史
-            </div>
-          </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="sealApply();">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
+                <div class="weui-cell_app_bd" >
+                  申请
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div v-show="userinfo.grouplimits.seal.length > 0" class="weui-cell_app_hd" @click="sealApprove();">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd">
+                  审批
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div v-show="userinfo.grouplimits.front.length > 0"  class="weui-cell_app_hd" @click="sealFront();" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
+                <div class="weui-cell_app_bd" >
+                  移交
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div v-show="userinfo.grouplimits.archive.length > 0"  class="weui-cell_app_hd" @click="sealArchive();">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
+                <div class="weui-cell_app_bd" >
+                  归档
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="sealMyList();" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+                <div class="weui-cell_app_bd" >
+                  历史
+                </div>
+              </div>
+            </van-col>
+          </van-row>
 
         </div>
       </div>
 
       <div class="weui-cells">
         <div class="weui-cell-title">领用借用</div>
-        <div class="weui-cell weui-cell-app_access" id="scanCell">
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsReceive('office');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
+                <div class="weui-cell_app_bd" >
+                  办公
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsReceive('drug');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
+                <div class="weui-cell_app_bd">
+                  药品
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsReceive('prevent');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
+                <div class="weui-cell_app_bd" >
+                  防疫
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd" >
+                  审批
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
 
-          <div class="weui-cell_app_hd" @click="goodsReceive('office');">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
-            <div class="weui-cell_app_bd" >
-              办公
-            </div>
-          </div>
-
-          <div class="weui-cell_app_hd" @click="goodsReceive('drug');">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
-            <div class="weui-cell_app_bd">
-              药品
-            </div>
-          </div>
-
-          <div class="weui-cell_app_hd" @click="goodsReceive('prevent');" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
-            <div class="weui-cell_app_bd" >
-              防疫
-            </div>
-          </div>
-
-           <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
-            <div class="weui-cell_app_bd" >
-              借用
-            </div>
-          </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
+                <div class="weui-cell_app_bd" >
+                  借用
+                </div>
+              </div>
+            </van-col>
+          </van-row>
 
         </div>
       </div>
@@ -402,7 +462,11 @@ export default {
           this.$router.push(`/app/sealmylist`);
         },
         async goodsReceive(type){
-          this.$router.push(`/app/goodsreceive?type=${type}`);
+          if(type == 'approve'){
+            this.$router.push(`/app/goodslist?type=${type}`);
+          } else {
+            this.$router.push(`/app/goodsreceive?type=${type}`);
+          }
         },
         async goodsBorrow(type){
           this.$router.push(`/app/goodsborrow?type=${type}`);

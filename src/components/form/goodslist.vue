@@ -7,6 +7,9 @@
 
     <header id="wx-header">
         <div class="center">
+            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+                <span>返回</span>
+            </router-link>
             <span>领用进度</span>
         </div>
     </header>
@@ -112,9 +115,9 @@ export default {
         this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})`);
 
         this.initList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
+          item.name = item.type + '领用: ' + item.name ,
           item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
+          item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
           item.isDefault = true;
         })
 
@@ -122,9 +125,9 @@ export default {
         this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})`);
 
         this.confirmList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
+          item.name = item.type + '领用: ' + item.name ,
           item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+          item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
           item.isDefault = true;
         })
 
@@ -132,9 +135,9 @@ export default {
         this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})`);
 
         this.doneList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
+          item.name = item.type + '领用: ' + item.name ,
           item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+          item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
           item.isDefault = true;
         })
 
@@ -153,15 +156,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
         } else if(this.tabname == '2'){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front`);
         }
 
       },
