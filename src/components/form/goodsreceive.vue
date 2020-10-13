@@ -336,7 +336,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          create_time: dayjs().format('YYYY-MM-DD'),
+          create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           create_by : userinfo.username,
           name : this.item.name,
           amount : this.item.amount,
@@ -366,6 +366,65 @@ export default {
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
+
+
+        /************************  工作流程日志(开始)  ************************/
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: this.tablename,
+          main_value: id,
+          proponents: userinfo.username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '发起'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : '发起领用申请[待处理]',//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : `物品领用(this.item.type) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
+          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
+
+        //同时推送一条待办记录给印章管理员
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogNode = {
+          id: tools.queryUniqueID(),
+          table_name: this.tablename,
+          main_value: id,
+          proponents: seal,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : seal_man ,//varchar(1000) null comment '操作职员',
+          approve_user   : seal ,//varchar(100)  null comment '审批人员',
+          action         : ''    ,//varchar(100)  null comment '操作动作',
+          action_opinion : '审批领用申请[已领取]',//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : '前台',//varchar(100)  null comment '职能岗位',
+          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : `物品领用(this.item.type) ` + this.item.name + ' #经办人: ' + userinfo.username,//text          null comment '业务内容',
+          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.taskViewProcessLog(prLogNode);
+
+        /************************  工作流程日志(结束)  ************************/
 
         //设置状态
         this.loading = false;
