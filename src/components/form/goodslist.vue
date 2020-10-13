@@ -215,30 +215,30 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}`);
+          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name ,
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}`);
+          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name ,
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name ,
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;

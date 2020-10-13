@@ -51,6 +51,7 @@
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
+                <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
@@ -160,6 +161,7 @@ export default {
             valid: workconfig.compValidation.entryjob.valid,
             item:{
               id: '',
+              serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
@@ -354,8 +356,14 @@ export default {
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
+         //查询数据
+        const value = await query.queryTableData(this.tablename , id);
+
+        //显示序列号
+        this.item.serialid = value.serialid;
+
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         //设置状态

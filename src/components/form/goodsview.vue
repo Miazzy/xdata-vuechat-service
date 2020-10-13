@@ -51,6 +51,7 @@
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
+                <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
@@ -160,6 +161,7 @@ export default {
             valid: workconfig.compValidation.entryjob.valid,
             item:{
               id: '',
+              serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
@@ -294,6 +296,7 @@ export default {
 
           //自动回显刚才填写的用户基础信息
           if(item){
+            this.item.serialid = item.serialid || this.item.serialid;
             this.item.create_by = item.create_by || this.item.create_by;
             this.item.name = item.name || this.item.name;
             this.item.amount = item.amount || this.item.amount;
