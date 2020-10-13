@@ -87,6 +87,9 @@ export const goodstype = {
     'office': '办公用品',
     'drug': '药品',
     'prevent': '防疫物资',
+    '办公用品': 'office',
+    '药品': 'drug',
+    '防疫物资': 'prevent',
 };
 
 /**
