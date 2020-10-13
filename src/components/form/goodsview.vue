@@ -84,13 +84,27 @@
 
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
+              <van-cell-group style="margin-top:10px;" v-show="!!item.status">
 
                 <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 流程状态（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
 
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
+                <van-cell value="处理记录" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <div>
+                  <van-steps direction="vertical" :active="processLogList.length - 1">
+                    <template v-for="value in processLogList">
+                      <van-step :key="value.id">
+                        <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                        <p>{{ value.create_time }}</p>
+                      </van-step>
+                    </template>
+                  </van-steps>
+                </div>
               </van-cell-group>
 
             </van-form>

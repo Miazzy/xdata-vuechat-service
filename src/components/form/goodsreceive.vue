@@ -84,6 +84,20 @@
 
               </van-cell-group>
 
+              <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
+                <van-cell value="处理记录" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <div>
+                  <van-steps direction="vertical" :active="processLogList.length - 1">
+                    <template v-for="value in processLogList">
+                      <van-step :key="value.id">
+                        <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                        <p>{{ value.create_time }}</p>
+                      </van-step>
+                    </template>
+                  </van-steps>
+                </div>
+              </van-cell-group>
+
             </van-form>
 
           </van-cell-group>

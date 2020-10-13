@@ -455,6 +455,7 @@ export default {
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
+          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
           storage.setStore(`system_task_done_item_by_id@${item.id}` , item , 60);
         });
 
@@ -478,7 +479,7 @@ export default {
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
-          item['sponsor'] = realname;
+          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
           storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
         });
 
@@ -510,6 +511,7 @@ export default {
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
+          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
           storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
         });
 
@@ -523,9 +525,10 @@ export default {
         this.timetasks = tlist;
       },
       async clickTaskDone(item, tabname = 1){
-        if(item.tname == 'bs_seal_regist'){
-          //跳转到相应的用印界面
+        if(item.tname == 'bs_seal_regist'){ //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
+        } else if(item.tname == 'bs_goods_receive'){ //跳转到相应的物品领用界面
+          this.$router.push(`/app/goodsview?id=${item.id}&statustype=none&type=finish&view=view&back=/explore`);
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
