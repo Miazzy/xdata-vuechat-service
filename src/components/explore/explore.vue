@@ -478,6 +478,7 @@ export default {
 
         //遍历数据，并放入缓存中
         tlist.map((item)=>{
+          item['sponsor'] = realname;
           storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
         });
 
