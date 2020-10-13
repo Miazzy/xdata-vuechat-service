@@ -141,11 +141,14 @@ export async function queryProcessLogWaitSeal(
             item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名，且已处理用户中，不含登录用户
-            if (item.tname !== 'bs_seal_regist') {
-                return false;
-            } else if (item.tname === 'bs_seal_regist') {
+            if (item.tname === 'bs_seal_regist') {
                 return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+            } else if (item.tname === 'bs_goods_receive') {
+                return (window.__.contains(item['username'], username) || window.__.contains(item['username'], realname));
+            } else {
+                return false;
             }
+
         });
 
         for (let item of result) {

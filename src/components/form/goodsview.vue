@@ -375,6 +375,12 @@ export default {
         const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
         const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
 
+        //查询当前所有待办记录
+        const tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //同时删除本条待办记录当前(印章管理员)
+        await workflow.deleteViewProcessLog(tlist);
+
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
           id: tools.queryUniqueID(),
