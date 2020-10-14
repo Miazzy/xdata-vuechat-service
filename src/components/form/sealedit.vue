@@ -1126,17 +1126,29 @@ export default {
           //领取地址
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-          //推送群消息，告知印章管理员进行用印处理(企业微信群)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
-                      .set('accept', 'json');
+          try {
+            //通知签收人领取资料(企业微信发送)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
+                         .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知签收人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+          try {
+            //通知印章人领取资料(企业微信发送)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
+                         .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知印章人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
-                       .set('accept', 'json');
+          try {
+            //推送群消息，告知印章管理员进行用印处理(企业微信群)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
+                        .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';

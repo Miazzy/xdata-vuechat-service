@@ -354,6 +354,7 @@ export default {
 
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
+          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
           return !task.TIME_TASK_NAME.includes(item.name);
         })
 
