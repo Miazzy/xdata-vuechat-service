@@ -1181,17 +1181,6 @@ export default {
 
         await workflow.approveViewProcessLog(prLogHisNode);
 
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
-
         //同时推送一条待办记录给前台用户
         const prLogNode = {
           id: tools.queryUniqueID(),
@@ -1217,6 +1206,22 @@ export default {
         }
 
         await workflow.taskViewProcessLog(prLogNode);
+
+        try {
+          //查询当前所有待办记录
+          let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+          //过滤出只关联当前流程的待办数据
+          tlist = tlist.filter(item => {
+            return item.id == id && item.pid == pid;
+          });
+
+          //同时删除本条待办记录当前(印章管理员)
+          await workflow.deleteViewProcessLog(tlist);
+
+        } catch (error) {
+          console.log(error);
+        }
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -1358,16 +1363,21 @@ export default {
 
         await workflow.approveViewProcessLog(prLogHisNode);
 
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        try {
+          //查询当前所有待办记录
+          let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
+          //过滤出只关联当前流程的待办数据
+          tlist = tlist.filter(item => {
+            return item.id == id && item.pid == pid;
+          });
 
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
+          //同时删除本条待办记录当前(印章管理员)
+          await workflow.deleteViewProcessLog(tlist);
+
+        } catch (error) {
+          console.log(error);
+        }
 
       },
 
@@ -1500,24 +1510,44 @@ export default {
         //回调地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
 
-        //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
+        try {
+          //修改状态为已用印
+          manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知经办人前台已收取资料，等待进行归档处理(email通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知(${this.item.contractId})/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
-                       .set('accept', 'json');
+        try {
+          //通知经办人前台已收取资料，等待进行归档处理(email通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料移交前台通知(${this.item.contractId})/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理/${email}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知经办人前台已收取资料，等待进行归档处理(企业微信通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+        try {
+          //通知经办人前台已收取资料，等待进行归档处理(企业微信通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待进行归档处理?rurl=${receiveURL}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知归档负责人到前台收取资料进行归档(企业微信群聊推送)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                       .set('accept', 'json');
+        try {
+          //通知归档负责人到前台收取资料进行归档(企业微信群聊推送)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档请求通知/文件:‘${this.item.filename}’已移交前台，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请至前台进行合同归档处理!?type=done&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知归档负责人到前台收取资料进行归档(企业微信发送)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].archive},${this.item.archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
-                       .set('accept', 'json');
+        try {
+          //通知归档负责人到前台收取资料进行归档(企业微信发送)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].archive},${this.item.archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
         //修改用印状态
         this.item.status = '移交前台';
