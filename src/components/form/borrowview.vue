@@ -379,7 +379,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -571,5 +571,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
-    @import "../../assets/css/goodsview.css";
+    @import "../../assets/css/borrowview.css";
 </style>
