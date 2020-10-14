@@ -23,7 +23,7 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
             已办
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 1px solid #329ff0;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
             本人
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ;" :style="tabname == 5 ? `border-bottom: 1px solid #329ff0;` : `border-bottom: 0px solid #329ff0;` ">
@@ -93,7 +93,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks.slice(0,8)">
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" :index="index" v-for=" (item , index) in doingtasks.slice(0,8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -101,7 +101,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="clickTaskDoing(item , tabname);">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -112,7 +112,7 @@
               </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" v-for=" (item , index) in doingtasks.slice(8)">
+          <div class="list-info" v-show="tabname == 2 && !loading" :key="item.id" :index="index" v-for=" (item , index) in doingtasks.slice(8)">
               <div class="header-box">
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
@@ -120,7 +120,7 @@
                 <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
               </div>
               </div>
-              <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=2`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+              <div class="desc-box" @click="clickTaskDoing(item , tabname);">
                 <div class="desc-time">{{item.create_time}}</div>
                 <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
                 <div class="desc-msg">
@@ -142,7 +142,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks.slice(0,8)">
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" :index="index" v-for=" (item , index) in donetasks.slice(0,8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -150,7 +150,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="clickTaskDone(item , tabname);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -161,7 +161,7 @@
             </div>
           </div>
           </van-pull-refresh>
-          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" v-for=" (item , index) in donetasks.slice(8)">
+          <div class="list-info" v-show="tabname == 3 && !loading" :key="item.id" :index="index" v-for=" (item , index) in donetasks.slice(8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -169,7 +169,7 @@
                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
              </div>
             </div>
-            <div class="desc-box" @click="$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=3`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`)">
+            <div class="desc-box" @click="clickTaskDone(item , tabname);">
               <div class="desc-time">{{item.create_time}}</div>
               <div class="desc-author">{{`${item.type} - ${item.name}`}}</div>
               <div class="desc-msg">
@@ -191,7 +191,7 @@
             @refresh="refreshData"
             style="min-height:400px;"
           >
-         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks.slice(0,8)">
+         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" :index="index" v-for=" (item , index) in selftasks.slice(0,8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -210,7 +210,7 @@
             </div>
          </div>
          </van-pull-refresh>
-         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" v-for=" (item , index) in selftasks.slice(8)">
+         <div class="list-info" v-show="tabname == 4 && !loading" :key="item.id" :index="index" v-for=" (item , index) in selftasks.slice(8)">
             <div class="header-box">
              <i class="new-msg-count" style="display: none;"></i>
              <i class="new-msg-dot" style="display: none;"></i>
@@ -412,6 +412,28 @@ export default {
 
         this.selftasks = tlist;
       },
+      async clickTaskDone(item, tabname = 1){
+        if(item.tname == 'bs_seal_regist'){ //跳转到相应的用印界面
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore/task`);
+        } else if(item.tname == 'bs_goods_receive'){ //跳转到相应的物品领用界面
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore/task`);
+        } else {
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=${tabname}`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
+        }
+      },
+      async clickTaskDoing(item , tabname = 1){
+        if(item.tname == 'bs_seal_regist' && item.topic.includes('#待用印')){
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=seal&view=edit&back=/explore/task`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_seal_regist' && item.topic.includes('#待移交')){
+          this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=front&view=edit&back=/explore/task`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_goods_receive' && item.topic.includes('#待处理')){
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=front&view=edit&back=/explore/task`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_goods_receive' && item.topic.includes('#已领取')){
+          this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=receive&view=edit&back=/explore/task`); //跳转到相应的用印界面
+        } else {
+          this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore/task?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}&back=/explore/task`);
+        }
+      }
     }
 }
 </script>
