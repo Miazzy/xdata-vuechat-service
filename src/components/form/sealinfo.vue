@@ -1399,17 +1399,29 @@ export default {
           //领取地址
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-          //推送群消息，告知印章管理员进行用印处理(企业微信群)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
-                      .set('accept', 'json');
+          try {
+            //推送群消息，告知印章管理员进行用印处理(企业微信群)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
+                        .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知签收人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+          try {
+            //通知签收人领取资料(企业微信发送)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${receiveURL}`)
+                         .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知印章人领取资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
-                       .set('accept', 'json');
+          try {
+            //通知印章人领取资料(企业微信发送)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
+                         .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
           //查询数据
           const value = await query.queryTableData(`bs_seal_regist` , id);

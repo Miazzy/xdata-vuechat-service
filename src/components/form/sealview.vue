@@ -1107,25 +1107,48 @@ export default {
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-        //修改状态为已用印，保存当前合同编号
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
+        try {
+          //修改状态为已用印，保存当前合同编号
+          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知签收人领取资料(email通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
-                      .set('accept', 'json');
+        try {
+          //通知签收人领取资料(email通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
+                        .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知签收人领取资料(企业微信通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已用印，请及时领取。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+        try {
+          //通知签收人领取资料(企业微信通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已用印，请及时领取。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${receiveURL}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
         //如果是合同类才走后续流程，如果是非合同类则通知经办人领取即可
         if(this.item.sealtype === '合同类'){
-          //通知前台准备接受资料(企业微信群聊通知)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                        .set('accept', 'json');
-          //通知前台准备接受资料(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
-                       .set('accept', 'json');
+
+          try {
+            //通知前台准备接受资料(企业微信群聊通知)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料等待移交通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请等待资料送至前台!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                          .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
+            //通知前台准备接受资料(企业微信发送)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
+                         .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
+
         }
 
         //修改用印状态
@@ -1274,16 +1297,28 @@ export default {
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
-        //修改状态为已退回
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
+        try {
+          //修改状态为已退回
+          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知签收人领取资料(email邮件通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
-                      .set('accept', 'json');
+        try {
+          //通知签收人领取资料(email邮件通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
+                        .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
-        //通知签收人领取资料(企业微信通知)
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+        try {
+          //通知签收人领取资料(企业微信通知)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}?rurl=${receiveURL}`)
+                         .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
 
         //修改用印状态
         this.item.status = '已退回';
@@ -1678,8 +1713,13 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-        //修改状态为已用印
-        await manageAPI.patchTableData(`bs_seal_regist` , id , {id , done_time: time });
+        try {
+          //修改状态为已用印
+          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , done_time: time });
+        } catch (error) {
+          console.log(error);
+        }
+
 
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
@@ -1689,8 +1729,12 @@ export default {
           value[key] = key.includes('_time') && value[key] ? dayjs(value[key]).format('YYYY-MM-DD HH:mm:ss') : value[key];
         })
 
-        //将数据转存到用印台账记录中
-        await manageAPI.postTableData(`bs_seal_registed` , value);
+        try {
+          //将数据转存到用印台账记录中
+          await manageAPI.postTableData(`bs_seal_registed` , value);
+        } catch (error) {
+          console.log(error);
+        }
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
@@ -1764,24 +1808,44 @@ export default {
 
         if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
 
-          //通知经办人已归档资料(email通知)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知(${this.item.contractId})/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}/${email}`)
+          try {
+            //通知经办人已归档资料(email通知)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/mail/用印资料归档完成通知(${this.item.contractId})/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}/${email}`)
+                           .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
+            //通知经办人已归档资料(企业微信通知)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${receiveURL}`)
                          .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知经办人已归档资料(企业微信通知)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${receiveURL}`)
-                       .set('accept', 'json');
+          try {
+            //通知前端归档完成，准备生成台账(企业微信群聊通知)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
+                           .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知前端归档完成，准备生成台账(企业微信群聊通知)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/用印资料归档完成通知/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成!?type=front&rurl=${url}&id=${id}&userid=${this.item.dealManager}`)
-                         .set('accept', 'json');
+          try {
+            //通知前端归档完成，准备生成台账(企业微信消息)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成?rurl=${url}`)
+                           .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
 
-          //通知前端归档完成，准备生成台账(企业微信消息)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已归档，${noname}:${this.item.contractId}，编号：${id}，经办人：${this.item.dealManager}，请完成归档台账生成?rurl=${url}`)
-                         .set('accept', 'json');
-
-          //修改状态为已用印
-          manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
+          try {
+            //修改状态为已用印
+            await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
+          } catch (error) {
+            console.log(error);
+          }
 
           //修改用印状态
           this.item.status = '已归档';
