@@ -202,7 +202,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div v-show="userinfo.grouplimits.seal.length > 0" class="weui-cell_app_hd" @click="sealApprove();">
+              <div v-show="userinfo.grouplimits.seal.length > 0 || true " class="weui-cell_app_hd" @click="sealApprove();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
                   审批
@@ -210,7 +210,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div v-show="userinfo.grouplimits.front.length > 0"  class="weui-cell_app_hd" @click="sealFront();" >
+              <div v-show="userinfo.grouplimits.front.length > 0 || true"  class="weui-cell_app_hd" @click="sealFront();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
                 <div class="weui-cell_app_bd" >
                   移交
@@ -218,13 +218,18 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div v-show="userinfo.grouplimits.archive.length > 0"  class="weui-cell_app_hd" @click="sealArchive();">
+              <div v-show="userinfo.grouplimits.archive.length > 0 || true"  class="weui-cell_app_hd" @click="sealArchive();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd" >
                   归档
                 </div>
               </div>
             </van-col>
+          </van-row>
+        </div>
+
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
@@ -450,13 +455,25 @@ export default {
           this.$router.push(`/app/sealinfo`);
         },
         async sealApprove(){
-          this.$router.push(`/app/seallist`);
+          if(this.userinfo.grouplimits.seal.length > 0){
+            this.$router.push(`/app/seallist`);
+          } else {
+            vant.Toast('您没有用印合同资料审批的权限！');
+          }
         },
         async sealFront(){
-          this.$router.push(`/app/sealfrontlist`);
+          if(this.userinfo.grouplimits.front.length > 0){
+            this.$router.push(`/app/sealfrontlist`);
+          } else {
+            vant.Toast('您没有用印合同资料前台移交的权限！');
+          }
         },
         async sealArchive(){
-          this.$router.push(`/app/sealarchivelist`);
+          if(this.userinfo.grouplimits.archive.length > 0){
+            this.$router.push(`/app/sealarchivelist`);
+          } else {
+            vant.Toast('您没有用印合同资料归档的权限！');
+          }
         },
         async sealMyList(){
           this.$router.push(`/app/sealmylist`);
