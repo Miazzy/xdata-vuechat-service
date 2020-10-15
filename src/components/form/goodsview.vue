@@ -572,7 +572,6 @@ export default {
 
           //查询领用数据
           let tlist = await query.queryTableDataByPid(this.tablename , id);
-          tlist = tlist.reverse();
           this.size = tlist.length;
           this.tlist = tlist;
 
@@ -631,14 +630,6 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          id,
-          name : this.item.name,
-          amount : this.item.amount,
-          remark : this.item.remark,
-          type : this.item.type,
-          approve_name : this.item.approve_name,
-          workflow : this.item.workflow,
-          approve : this.item.approve,
           status: '已领取',
         }; // 待处理元素
 
@@ -647,17 +638,15 @@ export default {
 
 
         //批量领取物品修改状态
-        for(let i = 1 ; i < this.tlist.length ; i++){
+        for(let i = 0 ; i < this.tlist.length ; i++){
 
           //第一步 保存用户数据到数据库中
           let element = {
-            name : tlist[i].name ,
-            amount : tlist[i].amount,
             status: '已领取',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , tlist[i].id , element);
+          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
 
