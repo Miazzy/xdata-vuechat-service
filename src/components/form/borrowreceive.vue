@@ -59,7 +59,7 @@
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable :label="item.type == '传屏设备' ? '传屏编号': '物品名称'" v-model="item.name"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写物品名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->

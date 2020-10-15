@@ -59,7 +59,7 @@
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
@@ -211,6 +211,15 @@ export default {
               showPickerJoinTime: false,
               showPickerDiploma: false,
             },
+            searchFlag: false,
+            dropMenuOldValue:'',
+            dropMenuValue:'',
+            dropMenuOption: [
+              { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '重置', value: 4 , icon: 'aim' },
+              { text: '应用', value: 5 , icon: 'apps-o' },
+              { text: '首页', value: 6 , icon: 'wap-home-o' },
+            ],
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
