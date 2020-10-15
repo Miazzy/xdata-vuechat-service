@@ -11,6 +11,10 @@
                 <span>返回</span>
             </router-link>
             <span>物品借用确认</span>
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 15px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+            </van-dropdown-menu>
         </div>
     </header>
 
@@ -221,6 +225,14 @@ export default {
               showPickerJoinTime: false,
               showPickerDiploma: false,
             },
+            searchFlag: false,
+            dropMenuOldValue:'',
+            dropMenuValue:'',
+            dropMenuOption: [
+              { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '应用', value: 5 , icon: 'apps-o' },
+              { text: '首页', value: 6 , icon: 'wap-home-o' },
+            ],
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
@@ -243,6 +255,78 @@ export default {
       this.queryInfo();
     },
     methods: {
+      //点击显示或者隐藏菜单
+      async headMenuToggle(){
+        this.$refs.headMenuItem.toggle();
+      },
+      //点击顶部搜索
+      async headMenuSearch(){
+        if(this.searchWord){
+          //刷新相应表单
+          this.queryTabList(this.tabname);
+          //显示搜索状态
+          vant.Toast('搜索...');
+          //等待一下
+          await tools.sleep(300);
+        }
+        //显示刷新消息
+        this.searchFlag = false;
+      },
+      //点击右侧菜单
+      async headDropMenu(value){
+        const val = this.dropMenuValue;
+        switch (val) {
+          case 0: //只显示合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 1: //只显示非合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 2: //刷新数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 3: //查询数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 4: //重置数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 5: //返回应用
+            this.$router.push(`/app`);
+            break;
+          case 6: //返回首页
+            this.$router.push(`/explore`);
+            break;
+          default:
+            console.log(`no operate. out of switch. `);
+        }
+      },
+      // 设置重置
+      async reduction(){
+        this.item = {
+              id: '',
+              serialid:'',
+              create_time: dayjs().format('YYYY-MM-DD'),
+              create_by: '',
+              receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
+              name:'', //领用物品名称
+              amount:'',//领用数量
+              remark:'',//备注说明
+              type:this.item.type,//领用类别
+              approve_name:'',//领用审批人员
+              workflow:'',//关联流程
+              approve:'',//领用审批人员
+              receive_name : this.item.receive_name , //领用人员名称
+              department : this.item.department, //领用部门名称
+              company : this.item.company, //单位名称
+              status: '',
+            };
+      },
       /**
        * @function 获取处理日志
        */
