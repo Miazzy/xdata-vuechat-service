@@ -164,6 +164,39 @@ export async function queryTableData(tableName, id) {
 /**
  * 查询数据
  * @param {*} tableName
+ * @param {*} id
+ */
+export async function queryTableDataByPid(tableName, id) {
+
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(pid,eq,${id})&_sort=-create_time`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_user_cache@${tableName}&pid${id}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_cache@${tableName}&pid${id}`, res.body, 2);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
  * @param {*} whereSQL
  */
 export async function queryTableDataByWhereSQL(tableName, whereSQL) {

@@ -64,6 +64,8 @@
                 <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                 <span class="van-goods-span-number" style="top:180px;">#1</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
@@ -339,6 +341,7 @@ export default {
             isfirst:true,
             dockFlag: false,
             role:'front',
+            size:15,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.entryjob.message,
             valid: workconfig.compValidation.entryjob.valid,
@@ -360,6 +363,7 @@ export default {
               approve:'',//领用审批人员
               status: '',
             },
+            tlist:[],
             back:'/app',
             workflowlist:[],
             announces:[],
@@ -566,8 +570,13 @@ export default {
           this.role = tools.getUrlParam('role');
           this.back = tools.getUrlParam('back') || '/app';
 
-           //查询用印数据
-          const item = await query.queryTableData(this.tablename , id);
+          //查询领用数据
+          let tlist = await query.queryTableDataByPid(this.tablename , id);
+          tlist = tlist.reverse();
+          this.size = tlist.length;
+          this.tlist = tlist;
+
+          const item = tlist[0];
 
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
@@ -588,6 +597,11 @@ export default {
             this.item.workflow = item.workflow || this.item.workflow;
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
+          }
+
+          for(let i = 1 ; i < tlist.length ; i++){
+            this.item['name'+i] = tlist[i].name ;
+            this.item['amount'+i] = tlist[i].amount ;
           }
 
           await this.queryProcessLog();
@@ -630,6 +644,22 @@ export default {
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
+
+
+        //批量领取物品修改状态
+        for(let i = 1 ; i < this.tlist.length ; i++){
+
+          //第一步 保存用户数据到数据库中
+          let element = {
+            name : tlist[i].name ,
+            amount : tlist[i].amount,
+            status: '已领取',
+          }; // 待处理元素
+
+          //第二步，向表单提交form对象数据
+          const result = await manageAPI.patchTableData(this.tablename , tlist[i].id , element);
+
+        }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已领用，请确认领用完成！?rurl=${receiveURL}`)
