@@ -304,7 +304,7 @@ export default {
               name:'', //领用物品名称
               amount:'',//领用数量
               remark:'',//备注说明
-              type:'',//领用类别
+              type:this.item.type,//领用类别
               approve_name:'',//领用审批人员
               workflow:'',//关联流程
               approve:'',//领用审批人员

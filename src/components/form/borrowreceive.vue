@@ -306,12 +306,12 @@ export default {
               receive_name:'',
               department:'',
               remark:'',//备注说明
-              type:'',//领用类别
+              type: this.item.type, //领用类别
               company:'',//单位名称
               approve_name:'',//领用审批人员
               workflow:'',//关联流程
               approve:'',//领用审批人员
-              receive_name : this.item.receive_name , //领用人员名称
+              receive_name : this.item.receive_name, //领用人员名称
               department : this.item.department, //领用部门名称
               company : this.item.company, //单位名称
               status: '',
