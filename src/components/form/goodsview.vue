@@ -340,6 +340,8 @@ export default {
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
+          debugger;
+
           //查询编号
           const id = tools.getUrlParam('id');
           this.role = tools.getUrlParam('role');
