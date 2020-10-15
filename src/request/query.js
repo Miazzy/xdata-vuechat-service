@@ -171,7 +171,7 @@ export async function queryTableDataByPid(tableName, id) {
     //大写转小写
     tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(pid,eq,${id})&_sort=-create_time`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(pid,eq,${id})&_sort=create_time`;
 
     try {
         //获取缓存中的数据
