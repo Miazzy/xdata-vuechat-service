@@ -57,7 +57,7 @@
                 <!-- 领用类别（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly" required clearable :label="item.type == '传屏设备' ? '传屏编号': '物品名称'" v-model="item.name"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写物品名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
               </van-cell-group>
@@ -214,7 +214,7 @@ export default {
             currentKey:'',
             tablename:'bs_goods_borrow',
             readonly: false,
-            goodstype: workconfig.goodstype,
+            goodsborrowtype: workconfig.goodsborrowtype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,
             acceptType: workconfig.compcolumns.acceptType,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
@@ -320,7 +320,7 @@ export default {
           const item = storage.getStore(`system_${this.tablename}_item@${userinfo.realname}`);
 
           //根据URL参数查询物资类型
-          this.item.type = this.goodstype[tools.getUrlParam('type')];
+          this.item.type = this.goodsborrowtype[tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){

@@ -292,6 +292,25 @@
                 </div>
               </div>
             </van-col>
+
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('box');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/robot.png" >
+                <div class="weui-cell_app_bd" >
+                  传屏
+                </div>
+              </div>
+            </van-col>
+
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd" >
+                  审批
+                </div>
+              </div>
+            </van-col>
+
           </van-row>
 
         </div>
@@ -486,7 +505,11 @@ export default {
           }
         },
         async goodsBorrow(type){
-          this.$router.push(`/app/borrowreceive?type=${type}`);
+          if(type == 'approve'){
+            this.$router.push(`/app/borrowlist?type=${type}`);
+          } else {
+            this.$router.push(`/app/borrowreceive?type=${type}`);
+          }
         },
     }
 }

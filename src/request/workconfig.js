@@ -93,6 +93,14 @@ export const goodstype = {
 };
 
 /**
+ * @description 物品借用管理
+ */
+export const goodsborrowtype = {
+    'common': '信息设备',
+    'box': '传屏设备',
+};
+
+/**
  * @description 领用物品说明
  */
 export const objects = {
