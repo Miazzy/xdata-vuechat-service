@@ -242,6 +242,57 @@ export default {
       this.queryInfo();
     },
     methods: {
+      //点击显示或者隐藏菜单
+      async headMenuToggle(){
+        this.$refs.headMenuItem.toggle();
+      },
+      //点击顶部搜索
+      async headMenuSearch(){
+        if(this.searchWord){
+          //刷新相应表单
+          this.queryTabList(this.tabname);
+          //显示搜索状态
+          vant.Toast('搜索...');
+          //等待一下
+          await tools.sleep(300);
+        }
+        //显示刷新消息
+        this.searchFlag = false;
+      },
+      //点击右侧菜单
+      async headDropMenu(value){
+        const val = this.dropMenuValue;
+        switch (val) {
+          case 0: //只显示合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 1: //只显示非合同类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryFresh();
+            break;
+          case 2: //刷新数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 3: //查询数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 4: //重置数据
+            this.dropMenuValue = this.dropMenuOldValue;
+            await this.reduction();
+            break;
+          case 5: //返回应用
+            this.$router.push(`/app`);
+            break;
+          case 6: //返回首页
+            this.$router.push(`/explore`);
+            break;
+          default:
+            console.log(`no operate. out of switch. `);
+        }
+      },
       /**
        * @function 获取处理日志
        */
