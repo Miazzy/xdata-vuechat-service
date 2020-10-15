@@ -53,13 +53,13 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 领用时间（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
+                <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="true" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" required clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -67,7 +67,7 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 领用人员（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-field :readonly="readonly" required clearable label="借用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
                 <!-- 单位名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->

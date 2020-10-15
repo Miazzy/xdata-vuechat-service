@@ -469,7 +469,7 @@ export default {
           }
         },
         async goodsBorrow(type){
-          this.$router.push(`/app/goodsborrow?type=${type}`);
+          this.$router.push(`/app/borrowreceive?type=${type}`);
         },
     }
 }
