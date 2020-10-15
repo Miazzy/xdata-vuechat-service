@@ -156,7 +156,7 @@ export default {
             active: 1,
             id:'',
             type:'',
-            title:'物品借用表',
+            title:'物品领用表',
             content:'',
             files:'',
             from:'',
@@ -226,7 +226,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_goods_borrow',
+            tablename:'bs_goods_receive',
             readonly: false,
             goodstype: workconfig.goodstype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,
@@ -379,7 +379,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -571,5 +571,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
-    @import "../../assets/css/borrowview.css";
+    @import "../../assets/css/goodsview.css";
 </style>

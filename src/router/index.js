@@ -232,6 +232,27 @@ const routes = [{
             "subPage": resolve => require(["../components/form/goodslist.vue"], resolve)
         }
     }, {
+        path: '/app/borrowreceive',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/borrowreceive.vue"], resolve)
+        }
+    }, {
+        path: '/app/borrow',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/borrow.vue"], resolve)
+        }
+    }, {
+        path: '/app/borrowlist',
+        name: "借用进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/borrowlist.vue"], resolve)
+        }
+    }, {
         path: '/app/entryjob',
         name: "入职引导",
         components: {
