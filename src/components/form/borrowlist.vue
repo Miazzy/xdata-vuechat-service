@@ -191,7 +191,7 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_goodsreceive_list_tabname') || '1';
+        this.tabname = storage.getStore('system_borrowreceive_list_tabname') || '1';
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -218,7 +218,7 @@ export default {
           this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
@@ -228,7 +228,7 @@ export default {
           this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
@@ -238,7 +238,7 @@ export default {
           this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
@@ -258,17 +258,17 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         }
 
       },
@@ -278,5 +278,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
-    @import "../../assets/css/goodslist.css";
+    @import "../../assets/css/borrowlist.css";
 </style>
