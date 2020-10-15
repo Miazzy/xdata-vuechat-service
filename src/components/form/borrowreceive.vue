@@ -11,6 +11,10 @@
                 <span>返回</span>
             </router-link>
             <span>物品借用</span>
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+              <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 15px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+            </van-dropdown-menu>
         </div>
     </header>
 
@@ -207,6 +211,15 @@ export default {
               showPickerJoinTime: false,
               showPickerDiploma: false,
             },
+            searchFlag: false,
+            dropMenuOldValue:'',
+            dropMenuValue:'',
+            dropMenuOption: [
+              { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '重置', value: 4 , icon: 'aim' },
+              { text: '应用', value: 5 , icon: 'apps-o' },
+              { text: '首页', value: 6 , icon: 'wap-home-o' },
+            ],
             statusType: workconfig.statusType,
             mailconfig: workconfig.mailconfig,
             config: workconfig.config,
