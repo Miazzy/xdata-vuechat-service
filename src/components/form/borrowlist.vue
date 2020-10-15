@@ -260,15 +260,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
           storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrowview?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
         }
 
       },
