@@ -65,7 +65,7 @@
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
-                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 15 ? size++ : size;"/>
+                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 16 ? size++ : size;"/>
 
                 <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;"  />
 
@@ -75,9 +75,9 @@
               <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name1"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount1"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#2</span>
               </van-cell-group>
@@ -85,9 +85,9 @@
               <van-cell-group v-show="size>=3" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name2"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount2"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#3</span>
               </van-cell-group>
@@ -95,9 +95,9 @@
               <van-cell-group v-show="size>=4" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name3"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount3"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#4</span>
               </van-cell-group>
@@ -105,9 +105,9 @@
               <van-cell-group v-show="size>=5" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name4"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount4"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#5</span>
               </van-cell-group>
@@ -115,9 +115,9 @@
               <van-cell-group v-show="size>=6" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name5"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount5"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#6</span>
               </van-cell-group>
@@ -125,9 +125,9 @@
               <van-cell-group v-show="size>=7" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name6"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount6"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#7</span>
               </van-cell-group>
@@ -135,9 +135,9 @@
               <van-cell-group v-show="size>=8" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name7"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount7"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#8</span>
               </van-cell-group>
@@ -145,9 +145,9 @@
               <van-cell-group v-show="size>=9" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name8"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount8"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#9</span>
               </van-cell-group>
@@ -155,9 +155,9 @@
               <van-cell-group v-show="size>=10" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name9"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount9"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#10</span>
               </van-cell-group>
@@ -165,9 +165,9 @@
               <van-cell-group v-show="size>=11" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name10"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount10"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#11</span>
               </van-cell-group>
@@ -175,9 +175,9 @@
               <van-cell-group v-show="size>=12" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name11"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount11"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#12</span>
               </van-cell-group>
@@ -185,9 +185,9 @@
               <van-cell-group v-show="size>=13" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name12"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount12"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#13</span>
               </van-cell-group>
@@ -195,9 +195,9 @@
               <van-cell-group v-show="size>=14" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name13"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount13"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#14</span>
               </van-cell-group>
@@ -205,11 +205,21 @@
               <van-cell-group v-show="size>=15" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
                 <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name14"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount14"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#15</span>
+              </van-cell-group>
+
+               <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+                <!-- 物品名称（HR需要确认/修改） -->
+                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name15"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
+                <!-- 领用数量（HR需要确认/修改） -->
+                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount15"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <span class="van-goods-span-number">#16</span>
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -333,6 +343,36 @@ export default {
               receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
               name:'', //领用物品名称
               amount:'',//领用数量
+              name1:'', //领用物品名称
+              amount1:'',//领用数量
+              name2:'', //领用物品名称
+              amount2:'',//领用数量
+              name3:'', //领用物品名称
+              amount3:'',//领用数量
+              name4:'', //领用物品名称
+              amount4:'',//领用数量
+              name5:'', //领用物品名称
+              amount5:'',//领用数量
+              name6:'', //领用物品名称
+              amount6:'',//领用数量
+              name7:'', //领用物品名称
+              amount7:'',//领用数量
+              name8:'', //领用物品名称
+              amount8:'',//领用数量
+              name9:'', //领用物品名称
+              amount9:'',//领用数量
+              name10:'', //领用物品名称
+              amount10:'',//领用数量
+              name11:'', //领用物品名称
+              amount11:'',//领用数量
+              name12:'', //领用物品名称
+              amount12:'',//领用数量
+              name13:'', //领用物品名称
+              amount13:'',//领用数量
+              name14:'', //领用物品名称
+              amount14:'',//领用数量
+              name15:'', //领用物品名称
+              amount15:'',//领用数量
               receive_name:'',//领用人员名称
               department:'',//领用部门名称
               remark:'',//备注说明
@@ -611,11 +651,40 @@ export default {
           approve_name : this.item.approve_name,
           workflow : this.item.workflow,
           approve : this.item.approve,
+          pid: id,
           status: '待处理',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
+
+        //计算批量物品
+        const tsize = this.size - 1;
+
+        if(tsize >= 1){
+          for(let i = 1; i <= tsize ; i++){
+
+            let element = {
+                  id: tools.queryUniqueID(),
+                  create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                  create_by : userinfo.username,
+                  name : this.item['name' + i],
+                  amount : this.item['amount' + i],
+                  receive_name:this.item.receive_name ,
+                  department : this.item.department,
+                  remark : this.item.remark,
+                  type : this.item.type,
+                  company : this.item.company,
+                  approve_name : this.item.approve_name,
+                  workflow : this.item.workflow,
+                  approve : this.item.approve,
+                  pid: id,
+                  status: '待处理',
+                };
+            //向表单提交form对象数据
+            await manageAPI.postTableData(this.tablename , element);
+          }
+        }
 
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');

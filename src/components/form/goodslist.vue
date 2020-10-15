@@ -223,6 +223,11 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.initList = this.initList.filter(item => {
+            return item.id == item.pid;
+          });
+
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
           this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
@@ -233,6 +238,11 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.confirmList = this.confirmList.filter(item => {
+            return item.id == item.pid;
+          });
+
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
           this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
@@ -243,6 +253,10 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.doneList = this.doneList.filter(item => {
+            return item.id == item.pid;
+          });
         }
 
       },
