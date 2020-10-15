@@ -26,3 +26,11 @@
 .van-goods-action-button--warning {
     border-radius: 10px 0px 0px 10px;
 }
+
+.van-goods-span-number {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    border-radius: 4px;
+    border: #cecece;
+}
