@@ -212,7 +212,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_borrow_receive',
+            tablename:'bs_goods_borrow',
             readonly: false,
             goodstype: workconfig.goodstype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,

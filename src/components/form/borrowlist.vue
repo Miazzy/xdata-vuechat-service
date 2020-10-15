@@ -86,7 +86,7 @@ export default {
             confirmList:[],
             doneList:[],
             hContractID:'',
-            tname: 'bs_borrow_receive',
+            tname: 'bs_goods_borrow',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
