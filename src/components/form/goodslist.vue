@@ -98,6 +98,7 @@ export default {
               '1': 'initList',
               '2': 'confirmList',
               '3': 'doneList',
+              '4':'rejectList',
             },
             back:'/app',
             searchWord:'',
@@ -264,6 +265,20 @@ export default {
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
+        } else if(tabname == 4) {
+          //获取最近6个月的已领取记录
+          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.rejectList.map((item , index) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          this.rejectList = this.rejectList.filter(item => {
+            return item.id == item.pid;
+          });
         }
 
       },
@@ -287,6 +302,10 @@ export default {
           //跳转到相应的用印界面
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '3' ){
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+         } else if(this.tabname == '4' ){
           storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
