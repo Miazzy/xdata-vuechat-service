@@ -540,40 +540,36 @@ export default {
           //先验证用户是否具备相应权限
           if(role == 'hr'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_HR_ADMIN');
-            const list = resp[0].userlist;
+            const resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
 
-            if(!list.includes(userinfo.username)){
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-人力角色的权限！');
               return false;
             }
 
           } else if(role == 'admin'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN');
-            const list = resp[0].userlist;
+            const resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
 
-            if(!list.includes(userinfo.username)){
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-行政角色的权限！');
               return false;
             }
 
           } else if(role == 'front'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN');
-            const list = resp[0].userlist;
+            const resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
 
-            if(!list.includes(userinfo.username)){
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-前台角色的权限！');
               return false;
             }
 
           } else if(role == 'meal'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN');
-            const list = resp[0].userlist;
+            const resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
 
-            if(!list.includes(userinfo.username)){
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-食堂角色的权限！');
               return false;
             }
