@@ -43,6 +43,14 @@ export const group = {
         prefix: 'LD',
         name: 'Group_LD',
     },
+    ENTRY_JOB: {
+        GROUP0: {
+            JOB_HR_ADMIN: 'zhaozy1028,guojy0508,tangjw1227,zhengm1105',
+            JOB_EXEC_ADMIN: 'yanggc,chenll',
+            JOB_MEAL_ADMIN: 'longjing',
+            JOB_FRONT_ADMIN: 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028',
+        }
+    },
 }
 
 /**

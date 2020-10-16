@@ -338,6 +338,7 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as workconfig from '@/request/workconfig';
 
 export default {
     mixins: [window.mixin],
@@ -524,17 +525,41 @@ export default {
           }
         },
         async entryjob(role){
+
+          let userinfo = await storage.getStore('system_linfo');
+
           //先验证用户是否具备相应权限
           if(role == 'hr'){
+            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_HR_ADMIN;
+
+            if(!list.includes(userinfo.username)){
+              return false;
+            }
 
           } else if(role == 'admin'){
+            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_EXEC_ADMIN;
+
+            if(!list.includes(userinfo.username)){
+              return false;
+            }
 
           } else if(role == 'front'){
+            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_FRONT_ADMIN;
+
+            if(!list.includes(userinfo.username)){
+              return false;
+            }
 
           } else if(role == 'meal'){
 
-          } else {
+            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_MEAL_ADMIN;
 
+            if(!list.includes(userinfo.username)){
+              return false;
+            }
+
+          } else {
+            //没有权限，无法查看
             return false;
           }
 
