@@ -202,7 +202,7 @@ export async function queryTableDataByPid(tableName, id) {
 export async function queryRoleGroupList(name) {
 
     //大写转小写
-    tableName = 'bs_admin_group';
+    const tableName = 'bs_admin_group';
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(groupname,eq,${name})&_sort=create_time`;
 

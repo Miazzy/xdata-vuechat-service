@@ -339,6 +339,7 @@
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as workconfig from '@/request/workconfig';
+import * as query from '@/request/query';
 
 export default {
     mixins: [window.mixin],
@@ -524,6 +525,9 @@ export default {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }
         },
+        /**
+         * @function 入职管理
+         */
         async entryjob(role){
 
           //获取当前登录用户信息
@@ -531,7 +535,9 @@ export default {
 
           //先验证用户是否具备相应权限
           if(role == 'hr'){
-            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_HR_ADMIN;
+            //角色
+            const resp = await query.queryRoleGroupList('JOB_HR_ADMIN');
+            const list = resp[0].userlist;
 
             if(!list.includes(userinfo.username)){
               vant.Toast('您没有入职管理-人力角色的权限！');
@@ -539,7 +545,9 @@ export default {
             }
 
           } else if(role == 'admin'){
-            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_EXEC_ADMIN;
+            //角色
+            const resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN');
+            const list = resp[0].userlist;
 
             if(!list.includes(userinfo.username)){
               vant.Toast('您没有入职管理-行政角色的权限！');
@@ -547,7 +555,9 @@ export default {
             }
 
           } else if(role == 'front'){
-            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_FRONT_ADMIN;
+            //角色
+            const resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN');
+            const list = resp[0].userlist;
 
             if(!list.includes(userinfo.username)){
               vant.Toast('您没有入职管理-前台角色的权限！');
@@ -555,7 +565,9 @@ export default {
             }
 
           } else if(role == 'meal'){
-            const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_MEAL_ADMIN;
+            //角色
+            const resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN');
+            const list = resp[0].userlist;
 
             if(!list.includes(userinfo.username)){
               vant.Toast('您没有入职管理-食堂角色的权限！');
