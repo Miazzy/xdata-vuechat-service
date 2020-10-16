@@ -271,7 +271,7 @@
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >借用</van-button>
           </div>
 
-          <div v-show="item.status ==='已借用' && role == 'receive' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div v-show="item.status ==='已借用' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >归还</van-button>
           </div>
 
@@ -746,6 +746,19 @@ export default {
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
+
+        //批量领取物品修改状态
+        for(let i = 0 ; i < this.tlist.length ; i++){
+
+          //第一步 保存用户数据到数据库中
+          let element = {
+            status: '已归还',
+          }; // 待处理元素
+
+          //第二步，向表单提交form对象数据
+          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+
+        }
 
         /************************  工作流程日志(开始)  ************************/
 
