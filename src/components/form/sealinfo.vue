@@ -302,11 +302,9 @@ export default {
     async activated() {
         this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        //this.userStatus();
     },
     async mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -319,11 +317,6 @@ export default {
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
-          // if( tools.isNull(info) ){
-          //   vant.Toast('尚未登录！');
-          //   await this.clearLoginInfo();
-          //   this.$router.push(`/login`);
-          // }
         } catch (error) {
           console.log(error);
         }
