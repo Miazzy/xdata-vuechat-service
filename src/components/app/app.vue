@@ -73,7 +73,7 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app&role=hr');" >
+              <div class="weui-cell_app_hd" @click="entryjob('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
                   审批
@@ -81,7 +81,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=admin`)">
+              <div class="weui-cell_app_hd" @click="entryjob('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
                   行政
@@ -89,7 +89,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=front`)">
+              <div class="weui-cell_app_hd" @click="entryjob('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png" >
                 <div class="weui-cell_app_bd" >
                   前台
@@ -97,7 +97,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=meal`)">
+              <div class="weui-cell_app_hd" @click="entryjob('meal');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxi_00.png" >
                 <div class="weui-cell_app_bd">
                   食堂
@@ -522,6 +522,24 @@ export default {
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }
+        },
+        async entryjob(role){
+          //先验证用户是否具备相应权限
+          if(role == 'hr'){
+
+          } else if(role == 'admin'){
+
+          } else if(role == 'front'){
+
+          } else if(role == 'meal'){
+
+          } else {
+
+            return false;
+          }
+
+          //跳转到相应界面
+          this.$router.push(`/app/entrylist?back=/app&role=${role}`);
         },
     }
 }
