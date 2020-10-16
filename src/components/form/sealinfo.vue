@@ -1257,12 +1257,6 @@ export default {
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
-        // if( tools.isNull(userinfo) ){
-        //   vant.Toast('尚未登录！');
-        //   await this.clearLoginInfo();
-        //   this.$router.push(`/login`);
-        // }
-
         // 缓存填报人信息
         this.cacheUserInfo();
 
@@ -1307,6 +1301,9 @@ export default {
         //公司工作组
         const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+
         //第一步，构造form对象
         const item = this.item;
         const no = maxinfo.maxno + 1;
@@ -1323,13 +1320,14 @@ export default {
         const username = item.username;
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
-        const seal_man = item.sealman;
         const contract_id = item.contractId;
         const prefix = item.prefix;
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
+        //用印注意，此处需要找到用印人的同组用户，写入数据库
         const seal = item.seal;
+        const seal_man = item.sealman;
         const front = item.front;
         const front_name = item.front_name;
         const finance = item.finance;
@@ -1340,10 +1338,13 @@ export default {
         const archive_name = item.archive_name;
         const send_location = item.send_location;
         const send_mobile = item.send_mobile;
-        //const prefix = item.prefix;
         const company = item.company;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
+
+        //获取到印章管理员组信息
+        const seal_group_ids = resp[0].userlist;
+        const seal_group_names = resp[0].userlist;
 
         if((!finance || !finance_name || !record || !record_name) && this.item.sealtype == '合同类'){
            //提示确认用印操作
@@ -1360,7 +1361,7 @@ export default {
           message: '确认提交用印登记申请？',
         })
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name }; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name , seal_group_ids , seal_group_names}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
@@ -1410,7 +1411,7 @@ export default {
 
           try {
             //通知印章人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.sealuserid},${workconfig.group[groupid].seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.seal}}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
