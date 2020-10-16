@@ -256,7 +256,7 @@ export default {
         const item = list.find((item,index) => {return id == item.id});
 
         //获取角色ROLE
-        this.role = tools.getUrlParam('role') || 'admin';
+        const role = tools.getUrlParam('role') || 'admin';
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
