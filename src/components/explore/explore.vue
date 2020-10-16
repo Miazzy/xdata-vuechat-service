@@ -530,6 +530,8 @@ export default {
           this.$router.push(`/app/sealview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore`);
         } else if(item.tname == 'bs_goods_receive'){ //跳转到相应的物品领用界面
           this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore`);
+        } else if(item.tname == 'bs_goods_borrow'){ //跳转到相应的物品领用界面
+          this.$router.push(`/app/borrow?id=${item.id}&pid=${item.pid}&statustype=none&type=finish&view=view&back=/explore`);
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=done&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
@@ -543,6 +545,10 @@ export default {
           this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else if(item.tname == 'bs_goods_receive' && item.topic.includes('#已领取')){
           this.$router.push(`/app/goodsview?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=receive&view=edit&back=/explore`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_goods_borrow' && item.topic.includes('#待处理')){
+          this.$router.push(`/app/borrow?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=front&view=edit&back=/explore`); //跳转到相应的用印界面
+        } else if(item.tname == 'bs_goods_borrow' && item.topic.includes('#已借用')){
+          this.$router.push(`/app/borrow?id=${item.id}&pid=${item.pid}&statustype=none&type=none&role=front&view=edit&back=/explore`); //跳转到相应的用印界面
         } else {
           this.$router.push(`/explore/content?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=${tabname}`)}&tasktype=wait&tname=${item.tname}&bname=${encodeURI(item.name)}&username=${item.proponents}&sponsor=${encodeURI(item.sponsor)}&topic=${encodeURI(item.topic)}&title=${encodeURI(item.topic)}&files=${encodeURI(item.files)}`);
         }
