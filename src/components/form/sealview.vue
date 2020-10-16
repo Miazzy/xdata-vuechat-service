@@ -931,6 +931,8 @@ export default {
               status: value.status,
               type: that.item.type,
               company: value.company,
+              seal_group_ids:value.seal_group_ids,
+              seal_group_names:value.seal_group_names,
               message: '同意',
             }
 
@@ -974,6 +976,11 @@ export default {
           //如果前缀编号存在，则查询一下最近合同单号
           if(that.item.prefix){
             await this.queryHContract();
+          }
+
+          //如果分组用户不存在，则将分组角色填入
+          if(){
+
           }
 
           //如果合同编号存在

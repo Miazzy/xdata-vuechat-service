@@ -173,11 +173,6 @@ export default {
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
-          // if( tools.isNull(info) ){
-          //   vant.Toast('尚未登录！');
-          //   await this.clearLoginInfo();
-          //   this.$router.push(`/login`);
-          // }
         } catch (error) {
           console.log(error);
         }
@@ -254,6 +249,9 @@ export default {
       //点击Tab栏
       async queryTabList(tabname , page = 0){
 
+        //获取当前用户信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         // 获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
@@ -274,7 +272,7 @@ export default {
         }
 
         if(tabname == 1){
-          const whereSQL = `_where=(status,eq,待用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的待用印记录
           this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
@@ -287,7 +285,7 @@ export default {
 
           this.initContractList.sort();
         } else if(tabname == 2){
-          const whereSQL = `_where=(status,eq,已用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已用印记录
           this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
@@ -300,7 +298,7 @@ export default {
 
           this.sealContractList.sort();
         } else if(tabname == 3){
-          const whereSQL = `_where=(status,eq,已领取)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已领取记录
           this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
@@ -313,7 +311,7 @@ export default {
 
           this.receiveContractList.sort();
         } else if(tabname == 4){
-          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已移交记录
           this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
@@ -326,7 +324,7 @@ export default {
 
           this.frontContractList.sort();
         } else if(tabname == 5){
-          const whereSQL = `_where=(status,eq,已完成)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已归档记录
           this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
@@ -339,7 +337,7 @@ export default {
 
           this.doneContractList.sort();
         } else if(tabname == 6 || tabname == 0){
-          const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已归档记录
           this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
