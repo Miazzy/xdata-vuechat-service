@@ -25,6 +25,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
+
             storage.setStore(`sys_workflow_cache@$history&id${business_data_id}`, res.body, 2);
         }
 
