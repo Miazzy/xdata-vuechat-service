@@ -53,13 +53,8 @@
             </van-col>
           </van-row>
         </div>
-      </div>
-
-      <div class="weui-cells" style="display:block;">
-        <div class="weui-cell-title">人事管理</div>
-
         <div class="flex-layout-content" id="scanCell">
-          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="$router.push(`/explore/sign?back=/app`)">
               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
@@ -68,27 +63,44 @@
                 </div>
               </div>
             </van-col>
+          </van-row>
+        </div>
+      </div>
+
+      <div class="weui-cells" style="display:block;">
+        <div class="weui-cell-title">入职管理</div>
+
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/person.png" >
+              <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app&role=hr');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd">
+                  审批
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=exec`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
-                  考勤
+                  行政
                 </div>
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push('/app/entrylist?back=/app');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
-                <div class="weui-cell_app_bd">
-                  入职
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=front`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png" >
+                <div class="weui-cell_app_bd" >
+                  前台
                 </div>
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd">
-              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=meal`)">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxi_00.png" >
                 <div class="weui-cell_app_bd">
-                  请假
+                  食堂
                 </div>
               </div>
             </van-col>
