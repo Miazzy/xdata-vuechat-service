@@ -40,7 +40,7 @@
             待处理
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已借出
+            已借用
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已归还
@@ -86,7 +86,7 @@ export default {
             confirmList:[],
             doneList:[],
             hContractID:'',
-            tname: 'bs_goods_borrow',
+            tname: 'bs_goods_receive',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
@@ -152,14 +152,6 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
@@ -191,7 +183,7 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_borrowreceive_list_tabname') || '1';
+        this.tabname = storage.getStore('system_goodsreceive_list_tabname') || '1';
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -223,9 +215,14 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.initList = this.initList.filter(item => {
+            return item.id == item.pid;
+          });
+
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已借用)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
@@ -233,9 +230,14 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.confirmList = this.confirmList.filter(item => {
+            return item.id == item.pid;
+          });
+
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已归还)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
@@ -243,6 +245,10 @@ export default {
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.doneList = this.doneList.filter(item => {
+            return item.id == item.pid;
+          });
         }
 
       },
@@ -258,17 +264,17 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_borrowreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=borrowlist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         }
 
       },
@@ -278,5 +284,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
-    @import "../../assets/css/borrowlist.css";
+    @import "../../assets/css/goodslist.css";
 </style>
