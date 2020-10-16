@@ -502,14 +502,26 @@ export default {
 
         },
         async sealFront(){
-          if(this.userinfo.grouplimits.front.length > 0){
+
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+          //获取角色列表
+          const resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+
+          if(this.userinfo.grouplimits.front.length > 0 || resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealfrontlist`);
           } else {
             vant.Toast('您没有用印合同资料前台移交的权限！');
           }
         },
         async sealArchive(){
-          if(this.userinfo.grouplimits.archive.length > 0){
+
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+          //获取角色列表
+          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+
+          if(this.userinfo.grouplimits.archive.length > 0 || resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealarchivelist`);
           } else {
             vant.Toast('您没有用印合同资料归档的权限！');
@@ -581,6 +593,9 @@ export default {
             vant.Toast('您没有入职管理的权限！');
             return false;
           }
+
+          //姚红,李菲,张文瑜,秦力,燕俊洁
+
 
           //跳转到相应界面
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
