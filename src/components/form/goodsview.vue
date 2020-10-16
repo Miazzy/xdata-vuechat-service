@@ -268,6 +268,7 @@
           </van-cell-group>
 
           <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;" />
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
           </div>
 
@@ -608,6 +609,106 @@ export default {
         } catch (error) {
           console.log(error);
         }
+
+      },
+      // 物品领用驳回
+      async handleDisagree(){
+        //显示加载状态
+        this.loading = true;
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        //表单ID
+        const id = this.item.id;
+        const type = tools.getUrlParam('statustype');
+        const pid = tools.getUrlParam('pid');
+
+        // 返回预览URL
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+
+        //第一步 保存用户数据到数据库中
+        const elem = {
+          status: '已驳回',
+        }; // 待处理元素
+
+        //第二步，向表单提交form对象数据
+        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+
+
+        //批量领取物品修改状态
+        for(let i = 0 ; i < this.tlist.length ; i++){
+
+          //第一步 保存用户数据到数据库中
+          let element = {
+            status: '已驳回',
+          }; // 待处理元素
+
+          //第二步，向表单提交form对象数据
+          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+
+        }
+
+        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已领用，请确认领用完成！?rurl=${receiveURL}`)
+                .set('accept', 'json');
+
+        /************************  工作流程日志(开始)  ************************/
+
+        //获取后端配置前端管理员组
+        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
+        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
+
+        //查询当前所有待办记录
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist = tlist.filter(item => {
+          return item.id == id && item.pid == pid;
+        });
+
+        //同时删除本条待办记录当前(印章管理员)
+        await workflow.deleteViewProcessLog(tlist);
+
+        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+        const prLogHisNode = {
+          id: tools.queryUniqueID(),
+          table_name: this.tablename,
+          main_value: id,
+          proponents: userinfo.username,
+          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+          action         : '确认'    ,//varchar(100)  null comment '操作动作',
+          action_opinion : '审批领用申请[已驳回]',//text          null comment '操作意见',
+          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+          relate_data       : '',//text          null comment '关联数据',
+          origin_data       : '',
+        }
+
+        await workflow.approveViewProcessLog(prLogHisNode);
+
+        /************************  工作流程日志(结束)  ************************/
+
+        //设置状态
+        this.loading = false;
+        this.status = elem.status;
+        this.readonly = true;
+        this.item.status = elem.status;
+
+        //弹出确认提示
+        await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '已驳回物品领用申请！',
+          });
 
       },
 

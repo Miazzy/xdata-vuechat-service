@@ -199,12 +199,12 @@ export async function queryTableDataByPid(tableName, id) {
  * @param {*} tableName
  * @param {*} id
  */
-export async function queryRoleGroupList(name) {
+export async function queryRoleGroupList(name, username = '') {
 
     //大写转小写
     const tableName = 'bs_admin_group';
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(groupname,eq,${name})&_sort=create_time`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(groupname,eq,${name})~and(userlist,like,~${username}~)&_sort=create_time`;
 
     try {
         //获取缓存中的数据

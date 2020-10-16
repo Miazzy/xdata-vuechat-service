@@ -488,6 +488,10 @@ export default {
           this.$router.push(`/app/sealinfo`);
         },
         async sealApprove(){
+
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+
           if(this.userinfo.grouplimits.seal.length > 0){
             this.$router.push(`/app/seallist`);
           } else {
