@@ -37,7 +37,7 @@
 
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待确认
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -105,6 +105,7 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
+            role:'',
             isLoading:false,
             loading:false,
             back:'/app',
@@ -191,14 +192,15 @@ export default {
         //强制渲染
         this.$forceUpdate();
 
+        //获取返回页面
+        this.back = tools.getUrlParam('back') || '/app';
+        this.role = tools.getUrlParam('role') || 'front';
+
         //获取tabname
         this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
 
         //查询员工信息列表
         await this.queryTabList(this.tabname ,0);
-
-        //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
 
       },
       async queryTabList(tabname , page){

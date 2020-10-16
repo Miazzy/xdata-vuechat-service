@@ -81,7 +81,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=exec`)">
+              <div class="weui-cell_app_hd" @click="$router.push(`/app/entrylist?back=/app&role=admin`)">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
                   行政
