@@ -526,13 +526,15 @@ export default {
         },
         async entryjob(role){
 
-          let userinfo = await storage.getStore('system_linfo');
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
 
           //先验证用户是否具备相应权限
           if(role == 'hr'){
             const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_HR_ADMIN;
 
             if(!list.includes(userinfo.username)){
+              vant.Toast('您没有入职管理-人力角色的权限！');
               return false;
             }
 
@@ -540,6 +542,7 @@ export default {
             const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_EXEC_ADMIN;
 
             if(!list.includes(userinfo.username)){
+              vant.Toast('您没有入职管理-行政角色的权限！');
               return false;
             }
 
@@ -547,19 +550,20 @@ export default {
             const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_FRONT_ADMIN;
 
             if(!list.includes(userinfo.username)){
+              vant.Toast('您没有入职管理-前台角色的权限！');
               return false;
             }
 
           } else if(role == 'meal'){
-
             const list = workconfig.group.ENTRY_JOB.GROUP0.JOB_MEAL_ADMIN;
 
             if(!list.includes(userinfo.username)){
+              vant.Toast('您没有入职管理-食堂角色的权限！');
               return false;
             }
 
-          } else {
-            //没有权限，无法查看
+          } else { //没有权限，无法查看
+            vant.Toast('您没有入职管理的权限！');
             return false;
           }
 
