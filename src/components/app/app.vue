@@ -491,8 +491,7 @@ export default {
 
           //获取当前登录用户信息
           const userinfo = await storage.getStore('system_userinfo');
-
-          //角色
+          //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
           if(this.userinfo.grouplimits.seal.length > 0 || resp[0].userlist.includes(userinfo.username)){
