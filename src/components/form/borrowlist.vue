@@ -61,6 +61,9 @@
         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已归还" edit-disabled @select="selectHContract()" />
         </template>
+        <template v-show="tabname == 4 && !loading && !isLoading">
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
+        </template>
       </div>
 
     </section>
@@ -88,12 +91,14 @@ export default {
             initList:[],
             confirmList:[],
             doneList:[],
+            rejectList:[],
             hContractID:'',
             tname: 'bs_goods_borrow',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
               '3': 'doneList',
+              '4': 'rejectList',
             },
             back:'/app',
             searchWord:'',
@@ -252,6 +257,20 @@ export default {
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
+         } else if(tabname == 4) {
+          //获取最近6个月的已领取记录
+          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.rejectList.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          this.rejectList = this.rejectList.filter(item => {
+            return item.id == item.pid;
+          });
         }
 
       },
@@ -264,18 +283,19 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
+        storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+         } else if(this.tabname == '4' ){
           //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         }
