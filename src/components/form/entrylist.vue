@@ -255,6 +255,9 @@ export default {
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
 
+        //获取角色ROLE
+        this.role = tools.getUrlParam('role') || 'admin';
+
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
@@ -263,7 +266,7 @@ export default {
         } else if(this.tabname == '2'){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=hr&back=/app/entrylist`);
+          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=/app/entrylist`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
