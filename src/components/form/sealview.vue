@@ -979,7 +979,27 @@ export default {
           }
 
           //如果分组用户不存在，则将分组角色填入
-          if(){
+          if(tools.isNull(value.seal_group_ids)){
+
+            //查询直接所在工作组
+            const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);
+
+            //获取到印章管理员组信息
+            let seal_group_ids = resp[0].userlist;
+            let seal_group_names = resp[0].enuserlist;
+
+            //如果未获取用户名称，则直接设置用印人为分组成员
+            if(tools.isNull(seal_group_ids)){
+              seal_group_ids = seal;
+              seal_group_names = seal_man;
+            }
+
+            try {
+              //修改状态为已用印，保存当前合同编号
+              await manageAPI.patchTableData(`bs_seal_regist` , id , {seal_group_ids,seal_group_names});
+            } catch (error) {
+              console.log(error);
+            }
 
           }
 
