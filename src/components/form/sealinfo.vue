@@ -1301,8 +1301,6 @@ export default {
         //公司工作组
         const groupid = tools.getUrlParam('groupid') || 'Group_LD';
 
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
         //第一步，构造form对象
         const item = this.item;
@@ -1342,9 +1340,12 @@ export default {
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);
+
         //获取到印章管理员组信息
         const seal_group_ids = resp[0].userlist;
-        const seal_group_names = resp[0].userlist;
+        const seal_group_names = resp[0].euserlist;
 
         if((!finance || !finance_name || !record || !record_name) && this.item.sealtype == '合同类'){
            //提示确认用印操作
