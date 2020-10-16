@@ -565,9 +565,6 @@ export default {
 
           const item = tlist[0];
 
-          //根据URL参数查询物资类型
-          this.item.type = this.goodsborrowtype[tools.getUrlParam('type')];
-
           //自动回显刚才填写的用户基础信息
           if(item){
             this.item.id = id;

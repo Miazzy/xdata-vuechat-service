@@ -86,7 +86,7 @@ export default {
             confirmList:[],
             doneList:[],
             hContractID:'',
-            tname: 'bs_goods_receive',
+            tname: 'bs_goods_borrow',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
@@ -266,15 +266,15 @@ export default {
         if(this.tabname == '1'){
           storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
           storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
           storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         }
 
       },
