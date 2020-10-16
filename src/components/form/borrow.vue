@@ -268,11 +268,11 @@
           </van-cell-group>
 
           <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >借用</van-button>
           </div>
 
-          <div v-show="item.status ==='已领取' && role == 'receive' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >完成</van-button>
+          <div v-show="item.status ==='已借用' && role == 'receive' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >归还</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -618,7 +618,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '已领取',
+          status: '已借用',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -630,7 +630,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已领取',
+            status: '已借用',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -704,7 +704,7 @@ export default {
           functions_station : '经办人',//varchar(100)  null comment '职能岗位',
           process_station   : '借用审批[物品借用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品借用(${this.item.type}) ` + this.item.name + '#已领取 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
+          content           : `物品借用(${this.item.type}) ` + this.item.name + '#已借用 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -744,7 +744,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          status: '已完成',
+          status: '已归还',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
