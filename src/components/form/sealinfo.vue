@@ -1345,7 +1345,7 @@ export default {
 
         //获取到印章管理员组信息
         const seal_group_ids = resp[0].userlist;
-        const seal_group_names = resp[0].euserlist;
+        const seal_group_names = resp[0].enuserlist;
 
         if((!finance || !finance_name || !record || !record_name) && this.item.sealtype == '合同类'){
            //提示确认用印操作
