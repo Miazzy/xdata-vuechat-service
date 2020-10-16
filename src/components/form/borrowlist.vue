@@ -53,10 +53,10 @@
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已借用" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已归还" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
@@ -183,7 +183,7 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_goodsreceive_list_tabname') || '1';
+        this.tabname = storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -264,17 +264,17 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
+          storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/borrow?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
         }
 
       },
