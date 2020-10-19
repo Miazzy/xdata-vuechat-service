@@ -117,12 +117,12 @@
           </van-cell-group>
 
           <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;" />
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;width:47.5%;float:right;"  >借用</van-button>
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;width:99.5%;text-align:center;"  >认领</van-button>
           </div>
 
-          <div v-show="item.status ==='已借用' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >归还</van-button>
+          <div v-show="item.status ==='已认领' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
+            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="驳回"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;" />
           </div>
 
           <div style="height:500px;" ></div>
@@ -422,15 +422,15 @@ export default {
               create_time: dayjs(item.create_time).format('YYYY-MM-DD'),
               create_by: item.create_by,
 
-              lost_time: dayjs(item.lost_name).format('YYYY-MM-DD'), //遗失时间
+              lost_time: dayjs(item.lost_time).format('YYYY-MM-DD'), //遗失时间
               lost_name: item.lost_name, //失物名称
               lost_amount: item.lost_amount,//失物数量
 
-              claim_name: item.claim_name, //认领人员
-              claim_time: dayjs(item.claim_time).format('YYYY-MM-DD'), //认领时间
-              department: item.department, //部门名称
-              company: item.company, //单位名称
-              mobile: item.mobile, //联系电话
+              claim_name: userinfo.realname, //认领人员
+              claim_time: dayjs().format('YYYY-MM-DD'), //认领时间
+              department: userinfo.department.name, //部门名称
+              company: userinfo.parent_company.name, //单位名称
+              mobile: userinfo.mobile, //联系电话
               description: item.description, //备注说明
 
               serialid: item.serialid, //序列编号

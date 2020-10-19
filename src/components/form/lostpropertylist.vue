@@ -271,13 +271,13 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=/app/lostpropertylist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=/app/lostpropertylist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=/app/lostpropertylist`);
          }
 
       },
