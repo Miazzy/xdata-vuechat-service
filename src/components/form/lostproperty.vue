@@ -214,7 +214,7 @@ export default {
               status: '',
             },
             tlist:[],
-            back:'/app',
+            back:'/app/lostpropertylist',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -372,11 +372,6 @@ export default {
         }, 1000);
       },
 
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
-
       // 选择入职时间
       async joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
@@ -406,7 +401,7 @@ export default {
           //查询编号
           const id = tools.getUrlParam('id');
           this.role = tools.getUrlParam('role');
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = tools.getUrlParam('back') || '/app/lostpropertylist';
 
           //查询借用数据
           let tlist = await query.queryTableDataByPid(this.tablename , id);
@@ -431,11 +426,6 @@ export default {
             this.item.workflow = item.workflow || this.item.workflow;
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
-          }
-
-          for(let i = 1 ; i < tlist.length ; i++){
-            this.item['name'+i] = tlist[i].name ;
-            this.item['amount'+i] = tlist[i].amount ;
           }
 
           await this.queryProcessLog();
