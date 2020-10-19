@@ -393,7 +393,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_goods_borrow',
+            tablename:'bs_lost_property',
             readonly: false,
             goodstype: workconfig.goodstype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,

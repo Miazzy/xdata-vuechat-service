@@ -87,7 +87,7 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_goods_borrow',
+            tname: 'bs_lost_property',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
