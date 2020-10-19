@@ -232,18 +232,16 @@ export async function queryRoleGroupList(name, username = '') {
  * @param {*} tableName
  * @param {*} id
  */
-export async function queryMessages(wxid, wxid_, maxId = '') {
+export async function queryMessages(wxid, wxid_, maxId = 0) {
 
     //大写转小写
     const tableName = 'bs_message';
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=（(team,like,~${wxid},${wxid_}~)~or(team,like,~${wxid_},${wxid}~)）~and(id,ge,${maxId})&_sort=id`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=((team,like,~${wxid},${wxid_}~)~or(team,like,~${wxid_},${wxid}~))&_sort=-id`;
 
     try {
         //获取缓存中的数据
         var cache = storage.getStore(`sys_message_cache##v1@${tableName}&wxid${wxid}|wxid_${wxid_}|maxid${maxId}`);
-
-        debugger;
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
