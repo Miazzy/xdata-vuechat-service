@@ -376,22 +376,6 @@ export default {
         }, 1000);
       },
 
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
