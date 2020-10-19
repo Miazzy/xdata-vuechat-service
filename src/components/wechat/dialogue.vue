@@ -44,13 +44,14 @@
                     </div>
                 </div>
                 <div class="chat-way" v-show="currentChatWay">
-                    <input class="chat-txt" type="text" v-on:focus="focusIpt" v-on:blur="blurIpt"/>
+                    <input class="chat-txt" type="text" v-model="message" v-on:focus="focusIpt" v-on:blur="blurIpt"/>
                 </div>
                 <span class="expression iconfont">
                   <van-icon name="smile-o" style="margin-top: 5px;margin-left:2px;"/>
                 </span>
                 <span class="more iconfont ">
-                  <van-icon name="add-o" style="margin-top: 5px;"/>
+                  <van-icon v-show=" message == '' " name="add-o" style="margin-top: 5px;"/>
+                  <van-button v-show=" message !== '' " type="primary" size="mini" style="padding: 0 2px; top:-7px;" @click="sendMessage();">发送</van-button>
                 </span>
                 <div class="recording" style="display: none;" id="recording">
                     <div class="recording-voice" style="display: none;" id="recording-voice">
@@ -81,6 +82,8 @@
 </template>
 <script>
 
+import * as manageAPI from '@/request/manage';
+import * as storage from '@/request/storage';
 import * as contact from '@/vuex/contacts';
 import * as tools from '@/request/tools';
 
@@ -90,10 +93,12 @@ export default {
             pageName: this.$route.query.name,
             currentChatWay: true, //ture为键盘打字 false为语音输入
             timer: null,
-            avatar:'',
+            avatar: '',
             wxid: this.$route.query.wxid,
-            messages:[],
-            userinfo:null,
+            message: '',
+            tablename: 'bs_message',
+            messages: [],
+            userinfo: null,
         }
     },
     beforeRouteEnter(to, from, next) {
@@ -196,11 +201,35 @@ export default {
                 document.body.scrollTop = document.body.scrollHeight
             }, 100)
         },
+        blurIpt() {
+            clearInterval(this.timer)
+        },
         async queryInfo(){
           this.userinfo = await contact.getUserInfo(this.wxid);
         },
-        blurIpt() {
-            clearInterval(this.timer)
+        async sendMessage(){
+
+          //获取用户信息
+          const myuserinfo = await storage.getStore('system_userinfo');
+
+          const message = this.message;
+          const wxid = this.$route.query.wxid;
+
+          const elem = {
+            id: tools.queryUniqueID(),
+            create_by: myuserinfo.username,
+            create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            wxid: myuserinfo.userid,
+            rwxid: wxid,
+            content: message,
+            team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
+            status: '0',
+          }
+
+          const result = await manageAPI.postTableData(this.tablename , elem);
+
+          this.message = '';
+
         },
         // 点击空白区域，菜单被隐藏
         MenuOutsideClick(e) {

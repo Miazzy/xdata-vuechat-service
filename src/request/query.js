@@ -230,6 +230,39 @@ export async function queryRoleGroupList(name, username = '') {
 /**
  * 查询数据
  * @param {*} tableName
+ * @param {*} id
+ */
+export async function queryMessages(wxid, wxid_, maxId = '') {
+
+    //大写转小写
+    const tableName = 'bs_message';
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(team,like,~${wxid}~)~and(team,like,~${wxid_}~)~and(id,ge,${maxId})&_sort=id`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_message_cache@${tableName}&wxid${wxid}|wxid_${wxid_}|maxid${maxId}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_message_cache@${tableName}&wxid${wxid}|wxid_${wxid_}|maxid${maxId}`, res.body, 1000);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
  * @param {*} whereSQL
  */
 export async function queryTableDataByWhereSQL(tableName, whereSQL) {
