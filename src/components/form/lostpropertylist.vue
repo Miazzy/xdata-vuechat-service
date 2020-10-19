@@ -211,9 +211,9 @@ export default {
           this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = item.type + '认领: ' + item.name + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
