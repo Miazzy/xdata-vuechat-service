@@ -170,47 +170,18 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用物品名称
-              amount:'',//借用数量
-              name1:'', //借用物品名称
-              amount1:'',//借用数量
-              name2:'', //借用物品名称
-              amount2:'',//借用数量
-              name3:'', //借用物品名称
-              amount3:'',//借用数量
-              name4:'', //借用物品名称
-              amount4:'',//借用数量
-              name5:'', //借用物品名称
-              amount5:'',//借用数量
-              name6:'', //借用物品名称
-              amount6:'',//借用数量
-              name7:'', //借用物品名称
-              amount7:'',//借用数量
-              name8:'', //借用物品名称
-              amount8:'',//借用数量
-              name9:'', //借用物品名称
-              amount9:'',//借用数量
-              name10:'', //借用物品名称
-              amount10:'',//借用数量
-              name11:'', //借用物品名称
-              amount11:'',//借用数量
-              name12:'', //借用物品名称
-              amount12:'',//借用数量
-              name13:'', //借用物品名称
-              amount13:'',//借用数量
-              name14:'', //借用物品名称
-              amount14:'',//借用数量
-              name15:'', //借用物品名称
-              amount15:'',//借用数量
-              receive_name:'',//借用人员名称
-              department:'',//借用部门名称
-              remark:'',//备注说明
-              type:'',//借用类别
-              company:'',//单位名称
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
+
+              lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
+              lost_name:'', //失物名称
+              lost_amount:'',//失物数量
+
+              claim_name: '', //认领人员
+              claim_time: '', //认领时间
+              department:'', //部门名称
+              company:'', //单位名称
+              mobile: '', //联系电话
+              description:'', //备注说明
+
               status: '',
             },
             back:'/app',
