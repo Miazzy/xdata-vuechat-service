@@ -34,7 +34,7 @@
                     <p>地区</p>
                 </div>
                 <div class="weui-cell__ft" style="-webkit-flex: 4;text-align: left;">
-                    <span v-for="item in userinfo.area">{{item}}&nbsp;&nbsp;&nbsp;</span>
+                    <span :key="item" v-for="item in userinfo.area">{{item}}&nbsp;&nbsp;&nbsp;</span>
                 </div>
             </div>
             <div class="weui-cell weui-cell_access">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="weui-cell__ft" style="-webkit-flex: 4;text-align: left;">
                     <div class="album-list">
-                        <img :src="item.imgSrc" style="width:50px;margin:0 5px" v-for="item in userinfo.album">
+                        <img :key="item.imgSrc" :src="item.imgSrc" style="width:50px;margin:0 5px" v-for="item in userinfo.album">
                     </div>
                 </div>
             </div>
