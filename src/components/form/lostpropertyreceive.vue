@@ -92,7 +92,7 @@
 
           </van-cell-group>
 
-          <div style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" v-show="!item.serialid" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >提交</van-button>
           </div>
 
@@ -347,28 +347,6 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
-
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
-
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -383,7 +361,7 @@ export default {
           const userinfo = await storage.getStore('system_userinfo');
 
           //获取缓存信息
-          const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
+          const item = storage.getStore(`system_${this.tablename}_item@${userinfo.realname}`);
 
           //自动回显刚才填写的用户基础信息
           if(item){
@@ -436,50 +414,16 @@ export default {
           id,
           create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           create_by : userinfo.username,
-          name : this.item.name,
-          amount : this.item.amount,
-          receive_name:this.item.receive_name ,
-          department : this.item.department,
-          remark : this.item.remark,
-          type : this.item.type,
-          company : this.item.company,
-          approve_name : this.item.approve_name,
-          workflow : this.item.workflow,
-          approve : this.item.approve,
+          lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
+          lost_name: this.item.lost_name, //失物名称
+          lost_amount: this.item.lost_amount,//失物数量
+          description: this.item.description, //备注说明
           pid: id,
           status: '待处理',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
-
-        //计算批量物品
-        const tsize = this.size - 1;
-
-        if(tsize >= 1){
-          for(let i = 1; i <= tsize ; i++){
-
-            let element = {
-                  id: tools.queryUniqueID(),
-                  create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-                  create_by : userinfo.username,
-                  name : this.item['name' + i],
-                  amount : this.item['amount' + i],
-                  receive_name:this.item.receive_name ,
-                  department : this.item.department,
-                  remark : this.item.remark,
-                  type : this.item.type,
-                  company : this.item.company,
-                  approve_name : this.item.approve_name,
-                  workflow : this.item.workflow,
-                  approve : this.item.approve,
-                  pid: id,
-                  status: '待处理',
-                };
-            //向表单提交form对象数据
-            await manageAPI.postTableData(this.tablename , element);
-          }
-        }
 
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
@@ -490,19 +434,18 @@ export default {
         //显示序列号
         this.item.serialid = value.serialid;
 
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕，请前台确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
-
-
-        /************************  工作流程日志(开始)  ************************/
-
         //查询直接所在工作组
         const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
 
         //获取后端配置前端管理员组
         const front = resp[0].userlist;
         const front_name = resp[0].enuserlist;
+
+        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front},${userinfo.username}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕！?rurl=${receiveURL}`)
+                .set('accept', 'json');
+
+        /************************  工作流程日志(开始)  ************************/
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
@@ -512,16 +455,16 @@ export default {
           proponents: userinfo.username,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          process_name   : '失物招领流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起借用申请[待处理]',//text          null comment '操作意见',
+          action_opinion : '发起失物登记[待处理]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[失物招领]',//varchar(100)  null comment '流程岗位',
+          process_station   : '登记[失物招领]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `失物招领(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
+          content           : `失物登记: ${this.item.lost_name}  ` + this.item.description + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -529,34 +472,6 @@ export default {
         }
 
         await workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: front,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : front_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : front ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[失物招领]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `失物招领(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.taskViewProcessLog(prLogNode);
 
         /************************  工作流程日志(结束)  ************************/
 
@@ -568,7 +483,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已经向前台客户推送失物招领申请！',
+            message: '已经登记失物招领！',
           });
 
       }
