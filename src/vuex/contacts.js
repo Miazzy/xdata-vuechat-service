@@ -342,12 +342,14 @@ export const getUserInfo = async(wxid) => {
     if (!wxid) {
         return;
     } else {
-        var contacts = await storage.getStore(ALL_USER_CACHE_KEY);
+        var contacts = await storage.getStoreDB(ALL_USER_CACHE_KEY);
         for (var index in contacts) {
-            if (contacts[index].wxid === wxid) {
+            if (contacts[index].wxid == wxid) {
                 return contacts[index]
             }
         }
+
+        //如果没有查询到，则直接查询远程服务器
     }
 }
 

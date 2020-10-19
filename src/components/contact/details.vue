@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;">发消息</a>
+        <a href="javascript:;" class="weui-btn weui-btn_primary" style="width:90%;margin-top:20px;" @click="sendMessage(userinfo)">发消息</a>
         <a href="javascript:;" class="weui-btn weui-btn_default" style="width:90%">视频</a>
 
     </div>
@@ -89,15 +89,18 @@ export default {
     methods: {
       async queryInfo() {
 
-          const wxid = this.$route.query.wxid;
-          const allContacts = await contact.queryContacts();
+        const wxid = this.$route.query.wxid;
+        const allContacts = await contact.queryContacts();
 
-          const userinfo = allContacts.find(item => {
-            return item.userid == wxid;
-          });
+        const userinfo = allContacts.find(item => {
+          return item.userid == wxid;
+        });
 
-          this.userinfo = userinfo;
-        }
+        this.userinfo = userinfo;
+      },
+      async sendMessage(userinfo) {
+        this.$router.push(`/wechat/dialogue?mid=1&group_num=1&mobile=${userinfo.mobile}&wxid=${this.$route.query.wxid}&username=${userinfo.name}`);
+      },
     },
 }
 </script>

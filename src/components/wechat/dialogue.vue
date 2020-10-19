@@ -19,7 +19,7 @@
         </header>
         <section class="dialogue-section clearfix" v-on:click="MenuOutsideClick">
             <div class="row clearfix" :key="item.headerUrl" v-for="item in msgInfo.msg">
-                <img :src="item.headerUrl" class="header">
+                <img :src="userinfo.avatar" class="header">
                 <p class="text" v-more>{{item.text}}</p>
             </div>
             <span class="msg-more" id="msg-more"><ul>
@@ -80,168 +80,184 @@
     </div>
 </template>
 <script>
-    export default {
-        data() {
-            return {
-                pageName: this.$route.query.name,
-                currentChatWay: true, //ture为键盘打字 false为语音输入
-                timer: null
-                // sayActive: false // false 键盘打字 true 语音输入
-            }
-        },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                vm.$store.commit("setPageName", vm.$route.query.name)
-            })
-        },
-        computed: {
-            msgInfo() {
-                for (var i in this.$store.state.msgList.baseMsg) {
-                    if (this.$store.state.msgList.baseMsg[i].mid == this.$route.query.mid) {
-                        return this.$store.state.msgList.baseMsg[i]
-                    }
-                }
-            }
-        },
-        directives: {
-            press: {
-                inserted(element, binding) {
-                    var recording = document.querySelector('.recording'),
-                        recordingVoice = document.querySelector('.recording-voice'),
-                        recordingCancel = document.querySelector('.recording-cancel'),
-                        startTx, startTy;
-                    element.addEventListener('touchstart', function(e) {
-                        element.className = "chat-say say-active"
-                        recording.style.display = recordingVoice.style.display = "block"
-                        var touches = e.touches[0]
-                        startTx = touches.clientX
-                        startTy = touches.clientY
-                        e.preventDefault()
-                    }, false)
-                    element.addEventListener('touchend', function(e) {
-                        element.className = "chat-say"
-                        recordingCancel.style.display = recording.style.display = recordingVoice.style.display = "none"
-                        e.preventDefault()
-                    }, false)
-                    element.addEventListener('touchmove', function(e) {
-                        var touches = e.changedTouches[0],
-                            endTx = touches.clientX,
-                            endTy = touches.clientY,
-                            distanceX = startTx - endTx,
-                            distanceY = startTy - endTy;
 
-                        if (distanceY > 50) {
-                            element.className = "chat-say"
-                            recordingVoice.style.display = "none"
-                            recordingCancel.style.display = "block"
-                        }else{
-                            element.className = "chat-say say-active"
-                            recordingVoice.style.display = "block"
-                            recordingCancel.style.display = "none"
-                        }
-                        // 阻断事件冒泡 防止页面被一同向上滑动
-                        e.preventDefault()
-                    }, false);
-                }
-            },
-            more: {
-                bind(element, binding) {
-                    var startTx, startTy
-                    element.addEventListener('touchstart', function(e) {
-                        var msgMore = document.getElementById('msg-more'),
-                            touches = e.touches[0];
-                        startTx = touches.clientX
-                        startTy = touches.clientY
+import * as contact from '@/vuex/contacts';
+import * as tools from '@/request/tools';
 
-                        clearTimeout(this.timer)
-                        this.timer = setTimeout(()=>{
-                            // 控制菜单的位置
-                            msgMore.style.left = ((startTx - 18) > 180 ? 180 : (startTx - 18)) + 'px'
-                            msgMore.style.top = (element.offsetTop - 33) + 'px'
-                            msgMore.style.display = "block"
-                            element.style.backgroundColor = '#e5e5e5'
-                        },500)
-
-                    }, false)
-                    element.addEventListener('touchmove', function(e) {
-                        var touches = e.changedTouches[0],
-                            disY = touches.clientY;
-                        if (Math.abs(disY-startTy)>10) {
-                            clearTimeout(this.timer)
-                        }
-                    }, false)
-                    element.addEventListener('touchend', function(e) {
-                        clearTimeout(this.timer)
-                    }, false)
-                }
-            }
-        },
-        methods: {
-            // 解决输入法被激活时 底部输入框被遮住问题
-            focusIpt() {
-                this.timer = setInterval(function() {
-                    document.body.scrollTop = document.body.scrollHeight
-                }, 100)
-            },
-            blurIpt() {
-                clearInterval(this.timer)
-            },
-            // 点击空白区域，菜单被隐藏
-            MenuOutsideClick(e) {
-                var container = document.querySelectorAll('.text'),
-                    msgMore = document.getElementById('msg-more')
-                if (e.target.className === 'text') {
-
-                } else {
-                    msgMore.style.display = 'none'
-                    container.forEach(item=>item.style.backgroundColor='#fff')
+export default {
+    data() {
+        return {
+            pageName: this.$route.query.name,
+            currentChatWay: true, //ture为键盘打字 false为语音输入
+            timer: null,
+            avatar:'',
+            wxid: this.$route.query.wxid,
+            messages:[],
+            userinfo:null,
+        }
+    },
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            vm.$store.commit("setPageName", vm.$route.query.name)
+        })
+    },
+    computed: {
+        msgInfo() {
+            for (var i in this.$store.state.msgList.baseMsg) {
+                if (this.$store.state.msgList.baseMsg[i].mid == this.$route.query.mid) {
+                    return this.$store.state.msgList.baseMsg[i]
                 }
             }
         }
+    },
+    async activated() {
+        this.queryInfo();
+    },
+    async mounted() {
+      this.queryInfo();
+    },
+    directives: {
+        press: {
+            inserted(element, binding) {
+                var recording = document.querySelector('.recording'),
+                    recordingVoice = document.querySelector('.recording-voice'),
+                    recordingCancel = document.querySelector('.recording-cancel'),
+                    startTx, startTy;
+                element.addEventListener('touchstart', function(e) {
+                    element.className = "chat-say say-active"
+                    recording.style.display = recordingVoice.style.display = "block"
+                    var touches = e.touches[0]
+                    startTx = touches.clientX
+                    startTy = touches.clientY
+                    e.preventDefault()
+                }, false)
+                element.addEventListener('touchend', function(e) {
+                    element.className = "chat-say"
+                    recordingCancel.style.display = recording.style.display = recordingVoice.style.display = "none"
+                    e.preventDefault()
+                }, false)
+                element.addEventListener('touchmove', function(e) {
+                    var touches = e.changedTouches[0],
+                        endTx = touches.clientX,
+                        endTy = touches.clientY,
+                        distanceX = startTx - endTx,
+                        distanceY = startTy - endTy;
+
+                    if (distanceY > 50) {
+                        element.className = "chat-say"
+                        recordingVoice.style.display = "none"
+                        recordingCancel.style.display = "block"
+                    }else{
+                        element.className = "chat-say say-active"
+                        recordingVoice.style.display = "block"
+                        recordingCancel.style.display = "none"
+                    }
+                    // 阻断事件冒泡 防止页面被一同向上滑动
+                    e.preventDefault()
+                }, false);
+            }
+        },
+        more: {
+            bind(element, binding) {
+                var startTx, startTy
+                element.addEventListener('touchstart', function(e) {
+                    var msgMore = document.getElementById('msg-more'),
+                        touches = e.touches[0];
+                    startTx = touches.clientX
+                    startTy = touches.clientY
+
+                    clearTimeout(this.timer)
+                    this.timer = setTimeout(()=>{
+                        // 控制菜单的位置
+                        msgMore.style.left = ((startTx - 18) > 180 ? 180 : (startTx - 18)) + 'px'
+                        msgMore.style.top = (element.offsetTop - 33) + 'px'
+                        msgMore.style.display = "block"
+                        element.style.backgroundColor = '#e5e5e5'
+                    },500)
+
+                }, false)
+                element.addEventListener('touchmove', function(e) {
+                    var touches = e.changedTouches[0],
+                        disY = touches.clientY;
+                    if (Math.abs(disY-startTy)>10) {
+                        clearTimeout(this.timer)
+                    }
+                }, false)
+                element.addEventListener('touchend', function(e) {
+                    clearTimeout(this.timer)
+                }, false)
+            }
+        }
+    },
+    methods: {
+        // 解决输入法被激活时 底部输入框被遮住问题
+        focusIpt() {
+            this.timer = setInterval(function() {
+                document.body.scrollTop = document.body.scrollHeight
+            }, 100)
+        },
+        async queryInfo(){
+          this.userinfo = await contact.getUserInfo(this.wxid);
+        },
+        blurIpt() {
+            clearInterval(this.timer)
+        },
+        // 点击空白区域，菜单被隐藏
+        MenuOutsideClick(e) {
+            var container = document.querySelectorAll('.text'),
+                msgMore = document.getElementById('msg-more')
+            if (e.target.className === 'text') {
+
+            } else {
+                msgMore.style.display = 'none'
+                container.forEach(item=>item.style.backgroundColor='#fff')
+            }
+        }
     }
+}
 </script>
 <style>
-    @import "../../assets/css/dialogue.css";
-    .dialogue-section {
-        height: 100%;
-        background: #fefefe;
-        padding: 2%;
-    }
-    .dialogue-section .row {
-        width: 80%;
-        margin-top: 30px;
-        margin-bottom: -10px;
-        margin-left: 0px;
-    }
+@import "../../assets/css/dialogue.css";
+.dialogue-section {
+    height: 100%;
+    background: #fefefe;
+    padding: 2%;
+}
+.dialogue-section .row {
+    width: 80%;
+    margin-top: 30px;
+    margin-bottom: -10px;
+    margin-left: 0px;
+}
 
-    .dialogue-section .row .header {
-        width: 35px;
-        height: 35px;
-        float: left;
-        display: block;
-    }
+.dialogue-section .row .header {
+    width: 35px;
+    height: 35px;
+    float: left;
+    display: block;
+}
 
-    .dialogue-section .row .text {
-        float: left;
-        background: #f0f0f0;
-        padding: 8px;
-        box-sizing: border-box;
-        margin-left: 10px;
-        position: relative;
-        border-radius: 4px;
-        max-width: 80%;
-        font-size: 14px;
+.dialogue-section .row .text {
+    float: left;
+    background: #f0f0f0;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-left: 10px;
+    position: relative;
+    border-radius: 4px;
+    max-width: 80%;
+    font-size: 14px;
 
-    }
+}
 
-    .dialogue-section .row .text:before {
-        width: 0;
-        height: 0;
-        position: absolute;
-        left: -12px;
-        top: 11px;
-        content: "";
-        border: 6px solid transparent;
-        border-right-color: #f0f0f0;
-    }
+.dialogue-section .row .text:before {
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: -12px;
+    top: 11px;
+    content: "";
+    border: 6px solid transparent;
+    border-right-color: #f0f0f0;
+}
 </style>
