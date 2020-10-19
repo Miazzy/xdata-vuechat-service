@@ -7,7 +7,7 @@
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
-            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back"  tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>失物招领</span>
@@ -185,7 +185,7 @@ export default {
               serialid: '', //序列编号
               status: '',
             },
-            back:'/app',
+            back:'/app/lostpropertylist',
             workflowlist:[],
             announces:[],
             informList:[],
@@ -355,7 +355,7 @@ export default {
           this.iswechat = tools.isWechat();
 
           //查询上一页
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = tools.getUrlParam('back') || '/app/lostpropertylist';
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');

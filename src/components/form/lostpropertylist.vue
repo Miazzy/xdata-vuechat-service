@@ -94,12 +94,13 @@ export default {
               '3': 'doneList',
               '4': 'rejectList',
             },
-            back:'/app',
+            back:'/app/lostpropertylist',
             searchWord:'',
             searchFlag: false,
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
+              { text: '登记', value: 1 , icon: 'edit' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -153,6 +154,9 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
+          case 1: //刷新数据
+            this.$router.push(`/app/lostpropertyreceive`);
+            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
@@ -267,13 +271,13 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=borrowlist`);
          }
 
       },
