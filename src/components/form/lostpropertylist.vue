@@ -226,9 +226,9 @@ export default {
           this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已认领)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = item.type + '认领: ' + item.name + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
@@ -241,9 +241,9 @@ export default {
           this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已归还)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = item.type + '认领: ' + item.name + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
@@ -255,9 +255,9 @@ export default {
           this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
-            item.name = item.type + '认领: ' + item.name + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
