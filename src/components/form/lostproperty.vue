@@ -57,165 +57,12 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 借用时间（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
-                <!-- 借用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="true" :required="false" clearable label="遗失时间" v-model="item.lost_time"  placeholder="请填写遗失时间！" @blur="validField('lost_time')" :error-message="message.lost_time"  />
                 <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="失物名称" v-model="item.name"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
+                <van-field :readonly="readonly" :required="false" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name')" :error-message="message.lost_name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="false" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
 
-                 <span class="van-goods-span-number" style="top:180px;">#1</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name1"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount1"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#2</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=3" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name2"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount2"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#3</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=4" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name3"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount3"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#4</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=5" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name4"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount4"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#5</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=6" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name5"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount5"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#6</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=7" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name6"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount6"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#7</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=8" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name7"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount7"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#8</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=9" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name8"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount8"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#9</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=10" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name9"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount9"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#10</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=11" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name10"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount10"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#11</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=12" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name11"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount11"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#12</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=13" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name12"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount12"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#13</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=14" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name13"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount13"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#14</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=15" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name14"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount14"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#15</span>
-              </van-cell-group>
-
-               <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="失物名称" v-model="item.name15"  placeholder="请填写失物名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount15"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#16</span>
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -223,11 +70,13 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 借用人员（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-field :readonly="true" :required="false" clearable label="认领人员" v-model="item.claim_name"  placeholder="请填写您的姓名！" @blur="validField('claim_name')" :error-message="message.claim_name"  />
                 <!-- 单位名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+                <!-- 联系电话（HR需要确认/修改） -->
+                <van-field :readonly="true" :required="false" clearable label="联系电话" v-model="item.mobile" placeholder="请填写您的联系电话！" @blur="validField('mobile')" :error-message="message.mobile" />
 
               </van-cell-group>
 
@@ -236,7 +85,7 @@
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.description"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如失物品相，颜色，遗失地点以及其他情况！" @blur="validField('remark')" :error-message="message.remark"  />
 
               </van-cell-group>
 
