@@ -10,11 +10,11 @@
         </header>
         <div class="weui-cells">
             <div class="weui-cell">
-                <div class="weui-cell__hd"><img :src="userinfo.headerUrl" alt="" class="self-header" style="width:60px"></div>
+                <div class="weui-cell__hd"><img :src="userinfo.avatar" alt="" class="self-header" style="width:60px"></div>
                 <div class="weui-cell__bd">
-                    <h4 class="self-nickname">{{userinfo.nickname}}<span class="gender" :class="[userinfo.sex===1?'gender-male':'gender-female']"></span></h4>
+                    <h4 class="self-nickname"> {{ userinfo.nickname }} <span class="gender" :class=" [ userinfo.gender == 1 ? 'gender-male' : 'gender-female' ] "></span></h4>
                     <p class="self-wxid" style="font-size: 13px;color: #999;">账号: {{userinfo.wxid}}</p>
-                    <p class="nickname" style="font-size: 13px;color: #999;">昵称:{{userinfo.nickname||'无'}}</p>
+                    <p class="nickname" style="font-size: 13px;color: #999;">昵称:{{userinfo.nickname||'无'}} - {{userinfo.position}}</p>
                 </div>
             </div>
         </div>
@@ -70,30 +70,21 @@ export default {
     data() {
         return {
             pageName: "",
-            userinfo:{},
+            userinfo: {
+              avatar:'',
+              area:[],
+              birthday:'',
+              sex: 0,
+              gender: 1,
+              nickname:'',
+            },
         }
     },
     async created(){
       await this.queryInfo();
     },
     computed: {
-        async userInfo() {
 
-          const wxid = this.$route.query.wxid;
-
-          const allContacts = await contact.queryContacts();
-
-          debugger;
-
-          const userinfo = allContacts.find(item => {
-            return item.userid == wxid;
-          })
-
-          debugger;
-
-          this.userinfo = userinfo;
-          return userinfo;
-        }
     },
     methods: {
       async queryInfo() {
@@ -101,13 +92,9 @@ export default {
           const wxid = this.$route.query.wxid;
           const allContacts = await contact.queryContacts();
 
-          debugger;
-
           const userinfo = allContacts.find(item => {
             return item.userid == wxid;
           });
-
-          debugger;
 
           this.userinfo = userinfo;
         }
