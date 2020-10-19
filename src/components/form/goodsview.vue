@@ -655,9 +655,12 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , seal);
+
         //获取后端配置前端管理员组
-        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
-        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
+        const front = resp[0].userlist;
+        const front_name = resp[0].enuserlist;
 
         //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -757,9 +760,12 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , seal);
+
         //获取后端配置前端管理员组
-        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
-        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
+        const front = resp[0].userlist;
+        const front_name = resp[0].enuserlist;
 
         //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);

@@ -692,9 +692,12 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , seal);
+
         //获取后端配置前端管理员组
-        const front = 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028';
-        const front_name = '舒芮,周雪丽,吴章英,郝倩文,陈安玲,赵梓宇';
+        const front = resp[0].userlist;
+        const front_name = resp[0].enuserlist;
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
