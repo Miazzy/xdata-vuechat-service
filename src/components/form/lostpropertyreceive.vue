@@ -182,6 +182,7 @@ export default {
               mobile: '', //联系电话
               description:'', //备注说明
 
+              serialid: '', //序列编号
               status: '',
             },
             back:'/app',
