@@ -232,6 +232,27 @@ const routes = [{
             "subPage": resolve => require(["../components/form/goodslist.vue"], resolve)
         }
     }, {
+        path: '/app/lostpropertyreceive',
+        name: "失物招领",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/lostpropertyreceive.vue"], resolve)
+        }
+    }, {
+        path: '/app/lostpropertyview',
+        name: "失物招领",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/lostproperty.vue"], resolve)
+        }
+    }, {
+        path: '/app/lostpropertylist',
+        name: "认领进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/lostpropertylist.vue"], resolve)
+        }
+    }, {
         path: '/app/borrowreceive',
         name: "物品借用",
         components: {

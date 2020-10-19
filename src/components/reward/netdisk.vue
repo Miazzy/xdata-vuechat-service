@@ -196,7 +196,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         },{
           id:'',
@@ -207,7 +206,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         },{
           id:'',
@@ -218,7 +216,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         },{
           id:'',
@@ -229,7 +226,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         },{
           id:'',
@@ -240,7 +236,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         },{
           id:'',
@@ -251,7 +246,6 @@ export default {
           size:'117.57 KB',
           click : (item) => {
             item.checked = !item.checked;
-            debugger;
           },
         }
       ],
@@ -274,7 +268,6 @@ export default {
     async init() {
       this.activeTabKey = 1;
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
-      debugger;
     },
     async changeStyle(winHeight) {
       if (window.innerHeight) {
@@ -312,7 +305,6 @@ export default {
     async onCheckAllChange(e){
       this.checkAll = !this.checkAll;
       console.log(`checked = ${e.target.checked}`);
-      debugger;
     }
   },
 };

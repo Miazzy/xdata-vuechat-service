@@ -39,13 +39,14 @@ export const queryDepartUserList = async() => {
 
     //查询部门URL
     const queryDepartURL = `https://api.yunwisdom.club:30443/api/v2/wework_depart_list/${userinfo.main_department}`;
+
     //获取上级部门编号
     const respDepart = await superagent.get(queryDepartURL).set('accept', 'json');
+
     //获取部门信息
     const department = respDepart.body.department.find(item => {
         return item.id = userinfo.main_department;
     });
-    debugger;
 
     //查询URL
     const queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_depart_user/${department.parentid}/1`

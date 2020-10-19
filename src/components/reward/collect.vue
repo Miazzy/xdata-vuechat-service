@@ -146,7 +146,6 @@ export default {
     async init() {
       this.activeTabKey = 4;
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
-      debugger;
     },
     async changeStyle(winHeight) {
       if (window.innerHeight) {
