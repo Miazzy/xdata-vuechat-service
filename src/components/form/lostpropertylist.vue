@@ -188,8 +188,19 @@ export default {
         //强制渲染
         this.$forceUpdate();
 
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         //获取tabname
         this.tabname = storage.getStore('system_lost_property_list_tabname') || '1';
+
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , userinfo.username);
+
+        //获取后端配置前端管理员组
+        this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';
+        //获取tabname
+        this.tabname = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? '1' : this.tabname;
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -272,13 +283,13 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertylist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=/app/lostpropertylist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=front&back=/app/lostpropertylist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
          }
 
       },
