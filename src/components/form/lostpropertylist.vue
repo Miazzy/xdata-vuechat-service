@@ -200,7 +200,7 @@ export default {
         //获取后端配置前端管理员组
         this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';
         //获取tabname
-        this.tabname = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? '1' : this.tabname;
+        this.tabname = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? this.tabname: 1;
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
