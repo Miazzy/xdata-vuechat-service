@@ -184,7 +184,7 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
+        this.tabname = storage.getStore('system_lost_property_list_tabname') || '1';
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -193,7 +193,7 @@ export default {
         this.back = tools.getUrlParam('back') || '/app';
 
       },
-      async queryTabList(tabname , page){
+      async queryTabList(tabname = 1 , page){
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -238,7 +238,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已归还)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
@@ -250,21 +250,7 @@ export default {
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
-         } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.rejectList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.rejectList = this.rejectList.filter(item => {
-            return item.id == item.pid;
-          });
-        }
+         }
 
       },
       async selectHContract(){
@@ -276,22 +262,19 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-        storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
+        storage.setStore('system_lost_property_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
-         } else if(this.tabname == '4' ){
-          //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
-        }
+          this.$router.push(`/app/lostproperty?id=${id}&statustype=none&role=front&back=borrowlist`);
+         }
 
       },
     }

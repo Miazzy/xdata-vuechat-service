@@ -315,7 +315,7 @@
             </van-col>
 
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="goodsBorrow('box');" >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
                 <div class="weui-cell_app_bd" >
                   招领
@@ -550,6 +550,8 @@ export default {
         async goodsBorrow(type){
           if(type == 'approve'){
             this.$router.push(`/app/borrowlist?type=${type}`);
+          } else if(type == 'lostproperty'){
+            this.$router.push(`/app/lostpropertylist`);
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }
