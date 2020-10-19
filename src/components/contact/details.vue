@@ -73,6 +73,9 @@ export default {
             userinfo:{},
         }
     },
+    async created(){
+      await this.queryInfo();
+    },
     computed: {
         async userInfo() {
 
@@ -91,7 +94,24 @@ export default {
           this.userinfo = userinfo;
           return userinfo;
         }
-    }
+    },
+    methods: {
+      async queryInfo() {
+
+          const wxid = this.$route.query.wxid;
+          const allContacts = await contact.queryContacts();
+
+          debugger;
+
+          const userinfo = allContacts.find(item => {
+            return item.userid == wxid;
+          });
+
+          debugger;
+
+          this.userinfo = userinfo;
+        }
+    },
 }
 </script>
 <style>
