@@ -102,7 +102,9 @@ export default {
 
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
+
             var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST) || [];
+
             if(tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
               var max = allContacts.length;
@@ -114,11 +116,13 @@ export default {
               initialList = initialList.sort();
               storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST , initialList , 3600 * 24);
             }
+
             return initialList;
         },
 
         // 将联系人根据首字母进行分类
         async queryContactsList() {
+
             var initialList = [];
             var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST) || {};
 
@@ -140,6 +144,7 @@ export default {
               let cache = JSON.stringify(contactsList);
               storage.setStoreDB(ALL_CONTACT_CACHE_LIST , cache , 3600 * 24);
             }
+
             return contactsList;
         },
         toPs(i) {

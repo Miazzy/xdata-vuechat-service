@@ -235,6 +235,7 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
+              { text: '认领', value: 1 , icon: 'goods-collect-o' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
@@ -282,6 +283,9 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
+          case 1: //认领数据
+            await this.handleConfirm();
+            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
