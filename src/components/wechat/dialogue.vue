@@ -230,15 +230,17 @@ export default {
 
           const message = this.message;
           const wxid = this.$route.query.wxid;
+          const id = tools.queryUniqueID();
 
           const elem = {
-            id: tools.queryUniqueID(),
+            id: id,
             create_by: myuserinfo.username,
             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             wxid: myuserinfo.userid,
             rwxid: wxid,
             content: message,
             team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
+            pid: id,
             status: '0',
           }
 
