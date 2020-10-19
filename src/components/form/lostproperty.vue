@@ -200,17 +200,19 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用失物名称
-              amount:'',//借用数量
-              receive_name:'',//借用人员名称
-              department:'',//借用部门名称
-              remark:'',//备注说明
-              type:'',//借用类别
-              company:'',//单位名称
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
+
+              lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
+              lost_name:'', //失物名称
+              lost_amount:'',//失物数量
+
+              claim_name: '', //认领人员
+              claim_time: '', //认领时间
+              department:'', //部门名称
+              company:'', //单位名称
+              mobile: '', //联系电话
+              description:'', //备注说明
+
+              serialid: '', //序列编号
               status: '',
             },
             tlist:[],
@@ -305,17 +307,19 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用失物名称
-              amount:'',//借用数量
-              remark:'',//备注说明
-              type:this.item.type,//借用类别
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
-              receive_name : this.item.receive_name , //借用人员名称
-              department : this.item.department, //借用部门名称
-              company : this.item.company, //单位名称
+
+              lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
+              lost_name:'', //失物名称
+              lost_amount:'',//失物数量
+
+              claim_name: '', //认领人员
+              claim_time: '', //认领时间
+              department:'', //部门名称
+              company:'', //单位名称
+              mobile: '', //联系电话
+              description:'', //备注说明
+
+              serialid: '', //序列编号
               status: '',
             };
       },
@@ -412,20 +416,26 @@ export default {
 
           //自动回显刚才填写的用户基础信息
           if(item){
-            this.item.id = id;
-            this.item.serialid = item.serialid || this.item.serialid;
-            this.item.create_by = item.create_by || this.item.create_by;
-            this.item.name = item.name || this.item.name;
-            this.item.amount = item.amount || this.item.amount;
-            this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
-            this.item.department = item.department || this.item.department;
-            this.item.remark = item.remark || this.item.remark;
-            this.item.type = item.type || this.item.type || '办公用品';
-            this.item.company = item.company || this.item.company;
-            this.item.approve_name = item.approve_name || this.item.approve_name;
-            this.item.workflow = item.workflow || this.item.workflow;
-            this.item.approve = item.approve || this.item.approve;
-            this.item.status = item.status || this.item.status;
+            this.item = {
+              id: item.id,
+              serialid: item.serialid,
+              create_time: dayjs(item.create_time).format('YYYY-MM-DD'),
+              create_by: item.create_by,
+
+              lost_time: dayjs(item.lost_name).format('YYYY-MM-DD'), //遗失时间
+              lost_name: item.lost_name, //失物名称
+              lost_amount: item.lost_amount,//失物数量
+
+              claim_name: item.claim_name, //认领人员
+              claim_time: dayjs(item.claim_time).format('YYYY-MM-DD'), //认领时间
+              department: item.department, //部门名称
+              company: item.company, //单位名称
+              mobile: item.mobile, //联系电话
+              description: item.description, //备注说明
+
+              serialid: item.serialid, //序列编号
+              status: item.status,
+            }
           }
 
           await this.queryProcessLog();
