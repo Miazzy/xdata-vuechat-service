@@ -19,7 +19,7 @@
         </header>
         <section class="dialogue-section clearfix" v-on:click="MenuOutsideClick">
             <div class="row clearfix" :key="item.id" v-for="item in messages">
-                <img :src="item.wxid == myuserinfo.wxid ? myuserinfo.avatar : userinfo.avatar " class="header">
+                <img :src="item.wxid == myuserinfo.userid ? myuserinfo.avatar : userinfo.avatar " class="header">
                 <p class="text" v-more>{{item.content}}</p>
             </div>
             <span class="msg-more" id="msg-more">
@@ -210,13 +210,13 @@ export default {
         },
         async queryInfo(){
           //获取用户信息
-          const myuserinfo = await storage.getStore('system_userinfo');
+          this.myuserinfo = await storage.getStore('system_userinfo');
 
           //获取聊天对象信息
           this.userinfo = await contact.getUserInfo(this.wxid);
 
           //获取与聊天对象的所有聊天记录
-          this.messages = await query.queryMessages(myuserinfo.userid , this.$route.query.wxid , '');
+          this.messages = await query.queryMessages(this.myuserinfo.userid , this.$route.query.wxid , '');
 
           this.messages.sort((n1 , n2) => {
             return n1.id - n2.id;
@@ -235,10 +235,10 @@ export default {
             id: tools.queryUniqueID(),
             create_by: myuserinfo.username,
             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            wxid: myuserinfo.wxid,
+            wxid: myuserinfo.userid,
             rwxid: wxid,
             content: message,
-            team: `${myuserinfo.username},${myuserinfo.wxid},${wxid}`,
+            team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
             status: '0',
           }
 
