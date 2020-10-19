@@ -116,13 +116,13 @@
 
           </van-cell-group>
 
-          <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div v-show="item.status ==='待处理' && role == 'common' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;width:99.5%;text-align:center;"  >认领</van-button>
           </div>
 
           <div v-show="item.status ==='已认领' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >确认</van-button>
-            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="驳回"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;" />
+            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="驳回"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;float:left;" />
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;width:47.5%;float:right;"  >确认</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -447,7 +447,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '已驳回',
+          status: '待处理',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -459,7 +459,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已驳回',
+            status: '待处理',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -503,12 +503,12 @@ export default {
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '驳回'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已驳回]',//text          null comment '操作意见',
+          action_opinion : '审批认领确认[已驳回]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[失物招领]',//varchar(100)  null comment '流程岗位',
+          process_station   : '认领确认[失物招领]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `失物招领(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+          content           : `失物招领 ${this.item.lost_name} ` + '#已驳回 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -543,11 +543,9 @@ export default {
 
         //表单ID
         const id = this.item.id;
-        const type = tools.getUrlParam('statustype');
-        const pid = tools.getUrlParam('pid');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/lostpropertyview?id=${id}&statustype=office&role=front&step=front`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -569,17 +567,6 @@ export default {
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
-
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
@@ -638,7 +625,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          status: '已归还',
+          status: '已完成',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -649,7 +636,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已归还',
+            status: '已完成',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -682,12 +669,12 @@ export default {
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '完成'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已完成]',//text          null comment '操作意见',
+          action_opinion : '审批认领确认[已完成]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[失物招领]',//varchar(100)  null comment '流程岗位',
+          process_station   : '认领确认[失物招领]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `失物招领(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+          content           : `失物招领 ${this.item.lost_name} ` + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -707,7 +694,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已完成失物招领申请！',
+            message: '已完成失物招领流程！',
           });
 
       }
