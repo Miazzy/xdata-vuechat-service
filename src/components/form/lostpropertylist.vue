@@ -100,7 +100,6 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              //{ text: '入职引导', value: 0 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
