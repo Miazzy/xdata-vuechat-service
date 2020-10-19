@@ -18,16 +18,18 @@
             </div>
         </header>
         <section class="dialogue-section clearfix" v-on:click="MenuOutsideClick">
-            <div class="row clearfix" :key="item.headerUrl" v-for="item in msgInfo.msg">
-                <img :src="userinfo.avatar" class="header">
-                <p class="text" v-more>{{item.text}}</p>
+            <div class="row clearfix" :key="item.id" v-for="item in messages">
+                <img :src="item.wxid == myuserinfo.wxid ? myuserinfo.avatar : userinfo.avatar " class="header">
+                <p class="text" v-more>{{item.content}}</p>
             </div>
-            <span class="msg-more" id="msg-more"><ul>
-                    <li>复制</li>
-                    <li>转发</li>
-                    <li>收藏</li>
-                    <li>删除</li>
-                </ul></span>
+            <span class="msg-more" id="msg-more">
+              <ul>
+                <li>复制</li>
+                <li>转发</li>
+                <li>收藏</li>
+                <li>删除</li>
+              </ul>
+            </span>
         </section>
         <footer class="dialogue-footer">
             <div class="component-dialogue-bar-person">
@@ -86,6 +88,7 @@ import * as manageAPI from '@/request/manage';
 import * as storage from '@/request/storage';
 import * as contact from '@/vuex/contacts';
 import * as tools from '@/request/tools';
+import * as query from '@/request/query';
 
 export default {
     data() {
@@ -98,6 +101,7 @@ export default {
             message: '',
             tablename: 'bs_message',
             messages: [],
+            myuserinfo: null,
             userinfo: null,
         }
     },
@@ -205,7 +209,19 @@ export default {
             clearInterval(this.timer)
         },
         async queryInfo(){
+          //获取用户信息
+          const myuserinfo = await storage.getStore('system_userinfo');
+
+          //获取聊天对象信息
           this.userinfo = await contact.getUserInfo(this.wxid);
+
+          //获取与聊天对象的所有聊天记录
+          this.messages = await query.queryMessages(myuserinfo.userid , this.$route.query.wxid , '');
+
+          this.messages.sort((n1 , n2) => {
+            return n1.id - n2.id;
+          });
+
         },
         async sendMessage(){
 
@@ -219,10 +235,10 @@ export default {
             id: tools.queryUniqueID(),
             create_by: myuserinfo.username,
             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-            wxid: myuserinfo.userid,
+            wxid: myuserinfo.wxid,
             rwxid: wxid,
             content: message,
-            team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
+            team: `${myuserinfo.username},${myuserinfo.wxid},${wxid}`,
             status: '0',
           }
 
