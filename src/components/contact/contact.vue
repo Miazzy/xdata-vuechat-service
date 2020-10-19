@@ -74,7 +74,6 @@ export default {
         }
     },
     async mounted() {
-      // mutations.js中有介绍
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
