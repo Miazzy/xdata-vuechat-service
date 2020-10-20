@@ -242,7 +242,7 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
 
     try {
         //获取缓存中的数据
-        var cache = storage.getStore(`sys_message_cache##v1@${tableName}&wxid${wxid}|wxid_${wxid_}|maxid${maxId}`);
+        var cache = storage.getStore(`sys_message_cache##v1@${tableName}&wxid${wxid}_wxid_${wxid_}_maxid${maxId}`);
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -252,7 +252,7 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
         var res = await superagent.get(queryURL).set('accept', 'json');
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}|wxid_${wxid_}|maxid${maxId}`, res.body, 5);
+            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}_wxid_${wxid_}_maxid${maxId}`, res.body, 3);
         }
 
         return res.body;
