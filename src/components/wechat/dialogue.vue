@@ -223,9 +223,25 @@ export default {
 
         },
         async queryMessages() {
-          //获取与聊天对象的所有聊天记录
-          this.messages = await query.queryMessages(this.myuserinfo.userid , this.$route.query.wxid , '');
 
+          //暂存
+          const temp1 = this.messages;
+
+          //获取与聊天对象的所有聊天记录
+          const temp2 = await query.queryMessages(this.myuserinfo.userid , this.$route.query.wxid , '');
+
+          //合并
+          this.messages = [...temp1 , ...temp2];
+
+          //去重
+          this.messages = this.messages.filter((item , index) => {
+            const tindex = this.messages.findIndex( element => {
+              return element.id == item.id;
+            });
+            return tindex == index;
+          })
+
+          //排序
           this.messages.sort((n1 , n2) => {
             return n1.id - n2.id;
           });
