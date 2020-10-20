@@ -10,6 +10,8 @@
 <script>
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as query from '@/request/query';
+
 import search from "../common/search";
 import msgItem from "../wechat/msg-item";
 
@@ -23,6 +25,7 @@ export default {
         return {
             "pageName": "消息",
             messages:[],
+            myuserinfo:null,
         }
     },
     activated() {
@@ -73,7 +76,16 @@ export default {
           }
         },
         async queryInfo(){
+
           const item = this.$store.state.msgList.baseMsg;
+
+          //获取用户信息
+          this.myuserinfo = await storage.getStore('system_userinfo');
+
+          //获取此用户的消息消息
+          this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
+
+          //将此用户的消息数据转为特定格式的数据
 
           debugger;
         },

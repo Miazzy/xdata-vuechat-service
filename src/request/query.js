@@ -263,6 +263,54 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
 /**
  * 查询数据
  * @param {*} tableName
+ * @param {*} id
+ */
+export async function queryVMessages(wxid, username, maxId = 0) {
+
+    //大写转小写
+    const tableName = 'v_messages';
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(team,like,~${wxid}~)&_sort=-id&_p=0&_size=100`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_message_cache##v1@${tableName}&wxid${wxid}}|maxid${maxId}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+
+            for (item of res.body) {
+
+                item.mid = item.id;
+                item.newMsgCount = 1;
+                item.quiet = true;
+                item.type = 'friend';
+                item.userid = item.team.replace(wxid, '').replace(username, '');
+
+                const temp = await contact.getUserInfo(item.userid);
+                //获取聊天对象信息
+                item.user = [temp];
+            };
+
+            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}}|maxid${maxId}`, res.body, 10);
+        }
+
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
  * @param {*} whereSQL
  */
 export async function queryTableDataByWhereSQL(tableName, whereSQL) {
