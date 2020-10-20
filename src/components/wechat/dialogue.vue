@@ -215,6 +215,11 @@ export default {
           //获取聊天对象信息
           this.userinfo = await contact.getUserInfo(this.wxid);
 
+          //查询用户聊天消息
+          await this.queryMessages();
+
+        },
+        async queryMessages() {
           //获取与聊天对象的所有聊天记录
           this.messages = await query.queryMessages(this.myuserinfo.userid , this.$route.query.wxid , '');
 
@@ -222,6 +227,10 @@ export default {
             return n1.id - n2.id;
           });
 
+          //定时查询是否有用户发送消息
+          setTimeout(async ()=>{
+            await this.queryMessages();
+          }, 3000);
         },
         async sendMessage(){
 
