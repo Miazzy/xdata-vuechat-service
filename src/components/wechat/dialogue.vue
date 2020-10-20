@@ -258,7 +258,7 @@ export default {
             team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
             type: 'friend',
             quiet_flag: 'true',
-            read_flag: 'true',
+            read_flag: 'false',
             pid: id,
             status: '0',
           }
