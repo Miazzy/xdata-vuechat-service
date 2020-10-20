@@ -248,6 +248,13 @@ export default {
 
           this.message = '';
 
+          //获取与聊天对象的所有聊天记录
+          this.messages = await query.queryMessages(this.myuserinfo.userid , this.$route.query.wxid , '');
+
+          this.messages.sort((n1 , n2) => {
+            return n1.id - n2.id;
+          });
+
         },
         // 点击空白区域，菜单被隐藏
         MenuOutsideClick(e) {

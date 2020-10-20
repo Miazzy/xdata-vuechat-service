@@ -16,12 +16,13 @@ import msgItem from "../wechat/msg-item";
 export default {
     components: {
         search,
-        msgItem
+        msgItem,
     },
     mixins: [window.mixin],
     data() {
         return {
-            "pageName": "消息"
+            "pageName": "消息",
+            messages:[],
         }
     },
     activated() {
@@ -29,12 +30,14 @@ export default {
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      this.queryInfo();
     },
     mounted() {
       this.$store.commit("toggleTipsStatus", -1);
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
+      this.queryInfo();
     },
     methods: {
         changeStyle(name){
@@ -68,6 +71,11 @@ export default {
           } catch (error) {
             console.log(error);
           }
+        },
+        async queryInfo(){
+          const item = this.$store.state.msgList.baseMsg;
+
+          debugger;
         },
         async userStatus(){
           try {
