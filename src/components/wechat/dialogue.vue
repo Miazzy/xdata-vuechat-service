@@ -240,6 +240,9 @@ export default {
             rwxid: wxid,
             content: message,
             team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
+            type: 'friend',
+            quiet_flag: 'true',
+            read_flag: 'true',
             pid: id,
             status: '0',
           }
