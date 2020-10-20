@@ -87,7 +87,6 @@ export default {
 
           //将此用户的消息数据转为特定格式的数据
 
-          debugger;
         },
         async userStatus(){
           try {

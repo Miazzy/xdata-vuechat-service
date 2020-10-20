@@ -292,10 +292,12 @@ export async function queryVMessages(wxid, username, maxId = 0) {
                 item.quiet = true;
                 item.type = 'friend';
                 item.userid = item.team.replace(wxid, '').replace(username, '');
-
                 const temp = await contact.getUserInfo(item.userid);
+
                 //获取聊天对象信息
                 item.user = [temp];
+                item.msg = [item.content];
+
             };
 
             storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}}|maxid${maxId}`, res.body, 10);

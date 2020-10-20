@@ -67,11 +67,9 @@
     },
     methods:{
       searchWordChange() {
-        debugger
         this.$emit('change', this.searchwords);
       },
       menuCardClick(id){
-        debugger
         this.$emit('click', id);
       },
     },
