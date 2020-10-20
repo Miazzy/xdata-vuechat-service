@@ -2,10 +2,10 @@
     <div class="dialogue">
         <header id="wx-header">
             <div class="other" style="right:0px;">
-                <router-link :to="{path:'/wechat/dialogue/dialogue-info',query: { msgInfo: msgInfo}}" tag="span" class="iconfont" v-show="$route.query.group_num&&$route.query.group_num!=1">
+                <router-link :to="{path:'/wechat/dialogue/dialogue-info',query: { msgInfo: messages , wxid : wxid  }}" tag="span" class="iconfont" v-show="$route.query.group_num&&$route.query.group_num!=1">
                   <van-icon name="weapp-nav" size="1.3rem" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
                 </router-link>
-                <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: msgInfo}}" tag="span" class="iconfont" v-show="$route.query.group_num==1">
+                <router-link :to="{path:'/wechat/dialogue/dialogue-detail',query: { msgInfo: messages , wxid : wxid }}" tag="span" class="iconfont" v-show="$route.query.group_num==1">
                   <van-icon name="weapp-nav" size="1.3rem" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
                 </router-link>
             </div>
