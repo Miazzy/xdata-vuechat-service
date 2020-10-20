@@ -275,7 +275,7 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
     try {
         //获取缓存中的数据
-        var cache = storage.getStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}|maxid${maxId}`);
+        var cache = storage.getStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}&maxid${maxId}`);
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -290,9 +290,12 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
                 item.mid = item.id;
                 item.newMsgCount = 1;
-                item.quiet = true;
+                item.quiet = item.quiet == 'true' ? true : false;
+                item.read = item.read_ == 'true' ? true : false;
                 item.type = 'friend';
                 item.userid = item.team.replace(wxid, '').replace(username, '').replace(/,/g, '');
+                item.wxid = item.userid;
+
                 const temp = await contact.getUserInfo(item.userid);
 
                 //获取聊天对象信息
@@ -301,7 +304,7 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
             };
 
-            storage.setStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}|maxid${maxId}`, res.body, 10);
+            storage.setStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}&maxid${maxId}`, res.body, 10);
         }
 
 
