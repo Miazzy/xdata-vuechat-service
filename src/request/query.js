@@ -1,5 +1,6 @@
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
+import * as contact from '@/vuex/contacts';
 
 export async function queryUserInfoByView(username) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key http://api.shengtai.club/api/v_admin?_where=(username,eq,zhaoziyun)
@@ -274,7 +275,7 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
     try {
         //获取缓存中的数据
-        var cache = storage.getStore(`sys_message_cache##v1@${tableName}&wxid${wxid}}|maxid${maxId}`);
+        var cache = storage.getStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}|maxid${maxId}`);
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -285,22 +286,22 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
         if (res.body != null && res.body.length > 0) {
 
-            for (item of res.body) {
+            for (let item of res.body) {
 
                 item.mid = item.id;
                 item.newMsgCount = 1;
                 item.quiet = true;
                 item.type = 'friend';
-                item.userid = item.team.replace(wxid, '').replace(username, '');
+                item.userid = item.team.replace(wxid, '').replace(username, '').replace(/,/g, '');
                 const temp = await contact.getUserInfo(item.userid);
 
                 //获取聊天对象信息
                 item.user = [temp];
-                item.msg = [item.content];
+                item.msg = [{ text: item.content, date: item.create_time }];
 
             };
 
-            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}}|maxid${maxId}`, res.body, 10);
+            storage.setStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}|maxid${maxId}`, res.body, 10);
         }
 
 
