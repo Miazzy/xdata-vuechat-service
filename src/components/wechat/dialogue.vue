@@ -218,6 +218,9 @@ export default {
           //查询用户聊天消息
           await this.queryMessages();
 
+          //阅读最新消息
+          await this.readMessages();
+
         },
         async queryMessages() {
           //获取与聊天对象的所有聊天记录
@@ -231,6 +234,10 @@ export default {
           setTimeout(async ()=>{
             await this.queryMessages();
           }, 3000);
+        },
+        async readMessages(){
+          const mid = this.$route.query.mid;
+          const result = await manageAPI.patchTableData(this.tablename , mid , {read_flag: 'true'});
         },
         async sendMessage(){
 
