@@ -1222,7 +1222,7 @@ export default {
           }
 
           //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
-          if(!tools.isNull(this.item.dealMail)){
+          if(tools.isNull(this.item.dealMail)){
             const tmp = await query.queryMailBySealData(this.item.signman);
             this.item.dealMail = tmp.deal_mail;
           }
