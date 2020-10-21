@@ -202,6 +202,9 @@ export default {
       },
       async queryTabList(tabname , page){
 
+        //获取当前用户信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
