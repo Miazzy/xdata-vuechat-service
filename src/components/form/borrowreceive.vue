@@ -322,6 +322,8 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            userid:'',
+            userList:[],
             huserid:'',
             huserList:[],
             auserid:'',
@@ -384,6 +386,10 @@ export default {
               approve_name:'',//借用审批人员
               workflow:'',//关联流程
               approve:'',//借用审批人员
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
               status: '',
             },
             back:'/app',
