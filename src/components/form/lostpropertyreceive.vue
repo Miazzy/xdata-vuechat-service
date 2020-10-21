@@ -65,6 +65,12 @@
 
               </van-cell-group>
 
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="招领管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="接待人员" v-model="item.user_admin_name" placeholder="请输入领用接待人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+              </van-cell-group>
+
               <van-cell-group style="margin-top:10px;">
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
@@ -149,6 +155,8 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            userid:'',
+            userList:[],
             huserid:'',
             huserList:[],
             auserid:'',
@@ -181,6 +189,11 @@ export default {
               company:'', //单位名称
               mobile: '', //联系电话
               description:'', //备注说明
+
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
 
               serialid: '', //序列编号
               status: '',
@@ -271,6 +284,87 @@ export default {
           default:
             console.log(`no operate. out of switch. `);
         }
+      },
+      //用户选择盖印人
+      async querySealMan(){
+
+        //获取盖章人信息
+        const user_admin_name = this.item.user_admin_name;
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.item.user_admin_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.userid = this.userid = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //将用户数据推送至对方数组
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  //获取盖印人姓名
+                  this.item.user_admin_name = user.lastname;
+                  //当前盖印人编号
+                  this.item.userid = this.userid = user.loginid;
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.userList = this.userList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前盖印人
+      async selectSealUser(value){
+        await tools.sleep(0);
+        const id = this.userid;
+        const user = this.userList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.user_admin_name = user.name;
+        this.item.userid = id;
       },
       // 设置重置
       async reduction(){
@@ -406,6 +500,19 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+        //查询直接所在工作组
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+        //获取到印章管理员组信息
+        let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+        let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
+
+        //如果未获取用户名称，则直接设置用印人为分组成员
+        if(tools.isNull(user_group_ids)){
+          user_group_ids = this.item.userid;
+          user_group_names = this.item.user_admin_name;
+        }
+
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&type=${type}&role=front`);
 
@@ -418,6 +525,10 @@ export default {
           lost_name: this.item.lost_name, //失物名称
           lost_amount: this.item.lost_amount,//失物数量
           description: this.item.description, //备注说明
+          userid : this.item.userid,
+          user_admin_name : this.item.user_admin_name,
+          user_group_ids,
+          user_group_names,
           pid: id,
           status: '待处理',
         }; // 待处理元素
@@ -442,7 +553,7 @@ export default {
         const front_name = resp[0].enuserlist;
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front},${userinfo.username}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front},${user_group_ids},${userinfo.username}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
