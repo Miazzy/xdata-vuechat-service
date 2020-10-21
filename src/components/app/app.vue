@@ -53,13 +53,73 @@
             </van-col>
           </van-row>
         </div>
-        <div class="flex-layout-content" id="scanCell">
+        <div class="flex-layout-content" id="scanCell" style="display: none;">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="$router.push(`/explore/sign?back=/app`)">
               <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
                 <div class="weui-cell_app_bd" >
                   签到
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
+      </div>
+
+      <div class="weui-cells" style="display:block;">
+        <div class="weui-cell-title">奖惩管理</div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('hr');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
+                <div class="weui-cell_app_bd">
+                  业绩
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('admin');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png" >
+                <div class="weui-cell_app_bd" >
+                  专项
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('front');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/finance.png" >
+                <div class="weui-cell_app_bd" >
+                  特殊
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('meal');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd">
+                  其他
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('hr');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
+                <div class="weui-cell_app_bd">
+                  月度
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="entryjob('admin');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png" >
+                <div class="weui-cell_app_bd" >
+                  季度
                 </div>
               </div>
             </van-col>
