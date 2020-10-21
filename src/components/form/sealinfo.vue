@@ -1344,8 +1344,8 @@ export default {
         const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);
 
         //获取到印章管理员组信息
-        let seal_group_ids = resp[0].userlist;
-        let seal_group_names = resp[0].enuserlist;
+        let seal_group_ids = resp && resp.length > 0 ? resp[0].userlist : '';
+        let seal_group_names = resp && resp.length > 0 ? resp[0].enuserlist : '';
 
         //如果未获取用户名称，则直接设置用印人为分组成员
         if(tools.isNull(seal_group_ids)){

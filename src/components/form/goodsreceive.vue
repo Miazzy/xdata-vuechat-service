@@ -235,6 +235,12 @@
 
               </van-cell-group>
 
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="领用管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="接待人员" v-model="item.user_admin_name" placeholder="请输入领用接待人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+              </van-cell-group>
+
               <van-cell-group style="margin-top:10px;">
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
@@ -319,6 +325,8 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
+            userid:'',
+            userList:[],
             huserid:'',
             huserList:[],
             auserid:'',
@@ -341,6 +349,7 @@ export default {
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
               receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
+              user_admin_name:'',
               name:'', //领用物品名称
               amount:'',//领用数量
               name1:'', //领用物品名称
@@ -381,6 +390,10 @@ export default {
               approve_name:'',//领用审批人员
               workflow:'',//关联流程
               approve:'',//领用审批人员
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
               status: '',
             },
             back:'/app',
@@ -479,6 +492,87 @@ export default {
           default:
             console.log(`no operate. out of switch. `);
         }
+      },
+      //用户选择盖印人
+      async querySealMan(){
+
+        //获取盖章人信息
+        const user_admin_name = this.item.user_admin_name;
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.item.user_admin_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.userid = this.userid = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //将用户数据推送至对方数组
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  //获取盖印人姓名
+                  this.item.user_admin_name = user.lastname;
+                  //当前盖印人编号
+                  this.item.userid = this.userid = user.loginid;
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.userList = this.userList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前盖印人
+      async selectSealUser(value){
+        await tools.sleep(0);
+        const id = this.userid;
+        const user = this.userList.find((item,index) => {return id == item.id});
+        //获取盖印人姓名
+        this.item.user_admin_name = user.name;
+        this.item.userid = id;
       },
       // 设置重置
       async reduction(){
