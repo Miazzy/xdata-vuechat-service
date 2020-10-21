@@ -435,11 +435,20 @@ export default {
       },
 
       async handleDisagree(){
-        //显示加载状态
-        this.loading = true;
 
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
+
+        //验证是否为办公用品管理员，如果不是，则没有权限进入
+        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+        if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+          vant.Toast('您没有物品管理-失物招领角色的权限！');
+          return false;
+        }
+
+        //显示加载状态
+        this.loading = true;
 
         //表单ID
         const id = this.item.id;
@@ -539,11 +548,19 @@ export default {
       // 用户提交入职登记表函数
       async handleConfirm() {
 
-        //显示加载状态
-        this.loading = true;
-
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
+
+        //验证是否为办公用品管理员，如果不是，则没有权限进入
+        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+        if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+          vant.Toast('您没有物品管理-失物招领角色的权限！');
+          return false;
+        }
+
+        //显示加载状态
+        this.loading = true;
 
         //表单ID
         const id = this.item.id;
