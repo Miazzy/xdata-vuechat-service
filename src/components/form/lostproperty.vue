@@ -61,7 +61,7 @@
                 <!-- 失物名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name')" :error-message="message.lost_name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
+                <van-field :readonly="readonly" :required="false" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
 
               </van-cell-group>
 
@@ -440,9 +440,9 @@ export default {
         const userinfo = await storage.getStore('system_userinfo');
 
         //验证是否为办公用品管理员，如果不是，则没有权限进入
-        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const resp_ = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
-        if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+        if(resp_.length == 0 || !resp_[0].userlist.includes(userinfo.username)){
           vant.Toast('您没有物品管理-失物招领角色的权限！');
           return false;
         }

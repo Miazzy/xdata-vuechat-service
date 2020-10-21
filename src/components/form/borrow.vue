@@ -63,7 +63,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="false" clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
 
                  <span class="van-goods-span-number" style="top:180px;">#1</span>
               </van-cell-group>

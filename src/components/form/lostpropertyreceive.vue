@@ -61,7 +61,7 @@
                 <!-- 失物名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="true" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name')" :error-message="message.lost_name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="true" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
+                <van-field :readonly="readonly" :required="true" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
 
               </van-cell-group>
 
