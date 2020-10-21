@@ -727,6 +727,20 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+
+        //查询直接所在工作组
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+        //获取到印章管理员组信息
+        let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+        let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
+
+        //如果未获取用户名称，则直接设置用印人为分组成员
+        if(tools.isNull(user_group_ids)){
+          user_group_ids = this.item.userid;
+          user_group_names = this.item.user_admin_name;
+        }
+
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&type=${type}&role=front`);
 
@@ -745,6 +759,10 @@ export default {
           approve_name : this.item.approve_name,
           workflow : this.item.workflow,
           approve : this.item.approve,
+          userid : this.item.userid,
+          user_admin_name : this.item.user_admin_name,
+          user_group_ids,
+          user_group_names,
           pid: id,
           status: '待处理',
         }; // 待处理元素
@@ -772,6 +790,10 @@ export default {
                   approve_name : this.item.approve_name,
                   workflow : this.item.workflow,
                   approve : this.item.approve,
+                  userid : this.item.userid,
+                  user_admin_name : this.item.user_admin_name,
+                  user_group_ids,
+                  user_group_names,
                   pid: id,
                   status: '待处理',
                 };
