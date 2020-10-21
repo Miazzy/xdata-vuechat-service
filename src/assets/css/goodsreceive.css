@@ -54,3 +54,24 @@
     background-color: #fff;
     display: none;
 }
+
+#van-user-list .van-radio__icon {
+    -webkit-box-flex: 0;
+    -webkit-flex: none;
+    flex: none;
+    height: 1em;
+    font-size: 20px;
+    line-height: 1em;
+    cursor: pointer;
+}
+
+#van-user-list .van-address-item__edit {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    color: #969799;
+    font-size: 20px;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    display: none;
+}

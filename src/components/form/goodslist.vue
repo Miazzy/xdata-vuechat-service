@@ -210,6 +210,9 @@ export default {
       },
       async queryTabList(tabname , page){
 
+        //获取当前用户信息
+        const userinfo = await storage.getStore('system_userinfo');
+
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
@@ -223,7 +226,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -238,7 +241,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -253,7 +256,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -267,7 +270,7 @@ export default {
           });
         } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
