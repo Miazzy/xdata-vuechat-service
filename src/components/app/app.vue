@@ -72,7 +72,7 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('hr');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
                 <div class="weui-cell_app_bd">
                   业绩
@@ -80,7 +80,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('admin');">
+              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png" >
                 <div class="weui-cell_app_bd" >
                   专项
@@ -88,7 +88,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('front');">
+              <div class="weui-cell_app_hd" @click="rewardApply('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/finance.png" >
                 <div class="weui-cell_app_bd" >
                   特殊
@@ -96,7 +96,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('meal');">
+              <div class="weui-cell_app_hd" @click="rewardApply('meal');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
                   其他
@@ -108,7 +108,7 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('hr');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd">
                   月度
@@ -116,7 +116,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="entryjob('admin');">
+              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png" >
                 <div class="weui-cell_app_bd" >
                   季度
@@ -601,20 +601,52 @@ export default {
           this.$router.push(`/app/sealmylist`);
         },
         async goodsReceive(type){
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+
           if(type == 'approve'){
+            //验证是否为办公用品管理员，如果不是，则没有权限进入
+            const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+              vant.Toast('您没有物品管理-物品领用角色的权限！');
+              return false;
+            }
+
             this.$router.push(`/app/goodslist?type=${type}`);
           } else {
             this.$router.push(`/app/goodsreceive?type=${type}`);
           }
         },
         async goodsBorrow(type){
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+
           if(type == 'approve'){
+
+            //验证是否为办公用品管理员，如果不是，则没有权限进入
+            const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+              vant.Toast('您没有物品管理-物品借用角色的权限！');
+              return false;
+            }
+
             this.$router.push(`/app/borrowlist?type=${type}`);
-          } else if(type == 'lostproperty'){
+
+          } else if(type == 'lostproperty'){//失物招领都有权限
+
             this.$router.push(`/app/lostpropertylist`);
+
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }
+        },
+        /**
+         * @function 奖惩申请
+         */
+        async rewardApply(){
+          vant.Toast('您暂时未开通权限！');
         },
         /**
          * @function 入职管理
@@ -665,9 +697,6 @@ export default {
             vant.Toast('您没有入职管理的权限！');
             return false;
           }
-
-          //姚红,李菲,张文瑜,秦力,燕俊洁
-
 
           //跳转到相应界面
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
