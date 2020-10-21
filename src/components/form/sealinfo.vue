@@ -1221,6 +1221,11 @@ export default {
             }
           }
 
+          //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
+          if(tools.isNull(this.item.dealMail)){
+
+          }
+
           //是否有最近缓存数据
           const tempitem = storage.getStore('system_seal_item');
 

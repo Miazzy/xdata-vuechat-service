@@ -340,6 +340,31 @@ export async function queryTableDataByWhereSQL(tableName, whereSQL) {
  * @param {*} tableName
  * @param {*} whereSQL
  */
+export async function queryMailBySealData(username) {
+    //大写转小写
+    const tableName = 'bs_seal_regist';
+    const whereSQL = `_where=(create_by,eq,${username})~and(deal_mail,like,~@~)&_p=0&_size=1`;
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?${whereSQL}`;
+
+    try {
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        debugger;
+
+        return res.body[0];
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} whereSQL
+ */
 export async function queryUserInfoByAccount(userid) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${window.requestAPIConfig.restapi}/api/v2/queryemployee/${userid}`;
