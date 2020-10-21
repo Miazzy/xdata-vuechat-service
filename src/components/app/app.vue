@@ -75,7 +75,7 @@
               <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
                 <div class="weui-cell_app_bd">
-                  业绩
+                  业绩考核
                 </div>
               </div>
             </van-col>
@@ -83,7 +83,15 @@
               <div class="weui-cell_app_hd" @click="rewardApply('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png" >
                 <div class="weui-cell_app_bd" >
-                  专项
+                  总裁专项
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
+                <div class="weui-cell_app_bd" >
+                  总经理专项
                 </div>
               </div>
             </van-col>
@@ -91,15 +99,7 @@
               <div class="weui-cell_app_hd" @click="rewardApply('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/finance.png" >
                 <div class="weui-cell_app_bd" >
-                  特殊
-                </div>
-              </div>
-            </van-col>
-            <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('meal');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
-                <div class="weui-cell_app_bd">
-                  其他
+                  特殊贡献
                 </div>
               </div>
             </van-col>
@@ -107,6 +107,14 @@
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="rewardApply('meal');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd">
+                  其他奖惩
+                </div>
+              </div>
+            </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
