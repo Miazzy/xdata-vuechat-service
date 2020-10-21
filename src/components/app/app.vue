@@ -89,7 +89,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="rewardApply('admin');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.0/images/pay02.png" >
                 <div class="weui-cell_app_bd" >
                   总经理专项
                 </div>
