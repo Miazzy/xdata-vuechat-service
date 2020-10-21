@@ -1222,10 +1222,28 @@ export default {
           }
 
           //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
-          if(tools.isNull(this.item.dealMail)){
+          if(tools.isNull(this.item.dealMail) || tools.isNull(this.item.company)){
             const tmp = await query.queryMailBySealData(this.item.signman);
             this.item.dealMail = tmp.deal_mail;
+            this.item.company = tmp.company;
+            this.item.dealDepart = tmp.deal_depart;
+            this.item.sealman = tmp.seal_man;
+            this.item.seal = tmp.seal;
           }
+
+          //如果前台不存在，则添加
+          if(tools.isNull(this.item.front)){
+            const tmp = await query.queryFrontBySealData(this.item.signman);
+            this.item.front = tmp.front;
+            this.item.front_name = tmp.front_name;
+            this.item.archive = tmp.archive;
+            this.item.archive_name = tmp.archive_name;
+            this.item.record = tmp.record;
+            this.item.record_name = tmp.record_name;
+            this.item.finance = tmp.finance;
+            this.item.finance_name = tmp.finance_name;
+          }
+
 
           //是否有最近缓存数据
           const tempitem = storage.getStore('system_seal_item');
