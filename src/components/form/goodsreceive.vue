@@ -727,7 +727,6 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
-
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
