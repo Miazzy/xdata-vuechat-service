@@ -264,6 +264,9 @@ export default {
           const wxid = this.$route.query.wxid;
           const id = tools.queryUniqueID();
 
+          let userids = [ myuserinfo.userid , wxid ];
+          userids = userids.sort();
+
           const elem = {
             id: id,
             create_by: myuserinfo.username,
@@ -271,7 +274,7 @@ export default {
             wxid: myuserinfo.userid,
             rwxid: wxid,
             content: message,
-            team: `${myuserinfo.username},${myuserinfo.userid},${wxid}`,
+            team: userids.toString(),
             type: 'friend',
             quiet_flag: 'true',
             read_flag: 'false',

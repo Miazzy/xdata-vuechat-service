@@ -87,7 +87,7 @@ export default {
 
           //将此用户的消息数据转为特定格式的数据
           this.messages.sort((n1,n2) => {
-            return n1.id - n2.id;
+            return n2.id - n1.id;
           });
 
         },
