@@ -46,6 +46,9 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已完成
           </div>
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+            已驳回
+          </div>
         </div>
       </div>
 
@@ -58,6 +61,9 @@
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
+        </template>
+        <template v-show="tabname == 4 && !loading && !isLoading">
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
@@ -92,13 +98,13 @@ export default {
               '1': 'initList',
               '2': 'confirmList',
               '3': 'doneList',
+              '4': 'rejectList',
             },
             searchWord:'',
             searchFlag: false,
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              //{ text: '入职引导', value: 0 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -230,7 +236,7 @@ export default {
           item.isDefault = true;
         });
 
-        //获取最近6个月的已用印记录
+        //获取最近6个月的已确认记录
         this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
 
         this.confirmList.map((item , index) => {
@@ -240,10 +246,20 @@ export default {
           item.isDefault = true;
         });
 
-        //获取最近6个月的已领取记录
+        //获取最近6个月的已完成记录
         this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
 
         this.doneList.map((item , index) => {
+          item.name = item.username + ' ' + item.mobile ,
+          item.tel = '';
+          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+          item.isDefault = true;
+        });
+
+        //获取最近6个月的已驳回记录
+        this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
+
+        this.rejectList.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
           item.tel = '';
           item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
