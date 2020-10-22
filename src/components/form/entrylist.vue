@@ -199,6 +199,11 @@ export default {
         //获取tabname
         this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
 
+        //如果角色不是HR，且tabname为1，则修改为2
+        if(this.role != 'hr' && this.tabname == '1'){
+          this.tabname = '2';
+        }
+
         //查询员工信息列表
         await this.queryTabList(this.tabname ,0);
 
