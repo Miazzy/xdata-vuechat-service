@@ -73,7 +73,7 @@
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/gongzidan.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.1/images/pay03.png" >
                 <div class="weui-cell_app_bd">
                   业绩考核
                 </div>
@@ -97,7 +97,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="rewardApply('front');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/finance.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.0/images/pay00.png" >
                 <div class="weui-cell_app_bd" >
                   特殊贡献
                 </div>
@@ -109,7 +109,7 @@
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="rewardApply('meal');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.2/images/pay07.png" >
                 <div class="weui-cell_app_bd">
                   其他奖惩
                 </div>
