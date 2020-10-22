@@ -138,14 +138,22 @@ export default {
               await this.clearLoginInfo();
               this.$router.push(`/login`);
             } else {
-              this.username = info.username;
+
+              //获取用户的账户
+              this.username = info.username || info.userid || info.mobile;
+
+              //获取用户的真实姓名
               this.realname = info.realname || info.name;
 
-              //如果没有获取用户的真实姓名，则通过电话号码
+              //如果没有获取用户的真实姓名，则通过电话号码查询用户真实信息
               if(!this.realname){
 
+                //通过电话号码查询用户信息
+
               }
-              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+
+              //显示用户头像
+              this.avatar = info.avatar.startsWith('https://') ? info.thumb_avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
             }
           } catch (error) {
             console.log(error);
