@@ -139,7 +139,12 @@ export default {
               this.$router.push(`/login`);
             } else {
               this.username = info.username;
-              this.realname = info.realname;
+              this.realname = info.realname || info.name;
+
+              //如果没有获取用户的真实姓名，则通过电话号码
+              if(!this.realname){
+
+              }
               this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
             }
           } catch (error) {
