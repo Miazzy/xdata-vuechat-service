@@ -402,7 +402,33 @@ export default {
           console.log(error);
         }
       },
+      async deleteProcessLog(){
 
+        const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
+        //查询业务编号，如果不存在，则直接返回
+        if(tools.isNull(id) || tools.isNull(pid)){
+          return ;
+        }
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist = tlist.filter(item => {
+          return item.id == id && item.pid == pid;
+        });
+
+        if(tlist.length > 0){
+          //同时删除本条待办记录当前(印章管理员)
+          await workflow.deleteViewProcessLog(tlist);
+        }
+
+      },
       //选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);

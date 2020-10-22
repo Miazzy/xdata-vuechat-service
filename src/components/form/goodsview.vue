@@ -518,6 +518,11 @@ export default {
         const id = tools.getUrlParam('id');
         const pid = tools.getUrlParam('pid');
 
+        //查询业务编号，如果不存在，则直接返回
+        if(tools.isNull(id) || tools.isNull(pid)){
+          return ;
+        }
+
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
 

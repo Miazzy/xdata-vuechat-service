@@ -836,10 +836,6 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
       // 选择入职时间
       joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
