@@ -959,6 +959,25 @@ export default {
         return front;
       },
       // 用户提交入职登记表函数
+      async handleDisagree() {
+
+        //系统编号
+        const id = tools.getUrlParam('id');
+
+        //设置前台确认时间
+        await manageAPI.patchTableData(`bs_entry_job` , id , { id , status: '已驳回' });
+
+        //修改状态
+        this.status = '已驳回';
+
+        //未获取到HR信息
+        await vant.Dialog.alert({
+          title: '温馨提示',
+          message: '入职登记已驳回！',
+        });
+
+      },
+      // 用户提交入职登记表函数
       async handleConfirm() {
 
         //显示加载状态
