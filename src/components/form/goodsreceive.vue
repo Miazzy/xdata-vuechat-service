@@ -599,11 +599,29 @@ export default {
        * @function 获取处理日志
        */
       async queryProcessLog(){
+
         const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
-          this.processLogList.sort();
+
+          //如果查询出出来记录，则将处理记录排序
+          if(this.processLogList && this.processLogList.length > 0){
+
+            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+            this.processLogList.sort();
+
+            //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
+            const temp = this.processLogList[this.processLogList.length - 1];
+
+            //检查状态并删除多余记录
+            if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
+              await this.deleteProcessLog();
+            }
+
+          }
+
         } catch (error) {
           console.log(error);
         }
