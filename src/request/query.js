@@ -293,10 +293,9 @@ export async function queryVMessages(wxid, username, maxId = 0) {
                 item.quiet = item.quiet == 'true' ? true : false;
                 item.read = item.read_ == 'true' ? true : false;
                 item.type = 'friend';
-                item.userid = item.team.replace(wxid, '').replace(username, '').replace(/,/g, '');
-                item.wxid = item.userid;
+                item.heuserid = item.groupid.replace(wxid, '').replace(username, '').replace(/,/g, '');
 
-                const temp = await contact.getUserInfo(item.userid);
+                const temp = await contact.getUserInfo(item.heuserid);
 
                 //获取聊天对象信息
                 item.user = [temp];
