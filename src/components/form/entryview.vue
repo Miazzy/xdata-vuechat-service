@@ -297,7 +297,7 @@
 
           </div>
 
-          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
+          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%; color: #000000; display:block;" >加载中...</van-loading>
 
           <div style="height:100px;" ></div>
         </div>
@@ -475,40 +475,64 @@ export default {
         }
       },
       async downloadGP(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_gp , '电子证件照' + this.item.files_gp.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_gp , '电子证件照' + this.item.files_gp.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadXS(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_xs , '行驶证附件' + this.item.files_xs.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_xs , '行驶证附件' + this.item.files_xs.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadJS(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_js , '驾驶证附件' + this.item.files_js.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_js , '驾驶证附件' + this.item.files_js.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadID(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_id , '身份证附件' + this.item.files_id.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_id , '身份证附件' + this.item.files_id.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadBK(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bk , '银行卡附件' + this.item.files_bk.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_bk , '银行卡附件' + this.item.files_bk.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_by , '毕业证附件' + this.item.files_by.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_by , '毕业证附件' + this.item.files_by.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadXW(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_xw , '学位证附件' + this.item.files_xw.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_xw , '学位证附件' + this.item.files_xw.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadGXZM(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_gxzm , '关系证明附件' + this.item.files_gxzm.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_gxzm , '关系证明附件' + this.item.files_gxzm.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadSSBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_ssby.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_ssby , '硕士毕业证附件' + this.item.files_ssby.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadSSXW(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_ssxw , '硕士学位证附件' + this.item.files_ssxw.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_ssxw , '硕士学位证附件' + this.item.files_ssxw.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadBSBY(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bsby , '博士毕业证附件' + this.item.files_bsby.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_bsby , '博士毕业证附件' + this.item.files_bsby.split('/')[1]);
+        vant.Toast.clear();
       },
       async downloadBSXW(file , res){
-        this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bsxw.split('/')[1]);
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bsxw.split('/')[1]);
+        vant.Toast.clear();
       },
       //查询归档人员
       async queryHRMan(){

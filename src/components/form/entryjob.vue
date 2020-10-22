@@ -215,73 +215,73 @@
 
                 <van-cell title="电子证件照" class="van-cell-upload" :label="item.files_gp.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessGP"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessGP"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell title="行驶证附件" class="van-cell-upload" :label="item.files_xs.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXS"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessXS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell title="驾驶证附件" class="van-cell-upload" :label="item.files_js.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessJS"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessJS"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell title="关系证明附件" class="van-cell-upload" :label="item.files_gxzm.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessGXZM"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessGXZM"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell title="身份证附件" class="van-cell-upload" :label="item.files_id.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessID"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessID"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell title="银行卡照片" class="van-cell-upload" :label="item.files_bk.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBK"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessBK"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '专科' || item.greatdiploma == '本科' || item.greatdiploma == '硕士' ||  item.greatdiploma == '博士') && false" title="毕业证附件" class="van-cell-upload" :label="item.files_by.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBY"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '本科' || item.greatdiploma == '硕士' || item.greatdiploma == '博士') && false" title="学位证附件" class="van-cell-upload" :label="item.files_xw.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessXW"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '硕士' ||  item.greatdiploma == '博士') && false " title="毕业证附件(硕士)" class="van-cell-upload" :label="item.files_ssby.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSBY"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessSSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '硕士' || item.greatdiploma == '博士') && false " title="学位证附件(硕士)" class="van-cell-upload" :label="item.files_ssxw.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessSSXW"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessSSXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '博士') && false " title="毕业证附件(博士)" class="van-cell-upload" :label="item.files_bsby.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSBY"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessBSBY"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
                 <van-cell style="display:none;" v-show="(item.greatdiploma == '博士') && false " title="学位证附件(博士)" class="van-cell-upload" :label="item.files_bsxw.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @success="uploadSuccessBSXW"  >上传</nut-uploader>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccessBSXW"  >上传</nut-uploader>
                   </template>
                 </van-cell>
 
@@ -494,52 +494,83 @@ export default {
       this.queryInfo();
     },
     methods: {
+      async toastUpload(flag){
+        if(flag == 'start'){
+          vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
+        } else if(flag == 'fail'){
+          this.$toast.success('文件上传失败，请稍后重试！');
+        }
+      },
       async uploadSuccessGP(file , res){
+        vant.Toast.clear();
         this.item.files_gp = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessXS(file , res){
+        vant.Toast.clear();
         this.item.files_xs = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessJS(file , res){
+        vant.Toast.clear();
         this.item.files_js = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessID(file , res){
+        vant.Toast.clear();
         this.item.files_id = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBY(file , res){
+        vant.Toast.clear();
         this.item.files_by = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessGXZM(file , res){
+        vant.Toast.clear();
         this.item.files_gxzm = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBK(file , res){
+        vant.Toast.clear();
         this.item.files_bk = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessXW(file , res){
+        vant.Toast.clear();
         this.item.files_xw = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessSSBY(file , res){
+        vant.Toast.clear();
         this.item.files_ssby = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessSSXW(file , res){
+        vant.Toast.clear();
         this.item.files_ssxw = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBSBY(file , res){
+        vant.Toast.clear();
         this.item.files_bsby = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBSXW(file , res){
+        vant.Toast.clear();
         this.item.files_bsxw = JSON.parse(res).message;
+        await tools.sleep(0);
         this.$toast.success('上传成功');
       },
       //处理验证确认
