@@ -1131,6 +1131,15 @@ export default {
           });
         }
 
+        //验证身份证照
+        if(tools.isNull(this.item.files_id)){
+          //弹出确认提示
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请上传身份证照片！',
+          });
+        }
+
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
