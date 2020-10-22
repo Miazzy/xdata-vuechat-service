@@ -342,6 +342,8 @@ export const getUserInfo = async(wxid) => {
     if (!wxid) {
         return;
     } else {
+
+        //从缓存中查询数据
         var contacts = await storage.getStoreDB(ALL_USER_CACHE_KEY);
         for (var index in contacts) {
             if (contacts[index].wxid == wxid) {
@@ -349,7 +351,40 @@ export const getUserInfo = async(wxid) => {
             }
         }
 
-        //如果没有查询到，则直接查询远程服务器
+        //如果没有从缓存数据库中查询处理，则查询服务器
+        return await getUserInfoByWxid(wxid);
+
+    }
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function getUserInfoByWxid(wxid) {
+
+    //如果没有查询到，则直接查询远程服务器
+    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_user/${wxid}`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_user_by_contacts_cache_wxid_v1@wxid${wxid}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_by_contacts_cache_wxid_v1@wxid${wxid}`, res.body, 3600 * 24);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
     }
 }
 

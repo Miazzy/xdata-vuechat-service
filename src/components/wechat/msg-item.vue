@@ -19,7 +19,7 @@
                 <div class="desc-time">{{item.msg[item.msg.length-1].date | fmtDate('hh:ss')}}</div>
                 <div class="desc-author" v-if="item.type=='group'">{{item.group_name}}</div>
                 <!--如果没有备注好友，则显示微信昵称-->
-                <div class="desc-author" v-else>{{item.user[0].remark||item.user[0].nickname}}</div>
+                <div class="desc-author" v-else>{{item.user[0].name}}</div>
                 <div class="desc-msg">
                     <div class="desc-mute iconfont icon-mute" v-show="item.quiet">
                     </div>

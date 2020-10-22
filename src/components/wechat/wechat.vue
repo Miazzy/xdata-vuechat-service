@@ -86,8 +86,9 @@ export default {
           this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
 
           //将此用户的消息数据转为特定格式的数据
-
-          debugger;
+          this.messages.sort((n1,n2) => {
+            return n1.id - n2.id;
+          });
 
         },
         async userStatus(){
