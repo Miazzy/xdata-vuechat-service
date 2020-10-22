@@ -1122,53 +1122,14 @@ export default {
           return ;
         }
 
-        //验证专科证书编号
-        // if(this.item.greatdiploma == '专科' && !this.item.diploma){
-
-        //   //弹出确认提示
-        //   await vant.Dialog.alert({
-        //     title: '温馨提示',
-        //     message: '请输入毕业证书编号(专科)！',
-        //   });
-
-        //   return;
-        // }
-
-        //验证本科证书编号
-        // if((this.item.greatdiploma == '本科' || this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && (!this.item.bachelor || !this.item.diploma)){
-
-        //   //弹出确认提示
-        //   await vant.Dialog.alert({
-        //     title: '温馨提示',
-        //     message: '请输入毕业证书编号或学位证书编号(本科)！',
-        //   });
-
-        //   return;
-        // }
-
-        //验证硕士证书编号
-        // if((this.item.greatdiploma == '硕士' || this.item.greatdiploma == '博士') && ( !this.item.bachelorss || !this.item.diplomass) ){
-
-        //   //弹出确认提示
-        //   await vant.Dialog.alert({
-        //     title: '温馨提示',
-        //     message: '请输入毕业证书编号或学位证书编号(硕士)！',
-        //   });
-
-        //   return;
-        // }
-
-        //验证博士证书编号
-        // if((this.item.greatdiploma == '博士') && ( !this.item.bachelorbs || !this.item.diplomabs) ){
-
-        //   //弹出确认提示
-        //   await vant.Dialog.alert({
-        //     title: '温馨提示',
-        //     message: '请输入毕业证书编号或学位证书编号(博士)！',
-        //   });
-
-        //   return;
-        // }
+        //验证电子证件照
+        if(tools.isNull(this.item.files_gp)){
+          //弹出确认提示
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请上传电子证件照！',
+          });
+        }
 
         //第一步 保存用户数据到数据库中
         const elem = {
