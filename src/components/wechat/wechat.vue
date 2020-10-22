@@ -104,7 +104,7 @@ export default {
           //验收加载数据
           window.wechatTimer = this.timeer = setTimeout(async ()=>{
             await this.queryMessages();
-          },1000);
+          }, 300);
         },
         async userStatus(){
           try {
