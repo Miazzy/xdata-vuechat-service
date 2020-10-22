@@ -486,11 +486,38 @@ export default {
        * @function 获取处理日志
        */
       async queryProcessLog(){
+
         const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
-          this.processLogList.sort();
+
+          if(this.processLogList && this.processLogList.length > 0){
+
+            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+            this.processLogList.sort();
+
+            const temp = this.processLogList[this.processLogList.length - 1];
+
+            if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
+              //获取用户基础信息
+              const userinfo = await storage.getStore('system_userinfo');
+
+              //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+              let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+              //过滤出只关联当前流程的待办数据
+              tlist = tlist.filter(item => {
+                return item.id == id && item.pid == pid;
+              });
+
+              //同时删除本条待办记录当前(印章管理员)
+              await workflow.deleteViewProcessLog(tlist);
+            }
+
+          }
+
         } catch (error) {
           console.log(error);
         }
