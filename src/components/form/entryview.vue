@@ -279,6 +279,10 @@
               <van-button color="linear-gradient(to right, #ff6060, red)" id="informed_confirm" type="danger" native-type="submit" text="确认"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;width:47.5%;float:right;" />
             </van-goods-action>
 
+            <van-goods-action  v-show=" status == '已确认' && role == 'hr' ">
+              <van-button color="linear-gradient(to right, #ff6060, red)" type="warning" text="作废"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:98.5%;float:left;" />
+            </van-goods-action>
+
             <van-goods-action  v-show=" status == '已确认' && role == 'front' && item.front_time == '' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="前台确认"  @click="handleFrontConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
