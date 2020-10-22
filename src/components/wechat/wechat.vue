@@ -25,6 +25,7 @@ export default {
         return {
             "pageName": "消息",
             messages:[],
+            timer:null,
             myuserinfo:null,
         }
     },
@@ -82,6 +83,11 @@ export default {
           //获取用户信息
           this.myuserinfo = await storage.getStore('system_userinfo');
 
+          await this.queryMessages();
+
+        },
+        async queryMessages(){
+
           //获取此用户的消息消息
           this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
 
@@ -90,6 +96,15 @@ export default {
             return n2.id - n1.id;
           });
 
+          //如果定时器存在，则清空原定时器
+          if(!!window.wechatTimer){
+            clearTimeout(window.wechatTimer);
+          }
+
+          //验收加载数据
+          window.wechatTimer = this.timeer = setTimeout(async ()=>{
+            await this.queryMessages();
+          },1000);
         },
         async userStatus(){
           try {

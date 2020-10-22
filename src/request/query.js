@@ -252,7 +252,7 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
         var res = await superagent.get(queryURL).set('accept', 'json');
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}_wxid_${wxid_}_maxid${maxId}`, res.body, 3);
+            storage.setStore(`sys_message_cache##v1@${tableName}&wxid${wxid}_wxid_${wxid_}_maxid${maxId}`, res.body, 1);
         }
 
         return res.body;
@@ -303,9 +303,8 @@ export async function queryVMessages(wxid, username, maxId = 0) {
 
             };
 
-            storage.setStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}&maxid${maxId}`, res.body, 10);
+            storage.setStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}&maxid${maxId}`, res.body, 1);
         }
-
 
         return res.body;
     } catch (err) {

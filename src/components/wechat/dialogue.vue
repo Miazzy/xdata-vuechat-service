@@ -250,10 +250,15 @@ export default {
               return n1.id - n2.id;
             });
 
+            //如果定时器存在，则清空定时器
+            if(!!window.dialogueTimer){
+              clearTimeout(window.dialogueTimer);
+            }
+
             //定时查询是否有用户发送消息
-            setTimeout(async ()=>{
+            window.dialogueTimer = setTimeout(async ()=>{
               await this.queryMessages();
-            }, 10000);
+            }, 300);
           } catch (error) {
             console.log(error);
           }
