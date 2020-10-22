@@ -46,7 +46,7 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已完成
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已驳回
           </div>
         </div>
@@ -206,7 +206,7 @@ export default {
         this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
 
         //如果角色不是HR，且tabname为1，则修改为2
-        if(this.role != 'hr' && this.tabname == '1'){
+        if(this.role != 'hr' && (this.tabname == '1' || this.tabname == '4')){
           this.tabname = '2';
         }
 
@@ -289,6 +289,10 @@ export default {
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         } else if(this.tabname == '3' ){
+          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          //跳转到相应的用印界面
+          this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
+         } else if(this.tabname == '4' ){
           storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
