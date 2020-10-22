@@ -133,10 +133,14 @@ export default {
         async userStatus(){
           try {
             let info = await storage.getStore('system_userinfo');
+
+            //如果用户未登录，则直接调整到登录界面
             if( tools.isNull(info) ){
+
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
               this.$router.push(`/login`);
+
             } else {
 
               //获取用户的账户
