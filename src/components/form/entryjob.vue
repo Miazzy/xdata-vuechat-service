@@ -1136,8 +1136,44 @@ export default {
           //弹出确认提示
           return await vant.Dialog.alert({
             title: '温馨提示',
-            message: '请上传身份证照片！',
+            message: '请上传身份证照！',
           });
+        }
+
+        //如果填写了车牌号，则验证驾驶证，行驶证的证件照片
+        if(!tools.isNull(this.item.carno)){
+
+          //验证身份证照
+          if(tools.isNull(this.item.files_xs)){
+            //弹出确认提示
+            return await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请上传行驶证照！',
+            });
+          }
+
+          //验证身份证照
+          if(tools.isNull(this.item.files_js)){
+            //弹出确认提示
+            return await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请上传驾驶证照！',
+            });
+          }
+        }
+
+        //如果填写了银行卡号，则验证银行卡证件照是否上传
+        if(!tools.isNull(this.item.bank_card)){
+
+          //验证银行卡证件照
+          if(tools.isNull(this.item.files_bk)){
+            //弹出确认提示
+            return await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请上传银行卡照！',
+            });
+          }
+
         }
 
         //第一步 保存用户数据到数据库中
