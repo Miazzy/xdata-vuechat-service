@@ -1131,15 +1131,6 @@ export default {
           });
         }
 
-        //验证身份证照
-        if(tools.isNull(this.item.files_id)){
-          //弹出确认提示
-          return await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '请上传身份证照！',
-          });
-        }
-
         //如果填写了车牌号，则验证驾驶证，行驶证的证件照片
         if(!tools.isNull(this.item.carno)){
 
@@ -1160,6 +1151,15 @@ export default {
               message: '请上传驾驶证照！',
             });
           }
+        }
+
+        //验证身份证照
+        if(tools.isNull(this.item.files_id)){
+          //弹出确认提示
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请上传身份证照！',
+          });
         }
 
         //如果填写了银行卡号，则验证银行卡证件照是否上传
