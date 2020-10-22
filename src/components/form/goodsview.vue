@@ -529,8 +529,11 @@ export default {
           return item.id == id && item.pid == pid;
         });
 
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
+        if(tlist.length > 0){
+          //同时删除本条待办记录当前(印章管理员)
+          await workflow.deleteViewProcessLog(tlist);
+        }
+
       },
       //选中当前盖印人
       async selectFrontUser(value){
