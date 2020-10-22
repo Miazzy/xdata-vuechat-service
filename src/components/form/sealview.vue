@@ -890,7 +890,7 @@ export default {
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
           //如果没有查询到数据，或者数据状态有误
-          if(tools.isNull(value) || value.status == '已测试' || value.status == '已退回' || value.status == '已作废' || value.status == '已完成'){
+          if(tools.isNull(value) || value.status == '已测试' || value.status == '已退回' || value.status == '已作废' || value.status == '已完成' || value.status == '已用印'){
             await this.deleteProcessLog();
           }
 
