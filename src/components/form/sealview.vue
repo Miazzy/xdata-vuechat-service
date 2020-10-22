@@ -1040,14 +1040,59 @@ export default {
        * @function 获取处理日志
        */
       async queryProcessLog(){
+
         const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
-          this.processLogList.sort();
+
+          //如果查询出出来记录，则将处理记录排序
+          if(this.processLogList && this.processLogList.length > 0){
+
+            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+            this.processLogList.sort();
+
+            //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
+            const temp = this.processLogList[this.processLogList.length - 1];
+
+            //检查状态并删除多余记录
+            if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) || (temp.action == '驳回' && temp.action_opinion.includes('已退回')) ){
+              await this.deleteProcessLog();
+            }
+
+          }
+
         } catch (error) {
           console.log(error);
         }
+      },
+      async deleteProcessLog(){
+
+        const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
+        //查询业务编号，如果不存在，则直接返回
+        if(tools.isNull(id) || tools.isNull(pid)){
+          return ;
+        }
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist = tlist.filter(item => {
+          return item.id == id && item.pid == pid;
+        });
+
+        if(tlist.length > 0){
+          //同时删除本条待办记录当前(印章管理员)
+          await workflow.deleteViewProcessLog(tlist);
+        }
+
       },
       /**
        * @function 处理同意操作
