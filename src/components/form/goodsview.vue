@@ -493,27 +493,18 @@ export default {
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
 
+          //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
 
             this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
             this.processLogList.sort();
 
+            //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
             const temp = this.processLogList[this.processLogList.length - 1];
 
+            //检查状态并删除多余记录
             if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
-              //获取用户基础信息
-              const userinfo = await storage.getStore('system_userinfo');
-
-              //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
-              let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-              //过滤出只关联当前流程的待办数据
-              tlist = tlist.filter(item => {
-                return item.id == id && item.pid == pid;
-              });
-
-              //同时删除本条待办记录当前(印章管理员)
-              await workflow.deleteViewProcessLog(tlist);
+              await this.deleteProcessLog();
             }
 
           }
@@ -522,7 +513,25 @@ export default {
           console.log(error);
         }
       },
+      async deleteProcessLog(){
 
+        const id = tools.getUrlParam('id');
+        const pid = tools.getUrlParam('pid');
+
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+
+        //过滤出只关联当前流程的待办数据
+        tlist = tlist.filter(item => {
+          return item.id == id && item.pid == pid;
+        });
+
+        //同时删除本条待办记录当前(印章管理员)
+        await workflow.deleteViewProcessLog(tlist);
+      },
       //选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);
@@ -561,12 +570,6 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
-
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
-
       // 选择入职时间
       async joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
@@ -574,7 +577,6 @@ export default {
         await tools.sleep(100);
         this.tag.showPickerJoinTime = false;
       },
-
       // 选择是否
       async commonTypeConfirm(value){
         this.item[this.currentKey] = value;
@@ -600,6 +602,11 @@ export default {
 
           //查询领用数据
           let tlist = await query.queryTableDataByPid(this.tablename , id);
+
+          if(tlist.length == 0){
+            await this.deleteProcessLog();
+          }
+
           this.size = tlist.length;
           this.tlist = tlist;
 
