@@ -71,6 +71,7 @@ export default {
             "pageName": "联系人",
             contactsInitialList:[],
             contactsList:{},
+            departid:null,
         }
     },
     async mounted() {
@@ -102,7 +103,9 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
 
-            var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST) || [];
+            const userinfo = await storage.getStore('system_userinfo');
+
+            var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
 
             if(tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
@@ -113,7 +116,7 @@ export default {
                   }
               }
               initialList = initialList.sort();
-              storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST , initialList , 3600 * 24);
+              storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department , initialList , 3600 * 24);
             }
 
             return initialList;
@@ -123,7 +126,7 @@ export default {
         async queryContactsList() {
 
             var initialList = [];
-            var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST) || {};
+            var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
 
             if(tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};
@@ -141,7 +144,7 @@ export default {
                   }
               }
               let cache = JSON.stringify(contactsList);
-              storage.setStoreDB(ALL_CONTACT_CACHE_LIST , cache , 3600 * 24);
+              storage.setStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department , cache , 3600 * 24);
             }
 
             return contactsList;
@@ -168,10 +171,10 @@ export default {
         },
         async clearLoginInfo(){
           try {
-            let info = await storage.getStore('system_linfo');
+            let userinfo = await storage.getStore('system_linfo');
 
-            this.username = info.username;
-            this.password = info.password;
+            this.username = userinfo.username;
+            this.password = userinfo.password;
 
             storage.clearStore('system_userinfo');
             storage.clearStore('system_token');
@@ -184,6 +187,7 @@ export default {
         async userStatus(){
           try {
             let userinfo = await storage.getStore('system_userinfo');
+            this.departid = userinfo.main_department;
           } catch (error) {
             console.log(error);
           }
