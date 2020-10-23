@@ -28,14 +28,20 @@ export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V8';
  */
 export const queryDepartUserList = async() => {
 
-    const cache = await storage.getStoreDB(ALL_USER_CACHE_DEPART_KEY);
+
+    //获取当前登录用户信息
+    const userinfo = await storage.getStore('system_userinfo');
+
+    //获取部门信息
+    const departID = userinfo.main_department;
+
+    const cache = await storage.getStoreDB(ALL_USER_CACHE_DEPART_KEY + '#depart_id#' + departID);
 
     if (!tools.isNull(cache)) {
         return cache;
     }
 
-    //获取当前登录用户信息
-    const userinfo = await storage.getStore('system_userinfo');
+    debugger;
 
     //查询部门URL
     const queryDepartURL = `https://api.yunwisdom.club:30443/api/v2/wework_depart_list/${userinfo.main_department}`;
@@ -118,7 +124,7 @@ export const queryDepartUserList = async() => {
         result.records = res.body.userlist;
         result.total = res.body.userlist.length;
 
-        storage.setStoreDB(ALL_USER_CACHE_DEPART_KEY, result, 3600 * 24 * 3);
+        storage.setStoreDB(ALL_USER_CACHE_DEPART_KEY + '#depart_id#' + departID, result, 3600 * 24 * 3);
 
         return result;
 
