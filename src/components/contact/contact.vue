@@ -99,7 +99,6 @@ export default {
 
     },
     methods: {
-
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
 
@@ -156,7 +155,7 @@ export default {
         },
         changeStyle(name) {
           try {
-            var name = window.location.hash.slice(2);
+            let name = window.location.hash.slice(2);
             name = name.includes('?') ? name.split('?')[0] : name;
             name = name.includes('/') ? name.split('/')[0] : name;
             $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
@@ -173,7 +172,7 @@ export default {
         },
         async clearLoginInfo(){
           try {
-            let userinfo = await storage.getStore('system_linfo');
+            const userinfo = await storage.getStore('system_linfo');
 
             this.username = userinfo.username;
             this.password = userinfo.password;
@@ -188,7 +187,7 @@ export default {
         },
         async userStatus(){
           try {
-            let userinfo = await storage.getStore('system_userinfo');
+            const userinfo = await storage.getStore('system_userinfo');
             this.departid = userinfo.main_department;
           } catch (error) {
             console.log(error);
