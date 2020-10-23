@@ -449,7 +449,6 @@ export default {
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 1000);
-          debugger;
           storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;

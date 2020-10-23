@@ -19,8 +19,6 @@ export async function queryProcessLogDone(
         console.log(res);
         result = res.body;
 
-        debugger;
-
         //遍历并格式化日期
         result = window.__.filter(result, function(item) {
             //格式化日期
