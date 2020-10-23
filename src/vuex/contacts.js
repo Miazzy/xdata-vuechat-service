@@ -19,9 +19,9 @@ const contact = { contacts: null };
 
 export default contact;
 
-export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V8';
-export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V8';
-export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V8';
+export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V9';
+export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V9';
+export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V9';
 
 /**
  * 查询审批处理页面的记录
@@ -325,9 +325,14 @@ export const queryUserList = async(params) => {
 }
 
 export const queryContacts = async() => {
+    //获取当前登录用户信息
+    const userinfo = await storage.getStore('system_userinfo');
+
     var all = [];
     var count = 0;
-    var cache = await storage.getStoreDB(ALL_USER_CACHE_KEY);
+    var cache = await storage.getStoreDB(ALL_USER_CACHE_KEY + '#depart#' + userinfo.main_department);
+
+    debugger;
 
     if (tools.isNull(cache) || cache.length <= 0) {
         let userlist = await queryDepartUserList();
@@ -336,7 +341,7 @@ export const queryContacts = async() => {
         if (!(tools.isNull(userlist) || userlist.length <= 0)) {
             all = [...all, ...userlist];
         }
-        storage.setStoreDB(ALL_USER_CACHE_KEY, all, 3600 * 24);
+        storage.setStoreDB(ALL_USER_CACHE_KEY + '#depart#' + userinfo.main_department, all, 3600 * 24);
     } else {
         all = cache;
     }
@@ -345,12 +350,16 @@ export const queryContacts = async() => {
 }
 
 export const getUserInfo = async(wxid) => {
+
+    //获取当前登录用户信息
+    const userinfo = await storage.getStore('system_userinfo');
+
     if (!wxid) {
         return;
     } else {
 
         //从缓存中查询数据
-        var contacts = await storage.getStoreDB(ALL_USER_CACHE_KEY);
+        var contacts = await storage.getStoreDB(ALL_USER_CACHE_KEY + '#depart#' + userinfo.main_department);
         for (var index in contacts) {
             if (contacts[index].wxid == wxid) {
                 return contacts[index]
