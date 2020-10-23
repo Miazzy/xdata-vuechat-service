@@ -19,6 +19,8 @@ export async function queryProcessLogDone(
         console.log(res);
         result = res.body;
 
+        debugger;
+
         //遍历并格式化日期
         result = window.__.filter(result, function(item) {
             //格式化日期
@@ -43,12 +45,20 @@ export async function queryProcessLogDone(
             return flag;
         });
 
-        for (let item of result) {
-            if (tools.isNull(item['sponsor'])) {
-                const temp = await query.queryUserInfoByAccount(item.proponents);
-                item['sponsor'] = temp.realname;
-            }
-        };
+        try {
+            for (let item of result) {
+                try {
+                    if (tools.isNull(item['sponsor'])) {
+                        const temp = await query.queryUserInfoByAccount(item.proponents);
+                        item['sponsor'] = temp.realname;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+        } catch (error) {
+            console.log(error);
+        }
 
         //根据ID编号去掉重复的数据
         result = window.__.uniq(result, false, 'id');
@@ -109,11 +119,15 @@ export async function queryProcessLogWait(
 
         try {
             for (let item of result) {
-                if (tools.isNull(item['sponsor'])) {
-                    if (!item.proponents.includes(',')) {
-                        const temp = await query.queryUserInfoByAccount(item.proponents);
-                        item['sponsor'] = temp.realname;
+                try {
+                    if (tools.isNull(item['sponsor'])) {
+                        if (!item.proponents.includes(',')) {
+                            const temp = await query.queryUserInfoByAccount(item.proponents);
+                            item['sponsor'] = temp.realname;
+                        }
                     }
+                } catch (error) {
+                    console.log(error);
                 }
             };
         } catch (error) {
@@ -141,7 +155,6 @@ export async function queryProcessLogWaitSeal(
         result = res.body;
 
         try {
-
             result = window.__.filter(result, function(item) {
                 //格式化日期
                 var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
@@ -172,11 +185,15 @@ export async function queryProcessLogWaitSeal(
 
         try {
             for (let item of result) {
-                if (tools.isNull(item['sponsor'])) {
-                    if (!item.proponents.includes(',')) {
-                        const temp = await query.queryUserInfoByAccount(item.proponents);
-                        item['sponsor'] = temp.realname;
+                try {
+                    if (tools.isNull(item['sponsor'])) {
+                        if (!item.proponents.includes(',')) {
+                            const temp = await query.queryUserInfoByAccount(item.proponents);
+                            item['sponsor'] = temp.realname;
+                        }
                     }
+                } catch (error) {
+                    console.log(error);
                 }
             };
         } catch (error) {

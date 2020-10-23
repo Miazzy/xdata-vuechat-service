@@ -449,18 +449,23 @@ export default {
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 1000);
+          debugger;
           storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
 
-        //遍历数据，并放入缓存中
-        tlist.map((item)=>{
-          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
-          storage.setStore(`system_task_done_item_by_id@${item.id}` , item , 60);
-        });
+        try {
+          //遍历数据，并放入缓存中
+          tlist.map((item)=>{
+            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            storage.setStore(`system_task_done_item_by_id@${item.id}` , item , 60);
+          });
 
-        this.donetasks = tlist;
+          this.donetasks = tlist;
+        } catch (error) {
+          console.log(error);
+        }
       },
       async queryTaskDoing(){
         let info = await storage.getStore('system_userinfo');
@@ -478,20 +483,25 @@ export default {
           tlist = result;
         }
 
-        //遍历数据，并放入缓存中
-        tlist.map((item)=>{
-          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
-          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
-        });
+        try {
+          //遍历数据，并放入缓存中
+          tlist.map((item)=>{
+            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
+          });
 
-        //过滤，去掉计时待办业务
-        tlist = tlist.filter((item)=>{
-          return !task.TIME_TASK_NAME.includes(item.name);
-        })
+          //过滤，去掉计时待办业务
+          tlist = tlist.filter((item)=>{
+            return !task.TIME_TASK_NAME.includes(item.name);
+          })
 
-        tlist = tlist.slice(0,30);
+          tlist = tlist.slice(0,30);
 
-        this.doingtasks = tlist;
+          this.doingtasks = tlist;
+        } catch (error) {
+          console.log(error);
+        }
+
       },
       async queryTaskTiming(){
 
@@ -510,20 +520,25 @@ export default {
           tlist = result;
         }
 
-        //遍历数据，并放入缓存中
-        tlist.map((item)=>{
-          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
-          storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
-        });
+        try {
+          //遍历数据，并放入缓存中
+          tlist.map((item)=>{
+            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
+          });
 
-        //过滤，去掉非计时待办业务
-        tlist = tlist.filter((item)=>{
-          return task.TIME_TASK_NAME.includes(item.name);
-        })
+          //过滤，去掉非计时待办业务
+          tlist = tlist.filter((item)=>{
+            return task.TIME_TASK_NAME.includes(item.name);
+          })
 
-        tlist = tlist.slice(0,30);
+          tlist = tlist.slice(0,30);
 
-        this.timetasks = tlist;
+          this.timetasks = tlist;
+        } catch (error) {
+          console.log(error);
+        }
+
       },
       async clickTaskDone(item, tabname = 1){
         if(item.tname == 'bs_seal_regist'){ //跳转到相应的用印界面
