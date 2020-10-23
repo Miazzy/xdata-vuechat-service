@@ -183,12 +183,7 @@ export default {
         },
         async userStatus(){
           try {
-            let info = await storage.getStore('system_userinfo');
-            if( tools.isNull(info) ){
-              vant.Toast('尚未登录！');
-              await this.clearLoginInfo();
-              this.$router.push(`/login`);
-            }
+            let userinfo = await storage.getStore('system_userinfo');
           } catch (error) {
             console.log(error);
           }
