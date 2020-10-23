@@ -125,6 +125,8 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsList() {
 
+            const userinfo = await storage.getStore('system_userinfo');
+
             var initialList = [];
             var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
 
