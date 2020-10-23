@@ -39,6 +39,10 @@ const routes = [{
             "subPage": resolve => require(["../components/wechat/dialogue-detail.vue"], resolve)
         }
     }, {
+        path: '/search',
+        name: "联系人",
+        component: resolve => require(["../components/common/searchs.vue"], resolve)
+    }, {
         path: '/contact',
         name: "联系人",
         component: resolve => require(["../components/contact/contact.vue"], resolve)
@@ -48,6 +52,13 @@ const routes = [{
         components: {
             "default": resolve => require(["../components/contact/contact.vue"], resolve),
             "subPage": resolve => require(["../components/contact/add-friend.vue"], resolve)
+        }
+    }, {
+        path: '/contact/search',
+        name: "",
+        components: {
+            "default": resolve => require(["../components/contact/contact.vue"], resolve),
+            "subPage": resolve => require(["../components/common/search.vue"], resolve)
         }
     }, {
         path: '/contact/details',
