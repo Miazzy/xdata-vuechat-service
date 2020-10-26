@@ -57,9 +57,9 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 申请时间 -->
-                <van-field :readonly="true"     :required="false" clearable label="申请时间" v-model="item.receive_time"  placeholder="请填写申请时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
+                <van-field :readonly="true"     :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" @blur="validField('apply_date')" :error-message="message.apply_date"  />
                 <!-- 流程标题 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="流程标题" v-model="item.type"  placeholder="请填写流程标题！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="流程标题" v-model="item.title"  placeholder="请填写流程标题！" @blur="validField('title')" :error-message="message.title"  />
 
               </van-cell-group>
 
@@ -68,11 +68,11 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 申请人员 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="申请人员" v-model="item.type"  placeholder="请填写流程标题！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="申请人员" v-model="item.apply_realname"  placeholder="请填写申请人员姓名！" @blur="validField('apply_realname')" :error-message="message.apply_realname"  />
                 <!-- 所属公司 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="所属公司" v-model="item.amount"  placeholder="请填写所属公司！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="所属公司" v-model="item.company"  placeholder="请填写所属公司！" @blur="validField('company')" :error-message="message.company"  />
                 <!-- 所属部门 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="所属部门" v-model="item.amount"  placeholder="请填写所属部门！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="所属部门" v-model="item.department"  placeholder="请填写所属部门！" @blur="validField('department')" :error-message="message.department"  />
 
               </van-cell-group>
 
@@ -81,9 +81,9 @@
                 <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 奖罚金额 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.type"  placeholder="请填写奖罚金额！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
                 <!-- 申请事由 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.amount"  placeholder="请填写申请事由！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.content"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
 
               </van-cell-group>
 
