@@ -375,12 +375,20 @@ export const getUserInfo = async(wxid) => {
  */
 export async function getUserInfoByWxid(wxid) {
 
+    window.userMap = new Map();
+
+    const key = `contacts_cache_wxid${wxid}`;
+
+    if (tools.isNull(wxid) || wxid.startsWith('wxid')) {
+        return {};
+    }
+
     //如果没有查询到，则直接查询远程服务器
     var queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_user/${wxid}`;
 
     try {
         //获取缓存中的数据
-        var cache = storage.getStore(`sys_user_by_contacts_cache_wxid_v1@wxid${wxid}`);
+        var cache = (await storage.getStoreDB(`contacts_cache_wxid${wxid}`)) || window.userMap.get(key);
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -389,8 +397,9 @@ export async function getUserInfoByWxid(wxid) {
 
         var res = await superagent.get(queryURL).set('accept', 'json');
 
-        if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_user_by_contacts_cache_wxid_v1@wxid${wxid}`, res.body, 3600 * 24);
+        if (res.body != null) {
+            window.userMap.set(key, res.body);
+            await storage.setStoreDB(key, res.body, 3600 * 24);
         }
 
         return res.body;

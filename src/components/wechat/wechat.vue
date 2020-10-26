@@ -88,23 +88,30 @@ export default {
         },
         async queryMessages(){
 
-          //获取此用户的消息消息
-          this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
+          //查询当前路径
+          const path = this.$router.currentRoute.path;
 
-          //将此用户的消息数据转为特定格式的数据
-          this.messages.sort((n1,n2) => {
-            return n2.id - n1.id;
-          });
+          //如果当前路径在wechat，则查询最新消息
+          if(path == '/wechat'){
+            //获取此用户的消息消息
+            this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
 
-          //如果定时器存在，则清空原定时器
-          if(!!window.wechatTimer){
-            clearTimeout(window.wechatTimer);
+            //将此用户的消息数据转为特定格式的数据
+            this.messages.sort((n1,n2) => {
+              return n2.id - n1.id;
+            });
+
+            //如果定时器存在，则清空原定时器
+            if(!!window.wechatTimer){
+              clearTimeout(window.wechatTimer);
+            }
+
+            //验收加载数据
+            window.wechatTimer = this.timeer = setTimeout(async ()=>{
+              await this.queryMessages();
+            }, 300);
           }
 
-          //验收加载数据
-          window.wechatTimer = this.timeer = setTimeout(async ()=>{
-            await this.queryMessages();
-          }, 300);
         },
         async userStatus(){
           try {
