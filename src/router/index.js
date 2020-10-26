@@ -278,6 +278,27 @@ const routes = [{
             "subPage": resolve => require(["../components/form/borrow.vue"], resolve)
         }
     }, {
+        path: '/app/rewardlist',
+        name: "借用进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/rewardlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/rewardview',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/reward.vue"], resolve)
+        }
+    }, {
+        path: '/app/rewardapply',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/rewardapply.vue"], resolve)
+        }
+    }, {
         path: '/app/borrowlist',
         name: "借用进度",
         components: {
