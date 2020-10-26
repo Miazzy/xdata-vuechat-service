@@ -752,6 +752,26 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+        //未获取到选择的物品领用接待人员
+        if(tools.isNull(this.item.name) || tools.isNull(this.item.amount)){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请输入领用物品名称与数量！',
+            });
+          return;
+        }
+
+        //未获取到选择的物品领用接待人员
+        if(tools.isNull(this.item.userid)){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请输入接待人员并点击人员列表，选择物品领用接待人员！',
+            });
+          return;
+        }
+
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
