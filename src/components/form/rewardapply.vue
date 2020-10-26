@@ -210,6 +210,10 @@ export default {
               reward_type: '',
               reward_name: '',
               reward_period: '',
+              hr_admin_ids: '',
+              hr_admin_names: '',
+              hr_id: '',
+              hr_name: '',
               apply_username: '',
               apply_realname: '',
               status: '',
@@ -388,7 +392,7 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              apply_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              apply_date: dayjs().format('YYYY-MM-DD'),
               title: '',
               company: '',
               department: '',
@@ -398,8 +402,13 @@ export default {
               amount: '',
               wflowid: '',
               bpm_status: '',
+              reward_type: '',
               reward_name: '',
               reward_period: '',
+              hr_admin_ids: '',
+              hr_admin_names: '',
+              hr_id: '',
+              hr_name: '',
               apply_username: '',
               apply_realname: '',
               status: '',
@@ -571,7 +580,7 @@ export default {
         const type = tools.getUrlParam('type');
 
         //查询直接所在工作组
-        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+        const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
 
         //获取到印章管理员组信息
         let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
@@ -579,33 +588,38 @@ export default {
 
         //如果未获取用户名称，则直接设置用印人为分组成员
         if(tools.isNull(user_group_ids)){
-          user_group_ids = this.item.userid;
-          user_group_names = this.item.user_admin_name;
+          user_group_ids = this.item.hr_id;
+          user_group_names = this.item.hr_name;
         }
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&type=${type}&role=front`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=front`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
+          serialid:'',
           create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          create_by : userinfo.username,
-          name : this.item.name,
-          amount : this.item.amount,
-          receive_name:this.item.receive_name ,
-          department : this.item.department,
-          remark : this.item.remark,
-          type : this.item.type,
-          company : this.item.company,
-          approve_name : this.item.approve_name,
-          workflow : this.item.workflow,
-          approve : this.item.approve,
-          userid : this.item.userid,
-          user_admin_name : this.item.user_admin_name,
-          user_group_ids,
-          user_group_names,
-          pid: id,
+          create_by: userinfo.username,
+          apply_date: dayjs().format('YYYY-MM-DD'),
+          title: this.item.title,
+          company: this.item.company,
+          department: this.item.department,
+          content: this.item.content,
+          remark: this.item.remark, //备注
+          files: this.item.files,
+          amount: this.item.amount,
+          wflowid: '',
+          bpm_status: '',
+          reward_type: this.item.reward_type,
+          reward_name: this.item.reward_name,
+          reward_period: this.item.reward_period,
+          hr_admin_ids: user_group_ids,
+          hr_admin_names: user_group_names,
+          hr_id: this.item.hr_id,
+          hr_name: this.item.hr_name,
+          apply_username: userinfo.username,
+          apply_realname: userinfo.realname,
           status: '待处理',
         }; // 待处理元素
 
@@ -654,7 +668,7 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids},zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids},${userinfo.username}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
 
@@ -731,7 +745,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已经向前台客户推送奖罚申请申请！',
+            message: '已经提交奖罚申请流程！',
           });
 
       }
