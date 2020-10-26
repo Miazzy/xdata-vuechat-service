@@ -268,12 +268,11 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
  */
 export async function queryVMessages(wxid, username, maxId = 0) {
 
-    //大写转小写
-    const tableName = 'v_messages';
-    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(team,like,~${wxid}~)&_sort=-id&_p=0&_size=100`;
-
     try {
+        //大写转小写
+        const tableName = 'v_messages';
+        //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+        var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(team,like,~${wxid}~)&_sort=-id&_p=0&_size=100`;
         //获取缓存中的数据
         var cache = storage.getStore(`sys_message_cache##v2@${tableName}&wxid${wxid}}&maxid${maxId}`);
 
