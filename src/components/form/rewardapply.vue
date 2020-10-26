@@ -686,6 +686,9 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+        //验证数据是否已经填写
+
+
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
 
