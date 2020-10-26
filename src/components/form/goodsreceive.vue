@@ -3,7 +3,7 @@
   <keep-alive>
 
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
+  <div id="content" style="margin-top: 0px;" >
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
