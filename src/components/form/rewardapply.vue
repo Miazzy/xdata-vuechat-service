@@ -510,7 +510,8 @@ export default {
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
-          debugger;
+          this.item.apply_realname = userinfo.realname;
+          this.item.apply_username = userinfo.username;
 
           //获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
@@ -522,9 +523,16 @@ export default {
             this.item.status = item.status || this.item.status;
           }
 
-          this.item.apply_realname = userinfo.realname;
-          this.item.department = userinfo.department.name;
-          this.item.company = userinfo.parent_company.name;
+
+          if(userinfo.department && userinfo.department.name){
+            this.item.department = userinfo.department.name;
+            this.item.company = userinfo.parent_company.name;
+          } else if(userinfo.systemuserinfo && userinfo.systemuserinfo.textfield1){
+            let temp = userinfo.systemuserinfo.textfield1.split('||')[0];
+            this.item.company = temp.split('>')[temp.split('>').length - 1];
+            temp = userinfo.systemuserinfo.textfield1.split('||')[1];
+            this.item.department = temp.split('>')[temp.split('>').length - 1];
+          }
 
         } catch (error) {
           console.log(error);
