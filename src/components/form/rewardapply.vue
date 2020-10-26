@@ -78,6 +78,12 @@
 
               </van-cell-group>
 
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="人力信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+              </van-cell-group>
+
               <van-cell-group style="margin-top:10px;position:relative;">
 
                 <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
