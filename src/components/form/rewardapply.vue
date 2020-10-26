@@ -83,6 +83,8 @@
                 <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 奖罚名称 -->
+                <van-field :readonly="readonly" :required="true"  clearable label="所属周期" v-model="item.reward_period"  placeholder="请填写奖罚所属周期！" @blur="validField('reward_period')" :error-message="message.reward_period"  />
+                <!-- 奖罚名称 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="奖罚名称" v-model="item.reward_name"  placeholder="请填写奖罚名称！" @blur="validField('reward_name')" :error-message="message.reward_name"  />
                 <!-- 奖罚金额 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
@@ -209,7 +211,7 @@ export default {
               bpm_status: '',
               reward_type: '',
               reward_name: '',
-              reward_period: '',
+              reward_period: dayjs().format('YYYY年MM月'),
               hr_admin_ids: '',
               hr_admin_names: '',
               hr_id: '',
