@@ -771,6 +771,8 @@ export default {
         const type = tools.getUrlParam('statustype');
         const pid = tools.getUrlParam('pid');
 
+        //检查用户是否具有权限进行审批
+
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
 
@@ -781,7 +783,6 @@ export default {
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
-
 
         //批量领取物品修改状态
         for(let i = 0 ; i < this.tlist.length ; i++){
