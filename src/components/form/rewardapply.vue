@@ -80,8 +80,8 @@
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="人力信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="querySealMan();" @click="querySealMan();" />
-                <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="queryHRMan();" @click="queryHRMan();" />
+                <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;position:relative;">
@@ -183,6 +183,7 @@ export default {
             groupid:'group00',
             sealuserid:'',
             userid:'',
+            hr_id:'',
             userList:[],
             huserid:'',
             huserList:[],
@@ -313,16 +314,16 @@ export default {
         }
       },
       //用户选择盖印人
-      async querySealMan(){
+      async queryHRMan(){
 
         //获取盖章人信息
-        const user_admin_name = this.item.user_admin_name;
+        const hr_name = this.item.hr_name;
 
         try {
-          if(!!user_admin_name){
+          if(!!hr_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+            let user = await manageAPI.queryUserByNameHRM(hr_name.trim());
 
             if(!!user){
 
@@ -330,6 +331,7 @@ export default {
               if(Array.isArray(user)){
 
                 try {
+
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
                     company = company.slice(company.lastIndexOf('>')+1);
@@ -339,9 +341,9 @@ export default {
                   })
 
                   //获取盖印人姓名
-                  this.item.user_admin_name = user[0].lastname;
+                  this.item.hr_name = user[0].lastname;
                   //当前盖印人编号
-                  this.item.userid = this.userid = user[0].loginid;
+                  this.item.hr_id = this.hr_id = user[0].loginid;
 
                 } catch (error) {
                   console.log(error);
@@ -350,16 +352,20 @@ export default {
               } else { //如果只有一个用户数据，则直接设置
 
                 try {
+
                   let company = user.textfield1.split('||')[0];
                   company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
+
                   //将用户数据推送至对方数组
                   this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+
                   //获取盖印人姓名
-                  this.item.user_admin_name = user.lastname;
+                  this.item.hr_name = user.lastname;
                   //当前盖印人编号
-                  this.item.userid = this.userid = user.loginid;
+                  this.item.hr_id = this.hr_id = user.loginid;
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -385,13 +391,11 @@ export default {
 
       },
       //选中当前盖印人
-      async selectSealUser(value){
+      async selectHRUser(value){
         await tools.sleep(0);
-        const id = this.userid;
+        const id = this.item.hr_id;
         const user = this.userList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.user_admin_name = user.name;
-        this.item.userid = id;
+        this.item.hr_name = user.name;
       },
       // 设置重置
       async reduction(){
