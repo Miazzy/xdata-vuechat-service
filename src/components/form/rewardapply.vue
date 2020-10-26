@@ -3,7 +3,7 @@
   <keep-alive>
 
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px;" >
+  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
@@ -83,7 +83,7 @@
                 <!-- 奖罚金额 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
                 <!-- 申请事由 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.content"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.content" rows="5" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
 
               </van-cell-group>
 
