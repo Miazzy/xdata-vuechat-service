@@ -554,11 +554,13 @@ export default {
       //选中当前盖印人
       async selectSealUser(value){
         await tools.sleep(0);
+
         const id = this.userid;
+        this.item.userid = id;
+
         const user = this.userList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
         this.item.user_admin_name = user.name;
-        this.item.userid = id;
       },
       // 设置重置
       async reduction(){
