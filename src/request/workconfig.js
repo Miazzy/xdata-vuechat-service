@@ -109,6 +109,17 @@ export const goodsborrowtype = {
 };
 
 /**
+ * @description 物品借用管理
+ */
+export const rewardtype = {
+    '0': '业绩考核奖',
+    '1': '总裁专项奖',
+    '2': '总经理专项奖',
+    '3': '特殊贡献奖',
+    '4': '其他奖惩',
+};
+
+/**
  * @description 领用物品说明
  */
 export const objects = {

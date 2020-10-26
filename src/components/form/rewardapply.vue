@@ -57,6 +57,8 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 申请时间 -->
+                <van-field :readonly="true"     :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" @blur="validField('reward_type')" :error-message="message.reward_type"  />
+                <!-- 申请时间 -->
                 <van-field :readonly="true"     :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" @blur="validField('apply_date')" :error-message="message.apply_date"  />
                 <!-- 流程标题 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="流程标题" v-model="item.title"  placeholder="请填写流程标题！" @blur="validField('title')" :error-message="message.title"  />
@@ -80,6 +82,8 @@
 
                 <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
+                <!-- 奖罚名称 -->
+                <van-field :readonly="readonly" :required="true"  clearable label="奖罚名称" v-model="item.reward_name"  placeholder="请填写奖罚名称！" @blur="validField('reward_name')" :error-message="message.reward_name"  />
                 <!-- 奖罚金额 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
                 <!-- 申请事由 -->
@@ -203,6 +207,7 @@ export default {
               amount: '',
               wflowid: '',
               bpm_status: '',
+              reward_type: '',
               reward_name: '',
               reward_period: '',
               apply_username: '',
@@ -281,7 +286,6 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
             break;
-
           case 4: //重置数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
@@ -506,6 +510,8 @@ export default {
 
           //查询上一页
           this.back = tools.getUrlParam('back') || '/app';
+          //查询type
+          const type = tools.getUrlParam('type') || '0';
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
@@ -516,23 +522,34 @@ export default {
           //获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
 
-          //自动回显刚才填写的用户基础信息
-          if(item){
-            this.item.create_by = item.create_by || this.item.create_by;
-            this.item.remark = item.remark || this.item.remark;
-            this.item.status = item.status || this.item.status;
+          try {
+            //自动回显刚才填写的用户基础信息
+            if(item){
+              this.item.create_by = item.create_by || this.item.create_by;
+              this.item.remark = item.remark || this.item.remark;
+              this.item.status = item.status || this.item.status;
+            }
+
+            if(userinfo.department && userinfo.department.name){
+              this.item.department = userinfo.department.name;
+              this.item.company = userinfo.parent_company.name;
+            } else if(userinfo.systemuserinfo && userinfo.systemuserinfo.textfield1){
+              let temp = userinfo.systemuserinfo.textfield1.split('||')[0];
+              this.item.company = temp.split('>')[temp.split('>').length - 1];
+              temp = userinfo.systemuserinfo.textfield1.split('||')[1];
+              this.item.department = temp.split('>')[temp.split('>').length - 1];
+            }
+          } catch (error) {
+            console.log(error);
           }
 
-
-          if(userinfo.department && userinfo.department.name){
-            this.item.department = userinfo.department.name;
-            this.item.company = userinfo.parent_company.name;
-          } else if(userinfo.systemuserinfo && userinfo.systemuserinfo.textfield1){
-            let temp = userinfo.systemuserinfo.textfield1.split('||')[0];
-            this.item.company = temp.split('>')[temp.split('>').length - 1];
-            temp = userinfo.systemuserinfo.textfield1.split('||')[1];
-            this.item.department = temp.split('>')[temp.split('>').length - 1];
+          try {
+            //查询奖惩类型
+            this.item.reward_type = workconfig.rewardtype[type];
+          } catch (error) {
+            console.log(error);
           }
+
 
         } catch (error) {
           console.log(error);

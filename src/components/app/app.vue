@@ -72,7 +72,7 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('业绩考核' , '0');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.1/images/pay03.png" >
                 <div class="weui-cell_app_bd">
                   业绩考核
@@ -80,7 +80,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
+              <div class="weui-cell_app_hd" @click="rewardApply('总裁专项' , '1');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png" >
                 <div class="weui-cell_app_bd" >
                   总裁专项
@@ -88,7 +88,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
+              <div class="weui-cell_app_hd" @click="rewardApply('总经理专项' , '2');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.0/images/pay02.png" >
                 <div class="weui-cell_app_bd" >
                   总经理专项
@@ -96,7 +96,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('front');">
+              <div class="weui-cell_app_hd" @click="rewardApply('特殊贡献' , '3');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.0/images/pay00.png" >
                 <div class="weui-cell_app_bd" >
                   特殊贡献
@@ -108,7 +108,7 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('meal');">
+              <div class="weui-cell_app_hd" @click="rewardApply('其他奖惩' , '4');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.2/images/pay07.png" >
                 <div class="weui-cell_app_bd">
                   其他奖惩
@@ -116,7 +116,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('hr');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('月度' , '5');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd">
                   月度
@@ -124,7 +124,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('admin');">
+              <div class="weui-cell_app_hd" @click="rewardApply('季度' , '6');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png" >
                 <div class="weui-cell_app_bd" >
                   季度
@@ -654,6 +654,7 @@ export default {
          * @function 奖惩申请
          */
         async rewardApply(){
+
           vant.Toast('您暂时未开通权限！');
         },
         /**
