@@ -285,7 +285,7 @@ const routes = [{
             "subPage": resolve => require(["../components/form/rewardlist.vue"], resolve)
         }
     }, {
-        path: '/app/rewardview',
+        path: '/app/reward',
         name: "物品借用",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
