@@ -3,7 +3,7 @@
   <keep-alive>
 
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px;" >
+  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
@@ -519,6 +519,8 @@ export default {
                     this.userList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
+                  debugger;
+
                   //获取盖印人姓名
                   this.item.user_admin_name = user[0].lastname;
                   //当前盖印人编号
@@ -537,6 +539,9 @@ export default {
                   department = department.slice(department.lastIndexOf('>')+1);
                   //将用户数据推送至对方数组
                   this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+
+                  debugger;
+
                   //获取盖印人姓名
                   this.item.user_admin_name = user.lastname;
                   //当前盖印人编号

@@ -395,6 +395,11 @@ export async function queryUserByNameHRM(name) {
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${name}~%27))~and(status,ne,5)`).set('accept', 'json');
+
+        maxinfo = maxinfo.filter(item => {
+            return !tools.isNull(item.loginid);
+        })
+
         //返回用户信息
         if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
             return maxinfo.body;

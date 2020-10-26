@@ -3,7 +3,7 @@
 <keep-alive>
 
   <!--首页组件-->
-  <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
+  <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
 
     <header id="wx-header" v-show="!searchFlag">
         <div class="center">
