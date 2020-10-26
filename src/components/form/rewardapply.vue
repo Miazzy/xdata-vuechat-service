@@ -593,7 +593,7 @@ export default {
         }
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=front`);
+        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -626,38 +626,6 @@ export default {
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
 
-        //计算批量物品
-        const tsize = this.size - 1;
-
-        if(tsize >= 1){
-          for(let i = 1; i <= tsize ; i++){
-
-            let element = {
-                  id: tools.queryUniqueID(),
-                  create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-                  create_by : userinfo.username,
-                  name : this.item['name' + i],
-                  amount : this.item['amount' + i],
-                  receive_name:this.item.receive_name ,
-                  department : this.item.department,
-                  remark : this.item.remark,
-                  type : this.item.type,
-                  company : this.item.company,
-                  approve_name : this.item.approve_name,
-                  workflow : this.item.workflow,
-                  approve : this.item.approve,
-                  userid : this.item.userid,
-                  user_admin_name : this.item.user_admin_name,
-                  user_group_ids,
-                  user_group_names,
-                  pid: id,
-                  status: '待处理',
-                };
-            //向表单提交form对象数据
-            await manageAPI.postTableData(this.tablename , element);
-          }
-        }
-
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
@@ -668,14 +636,14 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids},${userinfo.username}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
 
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        const resp = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
 
         //获取后端配置前端管理员组
         const front = resp[0].userlist;
@@ -689,14 +657,14 @@ export default {
           proponents: userinfo.username,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起借用申请[待处理]',//text          null comment '操作意见',
+          action_opinion : '发起奖惩申请[待处理]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
+          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
           content           : `奖罚申请(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
@@ -717,14 +685,14 @@ export default {
           proponents: front,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
           employee       : front_name ,//varchar(1000) null comment '操作职员',
           approve_user   : front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请',//text          null comment '操作意见',
+          action_opinion : '审批奖惩申请',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
+          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
           content           : `奖罚申请(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
