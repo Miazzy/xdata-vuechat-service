@@ -653,9 +653,8 @@ export default {
         /**
          * @function 奖惩申请
          */
-        async rewardApply(){
-
-          vant.Toast('您暂时未开通权限！');
+        async rewardApply(name , type){
+          this.$router.push(`/app/rewardapply?type=${type}&reward_name=${name}`);
         },
         /**
          * @function 入职管理
