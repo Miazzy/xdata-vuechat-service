@@ -95,7 +95,7 @@
                 <!-- 奖罚金额 -->
                 <van-field :readonly="readonly" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
                 <!-- 申请事由 -->
-                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.content" rows="5" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
+                <van-field :readonly="readonly" :required="true"  clearable label="申请事由" v-model="item.content" rows="2" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
 
               </van-cell-group>
 
@@ -121,13 +121,53 @@
                 </div>
               </van-cell-group>
 
-            <van-cell-group style="margin-top:10px;">
+            <van-cell-group style="margin-top:10px; position:relative;">
 
                 <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <van-icon name="add-o" style="position:absolute;top:40px;right:0px;z-index:100;" @click="size <= 6 ? size++ : size;"/>
+                <van-icon name="circle" style="position:absolute;top:85px;right:0px;z-index:100;" @click="size > 0 ? size-- : size;"  />
 
                 <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
                   <template #right-icon>
                     <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+
+                <van-cell v-show="size >= 1" title="相关附件 #1" class="van-cell-upload" :label="item.files_00.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_00"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="size >= 2" title="相关附件 #2" class="van-cell-upload" :label="item.files_01.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_01"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="size >= 3" title="相关附件 #3" class="van-cell-upload" :label="item.files_02.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_02"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="size >= 4" title="相关附件 #4" class="van-cell-upload" :label="item.files_03.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_03"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="size >= 5" title="相关附件 #5" class="van-cell-upload" :label="item.files_04.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_04"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="size >= 6" title="相关附件 #6" class="van-cell-upload" :label="item.files_05.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_05"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
                   </template>
                 </van-cell>
 
@@ -197,7 +237,7 @@ export default {
             userid:'',
             hr_id:'',
             userList:[],
-            size:1,
+            size: 0,
             processLogList:[],
             iswechat:false,
             isfirst:true,
@@ -216,7 +256,6 @@ export default {
               department: '',
               content: '',
               remark: '',//备注
-              files: '',
               amount: '',
               wflowid: '',
               bpm_status: '',
@@ -229,6 +268,13 @@ export default {
               hr_name: '',
               apply_username: '',
               apply_realname: '',
+              files: '',
+              files_00:'',
+              files_01:'',
+              files_02:'',
+              files_03:'',
+              files_04:'',
+              files_05:'',
               status: '',
             },
             back:'/app',
@@ -345,6 +391,48 @@ export default {
       async uploadSuccess(file , res){
         vant.Toast.clear();
         this.item.files = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_00(file , res){
+        vant.Toast.clear();
+        this.item.files_00 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_01(file , res){
+        vant.Toast.clear();
+        this.item.files_01 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_02(file , res){
+        vant.Toast.clear();
+        this.item.files_02 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_03(file , res){
+        vant.Toast.clear();
+        this.item.files_03 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_04(file , res){
+        vant.Toast.clear();
+        this.item.files_04 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_05(file , res){
+        vant.Toast.clear();
+        this.item.files_05 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
@@ -627,7 +715,6 @@ export default {
           department: this.item.department,
           content: this.item.content,
           remark: this.item.remark, //备注
-          files: this.item.files,
           amount: this.item.amount,
           wflowid: '',
           bpm_status: '',
@@ -640,6 +727,13 @@ export default {
           hr_name: this.item.hr_name,
           apply_username: userinfo.username,
           apply_realname: userinfo.realname,
+          files: this.item.files,
+          files_00: this.item.files_00,
+          files_01: this.item.files_01,
+          files_02: this.item.files_02,
+          files_03: this.item.files_03,
+          files_04: this.item.files_04,
+          files_05: this.item.files_05,
           status: '待处理',
         }; // 待处理元素
 
