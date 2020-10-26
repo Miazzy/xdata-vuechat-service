@@ -193,7 +193,7 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              apply_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              apply_date: dayjs().format('YYYY-MM-DD'),
               title: '',
               company: '',
               department: '',
@@ -238,7 +238,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_goods_borrow',
+            tablename:'bs_reward_apply',
             readonly: false,
             goodstype: workconfig.goodstype,
             goodsborrowtype: workconfig.goodsborrowtype,
@@ -382,19 +382,22 @@ export default {
         this.item = {
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用物品名称
-              amount:'',//借用数量
-              remark:'',//备注说明
-              type:this.item.type,//借用类别
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
-              receive_name : this.item.receive_name , //借用人员名称
-              department : this.item.department, //借用部门名称
-              company : this.item.company, //单位名称
+              apply_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              title: '',
+              company: '',
+              department: '',
+              content: '',
+              remark: '',//备注
+              files: '',
+              amount: '',
+              wflowid: '',
+              bpm_status: '',
+              reward_name: '',
+              reward_period: '',
+              apply_username: '',
+              apply_realname: '',
               status: '',
             };
       },
@@ -507,31 +510,21 @@ export default {
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
+          debugger;
+
           //获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
-
-          //根据URL参数查询物资类型
-          this.item.type = this.goodsborrowtype[tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){
             this.item.create_by = item.create_by || this.item.create_by;
-            this.item.name = item.name || this.item.name;
-            this.item.amount = item.amount || this.item.amount;
-            this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
-            this.item.department = item.department || this.item.department;
             this.item.remark = item.remark || this.item.remark;
-            this.item.type = this.item.type || item.type || '办公用品';
-            this.item.company = item.company || this.item.company;
-            this.item.approve_name = item.approve_name || this.item.approve_name;
-            this.item.workflow = item.workflow || this.item.workflow;
-            this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
-          } else {
-            this.item.receive_name = userinfo.realname || this.item.receive_name ;
-            this.item.department = userinfo.department.name;
-            this.item.company = userinfo.parent_company.name;
           }
+
+          this.item.apply_realname = userinfo.realname;
+          this.item.department = userinfo.department.name;
+          this.item.company = userinfo.parent_company.name;
 
         } catch (error) {
           console.log(error);
