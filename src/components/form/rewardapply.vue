@@ -192,52 +192,8 @@ export default {
               id: '',
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
+              apply_date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用物品名称
-              amount:'',//借用数量
-              name1:'', //借用物品名称
-              amount1:'',//借用数量
-              name2:'', //借用物品名称
-              amount2:'',//借用数量
-              name3:'', //借用物品名称
-              amount3:'',//借用数量
-              name4:'', //借用物品名称
-              amount4:'',//借用数量
-              name5:'', //借用物品名称
-              amount5:'',//借用数量
-              name6:'', //借用物品名称
-              amount6:'',//借用数量
-              name7:'', //借用物品名称
-              amount7:'',//借用数量
-              name8:'', //借用物品名称
-              amount8:'',//借用数量
-              name9:'', //借用物品名称
-              amount9:'',//借用数量
-              name10:'', //借用物品名称
-              amount10:'',//借用数量
-              name11:'', //借用物品名称
-              amount11:'',//借用数量
-              name12:'', //借用物品名称
-              amount12:'',//借用数量
-              name13:'', //借用物品名称
-              amount13:'',//借用数量
-              name14:'', //借用物品名称
-              amount14:'',//借用数量
-              name15:'', //借用物品名称
-              amount15:'',//借用数量
-              receive_name:'',//借用人员名称
-              department:'',//借用部门名称
-              remark:'',//备注说明
-              type:'',//借用类别
-              company:'',//单位名称
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
-              userid:'',
-              user_group_ids:'',
-              user_group_names:'',
-              user_admin_name:'',
               status: '',
             },
             back:'/app',
