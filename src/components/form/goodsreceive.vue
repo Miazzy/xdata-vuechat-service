@@ -574,10 +574,11 @@ export default {
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.userid;
-        const user = this.userList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.user_admin_name = user.name;
         this.item.userid = id;
+
+        //获取盖印人姓名
+        const user = this.userList.find((item,index) => {return id == item.id});
+        this.item.user_admin_name = user.name;
       },
       // 设置重置
       async reduction(){
