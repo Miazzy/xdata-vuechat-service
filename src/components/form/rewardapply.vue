@@ -80,7 +80,7 @@
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="人力信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="queryHRMan();" @click="queryHRMan();" />
+                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="queryHRMan();validField('hr_name');" @click="queryHRMan();" :error-message="message.hr_name" />
                 <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
               </van-cell-group>
 
@@ -242,8 +242,8 @@ export default {
             isfirst:true,
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            message: workconfig.compValidation.rewardapply.message,
+            valid: workconfig.compValidation.rewardapply.valid,
             item:{
               id: '',
               serialid:'',
@@ -588,9 +588,9 @@ export default {
         }
 
       },
-      async validField(fieldName){
+      validField(fieldName){
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -687,7 +687,22 @@ export default {
         const type = tools.getUrlParam('type');
 
         //验证数据是否已经填写
+        const keys = Object.keys({ title: '', company: '', department: '', content: '', remark: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', })
 
+        const invalidKey =  keys.find(key => {
+          const flag = this.validField(key);
+          return !flag;
+        });
+
+        debugger;
+
+        if(invalidKey != '' && invalidKey != null){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
+          });
+          return false;
+        }
 
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
