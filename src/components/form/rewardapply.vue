@@ -121,6 +121,18 @@
                 </div>
               </van-cell-group>
 
+            <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="附件上传" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
+                  <template #right-icon>
+                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                  </template>
+                </van-cell>
+
+            </van-cell-group>
+
             </van-form>
 
           </van-cell-group>
@@ -185,14 +197,6 @@ export default {
             userid:'',
             hr_id:'',
             userList:[],
-            huserid:'',
-            huserList:[],
-            auserid:'',
-            auserList:[],
-            fuserid:'',
-            fuserList:[],
-            muserid:'',
-            muserList:[],
             size:1,
             processLogList:[],
             iswechat:false,
@@ -274,6 +278,22 @@ export default {
       this.queryInfo();
     },
     methods: {
+
+      beforeUpload($e){
+        try {
+          const file = $e.target.files[0];
+          if(!file.name.includes('xls')){
+            this.$toast.fail('请上传Excel文档！');
+            $e.target.files = [];
+            return {event:$e};
+          } else {
+            return {event:$e};
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -290,6 +310,14 @@ export default {
         }
         //显示刷新消息
         this.searchFlag = false;
+      },
+      //上传提示
+      async toastUpload(flag){
+        if(flag == 'start'){
+          vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
+        } else if(flag == 'fail'){
+          this.$toast.success('文件上传失败，请稍后重试！');
+        }
       },
       //点击右侧菜单
       async headDropMenu(value){
@@ -312,6 +340,13 @@ export default {
           default:
             console.log(`no operate. out of switch. `);
         }
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess(file , res){
+        vant.Toast.clear();
+        this.item.files = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
       },
       //用户选择盖印人
       async queryHRMan(){
@@ -466,17 +501,6 @@ export default {
         }
 
       },
-
-      //选中当前盖印人
-      async selectFrontUser(value){
-        await tools.sleep(0);
-        const id = this.item.front_id;
-        const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
-        this.item.front_id = id;
-      },
-
       async validField(fieldName){
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
@@ -504,22 +528,6 @@ export default {
           file.status = 'failed';
           file.message = '上传成功';
         }, 1000);
-      },
-
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
       },
 
       // 获取URL或者二维码信息

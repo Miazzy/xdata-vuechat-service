@@ -75,3 +75,17 @@
     transform: translate(0, -50%);
     display: none;
 }
+
+.van-cell-upload .van-cell__title>span {
+    font-size: 14px;
+}
+
+.van-cell-upload .nut-uploader {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}
