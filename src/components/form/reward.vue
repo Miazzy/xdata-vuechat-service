@@ -349,7 +349,6 @@ export default {
       },
       async download(name , file){
         const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
-        debugger;
         await this.saveAsFile(this.downloadURL + this.item[file] , name + ' ' + this.item[file].split('/')[1]);
         vant.Toast.clear();
       },
