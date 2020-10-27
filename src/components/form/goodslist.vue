@@ -21,8 +21,8 @@
                       <download-excel
                         :data="json_data_office"
                         :fields="json_fields_office"
-                        worksheet="用印台账"
-                        name="用印台账(合同类).xlsx"
+                        worksheet="办公物品领用台账"
+                        name="办公物品领用台账.xlsx"
                       >
                         导出办公领用
                       </download-excel>
@@ -35,8 +35,8 @@
                       <download-excel
                         :data="json_data_drug"
                         :fields="json_fields_drug"
-                        worksheet="用印台账"
-                        name="用印台账(非合同类).xlsx"
+                        worksheet="药品领用台账"
+                        name="药品领用台账.xlsx"
                       >
                         导出药品领用
                       </download-excel>
@@ -49,8 +49,8 @@
                       <download-excel
                         :data="json_data_prevent"
                         :fields="json_fields_prevent"
-                        worksheet="用印台账"
-                        name="用印台账(非合同类).xlsx"
+                        worksheet="防疫物资领用台账"
+                        name="防疫物资领用台账.xlsx"
                       >
                         导出防疫领用
                       </download-excel>

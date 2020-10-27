@@ -14,7 +14,36 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_office"
+                        :fields="json_fields_office"
+                        worksheet="用印台账"
+                        name="设备借用台账.xlsx"
+                      >
+                        导出设备借用
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
+                   <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_drug"
+                        :fields="json_fields_drug"
+                        worksheet="用印台账"
+                        name="传屏借用台账.xlsx"
+                      >
+                        导出传屏借用
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
