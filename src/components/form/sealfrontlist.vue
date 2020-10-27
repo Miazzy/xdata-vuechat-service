@@ -351,7 +351,7 @@ export default {
           month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
           sealTypeSql = `~and(seal_type,like,合同类)`;
           const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data = await manageAPI.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
       },
