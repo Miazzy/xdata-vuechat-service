@@ -19,8 +19,8 @@
                   <template #title>
                     <span class="custom-title">
                       <download-excel
-                        :data="json_data_office"
-                        :fields="json_fields_office"
+                        :data="json_data"
+                        :fields="json_fields"
                         worksheet="用印台账"
                         name="设备借用台账.xlsx"
                       >
@@ -33,8 +33,8 @@
                    <template #title>
                     <span class="custom-title">
                       <download-excel
-                        :data="json_data_drug"
-                        :fields="json_fields_drug"
+                        :data="json_data_box"
+                        :fields="json_fields_box"
                         worksheet="用印台账"
                         name="传屏借用台账.xlsx"
                       >
@@ -147,6 +147,34 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '借用类型':'type',
+              '借用人员':'receive_name',
+              '借用公司':'company',
+              '借用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_fields_box: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '借用类型':'type',
+              '借用人员':'receive_name',
+              '借用公司':'company',
+              '借用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_data: [],
+            json_data_box: [],
         }
     },
     activated() {
@@ -228,6 +256,10 @@ export default {
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
+        //查询台账数据
+        await this.queryTabList('设备' , 0);
+        await this.queryTabList('传屏' , 0);
+
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
 
@@ -306,7 +338,30 @@ export default {
           this.rejectList = this.rejectList.filter(item => {
             return item.id == item.pid;
           });
+        } else if(tabname == '设备') {
+          //获取最近6个月的已领取记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(type,eq,信息设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          });
+
+        } else if(tabname == '传屏') {
+          //获取最近6个月的已领取记录
+          this.json_data_box = await manageAPI.queryTableData(this.tname , `_where=(type,eq,传屏设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data_box.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          });
+
         }
+
 
       },
       async selectHContract(){
