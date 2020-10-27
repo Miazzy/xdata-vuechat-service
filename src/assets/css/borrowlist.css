@@ -26,3 +26,7 @@
 .van-goods-action-button--warning {
     border-radius: 10px 0px 0px 10px;
 }
+
+#van-cell-export .van-cell__title span {
+    float: left;
+}
