@@ -320,6 +320,8 @@ export default {
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
+         } else if(tabname == '认领') {
+
          }
 
       },
