@@ -14,7 +14,21 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="认领台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="认领台账"
+                        name="认领台账.xls" >
+                        认领台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -118,6 +132,35 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields: {
+              '入职编号':'id',
+              '登记时间': 'create_time',
+              '登记人员': 'create_by',
+              '最高学历':'greatdiploma',
+              '入职员工': 'username',
+              '入职岗位': 'position',
+              '入职部门':'department',
+              '入职时间': 'join_time',
+              '电话号码':'mobile',
+              '配置电脑': 'computer',
+              '配置座椅': 'seat',
+              '配置抽屉': 'drawer',
+              '其他配置要求': 'other_equip',
+              '笔记簿': 'notebook',
+              '签字笔/擦': 'writingtools',
+              '员工工牌':'badge',
+              '其他办公用品要求':'othertools',
+              '车牌号':'carno',
+              '身份证号':'idcard',
+              '银行卡号':'bank_card',
+              '是否停车':'stop_flag',
+              '人力接待人员':'hr_name',
+              '行政接待人员':'admin_account',
+              '前台接待人员':'front_account',
+              '食堂饭卡':'meal_account',
+              '审批状态': 'status',
+            },
+            json_data: [],
         }
     },
     activated() {
