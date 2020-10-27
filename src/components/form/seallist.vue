@@ -10,10 +10,39 @@
                 <span>返回</span>
             </router-link>
             <span>用印进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="My Worksheet"
+                        name="用印台账(合同类).xls"
+                      >
+                        导出合同
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
+                   <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_common"
+                        :fields="json_fields"
+                        worksheet="My Worksheet"
+                        name="用印台账(非合同类).xls"
+                      >
+                        导出非合同
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -105,6 +134,10 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
+import JsonExcel from "vue-json-excel";
+
+Vue.component("downloadExcel", JsonExcel);
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -128,6 +161,24 @@ export default {
               '5': 'doneContractList',
               '6': 'failContractList',
             },
+            json_fields: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '文件名称':'filename',
+              '用印数量':'count',
+              '用印部门':'deal_depart',
+              '经办人员':'deal_manager',
+              '合同编号':'contract_id',
+              '签收人员':'signman',
+              '审批类型':'approve_type',
+              '关联流程':'workno',
+              '用印类型': 'seal_type',
+              '排序类型':'order_type',
+              '盖章人员': 'seal_man',
+              '用印状态': 'status',
+            },
+            json_data: [],
+            json_data_common: [],
             sealType:'',
             searchWord:'',
             totalpages:5,
@@ -349,6 +400,33 @@ export default {
           });
 
           this.failContractList.sort();
+        } else if(tabname == '合同类') {
+          // 获取最近6个月对应的日期
+          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+          sealTypeSql = `~and(seal_type,like,合同类)`;
+          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          //获取最近6个月的已归档记录
+          this.json_data = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
+            item.isDefault = true;
+          });
+          this.json_data.sort();
+        } else if(tabname == '非合同类') {
+          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+          sealTypeSql = `~and(seal_type,like,非合同类)`;
+          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          //获取最近6个月的已归档记录
+          this.json_data_common = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data_common.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
+            item.isDefault = true;
+          });
+          this.json_data_common.sort();
         }
       },
       async queryInfo(){
@@ -365,6 +443,9 @@ export default {
 
         //查询列表数据
         this.queryTabList(this.tabname , 0);
+
+        //查询合同类数据
+        this.queryTabList('合同类',0);
 
       },
       async selectHContract(){
