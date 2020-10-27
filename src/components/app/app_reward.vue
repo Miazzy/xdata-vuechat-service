@@ -69,7 +69,7 @@
 
       <div class="weui-cells" style="display:block;position:relative;">
         <div class="weui-cell-title">奖惩管理</div>
-        <div style="display:block;">
+        <div>
           <div style="position:absolute; top: 0.6rem; right:25px;">
             <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
               更多
@@ -156,12 +156,12 @@
       <div class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
-          <div style="position:absolute; top: 0.6rem; right:25px;">
+          <div style="position:absolute; top: 0.6rem; right:25px; display:none;">
             <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
               更多
             </span>
           </div>
-          <div style="position:absolute; top: 0.57rem; right:10px;">
+          <div style="position:absolute; top: 0.57rem; right:10px; display:none;">
             <van-icon name="arrow" />
           </div>
         </div>
@@ -298,15 +298,13 @@
 
       <div class="weui-cells" style="display: block; position:relative;">
         <div class="weui-cell-title">用印管理</div>
-        <div style="display:none;">
-          <div style="position:absolute; top: 0.6rem; right:25px;">
-            <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-              更多
-            </span>
-          </div>
-          <div style="position:absolute; top: 0.57rem; right:10px;">
-            <van-icon name="arrow" />
-          </div>
+        <div style="position:absolute; top: 0.6rem; right:25px;">
+          <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
+            更多
+          </span>
+        </div>
+        <div style="position:absolute; top: 0.57rem; right:10px;">
+          <van-icon name="arrow" />
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
