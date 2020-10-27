@@ -119,7 +119,7 @@
               <div class="weui-cell_app_hd" @click="rewardApply('月度' , '5');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd">
-                  月度
+                  月度报表
                 </div>
               </div>
             </van-col>
@@ -127,7 +127,15 @@
               <div class="weui-cell_app_hd" @click="rewardApply('季度' , '6');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png" >
                 <div class="weui-cell_app_bd" >
-                  季度
+                  季度报表
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="rewardApply('审批' , '7');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+                <div class="weui-cell_app_bd">
+                  奖罚审批
                 </div>
               </div>
             </van-col>
@@ -144,7 +152,7 @@
               <div class="weui-cell_app_hd" @click="entryjob('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
-                  审批
+                  入职审批
                 </div>
               </div>
             </van-col>
@@ -152,7 +160,7 @@
               <div class="weui-cell_app_hd" @click="entryjob('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
-                  行政
+                  行政审批
                 </div>
               </div>
             </van-col>
@@ -160,7 +168,7 @@
               <div class="weui-cell_app_hd" @click="entryjob('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png" >
                 <div class="weui-cell_app_bd" >
-                  前台
+                  前台审批
                 </div>
               </div>
             </van-col>
@@ -168,7 +176,7 @@
               <div class="weui-cell_app_hd" @click="entryjob('meal');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxi_00.png" >
                 <div class="weui-cell_app_bd">
-                  食堂
+                  食堂审批
                 </div>
               </div>
             </van-col>
@@ -277,7 +285,7 @@
               <div class="weui-cell_app_hd" @click="sealApply();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png" >
                 <div class="weui-cell_app_bd" >
-                  申请
+                  用印申请
                 </div>
               </div>
             </van-col>
@@ -285,7 +293,7 @@
               <div v-show="true " class="weui-cell_app_hd" @click="sealApprove();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
-                  审批
+                  用印审批
                 </div>
               </div>
             </van-col>
@@ -293,7 +301,7 @@
               <div v-show="true"  class="weui-cell_app_hd" @click="sealFront();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
                 <div class="weui-cell_app_bd" >
-                  移交
+                  用印移交
                 </div>
               </div>
             </van-col>
@@ -301,7 +309,7 @@
               <div v-show="true"  class="weui-cell_app_hd" @click="sealArchive();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd" >
-                  归档
+                  用印归档
                 </div>
               </div>
             </van-col>
@@ -314,7 +322,7 @@
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
                 <div class="weui-cell_app_bd" >
-                  历史
+                  用印历史
                 </div>
               </div>
             </van-col>
@@ -331,7 +339,7 @@
               <div class="weui-cell_app_hd" @click="goodsReceive('office');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
                 <div class="weui-cell_app_bd" >
-                  办公
+                  办公领用
                 </div>
               </div>
             </van-col>
@@ -339,7 +347,7 @@
               <div class="weui-cell_app_hd" @click="goodsReceive('drug');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
                 <div class="weui-cell_app_bd">
-                  药品
+                  药品领用
                 </div>
               </div>
             </van-col>
@@ -347,7 +355,7 @@
               <div class="weui-cell_app_hd" @click="goodsReceive('prevent');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
                 <div class="weui-cell_app_bd" >
-                  防疫
+                  防疫领用
                 </div>
               </div>
             </van-col>
@@ -355,7 +363,7 @@
               <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd" >
-                  审批
+                  领用审批
                 </div>
               </div>
             </van-col>
@@ -368,7 +376,7 @@
               <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
                 <div class="weui-cell_app_bd" >
-                  借用
+                  设备借用
                 </div>
               </div>
             </van-col>
@@ -377,7 +385,7 @@
               <div class="weui-cell_app_hd" @click="goodsBorrow('box');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/robot.png" >
                 <div class="weui-cell_app_bd" >
-                  传屏
+                  传屏借用
                 </div>
               </div>
             </van-col>
@@ -386,7 +394,7 @@
               <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
                 <div class="weui-cell_app_bd" >
-                  招领
+                  失物招领
                 </div>
               </div>
             </van-col>
@@ -395,7 +403,7 @@
               <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd" >
-                  审批
+                  借用审批
                 </div>
               </div>
             </van-col>
@@ -654,7 +662,15 @@ export default {
          * @function 奖惩申请
          */
         async rewardApply(name , type){
-          this.$router.push(`/app/rewardapply?type=${type}&reward_name=${name}`);
+          if(['业绩考核','总裁专项','总经理专项','特殊贡献','其他奖惩'].includes(name)){
+            this.$router.push(`/app/rewardapply?type=${type}&reward_name=${name}`);
+          } else if(name == '月度报表'){
+            this.$toast.fail('您暂时没有权限! ');
+          } else if(name == '季度报表'){
+            this.$toast.fail('您暂时没有权限！');
+          } else if(name == '奖罚审批'){
+            this.$router.push(`/app/rewardlist?type=${type}&reward_name=${name}`);
+          }
         },
         /**
          * @function 入职管理
