@@ -239,3 +239,7 @@
 .pagination-div .van-pagination__item {
     height: 43px;
 }
+
+#van-cell-export .van-cell__title span {
+    float: left;
+}

@@ -75,6 +75,9 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as query from '@/request/query';
 
+import JsonExcel from "vue-json-excel";
+Vue.component("downloadExcel", JsonExcel);
+
 export default {
     mixins: [window.mixin],
     data() {

@@ -355,15 +355,8 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
-              <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
-                <div class="weui-cell_app_bd">
-                  导出
-                </div>
-              </div>
-            </van-col>
           </van-row>
+
         </div>
       </div>
 
@@ -655,19 +648,6 @@ export default {
             this.$router.push(`/app/sealarchivelist`);
           } else {
             vant.Toast('您没有用印合同资料归档的权限！');
-          }
-        },
-        async sealExport(){
-
-          //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_EXPORT' , userinfo.username);
-
-          if(resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealExport`);
-          } else {
-            vant.Toast('您没有用印合同资料导出的权限！');
           }
         },
         async sealMyList(){

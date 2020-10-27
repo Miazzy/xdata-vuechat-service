@@ -14,7 +14,36 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="设备借用台账"
+                        name="设备借用台账.xlsx"
+                      >
+                        导出设备借用
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
+                   <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_box"
+                        :fields="json_fields_box"
+                        worksheet="传屏借用台账"
+                        name="传屏借用台账.xlsx"
+                      >
+                        导出传屏借用
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -80,6 +109,9 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
+import JsonExcel from "vue-json-excel";
+Vue.component("downloadExcel", JsonExcel);
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -115,6 +147,34 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '借用类型':'type',
+              '借用人员':'receive_name',
+              '借用公司':'company',
+              '借用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_fields_box: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '借用类型':'type',
+              '借用人员':'receive_name',
+              '借用公司':'company',
+              '借用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_data: [],
+            json_data_box: [],
         }
     },
     activated() {
@@ -196,6 +256,10 @@ export default {
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
+        //查询台账数据
+        await this.queryTabList('设备' , 0);
+        await this.queryTabList('传屏' , 0);
+
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
 
@@ -274,7 +338,30 @@ export default {
           this.rejectList = this.rejectList.filter(item => {
             return item.id == item.pid;
           });
+        } else if(tabname == '设备') {
+          //获取最近6个月的已领取记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(type,eq,信息设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          });
+
+        } else if(tabname == '传屏') {
+          //获取最近6个月的已领取记录
+          this.json_data_box = await manageAPI.queryTableData(this.tname , `_where=(type,eq,传屏设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data_box.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          });
+
         }
+
 
       },
       async selectHContract(){

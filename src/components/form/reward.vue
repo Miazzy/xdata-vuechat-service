@@ -3,14 +3,14 @@
   <keep-alive>
 
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px; overflow-x: hidden; " >
+  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
-            <router-link :to="back" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>奖罚申请确认</span>
+            <span>奖罚申请</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 15px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
@@ -51,201 +51,59 @@
 
             <van-form >
 
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;position:relative;">
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                <!-- 借用时间（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
-                <!-- 借用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
+                <!-- 申请时间 -->
+                <van-field :readonly="true" :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" />
+                <!-- 申请时间 -->
+                <van-field :readonly="true" :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" />
+                <!-- 流程标题 -->
+                <van-field :readonly="true" :required="false"  clearable label="流程标题" v-model="item.title"  placeholder="请填写流程标题！" />
 
-                 <span class="van-goods-span-number" style="top:180px;">#1</span>
               </van-cell-group>
 
-              <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name1"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount1"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#2</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=3" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name2"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount2"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#3</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=4" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name3"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount3"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#4</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=5" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name4"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount4"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#5</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=6" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name5"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount5"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#6</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=7" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name6"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount6"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#7</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=8" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name7"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount7"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#8</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=9" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name8"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount8"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#9</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=10" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name9"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount9"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#10</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=11" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name10"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount10"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#11</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=12" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name11"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount11"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#12</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=13" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name12"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount12"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#13</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=14" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name13"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount13"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#14</span>
-              </van-cell-group>
-
-              <van-cell-group v-show="size>=15" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name14"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount14"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#15</span>
-              </van-cell-group>
-
-               <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name15"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount15"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                <span class="van-goods-span-number">#16</span>
-              </van-cell-group>
-
-              <van-cell-group style="margin-top:10px;">
+              <van-cell-group style="margin-top:10px;position:relative;">
 
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
-                <!-- 借用人员（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="借用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
-                <!-- 单位名称（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
-                <!-- 部门名称（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+                <!-- 申请人员 -->
+                <van-field :readonly="true" :required="false"  clearable label="申请人员" v-model="item.apply_realname"  placeholder="请填写申请人员姓名！" />
+                <!-- 所属公司 -->
+                <van-field :readonly="true" :required="false"  clearable label="所属公司" v-model="item.company"  placeholder="请填写所属公司！" />
+                <!-- 所属部门 -->
+                <van-field :readonly="true" :required="false"  clearable label="所属部门" v-model="item.department"  placeholder="请填写所属部门！" />
 
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="人力信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" />
+                <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;position:relative;">
+
+                <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <!-- 奖罚名称 -->
+                <van-field :readonly="true" :required="true"  clearable label="所属周期" v-model="item.reward_period"  placeholder="请填写奖罚所属周期！" />
+                <!-- 奖罚名称 -->
+                <van-field :readonly="true" :required="true"  clearable label="奖罚名称" v-model="item.reward_name"  placeholder="请填写奖罚名称！" />
+                <!-- 奖罚金额 -->
+                <van-field :readonly="true" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" />
+                <!-- 申请事由 -->
+                <van-field :readonly="true" :required="true"  clearable label="申请事由" v-model="item.content" rows="2" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" />
+
+              </van-cell-group>
+
+              <van-cell-group v-show="item.remark" style="margin-top:10px;">
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
-
-              </van-cell-group>
-
-              <van-cell-group style="margin-top:10px;" v-show="!!item.status">
-
-                <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 流程状态（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
+                <van-field :readonly="true" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
 
               </van-cell-group>
 
@@ -263,17 +121,60 @@
                 </div>
               </van-cell-group>
 
+            <van-cell-group id="van-files-download" class="van-files-download" style="margin-top:10px; position:relative;">
+
+                <van-cell value="相关附件" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <van-cell v-show="item.files" title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('奖罚明细' , 'files');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_00" title="相关附件 #1" class="van-cell-upload" :label="item.files_00.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_00');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_01" title="相关附件 #2" class="van-cell-upload" :label="item.files_01.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_01');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_02" title="相关附件 #3" class="van-cell-upload" :label="item.files_02.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_02');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_03" title="相关附件 #4" class="van-cell-upload" :label="item.files_03.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_03');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_04" title="相关附件 #5" class="van-cell-upload" :label="item.files_04.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_04');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+                <van-cell v-show="item.files_05" title="相关附件 #6" class="van-cell-upload" :label="item.files_05.slice(0,30)">
+                  <template #right-icon>
+                    <van-button name="file" @click="download('相关附件','files_05');"  >下载</van-button>
+                  </template>
+                </van-cell>
+
+            </van-cell-group>
+
             </van-form>
 
           </van-cell-group>
 
-          <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:47.5%;" />
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;width:47.5%;float:right;"  >借用</van-button>
-          </div>
-
-          <div v-show="item.status ==='已借用' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >归还</van-button>
+          <div v-show="!item.serialid" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >提交</van-button>
           </div>
 
           <div style="height:500px;" ></div>
@@ -329,42 +230,50 @@ export default {
             fields:[],
             groupid:'group00',
             sealuserid:'',
-            huserid:'',
-            huserList:[],
-            auserid:'',
-            auserList:[],
-            fuserid:'',
-            fuserList:[],
-            muserid:'',
-            muserList:[],
+            userid:'',
+            hr_id:'',
+            userList:[],
+            size: 0,
             processLogList:[],
             iswechat:false,
             isfirst:true,
             dockFlag: false,
-            role:'front',
-            size:15,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            downloadURL:'https://upload.yunwisdom.club:30443/',
+            message: workconfig.compValidation.rewardapply.message,
+            valid: workconfig.compValidation.rewardapply.valid,
             item:{
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用物品名称
-              amount:'',//借用数量
-              receive_name:'',//借用人员名称
-              department:'',//借用部门名称
-              remark:'',//备注说明
-              type:'',//借用类别
-              company:'',//单位名称
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
+              apply_date: dayjs().format('YYYY-MM-DD'),
+              title: '',
+              company: '',
+              department: '',
+              content: '',
+              remark: '',//备注
+              amount: '',
+              wflowid: '',
+              bpm_status: '',
+              reward_type: '',
+              reward_name: '',
+              reward_period: dayjs().format('YYYY年MM月'),
+              hr_admin_ids: '',
+              hr_admin_names: '',
+              hr_id: '',
+              hr_name: '',
+              apply_username: '',
+              apply_realname: '',
+              files: '',
+              files_00:'',
+              files_01:'',
+              files_02:'',
+              files_03:'',
+              files_04:'',
+              files_05:'',
               status: '',
             },
-            tlist:[],
             back:'/app',
             workflowlist:[],
             announces:[],
@@ -385,6 +294,7 @@ export default {
             dropMenuValue:'',
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
+              { text: '重置', value: 4 , icon: 'aim' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
@@ -393,9 +303,10 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_goods_borrow',
+            tablename:'bs_reward_apply',
             readonly: false,
             goodstype: workconfig.goodstype,
+            goodsborrowtype: workconfig.goodsborrowtype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,
             acceptType: workconfig.compcolumns.acceptType,
             commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
@@ -410,6 +321,37 @@ export default {
       this.queryInfo();
     },
     methods: {
+      beforeUpload($e){
+        try {
+          const file = $e.target.files[0];
+          if(!file.name.includes('xls')){
+            this.$toast.fail('请上传Excel文档！');
+            $e.target.files = [];
+            return {event:$e};
+          } else {
+            return {event:$e};
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async saveAsFile(file , name){
+        try {
+          window.open(file , '_blank');
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          window.saveAs(file , name);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async download(name , file){
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        await this.saveAsFile(this.downloadURL + this.item[file] , name + ' ' + this.item[file].split('/')[1]);
+        vant.Toast.clear();
+      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -426,6 +368,14 @@ export default {
         }
         //显示刷新消息
         this.searchFlag = false;
+      },
+      //上传提示
+      async toastUpload(flag){
+        if(flag == 'start'){
+          vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
+        } else if(flag == 'fail'){
+          this.$toast.success('文件上传失败，请稍后重试！');
+        }
       },
       //点击右侧菜单
       async headDropMenu(value){
@@ -449,24 +399,172 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+      //上传文件成功后回调函数
+      async uploadSuccess(file , res){
+        vant.Toast.clear();
+        this.item.files = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_00(file , res){
+        vant.Toast.clear();
+        this.item.files_00 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_01(file , res){
+        vant.Toast.clear();
+        this.item.files_01 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_02(file , res){
+        vant.Toast.clear();
+        this.item.files_02 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_03(file , res){
+        vant.Toast.clear();
+        this.item.files_03 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_04(file , res){
+        vant.Toast.clear();
+        this.item.files_04 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+      //上传文件成功后回调函数
+      async uploadSuccess_05(file , res){
+        vant.Toast.clear();
+        this.item.files_05 = JSON.parse(res).message;
+        await tools.sleep(0);
+        this.$toast.success('上传成功');
+      },
+
+      //用户选择盖印人
+      async queryHRMan(){
+
+        //获取盖章人信息
+        const hr_name = this.item.hr_name;
+
+        try {
+          if(!!hr_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(hr_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.item.hr_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.hr_id = this.hr_id = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+
+                  //将用户数据推送至对方数组
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+
+                  //获取盖印人姓名
+                  this.item.hr_name = user.lastname;
+                  //当前盖印人编号
+                  this.item.hr_id = this.hr_id = user.loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.userList = this.userList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前盖印人
+      async selectHRUser(value){
+        await tools.sleep(0);
+        const id = this.item.hr_id;
+        const user = this.userList.find((item,index) => {return id == item.id});
+        this.item.hr_name = user.name;
+      },
       // 设置重置
       async reduction(){
         this.item = {
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //借用时间
-              name:'', //借用物品名称
-              amount:'',//借用数量
-              remark:'',//备注说明
-              type:this.item.type,//借用类别
-              approve_name:'',//借用审批人员
-              workflow:'',//关联流程
-              approve:'',//借用审批人员
-              receive_name : this.item.receive_name , //借用人员名称
-              department : this.item.department, //借用部门名称
-              company : this.item.company, //单位名称
+              apply_date: dayjs().format('YYYY-MM-DD'),
+              title: '',
+              company: '',
+              department: '',
+              content: '',
+              remark: '',//备注
+              amount: '',
+              wflowid: '',
+              bpm_status: '',
+              reward_type: '',
+              reward_name: '',
+              reward_period: dayjs().format('YYYY年MM月'),
+              hr_admin_ids: '',
+              hr_admin_names: '',
+              hr_id: '',
+              hr_name: '',
+              apply_username: '',
+              apply_realname: '',
+              files: '',
+              files_00:'',
+              files_01:'',
+              files_02:'',
+              files_03:'',
+              files_04:'',
+              files_05:'',
               status: '',
             };
       },
@@ -511,442 +609,69 @@ export default {
 
       },
 
-      //选中当前盖印人
-      async selectFrontUser(value){
-        await tools.sleep(0);
-        const id = this.item.front_id;
-        const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
-        this.item.front_id = id;
-      },
-
-      async validField(fieldName){
-        //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
-
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
-        if(fieldName.toLocaleLowerCase().includes('mail')) {
-          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
-        }
-
-        storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
-        return tools.isNull(this.message[fieldName]);
-      },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
-
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
         try {
           //查询当前是否微信端
           this.iswechat = tools.isWechat();
-
+          //查询上一页
+          this.back = tools.getUrlParam('back') || '/app';
+          //查询type
+          const type = tools.getUrlParam('type') || '0';
+          //查询ID
+          const id = tools.getUrlParam('id');
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
+          //查询数据
+          const item = await query.queryTableData(this.tablename , id);
 
-          //查询编号
-          const id = tools.getUrlParam('id');
-          this.role = tools.getUrlParam('role');
-          this.back = tools.getUrlParam('back') || '/app';
+          try {
+            //自动回显刚才填写的用户基础信息
+            if(item){
+              this.item = {
+                id: item.id,
+                serialid: item.serialid,
+                create_time: item.create_time,
+                create_by: item.create_by,
+                apply_date: dayjs(item.apply_date).format('YYYY-MM-DD'),
+                title: item.title,
+                company: item.company,
+                department: item.department,
+                content: item.content,
+                remark: item.remark, //备注
+                amount: item.amount,
+                wflowid: item.wflowid,
+                bpm_status: item.bpm_status,
+                reward_type: item.reward_type,
+                reward_name: item.reward_name,
+                reward_period: item.reward_period,
+                hr_admin_ids: item.hr_admin_ids,
+                hr_admin_names: item.hr_admin_names,
+                hr_id: item.hr_id,
+                hr_name: item.hr_name,
+                apply_username: item.apply_username,
+                apply_realname: item.apply_realname,
+                files: item.files,
+                files_00: item.files_00,
+                files_01: item.files_01,
+                files_02: item.files_02,
+                files_03: item.files_03,
+                files_04: item.files_04,
+                files_05: item.files_05,
+                status: item.status,
+              }
+            }
 
-          //查询借用数据
-          let tlist = await query.queryTableDataByPid(this.tablename , id);
-          this.size = tlist.length;
-          this.tlist = tlist;
-
-          const item = tlist[0];
-
-          //自动回显刚才填写的用户基础信息
-          if(item){
-            this.item.id = id;
-            this.item.serialid = item.serialid || this.item.serialid;
-            this.item.create_by = item.create_by || this.item.create_by;
-            this.item.name = item.name || this.item.name;
-            this.item.amount = item.amount || this.item.amount;
-            this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
-            this.item.department = item.department || this.item.department;
-            this.item.remark = item.remark || this.item.remark;
-            this.item.type = item.type || this.item.type || '办公用品';
-            this.item.company = item.company || this.item.company;
-            this.item.approve_name = item.approve_name || this.item.approve_name;
-            this.item.workflow = item.workflow || this.item.workflow;
-            this.item.approve = item.approve || this.item.approve;
-            this.item.status = item.status || this.item.status;
+          } catch (error) {
+            console.log(error);
           }
-
-          for(let i = 1 ; i < tlist.length ; i++){
-            this.item['name'+i] = tlist[i].name ;
-            this.item['amount'+i] = tlist[i].amount ;
-          }
-
-          await this.queryProcessLog();
 
         } catch (error) {
           console.log(error);
         }
 
       },
-
-      async handleDisagree(){
-        //显示加载状态
-        this.loading = true;
-
-        //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
-
-        //表单ID
-        const id = this.item.id;
-        const type = tools.getUrlParam('statustype');
-        const pid = tools.getUrlParam('pid');
-
-        // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
-
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          status: '已驳回',
-        }; // 待处理元素
-
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
-
-
-        //批量领取物品修改状态
-        for(let i = 0 ; i < this.tlist.length ; i++){
-
-          //第一步 保存用户数据到数据库中
-          let element = {
-            status: '已驳回',
-          }; // 待处理元素
-
-          //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
-
-        }
-
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/奖罚申请被驳回通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 已驳回，请沟通后重新发起借用！?rurl=${receiveURL}`)
-                .set('accept', 'json');
-
-        /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '驳回'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已驳回]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.approveViewProcessLog(prLogHisNode);
-
-        /************************  工作流程日志(结束)  ************************/
-
-        //设置状态
-        this.loading = false;
-        this.status = elem.status;
-        this.readonly = true;
-        this.item.status = elem.status;
-
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已驳回奖罚申请申请！',
-          });
-      },
-
-      // 用户提交入职登记表函数
-      async handleConfirm() {
-
-        //显示加载状态
-        this.loading = true;
-
-        //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
-
-        //表单ID
-        const id = this.item.id;
-        const type = tools.getUrlParam('statustype');
-        const pid = tools.getUrlParam('pid');
-
-        // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
-
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          status: '已借用',
-        }; // 待处理元素
-
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
-
-
-        //批量领取物品修改状态
-        for(let i = 0 ; i < this.tlist.length ; i++){
-
-          //第一步 保存用户数据到数据库中
-          let element = {
-            status: '已借用',
-          }; // 待处理元素
-
-          //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
-
-        }
-
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已借用，请确认借用完成！?rurl=${receiveURL}`)
-                .set('accept', 'json');
-
-        /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '确认'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已借用]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: this.item.create_by,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : this.item.receive_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : this.item.create_by ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '经办人',//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + '#已借用 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.taskViewProcessLog(prLogNode);
-
-        /************************  工作流程日志(结束)  ************************/
-
-        //设置状态
-        this.loading = false;
-        this.status = elem.status;
-        this.readonly = true;
-        this.item.status = elem.status;
-
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已确认奖罚申请申请！',
-          });
-
-      },
-      // 用户提交入职登记表函数
-      async handleFinaly() {
-
-        //显示加载状态
-        this.loading = true;
-
-        //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
-        const pid = tools.getUrlParam('pid');
-
-        //表单ID
-        const id = this.item.id;
-
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          id,
-          status: '已归还',
-        }; // 待处理元素
-
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
-
-        //批量领取物品修改状态
-        for(let i = 0 ; i < this.tlist.length ; i++){
-
-          //第一步 保存用户数据到数据库中
-          let element = {
-            status: '已归还',
-          }; // 待处理元素
-
-          //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
-
-        }
-
-        /************************  工作流程日志(开始)  ************************/
-
-        //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '完成'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已完成]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '借用审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.approveViewProcessLog(prLogHisNode);
-
-        /************************  工作流程日志(结束)  ************************/
-
-        //设置状态
-        this.loading = false;
-        this.status = elem.status;
-        this.readonly = true;
-        this.item.status = elem.status;
-
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已完成奖罚申请申请！',
-          });
-
-      }
     }
 }
 </script>
@@ -955,5 +680,5 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
-    @import "../../assets/css/goodsview.css";
+    @import "../../assets/css/goodsreceive.css";
 </style>
