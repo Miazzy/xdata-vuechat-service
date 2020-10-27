@@ -359,7 +359,7 @@
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
-                  导出
+                  台账导出
                 </div>
               </div>
             </van-col>
@@ -664,7 +664,7 @@ export default {
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_EXPORT' , userinfo.username);
 
-          if(resp[0].userlist.includes(userinfo.username)){
+          if(resp && resp.length > 0 && resp[0].userlist && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealExport`);
           } else {
             vant.Toast('您没有用印合同资料导出的权限！');
