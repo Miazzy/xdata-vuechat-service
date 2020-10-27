@@ -1,7 +1,7 @@
 <template>
   <keep-alive>
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px;" >
+  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
 
     <header id="wx-header" v-if="iswechat" style="overflow:hidden;">
         <div class="center" >

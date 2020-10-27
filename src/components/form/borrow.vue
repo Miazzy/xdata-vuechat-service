@@ -3,7 +3,7 @@
   <keep-alive>
 
   <!--首页组件-->
-  <div id="content" style="margin-top: 0px;" >
+  <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
 
     <header id="wx-header" v-if="iswechat" >
         <div class="center" >
@@ -757,6 +757,21 @@ export default {
         const id = this.item.id;
         const type = tools.getUrlParam('statustype');
         const pid = tools.getUrlParam('pid');
+
+        //检查用户是否具有权限进行审批
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+        //获取到印章管理员组信息
+        const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+
+        //获取到用户列表数据
+        if(tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '您没有物品借用的审批权限，请联系管理员进行处理！',
+          });
+          return;
+        }
 
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);

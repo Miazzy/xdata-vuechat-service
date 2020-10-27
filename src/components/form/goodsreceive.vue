@@ -519,6 +519,8 @@ export default {
                     this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
+                  debugger;
+
                   //获取盖印人姓名
                   this.item.user_admin_name = user[0].lastname;
                   //当前盖印人编号
@@ -537,6 +539,9 @@ export default {
                   department = department.slice(department.lastIndexOf('>')+1);
                   //将用户数据推送至对方数组
                   this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+
+                  debugger;
+
                   //获取盖印人姓名
                   this.item.user_admin_name = user.lastname;
                   //当前盖印人编号
@@ -569,10 +574,11 @@ export default {
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.userid;
-        const user = this.userList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.user_admin_name = user.name;
         this.item.userid = id;
+
+        //获取盖印人姓名
+        const user = this.userList.find((item,index) => {return id == item.id});
+        this.item.user_admin_name = user.name;
       },
       // 设置重置
       async reduction(){
@@ -772,6 +778,26 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+        //未获取到选择的物品领用接待人员
+        if(tools.isNull(this.item.name) || tools.isNull(this.item.amount)){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请输入领用物品名称与数量！',
+            });
+          return;
+        }
+
+        //未获取到选择的物品领用接待人员
+        if(tools.isNull(this.item.userid)){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请输入接待人员并点击人员列表，选择物品领用接待人员！',
+            });
+          return;
+        }
+
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
@@ -856,7 +882,7 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids},zhouxl0627,shur0411,wuzy0518,chenal0625,${userinfo.username}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
 

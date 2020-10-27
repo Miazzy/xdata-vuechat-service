@@ -1,9 +1,9 @@
-//import Vue from 'vue'
+// import Vue from 'vue'
 import Router from 'vue-router';
 
 Vue.use(Router);
 
-//app整体由店面页和店内页组成 暂时并没有用到嵌套路由
+// app整体由店面页和店内页组成 暂时并没有用到嵌套路由
 const routes = [{
         path: '/',
         name: "应用",
@@ -278,6 +278,27 @@ const routes = [{
             "subPage": resolve => require(["../components/form/borrow.vue"], resolve)
         }
     }, {
+        path: '/app/rewardlist',
+        name: "借用进度",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/rewardlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/reward',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/reward.vue"], resolve)
+        }
+    }, {
+        path: '/app/rewardapply',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/rewardapply.vue"], resolve)
+        }
+    }, {
         path: '/app/borrowlist',
         name: "借用进度",
         components: {
@@ -456,8 +477,16 @@ const routes = [{
         }
     }
 
-]
-export default new Router({
+];
+
+const router = new Router({
     base: "/vue-wechat/",
     routes,
 })
+
+// history模式跳转到新页面，返回顶部
+router.afterEach((to, from, next) => {
+    window.scrollTo(0, 0);
+});
+
+export default router;

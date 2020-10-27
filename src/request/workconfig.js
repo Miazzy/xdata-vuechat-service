@@ -109,6 +109,17 @@ export const goodsborrowtype = {
 };
 
 /**
+ * @description 物品借用管理
+ */
+export const rewardtype = {
+    '0': '业绩考核奖',
+    '1': '总裁专项奖',
+    '2': '总经理专项奖',
+    '3': '特殊贡献奖',
+    '4': '其他奖惩',
+};
+
+/**
  * @description 领用物品说明
  */
 export const objects = {
@@ -294,6 +305,34 @@ export const compValidation = {
             mobile: '请输入您的电话号码！', //
             meal_account: '请输入新员工的食堂账户！', //
         },
+    },
+    rewardapply: {
+        message: {
+            title: '',
+            company: '',
+            department: '',
+            content: '',
+            remark: '', //备注
+            amount: '',
+            reward_type: '',
+            reward_name: '',
+            reward_period: '',
+            hr_name: '',
+            apply_realname: '',
+        },
+        valid: {
+            title: '请输入奖罚申请的标题！',
+            company: '请输入申请人员的所在公司！',
+            department: '请输入申请人员的所在部门！',
+            content: '请输入申请事由！',
+            remark: '请输入备注信息！', //备注
+            amount: '请输入数量！',
+            reward_type: '请输入奖罚类型！',
+            reward_name: '请输入奖罚名称！',
+            reward_period: '请输入奖罚所属周期！',
+            hr_name: '请输入负责薪资管理的人力经理！',
+            apply_realname: '请输入申请人姓名！',
+        }
     }
 }
 

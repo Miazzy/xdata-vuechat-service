@@ -326,7 +326,7 @@
 
           </div>
 
-          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
+          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;display:none;" >加载中...</van-loading>
 
           <div style="height:100px;" ></div>
         </div>
