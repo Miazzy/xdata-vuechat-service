@@ -121,49 +121,49 @@
                 </div>
               </van-cell-group>
 
-            <van-cell-group style="margin-top:10px; position:relative;">
+            <van-cell-group id="van-files-download" class="van-files-download" style="margin-top:10px; position:relative;">
 
                 <van-cell value="相关附件" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-cell v-show="item.files" title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('奖罚明细' , 'files');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_00" title="相关附件 #1" class="van-cell-upload" :label="item.files_00.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_00"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_00');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_01" title="相关附件 #2" class="van-cell-upload" :label="item.files_01.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_01"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_01');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_02" title="相关附件 #3" class="van-cell-upload" :label="item.files_02.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_02"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_02');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_03" title="相关附件 #4" class="van-cell-upload" :label="item.files_03.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_03"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_03');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_04" title="相关附件 #5" class="van-cell-upload" :label="item.files_04.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_04"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_04');"  >下载</van-button>
                   </template>
                 </van-cell>
 
                 <van-cell v-show="item.files_05" title="相关附件 #6" class="van-cell-upload" :label="item.files_05.slice(0,30)">
                   <template #right-icon>
-                    <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_05"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                    <van-button name="file" @click="download('相关附件','files_05');"  >下载</van-button>
                   </template>
                 </van-cell>
 
@@ -239,6 +239,7 @@ export default {
             isfirst:true,
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
+            downloadURL:'https://upload.yunwisdom.club:30443/',
             message: workconfig.compValidation.rewardapply.message,
             valid: workconfig.compValidation.rewardapply.valid,
             item:{
@@ -333,6 +334,24 @@ export default {
         } catch (error) {
           console.log(error);
         }
+      },
+      async saveAsFile(file , name){
+        try {
+          window.open(file , '_blank');
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          window.saveAs(file , name);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      async download(name , file){
+        const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
+        debugger;
+        await this.saveAsFile(this.downloadURL + this.item[file] , name + ' ' + this.item[file].split('/')[1]);
+        vant.Toast.clear();
       },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
@@ -663,4 +682,13 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/sealinfo.css";
     @import "../../assets/css/goodsreceive.css";
+    #van-files-download .van-button[name="file"] {
+        background-image: linear-gradient(to right, #f96033, red);
+        margin: 5px 10px;
+        padding: 1px 20px;
+        border-radius: 8px;
+        color: #f0f0f0;
+        font-size: 12px;
+        height: 27px;
+    }
 </style>
