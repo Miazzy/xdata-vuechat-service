@@ -57,11 +57,11 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 申请时间 -->
-                <van-field :readonly="true" :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" @blur="validField('reward_type')" :error-message="message.reward_type"  />
+                <van-field :readonly="true" :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" />
                 <!-- 申请时间 -->
-                <van-field :readonly="true" :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" @blur="validField('apply_date')" :error-message="message.apply_date"  />
+                <van-field :readonly="true" :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" />
                 <!-- 流程标题 -->
-                <van-field :readonly="true" :required="false"  clearable label="流程标题" v-model="item.title"  placeholder="请填写流程标题！" @blur="validField('title')" :error-message="message.title"  />
+                <van-field :readonly="true" :required="false"  clearable label="流程标题" v-model="item.title"  placeholder="请填写流程标题！" />
 
               </van-cell-group>
 
@@ -70,17 +70,17 @@
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 申请人员 -->
-                <van-field :readonly="true" :required="false"  clearable label="申请人员" v-model="item.apply_realname"  placeholder="请填写申请人员姓名！" @blur="validField('apply_realname')" :error-message="message.apply_realname"  />
+                <van-field :readonly="true" :required="false"  clearable label="申请人员" v-model="item.apply_realname"  placeholder="请填写申请人员姓名！" />
                 <!-- 所属公司 -->
-                <van-field :readonly="true" :required="false"  clearable label="所属公司" v-model="item.company"  placeholder="请填写所属公司！" @blur="validField('company')" :error-message="message.company"  />
+                <van-field :readonly="true" :required="false"  clearable label="所属公司" v-model="item.company"  placeholder="请填写所属公司！" />
                 <!-- 所属部门 -->
-                <van-field :readonly="true" :required="false"  clearable label="所属部门" v-model="item.department"  placeholder="请填写所属部门！" @blur="validField('department')" :error-message="message.department"  />
+                <van-field :readonly="true" :required="false"  clearable label="所属部门" v-model="item.department"  placeholder="请填写所属部门！" />
 
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="人力信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" @blur="queryHRMan();validField('hr_name');" @click="queryHRMan();" :error-message="message.hr_name" />
+                <van-field required clearable label="人力经理" v-model="item.hr_name" placeholder="请输入需要知会的人力经理，如李茜!" />
                 <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectHRUser()" />
               </van-cell-group>
 
@@ -89,13 +89,13 @@
                 <van-cell value="奖罚信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <!-- 奖罚名称 -->
-                <van-field :readonly="true" :required="true"  clearable label="所属周期" v-model="item.reward_period"  placeholder="请填写奖罚所属周期！" @blur="validField('reward_period')" :error-message="message.reward_period"  />
+                <van-field :readonly="true" :required="true"  clearable label="所属周期" v-model="item.reward_period"  placeholder="请填写奖罚所属周期！" />
                 <!-- 奖罚名称 -->
-                <van-field :readonly="true" :required="true"  clearable label="奖罚名称" v-model="item.reward_name"  placeholder="请填写奖罚名称！" @blur="validField('reward_name')" :error-message="message.reward_name"  />
+                <van-field :readonly="true" :required="true"  clearable label="奖罚名称" v-model="item.reward_name"  placeholder="请填写奖罚名称！" />
                 <!-- 奖罚金额 -->
-                <van-field :readonly="true" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="true" :required="true"  clearable label="奖罚金额" v-model="item.amount"  placeholder="请填写奖罚金额！" />
                 <!-- 申请事由 -->
-                <van-field :readonly="true" :required="true"  clearable label="申请事由" v-model="item.content" rows="2" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" @blur="validField('content')" :error-message="message.content"  />
+                <van-field :readonly="true" :required="true"  clearable label="申请事由" v-model="item.content" rows="2" autosize type="textarea"  maxlength="10240"  placeholder="请填写申请事由！" />
 
               </van-cell-group>
 
@@ -103,7 +103,7 @@
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+                <van-field :readonly="true" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
 
               </van-cell-group>
 
@@ -430,6 +430,7 @@ export default {
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
+
       //用户选择盖印人
       async queryHRMan(){
 
@@ -589,23 +590,6 @@ export default {
         }
 
       },
-      validField(fieldName){
-        //获取用户基础信息
-        const userinfo = storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
-
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
-        if(fieldName.toLocaleLowerCase().includes('mail')) {
-          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
-        }
-
-        storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
-        return tools.isNull(this.message[fieldName]);
-      },
 
       // 获取URL或者二维码信息
       async queryInfo() {
@@ -670,180 +654,6 @@ export default {
         }
 
       },
-
-      // 用户提交入职登记表函数
-      async handleApply() {
-
-        //显示加载状态
-        this.loading = true;
-
-        //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
-
-        //表单ID
-        const id = tools.queryUniqueID();
-        const type = tools.getUrlParam('type');
-
-        //验证数据是否已经填写
-        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
-
-        const invalidKey =  keys.find(key => {
-          const flag = this.validField(key);
-          return !flag;
-        });
-
-        if(invalidKey != '' && invalidKey != null){
-          await vant.Dialog.alert({
-            title: '温馨提示',
-            message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
-          });
-          return false;
-        }
-
-        //查询直接所在工作组
-        const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
-
-        //获取到印章管理员组信息
-        let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
-        let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
-
-        //如果未获取用户名称，则直接设置用印人为分组成员
-        if(tools.isNull(user_group_ids)){
-          user_group_ids = this.item.hr_id;
-          user_group_names = this.item.hr_name;
-        }
-
-        // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
-
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          id,
-          serialid:'',
-          create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          create_by: userinfo.username,
-          apply_date: dayjs().format('YYYY-MM-DD'),
-          title: this.item.title,
-          company: this.item.company,
-          department: this.item.department,
-          content: this.item.content,
-          remark: this.item.remark, //备注
-          amount: this.item.amount,
-          wflowid: '',
-          bpm_status: '',
-          reward_type: this.item.reward_type,
-          reward_name: this.item.reward_name,
-          reward_period: this.item.reward_period,
-          hr_admin_ids: user_group_ids,
-          hr_admin_names: user_group_names,
-          hr_id: this.item.hr_id,
-          hr_name: this.item.hr_name,
-          apply_username: userinfo.username,
-          apply_realname: userinfo.realname,
-          files: this.item.files,
-          files_00: this.item.files_00,
-          files_01: this.item.files_01,
-          files_02: this.item.files_02,
-          files_03: this.item.files_03,
-          files_04: this.item.files_04,
-          files_05: this.item.files_05,
-          status: '待处理',
-        }; // 待处理元素
-
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData(this.tablename , elem);
-
-        //发送自动设置排序号请求
-        const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
-
-         //查询数据
-        const value = await query.queryTableData(this.tablename , id);
-
-        //显示序列号
-        this.item.serialid = value.serialid;
-
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
-
-
-        /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起奖惩申请[待处理]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: front,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
-          employee       : front_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : front ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批奖惩申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.taskViewProcessLog(prLogNode);
-
-        /************************  工作流程日志(结束)  ************************/
-
-        //设置状态
-        this.loading = false;
-        this.status = elem.status;
-        this.readonly = true;
-
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已经提交奖罚申请流程！',
-          });
-
-      }
     }
 }
 </script>
