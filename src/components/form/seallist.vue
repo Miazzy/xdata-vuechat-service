@@ -33,7 +33,7 @@
                     <span class="custom-title">
                       <download-excel
                         :data="json_data_common"
-                        :fields="json_fields"
+                        :fields="json_fields_common"
                         worksheet="用印台账"
                         name="用印台账(非合同类).xls"
                       >
@@ -169,6 +169,21 @@ export default {
               '用印部门':'deal_depart',
               '经办人员':'deal_manager',
               '合同编号':'contract_id',
+              '签收人员':'signman',
+              '审批类型':'approve_type',
+              '关联流程':'workno',
+              '用印类型': 'seal_type',
+              '排序类型':'order_type',
+              '盖章人员': 'seal_man',
+              '用印状态': 'status',
+            },
+            json_fields_common: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '文件名称':'filename',
+              '用印数量':'count',
+              '用印部门':'deal_depart',
+              '经办人员':'deal_manager',
               '签收人员':'signman',
               '审批类型':'approve_type',
               '关联流程':'workno',
