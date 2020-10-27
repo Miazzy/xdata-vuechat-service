@@ -14,16 +14,16 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                <van-cell id="van-cell-export" class="van-cell-export" title="移交台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
-                        worksheet="用印台账"
-                        name="用印台账(合同类).xls"
+                        worksheet="移交台账"
+                        name="移交台账(合同类).xls"
                       >
-                        合同台账
+                        移交台账
                       </download-excel>
                     </span>
                   </template>
