@@ -135,7 +135,6 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
 import JsonExcel from "vue-json-excel";
-
 Vue.component("downloadExcel", JsonExcel);
 
 export default {

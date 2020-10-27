@@ -123,6 +123,9 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
+import JsonExcel from "vue-json-excel";
+Vue.component("downloadExcel", JsonExcel);
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -149,7 +152,6 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              //{ text: '入职引导', value: 0 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -158,6 +160,48 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields_office: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '领用类型':'type',
+              '领用人员':'receive_name',
+              '领用公司':'company',
+              '领用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_fields_drug: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '领用类型':'type',
+              '领用人员':'receive_name',
+              '领用公司':'company',
+              '领用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_fields_prevent: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '物品名称':'name',
+              '物品数量':'amount',
+              '领用类型':'type',
+              '领用人员':'receive_name',
+              '领用公司':'company',
+              '领用部门':'department',
+              '接待人员':'user_admin_name',
+              '备注说明':'remark',
+              '审批状态': 'status',
+            },
+            json_data_office: [],
+            json_data_drug: [],
+            json_data_prevent: [],
         }
     },
     activated() {
@@ -247,6 +291,11 @@ export default {
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
+        //查询页面数据
+        this.queryTabList('办公' , 0);
+        this.queryTabList('药品' , 0);
+        this.queryTabList('防疫' , 0);
+
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
 
@@ -325,6 +374,39 @@ export default {
           this.rejectList = this.rejectList.filter(item => {
             return item.id == item.pid;
           });
+        } else if(tabname == '办公') {
+          //获取最近6个月的已领取记录
+          this.json_data_office = await manageAPI.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data_office.map((item , index) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+        } else if(tabname == '药品') {
+          //获取最近6个月的已领取记录
+          this.json_data_drug = await manageAPI.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data_drug.map((item , index) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+        } else if(tabname == '防疫') {
+          //获取最近6个月的已领取记录
+          this.json_data_prevent = await manageAPI.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.json_data_prevent.map((item , index) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
         }
 
       },
