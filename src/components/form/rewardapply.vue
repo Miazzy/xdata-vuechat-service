@@ -749,7 +749,7 @@ export default {
           files_03: this.item.files_03,
           files_04: this.item.files_04,
           files_05: this.item.files_05,
-          status: '待处理',
+          status: '待审批',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -795,7 +795,7 @@ export default {
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
           process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
+          content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -823,7 +823,7 @@ export default {
           functions_station : '前台',//varchar(100)  null comment '职能岗位',
           process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
+          content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + '#待审批 #经办人: ' + userinfo.username,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
