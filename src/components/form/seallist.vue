@@ -20,7 +20,7 @@
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
-                        worksheet="My Worksheet"
+                        worksheet="用印台账"
                         name="用印台账(合同类).xls"
                       >
                         导出合同
@@ -34,7 +34,7 @@
                       <download-excel
                         :data="json_data_common"
                         :fields="json_fields"
-                        worksheet="My Worksheet"
+                        worksheet="用印台账"
                         name="用印台账(非合同类).xls"
                       >
                         导出非合同
@@ -446,6 +446,9 @@ export default {
 
         //查询合同类数据
         this.queryTabList('合同类',0);
+
+        //查询非合同类数据
+        this.queryTabList('非合同类',0);
 
       },
       async selectHContract(){
