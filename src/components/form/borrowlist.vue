@@ -21,7 +21,7 @@
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
-                        worksheet="用印台账"
+                        worksheet="设备借用台账"
                         name="设备借用台账.xlsx"
                       >
                         导出设备借用
@@ -35,7 +35,7 @@
                       <download-excel
                         :data="json_data_box"
                         :fields="json_fields_box"
-                        worksheet="用印台账"
+                        worksheet="传屏借用台账"
                         name="传屏借用台账.xlsx"
                       >
                         导出传屏借用
