@@ -318,6 +318,7 @@ export const compValidation = {
             reward_name: '',
             reward_period: '',
             hr_name: '',
+            files: '',
             apply_realname: '',
         },
         valid: {
@@ -331,6 +332,7 @@ export const compValidation = {
             reward_name: '请输入奖罚名称！',
             reward_period: '请输入奖罚所属周期！',
             hr_name: '请输入负责薪资管理的人力经理！',
+            files: '请上传奖罚明细Excel文档！',
             apply_realname: '请输入申请人姓名！',
         }
     }

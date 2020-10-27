@@ -687,7 +687,7 @@ export default {
         const type = tools.getUrlParam('type');
 
         //验证数据是否已经填写
-        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', })
+        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
 
         const invalidKey =  keys.find(key => {
           const flag = this.validField(key);
