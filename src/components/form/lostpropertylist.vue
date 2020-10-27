@@ -22,7 +22,7 @@
                         :data="json_data"
                         :fields="json_fields"
                         worksheet="导出台账"
-                        name="导出台账.xls" >
+                        name="失物招领台账.xls" >
                         导出台账
                       </download-excel>
                     </span>
