@@ -617,7 +617,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_EXPORT' , userinfo.username);
 
           if(resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealExport`);

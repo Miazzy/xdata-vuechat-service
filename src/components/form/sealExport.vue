@@ -27,11 +27,13 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-popup v-model="showStartPickerTime" round position="bottom">
-              <van-datetime-picker
+              <van-datetime-picker 
                 type="date"
                 @cancel="showStartPickerTime = false"
                 @confirm="startDateConfirm"
-                title="选择开始日期"
+                title="选择开始日期" 
+                :min-date="minDate"
+                :max-date="maxDate"
               />
             </van-popup>
 
@@ -39,8 +41,10 @@
               <van-datetime-picker
                 type="date"
                 @cancel="showEndPickerTime = false"
-                @confirm="endDatefirm"
-                title="选择结束日期"
+                @confirm="endDateConfirm"
+                title="选择结束日期" 
+                :min-date="minDate"
+                :max-date="maxDate"
               />
             </van-popup>
 
@@ -53,21 +57,22 @@
               <van-radio name="已归档" icon-size="18px">已归档</van-radio>
             </van-radio-group>
 
-            <van-goods-action>
-              <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="导出"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
-            </van-goods-action>
-
+            <download-excel
+                class = "export-excel-wrapper"
+                :fetch = "handleConfirm"
+                :fields = "exportFields"
+                name = "用印导出.xls">
+                <van-goods-action>
+                  <van-goods-action-button id="informed_confirm" type="danger" :disabled="disabled" native-type="submit" text="导出"  style="border-radius: 10px 10px 10px 10px;" />
+                </van-goods-action>
+            </download-excel>
           </div>
-
-          <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
-
           <div style="height:100px;" ></div>
         </div>
       </div>
 
     </section>
   </div>
-  </keep-alive>
 </template>
 <script>
 import * as storage from '@/request/storage';
@@ -80,9 +85,11 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 import { RadioGroup, Radio } from 'vant';
+import JsonExcel from 'vue-json-excel'
 
 Vue.use(Radio);
 Vue.use(RadioGroup);
+Vue.component('downloadExcel', JsonExcel)
 
 export default {
     mixins: [window.mixin],
@@ -93,8 +100,33 @@ export default {
             showEndPickerTime: false,
             startDate: dayjs().format('YYYY-MM-DD'),
             endDate: dayjs().format('YYYY-MM-DD'),
+            minDate: new Date(2020, 2, 1),
+            maxDate: new Date(2025, 2, 1),
             status:'全部',
-            showStatusPicker:false
+            showStatusPicker:false,
+            disabled:false,
+            exportData:[],
+            exportFields : {
+              "序列号":"serialid",
+              "所属系统":"approve_type",
+              "申请人":"create_by",
+              "创建日期":"create_time",
+              "文件名称":"filename",
+              "文件份数":"count",
+              "经办部门":"deal_depart",
+              "经办人员":"deal_manager",
+              "盖印时间":"seal_time",
+              "盖印人员":"seal_man",
+              "合同编号":"contract_id",
+              "文件签收":"sign_man",
+              "流程编号":"workno",
+              "用印类型":"seal_type",
+              "用印状态":"status",
+              "印章编号":"no",
+              "审批说明":"message",
+              "所属公司":"company",
+              "领取时间":"receive_time"
+            }
         }
     },
 
@@ -103,7 +135,7 @@ export default {
         this.startDate = dayjs(value).format('YYYY-MM-DD');
         this.showStartPickerTime = false;
       },
-      async endDatefirm(value){
+      async endDateConfirm(value){
         this.endDate = dayjs(value).format('YYYY-MM-DD');
         this.showEndPickerTime = false;
       },
@@ -117,14 +149,45 @@ export default {
       },
 
       async handleConfirm() {
-        console.log(this.status)
-        //显示加载状态
-        this.loading = true;
+        if (this.disabled) {
+          return;
+        }
+        //按钮置灰
+        this.disabled = true;
+        const userinfo = await storage.getStore('system_userinfo');
+        let sqlWhere = '_where=(create_time,gt,'+ this.startDate + ')~and(create_time,lt,'+ dayjs(this.endDate).add(1, 'day').format('YYYY-MM-DD') + ')';
+        switch (this.status) {
+          case '全部':
+            break;
+          case '已归档':
+            sqlWhere += '~and(status,like,~归档~)'
+            break;
+          default:
+            sqlWhere += '~and(status,eq,'+ this.status + ')'
+            break;
+        }
+        // if (!(this.status == '全部')) {
+        //   sqlWhere += '~and(status,eq,'+ this.status + ')'
+        // }
+        //权限
+        if (!(this.status == '已归档')) {
+          sqlWhere += '~and(seal_group_ids,like,~'+ userinfo.username + '~)'
+        }
+        const value = await query.queryTableDataByWhereSQL(`bs_seal_regist`, sqlWhere);
+        if(value.length > 0) {
+          value.map((item , index) => {
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          })
+        }else {
+          vant.Dialog.alert({
+            message: "没有查询到需要导出的数据！"
+        });
+        }
+        this.exportData = value;
+        this.disabled = false;
+        return value;
+      },
 
-        // 查询SQL
-        // const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${hr_name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid`;
-
-      }
     }
 }
 </script>
