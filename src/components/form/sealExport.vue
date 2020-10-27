@@ -9,7 +9,7 @@
                 <span>返回</span>
             </router-link>
         <span>用印导出</span>
-      </div>  
+      </div>
     </header>
 
     <section>
@@ -27,11 +27,11 @@
 
           <div style="margin-top:30px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-popup v-model="showStartPickerTime" round position="bottom">
-              <van-datetime-picker 
+              <van-datetime-picker
                 type="date"
                 @cancel="showStartPickerTime = false"
                 @confirm="startDateConfirm"
-                title="选择开始日期" 
+                title="选择开始日期"
                 :min-date="minDate"
                 :max-date="maxDate"
               />
@@ -42,7 +42,7 @@
                 type="date"
                 @cancel="showEndPickerTime = false"
                 @confirm="endDateConfirm"
-                title="选择结束日期" 
+                title="选择结束日期"
                 :min-date="minDate"
                 :max-date="maxDate"
               />
@@ -84,11 +84,13 @@ import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
-import { RadioGroup, Radio } from 'vant';
-import JsonExcel from 'vue-json-excel'
 
-Vue.use(Radio);
-Vue.use(RadioGroup);
+// import { RadioGroup, Radio } from 'vant';
+// import JsonExcel from 'vue-json-excel'
+
+// Vue.use(Radio);
+// Vue.use(RadioGroup);
+
 Vue.component('downloadExcel', JsonExcel)
 
 export default {
