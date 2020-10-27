@@ -37,10 +37,10 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            待处理
+            待审批
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            处理中
+            审批中
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已完成
@@ -53,10 +53,10 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待审批" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="处理中" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="审批中" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
@@ -93,7 +93,7 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_goods_borrow',
+            tname: 'bs_reward_apply',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
