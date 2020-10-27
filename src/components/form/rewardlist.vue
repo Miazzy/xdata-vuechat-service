@@ -94,6 +94,7 @@ export default {
             rejectList:[],
             hContractID:'',
             tname: 'bs_reward_apply',
+            tablename: 'bs_reward_apply',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
@@ -217,62 +218,48 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待审批)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,审批中)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
          } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
-          this.rejectList = this.rejectList.filter(item => {
-            return item.id == item.pid;
-          });
         }
 
       },
@@ -290,16 +277,16 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
          } else if(this.tabname == '4' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
+          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         }
 
       },

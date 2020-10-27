@@ -116,7 +116,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('月度' , '5');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('月度报表' , '5');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd">
                   月度报表
@@ -124,7 +124,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('季度' , '6');">
+              <div class="weui-cell_app_hd" @click="rewardApply('季度报表' , '6');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/ribao.png" >
                 <div class="weui-cell_app_bd" >
                   季度报表
@@ -132,7 +132,7 @@
               </div>
             </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('审批' , '7');" >
+              <div class="weui-cell_app_hd" @click="rewardApply('奖罚审批' , '7');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
                   奖罚审批
