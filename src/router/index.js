@@ -215,13 +215,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealmylist.vue"], resolve)
         }
     }, {
-        path: '/app/sealmylist',
-        name: "用印历史",
+        path: '/app/sealExport',
+        name: "用印导出",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/sealmylist.vue"], resolve)
+            "subPage": resolve => require(["../components/form/sealExport.vue"], resolve)
         }
-    }, {
+    }, {   
         path: '/app/goodsreceive',
         name: "物品领用",
         components: {
@@ -305,7 +305,7 @@ const routes = [{
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/entrylist.vue"], resolve)
         }
-    }, {
+    }, { 
         path: '/app/news',
         name: "公告",
         components: {
