@@ -15,15 +15,15 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="认领台账" icon="balance-list-o"  >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
-                        worksheet="认领台账"
-                        name="认领台账.xls" >
-                        认领台账
+                        worksheet="导出台账"
+                        name="导出台账.xls" >
+                        导出台账
                       </download-excel>
                     </span>
                   </template>
@@ -89,7 +89,6 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as query from '@/request/query';
 
-
 try {
   Vue.component("downloadExcel", JsonExcel);
 } catch (error) {
@@ -133,31 +132,20 @@ export default {
             isLoading:false,
             loading:false,
             json_fields: {
-              '入职编号':'id',
+              '排序号': 'serialid',
+              '业务编号': 'id',
               '登记时间': 'create_time',
               '登记人员': 'create_by',
-              '最高学历':'greatdiploma',
-              '入职员工': 'username',
-              '入职岗位': 'position',
-              '入职部门':'department',
-              '入职时间': 'join_time',
+              '物品名称': 'lost_name',
+              '物品数量': 'lost_amount',
+              '丢失时间': 'lost_time',
+              '领取人员': 'claim_name',
+              '领取时间': 'claim_time',
+              '领取公司': 'company',
+              '领取部门':'department',
+              '联系电话':'mobile',
+              '处理人员': 'user_admin_name',
               '电话号码':'mobile',
-              '配置电脑': 'computer',
-              '配置座椅': 'seat',
-              '配置抽屉': 'drawer',
-              '其他配置要求': 'other_equip',
-              '笔记簿': 'notebook',
-              '签字笔/擦': 'writingtools',
-              '员工工牌':'badge',
-              '其他办公用品要求':'othertools',
-              '车牌号':'carno',
-              '身份证号':'idcard',
-              '银行卡号':'bank_card',
-              '是否停车':'stop_flag',
-              '人力接待人员':'hr_name',
-              '行政接待人员':'admin_account',
-              '前台接待人员':'front_account',
-              '食堂饭卡':'meal_account',
               '审批状态': 'status',
             },
             json_data: [],
@@ -256,6 +244,9 @@ export default {
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
+        //查询台账数据
+        this.queryTabList('认领' , 0);
+
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
 
@@ -321,7 +312,9 @@ export default {
             return item.id == item.pid;
           });
          } else if(tabname == '认领') {
-
+           //获取最近6个月的已领取记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
          }
 
       },
