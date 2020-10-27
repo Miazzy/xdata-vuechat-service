@@ -22,7 +22,7 @@
                         :data="json_data_office"
                         :fields="json_fields_office"
                         worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xlsx"
+                        name="办公物品领用台账.xls"
                       >
                         办公台账
                       </download-excel>
@@ -36,7 +36,7 @@
                         :data="json_data_drug"
                         :fields="json_fields_drug"
                         worksheet="药品领用台账"
-                        name="药品领用台账.xlsx"
+                        name="药品领用台账.xls"
                       >
                         药品台账
                       </download-excel>
@@ -50,7 +50,7 @@
                         :data="json_data_prevent"
                         :fields="json_fields_prevent"
                         worksheet="防疫物资领用台账"
-                        name="防疫物资领用台账.xlsx"
+                        name="防疫物资领用台账.xls"
                       >
                         防疫台账
                       </download-excel>

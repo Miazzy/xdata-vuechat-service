@@ -21,7 +21,7 @@
                         :data="json_data"
                         :fields="json_fields"
                         worksheet="用印台账"
-                        name="用印台账(合同类).xlsx"
+                        name="用印台账(合同类).xls"
                       >
                         合同台账
                       </download-excel>
@@ -35,7 +35,7 @@
                         :data="json_data_common"
                         :fields="json_fields_common"
                         worksheet="用印台账"
-                        name="用印台账(非合同类).xlsx"
+                        name="用印台账(非合同类).xls"
                       >
                         非合同台账
                       </download-excel>

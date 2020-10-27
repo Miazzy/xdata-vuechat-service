@@ -22,7 +22,7 @@
                         :data="json_data"
                         :fields="json_fields"
                         worksheet="设备借用台账"
-                        name="设备借用台账.xlsx"
+                        name="设备借用台账.xls"
                       >
                         设备台账
                       </download-excel>
@@ -36,7 +36,7 @@
                         :data="json_data_box"
                         :fields="json_fields_box"
                         worksheet="传屏借用台账"
-                        name="传屏借用台账.xlsx"
+                        name="传屏借用台账.xls"
                       >
                         传屏台账
                       </download-excel>
