@@ -616,12 +616,12 @@ export default {
                 serialid: item.serialid,
                 create_time: item.create_time,
                 create_by: item.create_by,
-                apply_date: item.apply_date,
+                apply_date: dayjs(item.apply_date).format('YYYY-MM-DD'),
                 title: item.title,
                 company: item.company,
                 department: item.department,
                 content: item.content,
-                remark: item.remark,//备注
+                remark: item.remark, //备注
                 amount: item.amount,
                 wflowid: item.wflowid,
                 bpm_status: item.bpm_status,
