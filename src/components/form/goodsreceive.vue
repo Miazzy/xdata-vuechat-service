@@ -66,9 +66,7 @@
                 <van-field :readonly="readonly" required clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 16 ? size++ : size;"/>
-
                 <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;"  />
-
                 <span class="van-goods-span-number" style="top:130px;">#1</span>
               </van-cell-group>
 
@@ -231,13 +229,13 @@
                 <!-- 单位名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+                <van-field :readonly="readonly" required clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department');" :error-message="message.department" />
 
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="领用管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入物品领用管理人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入物品领用管理员!" @blur="validField('user_admin_name');querySealMan();" :error-message="message.user_admin_name" @click="querySealMan();"  />
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
               </van-cell-group>
 
@@ -341,8 +339,8 @@ export default {
             isfirst:true,
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            message: workconfig.compValidation.goodsreceive.message,
+            valid: workconfig.compValidation.goodsreceive.valid,
             item:{
               id: '',
               serialid:'',

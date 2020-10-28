@@ -306,6 +306,62 @@ export const compValidation = {
             meal_account: '请输入新员工的食堂账户！', //
         },
     },
+    goodsreceive: {
+        message: {
+            create_time: '',
+            create_by: '',
+            receive_time: '', //领用时间
+            user_admin_name: '',
+            name: '', //领用物品名称
+            amount: '', //领用数量
+            receive_name: '', //领用人员名称
+            department: '', //领用部门名称
+            remark: '', //备注说明
+            type: '', //领用类别
+            company: '', //单位名称
+        },
+        valid: {
+            create_time: '请输入登记时间！',
+            create_by: '请输入登记人员！',
+            receive_time: '请输入领用时间！', //领用时间
+            user_admin_name: '请输入物品领用管理员！',
+            name: '请输入领用物品名称！', //领用物品名称
+            amount: '请输入领用物品数量及单位！', //领用数量
+            receive_name: '请输入领用人员姓名！', //领用人员名称
+            department: '请输入领用人员所属部门！', //领用部门名称
+            remark: '请输入领用备注说明！', //备注说明
+            type: '请输入领用类别！', //领用类别
+            company: '请输入领用人员所属单位/公司名称！', //单位名称
+        }
+    },
+    borrowreceive: {
+        message: {
+            create_time: '',
+            create_by: '',
+            receive_time: '', //领用时间
+            user_admin_name: '',
+            name: '', //领用物品名称
+            amount: '', //领用数量
+            receive_name: '', //领用人员名称
+            department: '', //领用部门名称
+            remark: '', //备注说明
+            type: '', //领用类别
+            company: '', //单位名称
+        },
+        valid: {
+            create_time: '请输入登记时间！',
+            create_by: '请输入登记人员！',
+            receive_time: '请输入物品借用时间！', //领用时间
+            user_admin_name: '请输入物品借用管理员！',
+            name: '请输入借用物品/设备名称！', //领用物品名称
+            amount: '请输入借用物品/设备数量及单位！', //领用数量
+            receive_name: '请输入借用人员姓名！', //领用人员名称
+            department: '请输入借用人员所属部门！', //领用部门名称
+            remark: '请输入物品借用备注说明！', //备注说明
+            type: '请输入物品借用类别！', //领用类别
+            company: '请输入借用人员所属单位/公司名称！', //单位名称
+        }
+    },
     rewardapply: {
         message: {
             title: '',
