@@ -86,11 +86,15 @@ export default {
 
       // 将联系人根据首字母进行分类
       async queryContactsList() {
+
           var initialList = [];
           var contactsList = [];
+
           var allContacts = await contact.queryContacts();
           var contactsInitialList = await this.queryContactsInitialList();
+
           var max = allContacts.length;
+
           for (var i = 0; i < contactsInitialList.length; i++) {
               var protoTypeName = contactsInitialList[i];
               contactsList[protoTypeName] = [];
@@ -100,7 +104,9 @@ export default {
                   }
               }
           }
+
           return contactsList;
+
       },
       async userLogin(){
 
