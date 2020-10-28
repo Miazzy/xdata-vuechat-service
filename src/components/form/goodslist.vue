@@ -11,7 +11,7 @@
                 <span>返回</span>
             </router-link>
             <span>领用进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
@@ -22,9 +22,9 @@
                         :data="json_data_office"
                         :fields="json_fields_office"
                         worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xlsx"
+                        name="办公物品领用台账.xls"
                       >
-                        导出办公领用
+                        办公台账
                       </download-excel>
                     </span>
                   </template>
@@ -36,9 +36,9 @@
                         :data="json_data_drug"
                         :fields="json_fields_drug"
                         worksheet="药品领用台账"
-                        name="药品领用台账.xlsx"
+                        name="药品领用台账.xls"
                       >
-                        导出药品领用
+                        药品台账
                       </download-excel>
                     </span>
                   </template>
@@ -50,9 +50,9 @@
                         :data="json_data_prevent"
                         :fields="json_fields_prevent"
                         worksheet="防疫物资领用台账"
-                        name="防疫物资领用台账.xlsx"
+                        name="防疫物资领用台账.xls"
                       >
-                        导出防疫领用
+                        防疫台账
                       </download-excel>
                     </span>
                   </template>
@@ -123,8 +123,12 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-import JsonExcel from "vue-json-excel";
-Vue.component("downloadExcel", JsonExcel);
+
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],
@@ -447,4 +451,5 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
     @import "../../assets/css/goodslist.css";
+
 </style>

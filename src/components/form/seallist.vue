@@ -21,9 +21,9 @@
                         :data="json_data"
                         :fields="json_fields"
                         worksheet="用印台账"
-                        name="用印台账(合同类).xlsx"
+                        name="用印台账(合同类).xls"
                       >
-                        导出合同
+                        合同台账
                       </download-excel>
                     </span>
                   </template>
@@ -35,9 +35,9 @@
                         :data="json_data_common"
                         :fields="json_fields_common"
                         worksheet="用印台账"
-                        name="用印台账(非合同类).xlsx"
+                        name="用印台账(非合同类).xls"
                       >
-                        导出非合同
+                        非合同台账
                       </download-excel>
                     </span>
                   </template>
@@ -134,8 +134,12 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-import JsonExcel from "vue-json-excel";
-Vue.component("downloadExcel", JsonExcel);
+
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],

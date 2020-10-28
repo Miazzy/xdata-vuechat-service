@@ -13,7 +13,22 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="移交台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="移交台账"
+                        name="移交台账(合同类).xls"
+                      >
+                        移交台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -81,6 +96,12 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -119,6 +140,23 @@ export default {
             menuCssValue:'',
             isLoading:false,
             loading:false,
+            json_fields: {
+              '排序编号':'serialid',
+              '登记时间': 'create_time',
+              '文件名称':'filename',
+              '用印数量':'count',
+              '用印部门':'deal_depart',
+              '经办人员':'deal_manager',
+              '合同编号':'contract_id',
+              '签收人员':'signman',
+              '审批类型':'approve_type',
+              '关联流程':'workno',
+              '用印类型': 'seal_type',
+              '排序类型':'order_type',
+              '盖章人员': 'seal_man',
+              '用印状态': 'status',
+            },
+            json_data: [],
         }
     },
     activated() {
@@ -224,14 +262,20 @@ export default {
         }
       },
       //点击Tab栏
-      async queryTabList(tabname){
+      async queryTabList(tabname , page){
 
-        //获取最近6个月对应的日期
+         //获取当前用户信息
+        const userinfo = await storage.getStore('system_userinfo');
+
+        // 获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
 
-        if(this.sealType === 0 || true) {
+        // 设置当前页为第一页
+        this.currentPage = page + 1;
+
+        if(this.sealType === 0) {
           sealTypeSql = `~and(seal_type,like,合同类)`;
         } else if(this.sealType === 1) {
           sealTypeSql = `~and(seal_type,like,非合同类)`;
@@ -244,7 +288,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -254,7 +298,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -264,7 +308,7 @@ export default {
           })
         } else if(tabname == 3){
           //获取最近6个月的已领取记录
-          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -274,7 +318,7 @@ export default {
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -284,7 +328,7 @@ export default {
           })
         } else if(tabname == 5){
           //获取最近6个月的已归档记录
-          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -294,7 +338,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -302,6 +346,13 @@ export default {
             item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           })
+        } else if(tabname == '合同类') {
+          // 获取最近6个月对应的日期
+          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+          sealTypeSql = `~and(seal_type,like,合同类)`;
+          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          this.json_data = await manageAPI.queryTableData('bs_seal_regist', whereSQL);
+          this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
       },
       async queryInfo(){
@@ -311,78 +362,16 @@ export default {
 
         //获取tabname
         this.tabname = storage.getStore('system_seal_front_list_tabname') || 2;
+        this.tabname = this.tabname > 6 ? 2 : this.tabname;
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
-        //设置查询合同类别SQL
-        let sealTypeSql = '';
+        //查询列表数据
+        this.queryTabList(this.tabname , 0);
 
-        if(this.sealType === 0 || true) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-        }
-
-        //获取最近6个月的待用印记录
-        this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.initContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近6个月的已用印记录
-        this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.sealContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近6个月的已领取记录
-        this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.receiveContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近6个月的已移交记录
-        this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.frontContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近6个月的已归档记录
-        this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.doneContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近6个月的已归档记录
-        this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})${sealTypeSql}&_sort=-create_time&_p=0&_size=1000`);
-
-        this.failContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
+        //查询合同类数据
+        this.queryTabList('合同类' , 0);
 
       },
       async selectHContract(){

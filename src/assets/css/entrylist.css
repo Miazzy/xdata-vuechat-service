@@ -98,3 +98,7 @@
     background-color: #fff;
     display: none;
 }
+
+#van-cell-export .van-cell__title span {
+    float: left;
+}

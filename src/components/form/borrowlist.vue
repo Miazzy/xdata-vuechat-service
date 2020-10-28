@@ -11,34 +11,34 @@
                 <span>返回</span>
             </router-link>
             <span>借用进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 5rem; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                <van-cell id="van-cell-export" class="van-cell-export" title="设备借用台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
                         worksheet="设备借用台账"
-                        name="设备借用台账.xlsx"
+                        name="设备借用台账.xls"
                       >
-                        导出设备借用
+                        设备台账
                       </download-excel>
                     </span>
                   </template>
                 </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="传屏借用台账" icon="todo-list-o" >
                    <template #title>
                     <span class="custom-title">
                       <download-excel
                         :data="json_data_box"
                         :fields="json_fields_box"
                         worksheet="传屏借用台账"
-                        name="传屏借用台账.xlsx"
+                        name="传屏借用台账.xls"
                       >
-                        导出传屏借用
+                        传屏台账
                       </download-excel>
                     </span>
                   </template>
@@ -109,8 +109,11 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-import JsonExcel from "vue-json-excel";
-Vue.component("downloadExcel", JsonExcel);
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],
@@ -138,7 +141,6 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              //{ text: '入职引导', value: 0 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -398,4 +400,13 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
     @import "../../assets/css/goodslist.css";
+
+    #van-cell-export .van-cell__title span {
+        float: left;
+        transform:style(.8);
+    }
+    #van-cell-export .van-cell__title span div {
+        float: left;
+        transform:style(.8);
+    }
 </style>

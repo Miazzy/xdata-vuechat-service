@@ -59,17 +59,16 @@
                 <!-- 借用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 借用类别（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用物品/设备的类别，如信息设备、传屏设备！" @blur="validField('type')" :error-message="message.type"  />
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" required clearable label="借用数量" v-model="item.amount"  placeholder="请填写借用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly" required clearable label="数量/单位" v-model="item.amount"  placeholder="请填写借用数量及单位，如2支！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 16 ? size++ : size;"/>
-
                 <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;"  />
-
                 <span class="van-goods-span-number" style="top:130px;">#1</span>
+
               </van-cell-group>
 
               <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
@@ -77,7 +76,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name1"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount1"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount1"  placeholder="请填写借用数量及单位，如2支！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#2</span>
               </van-cell-group>
@@ -87,7 +86,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name2"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount2"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount2"  placeholder="请填写借用数量及单位，如1盒！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#3</span>
               </van-cell-group>
@@ -97,7 +96,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name3"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount3"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount3"  placeholder="请填写借用数量及单位，如4个！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#4</span>
               </van-cell-group>
@@ -107,7 +106,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name4"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount4"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount4"  placeholder="请填写借用数量及单位，如2支！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#5</span>
               </van-cell-group>
@@ -117,7 +116,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name5"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount5"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount5"  placeholder="请填写借用数量及单位，如2盒！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#6</span>
               </van-cell-group>
@@ -127,7 +126,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name6"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount6"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount6"  placeholder="请填写借用数量及单位，如2只！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#7</span>
               </van-cell-group>
@@ -137,7 +136,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name7"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount7"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount7"  placeholder="请填写借用数量及单位，如2块！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#8</span>
               </van-cell-group>
@@ -147,7 +146,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name8"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount8"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount8"  placeholder="请填写借用数量及单位，如1袋！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#9</span>
               </van-cell-group>
@@ -157,7 +156,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name9"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount9"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount9"  placeholder="请填写借用数量及单位，如2个！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#10</span>
               </van-cell-group>
@@ -167,7 +166,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name10"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount10"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount10"  placeholder="请填写借用数量及单位，如2块！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#11</span>
               </van-cell-group>
@@ -177,7 +176,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name11"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount11"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount11"  placeholder="请填写借用数量及单位，如2箱！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#12</span>
               </van-cell-group>
@@ -187,7 +186,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name12"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount12"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount12"  placeholder="请填写借用数量及单位，如2个！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#13</span>
               </van-cell-group>
@@ -197,7 +196,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name13"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount13"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount13"  placeholder="请填写借用数量及单位，如2只！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#14</span>
               </van-cell-group>
@@ -207,7 +206,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name14"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount14"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount14"  placeholder="请填写借用数量及单位，如2盒！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#15</span>
               </van-cell-group>
@@ -217,7 +216,7 @@
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name15"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="借用数量" v-model="item.amount15"  placeholder="请填写借用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+                <van-field :readonly="readonly"  clearable label="数量/单位" v-model="item.amount15"  placeholder="请填写借用数量及单位，如2箱！" @blur="validField('amount')" :error-message="message.amount"  />
 
                 <span class="van-goods-span-number">#16</span>
               </van-cell-group>
@@ -236,8 +235,8 @@
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
-                <van-cell value="领用管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="接待人员" v-model="item.user_admin_name" placeholder="请输入领用接待人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-cell value="借用管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入物品借用管理员!" @blur="validField('user_admin_name');querySealMan();" :error-message="message.user_admin_name" @click="querySealMan();" />
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
               </van-cell-group>
 
@@ -338,8 +337,8 @@ export default {
             isfirst:true,
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            message: workconfig.compValidation.borrowreceive.message,
+            valid: workconfig.compValidation.borrowreceive.valid,
             item:{
               id: '',
               serialid:'',
@@ -651,18 +650,24 @@ export default {
         this.item.front_id = id;
       },
 
-      async validField(fieldName){
+      validField(fieldName){
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
-        if(fieldName.toLocaleLowerCase().includes('mail')) {
-          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        if(fieldName.toLocaleLowerCase().includes('amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ) {
+          this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写借用数量及借用单位，注意单位！' : '';
+          return tools.isNull(this.message[fieldName]);
         }
+
+        if(fieldName.toLocaleLowerCase().includes('mail') && !regMail.test(this.item[fieldName])) {
+          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+          return tools.isNull(this.message[fieldName]);
+        }
+
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
@@ -754,22 +759,56 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
-        //未获取到选择的物品领用接待人员
-        if(tools.isNull(this.item.name) || tools.isNull(this.item.amount)){
+        //验证数据是否已经填写
+        const keys = Object.keys({
+          type: '', //领用类别
+          name: '', //领用物品名称
+          amount: '', //领用数量
+          receive_name: '', //领用人员名称
+          department: '', //领用部门名称
+          company: '', //单位名称
+          user_admin_name: '',
+        })
+
+        const invalidKey =  keys.find(key => {
+          const flag = this.validField(key);
+          return !flag;
+        });
+
+        if(invalidKey != '' && invalidKey != null){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
+          });
+          return false;
+        }
+
+        //如果物品数量只是整数，没有单位，则提示填入单位
+        if(/^\+?[1-9][0-9]*$/.test(this.item.amount)){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
-              message: '请输入领用物品名称与数量！',
+              message: '请在借用数量处，填写借用数量及借用单位！',
             });
           return;
         }
 
         //未获取到选择的物品领用接待人员
+        if(tools.isNull(this.item.name) || tools.isNull(this.item.amount)){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请输入借用物品名称与数量！',
+            });
+          return;
+        }
+
+        //未获取到选择的物品借用接待人员
         if(tools.isNull(this.item.userid)){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
-              message: '请输入接待人员并点击人员列表，选择物品领用接待人员！',
+              message: '请输入物品管理员并点击人员列表，选择物品借用管理员！',
             });
           return;
         }

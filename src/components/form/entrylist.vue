@@ -11,10 +11,37 @@
                 <span>返回</span>
             </router-link>
             <span>入职进度</span>
-            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
+            <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" v-show="role == 'hr'" title="入职台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="入职台账"
+                        name="入职台账.xls" >
+                        入职台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+                <van-cell id="van-cell-export" class="van-cell-export" v-show="role !== 'hr'" title="入职台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields_common"
+                        worksheet="入职台账"
+                        name="入职台账.xls" >
+                        入职台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -37,16 +64,16 @@
 
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ;" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待确认
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ;" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已确认
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ;" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已完成
           </div>
-          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ;" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div v-show="role == 'hr'" class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(tabname , 0);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已驳回
           </div>
         </div>
@@ -81,8 +108,12 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-import JsonExcel from "vue-json-excel";
-Vue.component("downloadExcel", JsonExcel);
+
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],
@@ -118,6 +149,61 @@ export default {
             isLoading:false,
             loading:false,
             back:'/app',
+            json_fields: {
+              '入职编号':'id',
+              '登记时间': 'create_time',
+              '登记人员': 'create_by',
+              '最高学历':'greatdiploma',
+              '入职员工': 'username',
+              '入职岗位': 'position',
+              '入职部门':'department',
+              '入职时间': 'join_time',
+              '电话号码':'mobile',
+              '配置电脑': 'computer',
+              '配置座椅': 'seat',
+              '配置抽屉': 'drawer',
+              '其他配置要求': 'other_equip',
+              '笔记簿': 'notebook',
+              '签字笔/擦': 'writingtools',
+              '员工工牌':'badge',
+              '其他办公用品要求':'othertools',
+              '车牌号':'carno',
+              '身份证号':'idcard',
+              '银行卡号':'bank_card',
+              '是否停车':'stop_flag',
+              '人力接待人员':'hr_name',
+              '行政接待人员':'admin_account',
+              '前台接待人员':'front_account',
+              '食堂饭卡':'meal_account',
+              '审批状态': 'status',
+            },
+            json_fields_common: {
+              '入职编号':'id',
+              '登记时间': 'create_time',
+              '登记人员': 'create_by',
+              '最高学历':'greatdiploma',
+              '入职员工': 'username',
+              '入职岗位': 'position',
+              '入职部门':'department',
+              '入职时间': 'join_time',
+              '电话号码':'mobile',
+              '配置电脑': 'computer',
+              '配置座椅': 'seat',
+              '配置抽屉': 'drawer',
+              '其他配置要求': 'other_equip',
+              '笔记簿': 'notebook',
+              '签字笔/擦': 'writingtools',
+              '员工工牌':'badge',
+              '其他办公用品要求':'othertools',
+              '车牌号':'carno',
+              '是否停车':'stop_flag',
+              '人力接待人员':'hr_name',
+              '行政接待人员':'admin_account',
+              '前台接待人员':'front_account',
+              '食堂饭卡':'meal_account',
+              '审批状态': 'status',
+            },
+            json_data: [],
         }
     },
     activated() {
@@ -213,8 +299,17 @@ export default {
           this.tabname = '2';
         }
 
+        //如果角色不是HR，则导出功能，不能导出身份证号，银行卡号
+        if(this.role !== 'hr'){
+          delete this.json_fields.idcard;
+          delete this.json_fields.bank_card;
+        }
+
         //查询员工信息列表
         await this.queryTabList(this.tabname ,0);
+
+        //查询员工信息列表
+        await this.queryTabList('入职' ,0);
 
       },
       async queryTabList(tabname , page){
@@ -229,45 +324,58 @@ export default {
           searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))`;
         }
 
-        //获取最近6个月的待用印记录
-        this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
+        if(tabname == 1){
+          //获取最近6个月的待用印记录
+          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
 
-        this.initList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
-          item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
-          item.isDefault = true;
-        });
+          this.initList.map((item , index) => {
+            item.name = item.username + ' ' + item.mobile ,
+            item.tel = '';
+            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
+            item.isDefault = true;
+          });
+        } else if(tabname == 2) {
+          //获取最近6个月的已确认记录
+          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
 
-        //获取最近6个月的已确认记录
-        this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
+          this.confirmList.map((item , index) => {
+            item.name = item.username + ' ' + item.mobile ,
+            item.tel = '';
+            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+            item.isDefault = true;
+          });
+        } else if(tabname == 3) {
+          //获取最近6个月的已完成记录
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
 
-        this.confirmList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
-          item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-          item.isDefault = true;
-        });
+          this.doneList.map((item , index) => {
+            item.name = item.username + ' ' + item.mobile ,
+            item.tel = '';
+            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+            item.isDefault = true;
+          });
+        } else if(tabname == 4) {
+          //获取最近6个月的已驳回记录
+          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
 
-        //获取最近6个月的已完成记录
-        this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
+          this.rejectList.map((item , index) => {
+            item.name = item.username + ' ' + item.mobile ,
+            item.tel = '';
+            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+            item.isDefault = true;
+          });
+        } else if(tabname == '入职') {
+          //获取最近6个月的已驳回记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(create_time,gt,${month})${searchSql}`);
 
-        this.doneList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
-          item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-          item.isDefault = true;
-        });
+          this.json_data.map((item , index) => {
+            item.name = item.username + ' ' + item.mobile ,
+            item.tel = '';
+            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
+            item.isDefault = true;
+          });
+        }
 
-        //获取最近6个月的已驳回记录
-        this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
-
-        this.rejectList.map((item , index) => {
-          item.name = item.username + ' ' + item.mobile ,
-          item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-          item.isDefault = true;
-        });
       },
       async selectHContract(){
 
@@ -308,4 +416,7 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/entrylist.css";
+    #van-cell-export .van-cell__title span {
+        float: left;
+    }
 </style>

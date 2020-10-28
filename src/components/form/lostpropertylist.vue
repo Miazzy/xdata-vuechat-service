@@ -14,7 +14,21 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="导出台账"
+                        name="失物招领台账.xls" >
+                        导出台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -35,8 +49,8 @@
     <section>
 
       <div class="weui-cells" style="margin-top: 0px;">
-        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+        <div v-show="role == 'front' " class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
+          <div v-show="role == 'front' " class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待处理
           </div>
           <div v-show="role == 'front' " class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -50,7 +64,7 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading && role == 'front'">
           <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已认领" edit-disabled @select="selectHContract()" />
@@ -75,8 +89,11 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as query from '@/request/query';
 
-import JsonExcel from "vue-json-excel";
-Vue.component("downloadExcel", JsonExcel);
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],
@@ -114,6 +131,24 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields: {
+              '排序号': 'serialid',
+              '业务编号': 'id',
+              '登记时间': 'create_time',
+              '登记人员': 'create_by',
+              '物品名称': 'lost_name',
+              '物品数量': 'lost_amount',
+              '丢失时间': 'lost_time',
+              '领取人员': 'claim_name',
+              '领取时间': 'claim_time',
+              '领取公司': 'company',
+              '领取部门':'department',
+              '联系电话':'mobile',
+              '处理人员': 'user_admin_name',
+              '电话号码':'mobile',
+              '审批状态': 'status',
+            },
+            json_data: [],
         }
     },
     activated() {
@@ -199,7 +234,7 @@ export default {
         this.tabname = storage.getStore('system_lost_property_list_tabname') || '1';
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , userinfo.username);
+        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
         this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';
@@ -208,6 +243,9 @@ export default {
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
+
+        //查询台账数据
+        this.queryTabList('认领' , 0);
 
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
@@ -273,6 +311,10 @@ export default {
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
+         } else if(tabname == '认领') {
+           //获取最近6个月的已领取记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
          }
 
       },
