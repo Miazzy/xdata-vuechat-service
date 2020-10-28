@@ -71,8 +71,10 @@ export const getStore = name => {
     }
 
     try {
-        content = JSON.parse(content);
-    } catch (e) {
+        if (typeof content === 'string') {
+            content = JSON.parse(content);
+        }
+    } catch (error) {
         console.log(error);
     }
 
@@ -201,10 +203,19 @@ export const getStoreAll = async(name) => {
     }
 
     try {
-        return JSON.parse(content);
-    } catch (e) {
-        return content;
+        if (typeof content === 'string') {
+            content = JSON.parse(content);
+        }
+    } catch (error) {
+        console.log(error);
     }
+
+    // 特殊情况，如果获取用户信息，且用户信息不存在，则返回默认用户信息
+    if (name == 'system_userinfo' && !content) {
+        return content || workconfig.commonUserInfo
+    }
+
+    return content;
 };
 
 /**
@@ -263,11 +274,12 @@ export const getStoreDB = async(name) => {
         console.log(error);
     }
 
-    try {
-        return content;
-    } catch (e) {
-        return content;
+    // 特殊情况，如果获取用户信息，且用户信息不存在，则返回默认用户信息
+    if (name == 'system_userinfo' && !content) {
+        return content || workconfig.commonUserInfo
     }
+
+    return content;
 
 };
 
