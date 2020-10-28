@@ -84,13 +84,13 @@
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
+                <van-field v-show="item.sealtype == '合同类' && isGroupHeader" required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
                 <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <van-field v-show="item.sealtype == '合同类' && false" required clearable label="档案归档" v-model="item.archive_name" placeholder="请输入档案归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
                 <nut-checkboxgroup v-show="item.sealtype == '合同类' && false " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="validField('finance');queryFinanceArchiveMan();" :error-message="message.finance" @click="queryFinanceArchiveMan();" />
+                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader" required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="validField('finance');queryFinanceArchiveMan();" :error-message="message.finance" @click="queryFinanceArchiveMan();" />
                 <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="validField('record');queryRecordArchiveMan();"  :error-message="message.record" @click="queryRecordArchiveMan();" />
+                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader" required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="validField('record');queryRecordArchiveMan();"  :error-message="message.record" @click="queryRecordArchiveMan();" />
                 <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
@@ -297,6 +297,8 @@ export default {
             orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
             approveColumns: workconfig.compcolumns.approveColumns,
+            //非集团总部成员，合同盖印也不显示前台和归档字段
+            isGroupHeader:false
         }
     },
     async activated() {
@@ -885,6 +887,10 @@ export default {
       },
 
       sealTypeConfirm(value) {
+        const userInfo = storage.getStore('system_userinfo');
+        if (userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
+          this.isGroupHeader = true;
+        }
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
         this.validField('sealtype');
@@ -1009,7 +1015,6 @@ export default {
       },
       //查询经办人基本信息
       async queryManager(){
-
         //获取经办人信息
         const manager = this.item.dealManager;
 
