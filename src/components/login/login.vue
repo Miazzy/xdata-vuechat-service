@@ -152,15 +152,19 @@ export default {
       async clearLoginInfo(){
 
         try {
-          let info = await storage.getStore('system_linfo');
 
-          this.username = info.username;
-          this.password = info.password;
+          let userinfo = await storage.getStore('system_linfo');
+
+          if(userinfo && userinfo.username && userinfo.password){
+            this.username = userinfo.username;
+            this.password = userinfo.password;
+          }
 
           storage.clearStore('system_userinfo');
           storage.clearStore('system_token');
           storage.clearStore('system_department');
           storage.clearStore('system_login_time');
+
         } catch (error) {
           console.log(error);
         }
