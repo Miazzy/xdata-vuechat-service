@@ -888,7 +888,7 @@ export default {
 
       sealTypeConfirm(value) {
         const userInfo = storage.getStore('system_userinfo');
-        if (userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
+        if (userInfo && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
           this.isGroupHeader = true;
         }
         this.item.sealtype = value;
