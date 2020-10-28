@@ -1,3 +1,5 @@
+import * as workconfig from '@/request/workconfig';
+
 try {
     localforage.config({
         driver: localforage.WEBSQL,
@@ -69,10 +71,18 @@ export const getStore = name => {
     }
 
     try {
-        return JSON.parse(content);
+        content = JSON.parse(content);
     } catch (e) {
-        return content;
+        console.log(error);
     }
+
+    // 特殊情况，如果获取用户信息，且用户信息不存在，则返回默认用户信息
+    if (name == 'system_userinfo' && !content) {
+        return content || workconfig.commonUserInfo
+    }
+
+    return content;
+
 };
 
 /**
