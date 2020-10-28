@@ -665,7 +665,7 @@ export default {
           const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_EXPORT' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealExport`);
+            this.$router.push(`/app/sealexport`);
           } else {
             vant.Toast('您没有用印合同资料导出的权限！');
           }
