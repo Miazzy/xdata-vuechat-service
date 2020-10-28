@@ -380,6 +380,11 @@ export async function queryFrontBySealData(username) {
  * @param {*} whereSQL
  */
 export async function queryUserInfoByAccount(userid) {
+
+    if (tools.isNull(userid)) {
+        return {};
+    }
+
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
     var queryURL = `${window.requestAPIConfig.restapi}/api/v2/queryemployee/${userid}`;
 

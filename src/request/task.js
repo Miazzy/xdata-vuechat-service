@@ -11,6 +11,12 @@ export async function queryProcessLogDone(
     page = 0,
     size = 50,
 ) {
+
+    // 查询用户数据信息
+    if (tools.isNull(username) || tools.isNull(realname)) {
+        return [];
+    }
+
     //查询URL
     var queryURL = `${window.requestAPIConfig.restapi}/api/v_handled_events_unq?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
@@ -46,7 +52,7 @@ export async function queryProcessLogDone(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor'])) {
+                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         const temp = await query.queryUserInfoByAccount(item.proponents);
                         item['sponsor'] = temp.realname;
                     }
@@ -73,6 +79,12 @@ export async function queryProcessLogWait(
     page = 0,
     size = 50,
 ) {
+
+    // 查询用户数据信息
+    if (tools.isNull(username) || tools.isNull(realname)) {
+        return [];
+    }
+
     //查询URL
     var queryURL = `${window.requestAPIConfig.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
@@ -118,7 +130,7 @@ export async function queryProcessLogWait(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor'])) {
+                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
                             item['sponsor'] = temp.realname;
@@ -144,6 +156,12 @@ export async function queryProcessLogWaitSeal(
     page = 0,
     size = 50,
 ) {
+
+    // 查询用户数据信息
+    if (tools.isNull(username) || tools.isNull(realname)) {
+        return [];
+    }
+
     //查询URL
     var queryURL = `${window.requestAPIConfig.restapi}/api/v_handling_events?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
     var result = {};
@@ -184,7 +202,7 @@ export async function queryProcessLogWaitSeal(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor'])) {
+                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
                             item['sponsor'] = temp.realname;

@@ -28,9 +28,13 @@ export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V9';
  */
 export const queryDepartUserList = async() => {
 
-
     //获取当前登录用户信息
     const userinfo = await storage.getStore('system_userinfo');
+
+    //如果没有获取到用户数据，则无法获取部门信息
+    if (tools.isNull(userinfo) || tools.isNull(userinfo.main_department)) {
+        return { records: [], total: 0 };
+    }
 
     //获取部门信息
     const departID = userinfo.main_department;

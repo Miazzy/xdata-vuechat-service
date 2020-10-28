@@ -3,12 +3,12 @@
   <div id="self">
     <div class="weui-tab__content" style="display: block;">
       <div class="weui-cells">
-        <router-link to="/self/profile" class="weui-cell weui-cell_access">
+        <router-link :to=" realname == '' ? `/self/profile` : `/login`  " class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
-            <img :src="avatar" alt="" class="self-header">
+            <img :src="avatar" alt="" class="self-header" style="border: 0.05rem solid #f5f5f5;">
           </div>
           <div class="weui-cell__bd">
-            <h4 class="self-nickname">{{realname}}</h4>
+            <h4 class="self-nickname" @click=" realname == '' ? $router.push(`/login`) : null ;">{{realname || '点击登录' }} </h4>
 
             <p class="self-wxid">账号: {{username}}</p>
           </div>
@@ -132,10 +132,10 @@ export default {
         },
         async userStatus(){
           try {
-            let info = await storage.getStore('system_userinfo');
+            let userinfo = await storage.getStore('system_userinfo');
 
             //如果用户未登录，则直接调整到登录界面
-            if( tools.isNull(info) ){
+            if( tools.isNull(userinfo) ){
 
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
@@ -144,10 +144,10 @@ export default {
             } else {
 
               //获取用户的账户
-              this.username = info.username || info.userid || info.mobile;
+              this.username = userinfo.username || userinfo.userid || userinfo.mobile;
 
               //获取用户的真实姓名
-              this.realname = info.realname || info.name;
+              this.realname = userinfo.realname || userinfo.name;
 
               //如果没有获取用户的真实姓名，则通过电话号码查询用户真实信息
               if(!this.realname){
@@ -157,7 +157,8 @@ export default {
               }
 
               //显示用户头像
-              this.avatar = info.avatar.startsWith('https://') ? info.thumb_avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+              this.avatar = userinfo && userinfo.avatar && userinfo.avatar.startsWith('https://') ? info.thumb_avatar : '';
+
             }
           } catch (error) {
             console.log(error);
