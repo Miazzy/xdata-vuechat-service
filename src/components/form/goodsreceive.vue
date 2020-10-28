@@ -237,7 +237,7 @@
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="领用管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="接待人员" v-model="item.user_admin_name" placeholder="请输入领用接待人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入物品领用管理人员!" @blur="querySealMan();" @click="querySealMan();" />
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
               </van-cell-group>
 
