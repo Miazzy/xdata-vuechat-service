@@ -350,7 +350,7 @@ export const getUserInfo = async(wxid) => {
     //获取当前登录用户信息
     const userinfo = await storage.getStore('system_userinfo');
 
-    if (!wxid) {
+    if (!wxid || !userinfo) {
         return;
     } else {
 

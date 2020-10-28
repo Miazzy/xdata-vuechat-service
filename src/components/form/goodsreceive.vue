@@ -637,20 +637,23 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
-        //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        if(userinfo){
+          //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+          let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
+          //过滤出只关联当前流程的待办数据
+          tlist = tlist.filter(item => {
+            return item.id == id && item.pid == pid;
+          });
 
-        if(tlist.length > 0){
-          //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          if(tlist.length > 0){
+            //同时删除本条待办记录当前(印章管理员)
+            await workflow.deleteViewProcessLog(tlist);
+          }
         }
+
 
       },
 
@@ -666,7 +669,7 @@ export default {
 
       validField(fieldName){
         //获取用户基础信息
-        const userinfo = storage.getStore('system_userinfo');
+        let userinfo = storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -730,7 +733,7 @@ export default {
           this.back = tools.getUrlParam('back') || '/app';
 
           //获取用户基础信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
           //获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
@@ -771,7 +774,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
         //表单ID
         const id = tools.queryUniqueID();

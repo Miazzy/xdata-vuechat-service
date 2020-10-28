@@ -407,6 +407,11 @@ export const compValidation = {
 }
 
 /**
+ * @param {*} 普通用户 (扫码用户)
+ */
+export const commonUserInfo = { username: 'common', realname: '', main_department: '', department: { name: '' }, parent_company: { name: '' }, };
+
+/**
  * @description 左侧菜单列表
  */
 export function getPaneflows(this_) {
