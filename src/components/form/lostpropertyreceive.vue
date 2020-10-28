@@ -57,17 +57,17 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 借用时间（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="遗失时间" v-model="item.lost_time"  placeholder="请填写遗失时间！" @blur="validField('lost_time')" :error-message="message.lost_time"  />
+                <van-field :readonly="true" :required="false" clearable label="遗失时间" v-model="item.lost_time"  placeholder="请填写遗失时间！" @blur="validField('lost_time');" :error-message="message.lost_time"  />
                 <!-- 失物名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="true" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name')" :error-message="message.lost_name"  />
+                <van-field :readonly="readonly" :required="true" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name');" :error-message="message.lost_name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="true" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
+                <van-field :readonly="readonly" :required="true" clearable label="数量/单位" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount');" :error-message="message.lost_amount"  />
 
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="招领管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="接待人员" v-model="item.user_admin_name" placeholder="请输入领用接待人员!" @blur="querySealMan();" @click="querySealMan();" />
+                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入失物招领处的物品管理员!" @blur="validField('user_admin_name');querySealMan();" :error-message="message.user_admin_name"  @click="querySealMan();" />
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
               </van-cell-group>
 
@@ -171,8 +171,8 @@ export default {
             isfirst:true,
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            message: workconfig.compValidation.lostproperty.message,
+            valid: workconfig.compValidation.lostproperty.valid,
             item:{
               id: '',
               serialid:'',
@@ -439,19 +439,24 @@ export default {
         this.item.front_id = id;
       },
 
-      async validField(fieldName){
+      validField(fieldName){
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
-        if(fieldName.toLocaleLowerCase().includes('mail')) {
-          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+        if(fieldName.toLocaleLowerCase().includes('lost_amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName])) {
+          this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写物品数量及单位，注意单位！' : '';
+          return tools.isNull(this.message[fieldName]);
         }
 
+        if(fieldName.toLocaleLowerCase().includes('mail') && !regMail.test(this.item[fieldName])) {
+          this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+          return tools.isNull(this.message[fieldName]);
+        }
+
+        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
@@ -525,6 +530,26 @@ export default {
         //表单ID
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
+
+        //验证数据是否已经填写
+        const keys = Object.keys({
+          lost_name: '', //领用物品名称
+          lost_amount: '', //领用数量
+          user_admin_name: '',
+        })
+
+        const invalidKey =  keys.find(key => {
+          const flag = this.validField(key);
+          return !flag;
+        });
+
+        if(invalidKey != '' && invalidKey != null){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
+          });
+          return false;
+        }
 
         //查询直接所在工作组
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);

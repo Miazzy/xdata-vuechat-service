@@ -362,6 +362,18 @@ export const compValidation = {
             company: '请输入借用人员所属单位/公司名称！', //单位名称
         }
     },
+    lostproperty: {
+        message: {
+            lost_name: '', //领用物品名称
+            lost_amount: '', //领用数量
+            user_admin_name: '',
+        },
+        valid: {
+            lost_name: '请输入物品名称！', //领用物品名称
+            lost_amount: '请输入物品数量及单位！', //领用数量
+            user_admin_name: '请输入失物招领处的物品管理员姓名！',
+        }
+    },
     rewardapply: {
         message: {
             title: '',
