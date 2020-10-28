@@ -177,6 +177,8 @@ export default {
         if(value.length > 0) {
           value.map((item , index) => {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           })
         }else {
           vant.Dialog.alert({
