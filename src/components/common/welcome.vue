@@ -1,20 +1,29 @@
 <template>
     <div class="welcome" :class="{hide:hide}">
-        <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@8.0.0/images/background.jpeg" alt="">
+        <img :src="src" alt="">
     </div>
 </template>
 <script>
+import * as tools from '@/request/tools';
+
 export default {
     data() {
         return {
-            hide: false
+            hide: false,
+            src:``,
+            msrc:`https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@8.0.0/images/background.jpeg`,
+            psrc:`http://oa.leading-group.com:90/page/resource/userfile/image/ecology8/leading.jpg`,
         }
     },
     mounted() {
+        const timestamp = tools.isPCWeb() ? 300 : 500;
         setTimeout(() => {
             this.hide = true
-        }, 1500)
-    }
+        }, timestamp);
+    },
+    created(){
+      this.src = tools.isPCWeb() ? this.psrc : this.msrc;
+    },
 }
 </script>
 <style>

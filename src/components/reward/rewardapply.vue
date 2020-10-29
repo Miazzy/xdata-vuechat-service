@@ -156,6 +156,7 @@
                     <a-col :span="20" style="height:auto;">
                       <a-textarea
                         v-model="item.content"
+                        @blur="validFieldToast('content')"
                         placeholder="请输入奖罚申请流程的申请事由！"
                         :auto-size="{ minRows: 10, maxRows: 50 }"
                         style="height:120px; border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;"
@@ -297,8 +298,15 @@
   </div>
 </template>
 <script>
-import * as storage from "@/request/storage";
-import * as tools from "@/request/tools";
+import * as storage from '@/request/storage';
+import * as tools from '@/request/tools';
+import * as announce from '@/request/announce';
+import * as task from '@/request/task';
+import * as query from '@/request/query';
+import * as constant from '@/request/constant';
+import * as workflow from '@/request/workflow';
+import * as manageAPI from '@/request/manage';
+import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
 export default {
