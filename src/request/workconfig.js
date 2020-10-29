@@ -168,7 +168,7 @@ export const reward = {
             href: "/account/todolist",
             description: '业绩考核奖罚申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply`, '_blank');
+                window.open(`/#/reward/rewardapply?type=0&reward_name=业绩考核`, '_blank');
             }
         }, {
             name: "总裁专项奖",
@@ -176,7 +176,7 @@ export const reward = {
             href: "/account/donelist",
             description: '总裁专项奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply`, '_blank');
+                window.open(`/#/reward/rewardapply?type=1&reward_name=总裁专项`, '_blank');
             }
         }, {
             name: "总经理专项奖",
@@ -184,7 +184,7 @@ export const reward = {
             href: "/account/donelist",
             description: '总经理专项奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply`, '_blank');
+                window.open(`/#/reward/rewardapply?type=2&reward_name=总经理专项`, '_blank');
             }
         }, {
             name: "特殊贡献奖",
@@ -192,7 +192,7 @@ export const reward = {
             href: "/account/myrewards",
             description: '特殊贡献奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply`, '_blank');
+                window.open(`/#/reward/rewardapply?type=3&reward_name=特殊贡献`, '_blank');
             },
         }, {
             name: "其他奖罚",
@@ -200,7 +200,7 @@ export const reward = {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-                //this.$router.push(`/app/rewardapply?type=4&back=/reward/workspace`);
+                window.open(`/#/reward/rewardapply?type=4&reward_name=其他奖惩`, '_blank');
             },
         }, {
             name: "月度报表",
@@ -224,7 +224,7 @@ export const reward = {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-
+                window.open(`/#/app/rewardlist?type=7&back=/reward/workspace`, '_blank');
             },
         }],
     }, {
