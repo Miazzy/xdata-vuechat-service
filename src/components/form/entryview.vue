@@ -1047,7 +1047,7 @@ export default {
 
           try {
             // 根据前台用户，获取同前台用户组的所有成员，并向他们推送消息，（目前，只填写了一个前台用户，但是每个前台用户都应当获取到消息） COMMON_RECEIVE_BORROW 是定义物品管理员的常量字符串，目前暂且使用 TODO
-            const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.id); // 查询直接所在工作组
+            const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.loginid); // 查询直接所在工作组
             // 获取到印章管理员组信息
             user_group_ids = response && response.length > 0 ? response[0].userlist : '';
           } catch (error) {
