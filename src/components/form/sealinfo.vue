@@ -888,6 +888,7 @@ export default {
 
       sealTypeConfirm(value) {
         const userInfo = storage.getStore('system_userinfo');
+        //非总部的人不需要展示前台、档案、财务人员
         if (userInfo && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
           this.isGroupHeader = true;
         }
