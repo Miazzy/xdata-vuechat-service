@@ -995,7 +995,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已经向前台客户推送物品领用申请！',
+            message: '已经向办公用品管理员推送物品领用申请！',
           });
 
       }

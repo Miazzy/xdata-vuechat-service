@@ -376,7 +376,7 @@
               <div class="weui-cell_app_hd" @click="goodsReceive('office');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
                 <div class="weui-cell_app_bd" >
-                  办公领用
+                  办公预约
                 </div>
               </div>
             </van-col>
