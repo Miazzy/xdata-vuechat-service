@@ -888,7 +888,7 @@ export default {
 
       sealTypeConfirm(value) {
         const userInfo = storage.getStore('system_userinfo');
-        if (userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
+        if (userInfo && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
           this.isGroupHeader = true;
         }
         this.item.sealtype = value;
@@ -1290,7 +1290,7 @@ export default {
         this.cacheUserInfo();
 
         //先验证是否合法
-        const keys = this.item.sealtype == '合同类' ?
+        const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
           Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
           Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
 
@@ -1382,7 +1382,7 @@ export default {
           seal_group_names = seal_man;
         }
 
-        if((!finance || !finance_name || !record || !record_name) && this.item.sealtype == '合同类'){
+        if((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)){
            //提示确认用印操作
           await vant.Dialog.confirm({
             title: '用印申请',
