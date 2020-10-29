@@ -119,6 +119,59 @@ export const rewardtype = {
     '4': '其他奖惩',
 };
 
+export const columns = {
+    reward: {
+        items: [{
+                title: '分配性质',
+                dataIndex: 'type',
+                key: 'type',
+                scopedSlots: { customRender: 'name' },
+            },
+            {
+                title: '发放期间',
+                dataIndex: 'period',
+                key: 'period',
+            },
+            {
+                title: '员工姓名',
+                dataIndex: 'username',
+                key: 'username',
+                ellipsis: true,
+            },
+            {
+                title: '员工OA',
+                dataIndex: 'account',
+                key: 'account',
+                ellipsis: true,
+            },
+            {
+                title: '所属单位',
+                dataIndex: 'company',
+                key: 'company',
+                ellipsis: true,
+            },
+            {
+                title: '所属部门',
+                dataIndex: 'department',
+                key: 'department',
+                ellipsis: true,
+            },
+            {
+                title: '员工职务',
+                dataIndex: 'position',
+                key: 'position',
+                ellipsis: true,
+            },
+            {
+                title: '分配金额',
+                dataIndex: 'amount',
+                key: 'amount',
+                ellipsis: true,
+            },
+        ],
+    }
+}
+
 /**
  * @description 领用物品说明
  */

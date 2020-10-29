@@ -15,9 +15,9 @@
                   奖罚申请流程
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       基础信息
                     </a-col>
                    </a-row>
@@ -51,9 +51,9 @@
                   </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       人员信息
                     </a-col>
                    </a-row>
@@ -87,9 +87,9 @@
                   </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       知会信息
                     </a-col>
                    </a-row>
@@ -106,9 +106,9 @@
                   </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       奖罚信息
                     </a-col>
                    </a-row>
@@ -157,9 +157,9 @@
                   </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       备注信息
                     </a-col>
                    </a-row>
@@ -180,9 +180,9 @@
                   </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       附件信息
                     </a-col>
                    </a-row>
@@ -237,17 +237,19 @@
                   </van-cell-group>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       奖惩明细
                     </a-col>
                    </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:15px;margin-bottom:5px; margin-right:10px;">
-                  <a-table :columns="columns" :data-source="data">
-                  </a-table>
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
+                  <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
+                    <a-table :columns="columns" :data-source="data">
+                    </a-table>
+                   </a-row>
                 </div>
 
                 <div class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
@@ -255,12 +257,12 @@
                     <a-col :span="8">
 
                     </a-col>
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       <a-button type="primary" style="width: 120px;color:c0c0c0;" >
                         保存
                       </a-button>
                     </a-col>
-                    <a-col :span="4" style="font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;">
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       <a-button type="primary" style="width: 120px;" >
                         提交
                       </a-button>
@@ -290,6 +292,7 @@
 <script>
 import * as storage from "@/request/storage";
 import * as tools from "@/request/tools";
+import * as workconfig from '@/request/workconfig';
 
 export default {
   mixins: [window.mixin],
@@ -333,65 +336,18 @@ export default {
               files_05:'',
               status: '',
             },
-      column: [
-        {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-          scopedSlots: { customRender: 'name' },
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-          key: 'age',
-          width: 80,
-        },
-        {
-          title: 'Address',
-          dataIndex: 'address',
-          key: 'address 1',
-          ellipsis: true,
-        },
-        {
-          title: 'Long Column Long Column Long Column',
-          dataIndex: 'address',
-          key: 'address 2',
-          ellipsis: true,
-        },
-        {
-          title: 'Long Column Long Column',
-          dataIndex: 'address',
-          key: 'address 3',
-          ellipsis: true,
-        },
-        {
-          title: 'Long Column',
-          dataIndex: 'address',
-          key: 'address 4',
-          ellipsis: true,
-        },
-      ],
+      columns: workconfig.columns.reward.items,
       data: [
         {
           key: '1',
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-          tags: ['loser'],
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-          tags: ['cool', 'teacher'],
+          type: '当前分配',
+          period: '2020年10月',
+          username: '张晓明',
+          account: 'zhangxm0101',
+          company: '领地集团',
+          department: '人力行政中心',
+          position:'软件工程师',
+          amount:'400.00',
         },
       ],
     };
@@ -448,5 +404,12 @@ export default {
     color: #f0f0f0;
     font-size: 12px;
     height: 27px;
+}
+
+.reward-apply-content-title {
+  margin-top:15px;margin-bottom:5px; margin-right:10px;
+}
+.reward-apply-content-title-text {
+  font-weight:600; font-size:1.0rem; margin-top:5px; text-align: center;
 }
 </style>
