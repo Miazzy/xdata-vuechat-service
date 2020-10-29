@@ -117,6 +117,13 @@ const routes = [{
             "subPage": resolve => require(["../components/reward/workspace.vue"], resolve)
         }
     }, {
+        path: '/reward/rewardapply',
+        name: "奖罚申请",
+        components: {
+            "default": resolve => require(["../components/reward/home.vue"], resolve),
+            "subPage": resolve => require(["../components/reward/rewardapply.vue"], resolve)
+        }
+    }, {
         path: '/reward/netdisk',
         name: "奖惩云文件",
         components: {
@@ -221,7 +228,7 @@ const routes = [{
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/sealexport.vue"], resolve)
         }
-    }, {   
+    }, {
         path: '/app/goodsreceive',
         name: "物品领用",
         components: {
@@ -326,7 +333,7 @@ const routes = [{
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/entrylist.vue"], resolve)
         }
-    }, { 
+    }, {
         path: '/app/news',
         name: "公告",
         components: {

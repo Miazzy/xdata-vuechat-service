@@ -624,7 +624,7 @@ export default {
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
-          if(resp[0].userlist.includes(userinfo.username)){
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/seallist`);
           } else {
             vant.Toast('您没有用印合同资料审批的权限！');
@@ -638,7 +638,7 @@ export default {
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
 
-          if(resp[0].userlist.includes(userinfo.username)){
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealfrontlist`);
           } else {
             vant.Toast('您没有用印合同资料前台移交的权限！');
@@ -651,7 +651,7 @@ export default {
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
 
-          if(resp[0].userlist.includes(userinfo.username)){
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealarchivelist`);
           } else {
             vant.Toast('您没有用印合同资料归档的权限！');
