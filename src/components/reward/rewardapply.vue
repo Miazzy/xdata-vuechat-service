@@ -746,7 +746,8 @@ export default {
             message: '已经提交奖罚申请流程！',
           });
 
-      }
+      },
+
   },
 };
 </script>

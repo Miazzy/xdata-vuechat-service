@@ -52,7 +52,6 @@
             </template>
           </van-cell-group>
 
-
           <div style="margin-top:10px;margin-bottom:10px;" v-show=" (purl != '' && purl != null && typeof purl != 'undefined')">
             <iframe  id="iframepage" name="iframepage" frameBorder=0 scrolling=yes width="100%" style="width:100%;height:600px;" :src="purl">
             </iframe>
@@ -107,7 +106,6 @@
             <div class="main-loading" :style=" loading ? 'display:block;':'display:none;' ">
               <van-loading type="spinner" size="48px" style="text-align:text;" />
             </div>
-
 
             <van-goods-action v-if="(item.bpm_value == 2 || item.bpm_value == 3) && tasktype == 'wait' ">
               <van-goods-action-button type="warning" text="驳回" @click="handleDisagree();" />
