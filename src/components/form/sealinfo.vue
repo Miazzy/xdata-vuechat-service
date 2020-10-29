@@ -1249,7 +1249,6 @@ export default {
             this.item.finance_name = tmp.finance_name;
           }
 
-
           //是否有最近缓存数据
           const tempitem = storage.getStore('system_seal_item');
 
