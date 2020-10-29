@@ -1034,7 +1034,7 @@ export default {
         // 修改状态为已确认
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , join_time , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
 
-        //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
+        // 检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
         front = await this.queryUserInfo(front_name);
         admin = await this.queryUserInfo(admin_name);
         meal = await this.queryUserInfo(meal_name);
@@ -1042,12 +1042,13 @@ export default {
         // 如果前台、行政、食堂用户都存在，则先他们推送消息
         if(front && admin && meal){
 
+          // 定义前台组成员账号，推送入职信息时，向整个前台组成员推送消息
           let user_group_ids = '';
 
           try {
             // 根据前台用户，获取同前台用户组的所有成员，并向他们推送消息，（目前，只填写了一个前台用户，但是每个前台用户都应当获取到消息） COMMON_RECEIVE_BORROW 是定义物品管理员的常量字符串，目前暂且使用 TODO
             const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.id); // 查询直接所在工作组
-            //获取到印章管理员组信息
+            // 获取到印章管理员组信息
             user_group_ids = response && response.length > 0 ? response[0].userlist : '';
           } catch (error) {
             console.log(error);
