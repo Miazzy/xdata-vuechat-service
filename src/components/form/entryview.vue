@@ -1005,13 +1005,13 @@ export default {
       // 用户提交入职登记表函数
       async handleConfirm() {
 
-        //显示加载状态
+        // 显示加载状态
         this.loading = true;
 
-        //系统编号
+        // 系统编号
         const id = tools.getUrlParam('id');
 
-        //获取相应对接人员信息
+        // 获取相应对接人员信息
         const front_name = this.item.front_name;
         const admin_name = this.item.admin_name;
         const meal_name = this.item.meal_name;
@@ -1019,19 +1019,19 @@ export default {
         const admin_id = this.item.admin_id;
         const meal_id = this.item.meal_id;
 
-        //入职日期需要HR再次确认
+        // 入职日期需要HR再次确认
         const join_time = this.item.join_time;
 
-        //获取相应对接人员OA账号
+        // 获取相应对接人员OA账号
         let front , admin , meal , queryURL , resp;
 
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=`);
 
-        //操作时间
+        // 操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-        //修改状态为已确认
+        // 修改状态为已确认
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , join_time , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
 
         //检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
@@ -1039,13 +1039,31 @@ export default {
         admin = await this.queryUserInfo(admin_name);
         meal = await this.queryUserInfo(meal_name);
 
+        // 如果前台、行政、食堂用户都存在，则先他们推送消息
         if(front && admin && meal){
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id},${this.item.front_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
-                .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id},${this.item.admin_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
-                .set('accept', 'json');
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id},${this.item.meal_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
-                .set('accept', 'json');
+
+          let user_group_ids = '';
+
+          try {
+            // 根据前台用户，获取同前台用户组的所有成员，并向他们推送消息，（目前，只填写了一个前台用户，但是每个前台用户都应当获取到消息） COMMON_RECEIVE_BORROW 是定义物品管理员的常量字符串，目前暂且使用 TODO
+            const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.id); // 查询直接所在工作组
+            //获取到印章管理员组信息
+            user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id},${user_group_ids},${this.item.front_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
+                  .set('accept', 'json');
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id},${this.item.admin_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
+                  .set('accept', 'json');
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id},${this.item.meal_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
+                  .set('accept', 'json');
+          } catch (error) {
+            console.log(error);
+          }
+
         } else if(!front){
           //未获取到HR信息
           await vant.Dialog.alert({
