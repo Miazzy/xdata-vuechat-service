@@ -448,7 +448,7 @@ export const compValidation = {
             department: '请输入申请人员的所在部门！',
             content: '请输入申请事由！',
             remark: '请输入备注信息！', //备注
-            amount: '请输入数量！',
+            amount: '请输入本次奖罚申请的单项奖金总额！',
             reward_type: '请输入奖罚类型！',
             reward_name: '请输入奖罚名称！',
             reward_period: '请输入奖罚所属周期！',
