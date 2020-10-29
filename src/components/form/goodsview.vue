@@ -237,7 +237,7 @@
 
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
-
+                <van-field :readonly="readonly" :required="false" clearable label="驳回理由" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="!!item.status">
@@ -363,6 +363,7 @@ export default {
               workflow:'',//关联流程
               approve:'',//领用审批人员
               status: '',
+              disagree_remark: '',//驳回理由
             },
             tlist:[],
             back:'/app',
@@ -639,6 +640,10 @@ export default {
             this.item.workflow = item.workflow || this.item.workflow;
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
+            this.item.disagree_remark = item.disagree_remark || this.item.disagree_remark;
+          }
+          if (this.item && this.item.status === '已驳回') {
+            this.readonly = true
           }
 
           for(let i = 1 ; i < tlist.length ; i++){
@@ -672,6 +677,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           status: '已驳回',
+          disagree_remark : this.item.disagree_remark,
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
