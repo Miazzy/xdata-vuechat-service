@@ -1,0 +1,36 @@
+.van-cell-upload .van-cell__title>span {
+    font-size: 14px;
+}
+
+.van-cell-upload .nut-uploader {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}
+
+#van-files-download .van-button[name="file"] {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 5px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    height: 27px;
+}
+
+.reward-apply-content-title {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.reward-apply-content-title-text {
+    font-weight: 600;
+    font-size: 1.0rem;
+    margin-top: 5px;
+    text-align: center;
+}
