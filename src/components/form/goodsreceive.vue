@@ -35,7 +35,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">物品领用表</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">办公用品预约</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -307,7 +307,7 @@ export default {
             active: 1,
             id:'',
             type:'',
-            title:'物品领用表',
+            title:'办公用品预约',
             content:'',
             files:'',
             from:'',

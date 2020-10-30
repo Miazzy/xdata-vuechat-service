@@ -35,7 +35,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">物品领用表</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">办公用品预约</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -237,6 +237,9 @@
 
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
                 <van-field :readonly="readonly" :required="false" clearable label="驳回理由" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
               </van-cell-group>
 
@@ -313,7 +316,7 @@ export default {
             active: 1,
             id:'',
             type:'',
-            title:'物品领用表',
+            title:'办公用品预约',
             content:'',
             files:'',
             from:'',
