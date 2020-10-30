@@ -3,7 +3,7 @@
   <div id="self">
     <div class="weui-tab__content" style="display: block;">
       <div class="weui-cells">
-        <router-link :to=" realname == '' ? `/self/profile` : `/login`  " class="weui-cell weui-cell_access">
+        <div @click="selfProfile();" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img :src="avatar" alt="" class="self-header" style="border: 0.05rem solid #f5f5f5;">
           </div>
@@ -15,7 +15,7 @@
           <div class="weui-cell__ft">
             <img src="../../assets/images/chat-info-qr.png">
           </div>
-        </router-link>
+        </div>
         <router-link to="" class="weui-cell weui-cell_access">
           <div class="weui-cell__hd">
             <img src="../../assets/images/me_my-card-package-icon.png">
@@ -83,18 +83,18 @@ export default {
           avatar:'',
       }
     },
-    mounted() {
-      this.$store.commit("toggleTipsStatus", -1);
+    async mounted() {
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
     },
-    activated() {
-      $('#return[tag=div]').remove();
-      this.$store.commit("toggleTipsStatus", -1);
+    async activated() {
       this.changeStyle();
       this.displayFoot();
-      this.userStatus();
+      await this.userStatus();
+    },
+    async created(){
+      await this.userStatus();
     },
     methods: {
         changeStyle(name){
@@ -129,6 +129,7 @@ export default {
           } catch (error) {
             console.log(error);
           }
+
         },
         async userStatus(){
           try {
@@ -157,14 +158,17 @@ export default {
               }
 
               //显示用户头像
-              this.avatar = userinfo && userinfo.avatar && userinfo.avatar.startsWith('https://') ? info.thumb_avatar : '';
+              this.avatar = userinfo && userinfo.avatar && userinfo.avatar.startsWith('https://') ? userinfo.thumb_avatar : '';
 
             }
           } catch (error) {
             console.log(error);
           }
-        }
-    }
+        },
+        async selfProfile(){
+          this.realname !== '' ? this.$router.push(`/self/profile`) : this.$router.push(`/login`);
+        },
+  }
 }
 </script>
 <style scoped>
