@@ -318,6 +318,7 @@ export default {
       activeTabKey: 3,
       acceptType:'*/*',
       uploadURL:'',
+      tablename:'bs_reward_apply',
       size: 0,
       item:{
               id: '',
@@ -603,7 +604,7 @@ export default {
           return false;
         }
 
-        //查询直接所在工作组
+        //查询直接所在工作组，注意此处是奖罚人力经理管理员
         const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
 
         //获取到印章管理员组信息
@@ -665,73 +666,14 @@ export default {
         //显示序列号
         this.item.serialid = value.serialid;
 
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
+        //第三步 向HR推送，HR确认后
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
-
         /************************  工作流程日志(开始)  ************************/
 
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起奖惩申请[待处理]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: front,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
-          employee       : front_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : front ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批奖惩申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + '#待审批 #经办人: ' + userinfo.username,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await workflow.taskViewProcessLog(prLogNode);
+        await this.handleSubmitWF(userinfo , '' , '' , 'zhaozy1028' , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
         /************************  工作流程日志(结束)  ************************/
 
@@ -740,13 +682,123 @@ export default {
         this.status = elem.status;
         this.readonly = true;
 
-        //弹出确认提示
-        await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已经提交奖罚申请流程！',
-          });
-
       },
+
+      /**
+       * @function 提交自由流程
+       */
+      async handleSubmitWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime) {
+
+          //校验提交信息是否准确
+          var checkFlag = workflow.checkSubmitInfo( wfUsers,  nfUsers, approver, );
+          let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID); //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+          let vflag_ = storage.getStore(`start_free_process_@table_name#${curTableName}@id#${curItemID}`);
+
+          debugger;
+
+          //如果校验标识有误，则直接返回
+          if ( tools.isNull(approver) || !checkFlag || vflag || vflag_ == "true") {
+              debugger;
+              return !checkFlag ? null : vant.Toast.fail("已提交过申请，无法再次提交审批！"); //数据库中已经存在此记录，提示用户无法提交审批
+          }
+
+          debugger;
+
+          //是否确认提交此自由流程?
+          this.$confirm({
+              title: "确认操作",
+              content: "是否确认提交此自由流程?",
+              onOk: async() => {
+                await this.handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime);
+              }
+          });
+      },
+
+      /**
+       * @function 启动自由流程
+       */
+      async handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime){
+
+        try {
+          //自由流程节点
+           var node = {
+               id: tools.queryUniqueID(),
+               create_by: userinfo["username"],
+               create_time: ctime,
+               table_name: curTableName,
+               main_key: curItemID,
+               audit_node: tools.deNull(wfUsers),
+               approve_node: tools.deNull(approver),
+               notify_node: tools.deNull(nfUsers)
+           };
+
+           const freeWFNode = JSON.parse(JSON.stringify(node));
+
+           //提交发起人审批相关处理信息
+           node = {
+               id: tools.queryUniqueID(), //获取随机数
+               table_name: curTableName, //业务表名
+               main_value: curItemID, //表主键值
+               business_data_id: curItemID, //业务具体数据主键值
+               business_code: "000000000", //业务编号
+               process_name: "自由流程审批", //流程名称
+               employee: userinfo["username"],
+               process_station: "自由流程审批",
+               process_audit: "000000000",
+               proponents: userinfo["username"],
+               approve_user: userinfo["username"],
+               action: "发起",
+               action_opinion: "发起自由流程",
+               content: data["content"],
+               operate_time: ctime,
+               create_time: ctime,
+               business_data: JSON.stringify(freeWFNode)
+           };
+
+           //发起节点，审批信息，写入审批历史表中
+           const startFreeNode = JSON.parse(JSON.stringify(node));
+
+           //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
+           var firstWflowUser = tools.deNull(wfUsers) == "" ?  tools.deNull(approver) : tools.deNull(wfUsers).split(",")[0];
+
+           //提交审批相关处理信息
+           node = {
+               id: tools.queryUniqueID(), //获取随机数
+               table_name: curTableName, //业务表名
+               main_value: curItemID, //表主键值
+               business_data_id: curItemID, //业务具体数据主键值
+               business_code: "000000000", //业务编号
+               process_name: "自由流程审批", //流程名称
+               employee: firstWflowUser,
+               process_station: "自由流程审批",
+               process_audit: "000000000",
+               proponents: userinfo["username"],
+               content: data["content"],
+               operate_time: ctime,
+               create_time: ctime,
+               business_data: JSON.stringify(node)
+           };
+
+           //保存审批相关处理信息
+           const nextWflowNode = JSON.parse(JSON.stringify(node));
+
+           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+           if (await manageAPI.queryApprovalExist(curTableName,  curItemID)) {
+             return vant.Toast.fail("已提交过申请，无法再次提交审批！");
+           }
+
+           //处理自由流程发起提交审批操作
+           await workflow.postWorkflowFree(userinfo, curTableName, data, freeWFNode, startFreeNode, nextWflowNode, "2");
+           //弹出审批完成提示框
+           vant.Toast.success("提交自由流程审批成功！");
+           //记录当前流程已经提交，短时间内无法再次提交
+           storage.setStore(`start_free_process_@table_name#${curTableName}@id#${curItemID}`,  "true", 60 );
+           //操作完毕，返回结果
+           return true;
+        } catch (error) {
+            console.log(error);
+        }
+      }
 
   },
 };

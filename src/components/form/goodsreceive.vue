@@ -921,15 +921,11 @@ export default {
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请前台确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
-
         /************************  工作流程日志(开始)  ************************/
 
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
-
         //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
+        const front = user_group_ids;
+        const front_name = user_group_names;
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {

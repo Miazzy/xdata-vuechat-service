@@ -858,3 +858,64 @@ export async function deleteProcessLogInf(tableName, node) {
         console.log(err);
     }
 }
+
+export async function queryApprovalExist(tableName, businessID) {
+
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //查询URL GET
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})`;
+    //查询标识
+    var vflag = false;
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        vflag = res.body.length > 0 ? true : false;
+    } catch (err) {
+        console.log(err);
+    }
+
+    return vflag;
+}
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function postProcessFreeNode(node) {
+    //提交URL
+    var postURL = `${window.requestAPIConfig.restapi}/api/bs_free_process`;
+    try {
+        var res = await superagent
+            .post(postURL)
+            .send(node)
+            .set('accept', 'json');
+
+        console.log(res);
+
+        return res.body;
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+/**
+ * 查询数据
+ * @param {*} tableName
+ * @param {*} foreignKey
+ * @param {*} id
+ */
+export async function queryTableDataByField(tableName, field, value) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?_where=(${field},eq,${value})`;
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
