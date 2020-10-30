@@ -501,7 +501,7 @@ export default {
                     company = company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
-                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:elem.mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
                   //获取盖印人姓名
@@ -521,7 +521,7 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   //将用户数据推送至对方数组
-                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:'' , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
                   //获取盖印人姓名
                   this.item.user_admin_name = user.lastname;
                   //当前盖印人编号
