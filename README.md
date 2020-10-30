@@ -49,3 +49,16 @@ https://e-cloudstore.com/doc.html#ecode%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E
 
 ### 泛微e8流程首页
 http://oa.leading-group.com:90/workflow/request/RequestTypeShow.jsp?offical=&colnum4show=mulitcol&fromadvancedmenu=0&selectedContent=&infoId=0&needPopupNewPage=true&needall=0&prjid=&docid=&crmid=&hrmid=&topage=&isec=&usedtodo=-1
+
+
+### 定时执行，防止前台、财务、档案人员等不存在
+
+update bs_seal_regist set front = seal where (front = '' or front is null) and seal is not null ;
+update bs_seal_regist set finance = seal where (finance = '' or finance is null) and seal is not null ;
+update bs_seal_regist set record = seal where (record = '' or record is null) and seal is not null ;
+update bs_seal_regist set archive = seal where (archive = '' or archive is null) and seal is not null ;
+
+update bs_seal_regist set front_name = seal_man where (front_name = '' or front_name is null) and seal is not null ;
+update bs_seal_regist set record_name = seal_man where (record_name = '' or record_name is null) and seal is not null ;
+update bs_seal_regist set finance_name = seal_man where (finance_name = '' or finance_name is null) and seal is not null ;
+update bs_seal_regist set archive_name = seal_man where (archive_name = '' or archive_name is null) and seal is not null ;
