@@ -251,23 +251,15 @@ export default {
         }
     },
     activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        //this.userStatus();
     },
     mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     methods: {
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
-          // if( tools.isNull(info) ){
-          //   vant.Toast('尚未登录！');
-          //   await this.clearLoginInfo();
-          //   this.$router.push(`/login`);
-          // }
         } catch (error) {
           console.log(error);
         }
@@ -337,6 +329,18 @@ export default {
             }
 
           await this.queryProcessLog();
+
+          //如果不是总部员工，则前台移交人员、财务人员、档案人员都设置为印章管理员
+          if(!!this.item.seal && (!this.item.front || !this.item.finance || !this.item.record || !this.item.archive)){
+            this.item.front == this.item.seal;
+            this.item.finance == this.item.seal;
+            this.item.record == this.item.seal;
+            this.item.archive == this.item.seal;
+            this.item.front_name == this.item.sealman;
+            this.item.finance_name == this.item.sealman;
+            this.item.record_name == this.item.sealman;
+            this.item.archive_name == this.item.sealman;
+          }
 
         } catch (error) {
           console.log(error);
