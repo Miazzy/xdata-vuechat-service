@@ -917,7 +917,7 @@ export default {
         //显示序列号
         this.item.serialid = value.serialid;
 
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
+        //第三步 向物品管理员推送通知
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
