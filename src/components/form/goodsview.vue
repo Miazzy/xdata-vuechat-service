@@ -820,17 +820,17 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/亲爱的${userinfo.realname}，您预约的办公用品已准备就绪，预约号为${item.serialid}，请于上午11:00-12:00或下午17:00-18:00到办公用品管理员处，凭预约号领取！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/亲爱的${userinfo.realname}，您预约的办公用品已准备就绪，预约号为${this.item.serialid}，请于上午11:00-12:00或下午17:00-18:00到办公用品管理员处，凭预约号领取！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        //const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
+        const front = user_group_ids;
+        const front_name = user_group_ids;
 
         //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
