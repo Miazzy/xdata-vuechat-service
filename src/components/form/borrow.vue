@@ -799,17 +799,17 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品借用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已借用，请确认借用完成！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品借用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已借用，请使用完后按时归还！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        //const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , '');
 
         //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
+        const front = user_group_ids;
+        const front_name = user_group_ids;
 
         //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -855,12 +855,12 @@ export default {
           id: tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
-          proponents: this.item.create_by,
+          proponents: user_group_ids,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
           process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : this.item.receive_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : this.item.create_by ,//varchar(100)  null comment '审批人员',
+          employee       : user_group_ids ,//varchar(1000) null comment '操作职员',
+          approve_user   : user_group_ids ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
           action_opinion : '审批借用申请',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
@@ -883,6 +883,7 @@ export default {
         this.status = elem.status;
         this.readonly = true;
         this.item.status = elem.status;
+        this.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({
@@ -900,6 +901,21 @@ export default {
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
+
+        //检查用户是否具有权限进行审批
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+        //获取到印章管理员组信息
+        const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+
+        //获取到用户列表数据
+        if(tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '您没有物品借用的审批权限，请联系管理员进行处理！',
+          });
+          return;
+        }
 
         //表单ID
         const id = this.item.id;
@@ -972,6 +988,7 @@ export default {
         this.status = elem.status;
         this.readonly = true;
         this.item.status = elem.status;
+        this.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({

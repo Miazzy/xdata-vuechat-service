@@ -243,7 +243,7 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -897,7 +897,7 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/物品借用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品借用登记完毕，请前台确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/物品借用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品借用登记完毕，请确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
 
