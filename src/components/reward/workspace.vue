@@ -126,7 +126,11 @@ export default {
     },
     // 企业微信登录处理函数
     async weworkLogin(){
-      return await query.queryWeworkUser();
+      try {
+        return await query.queryWeworkUser();
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

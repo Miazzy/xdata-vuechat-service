@@ -171,6 +171,7 @@ export default {
   methods: {
     async init() {
       this.panename = tools.getUrlParam('panename') || 'myrewardlist';
+      this.userinfo = await this.weworkLogin(); //查询当前登录用户
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
       this.menuCardClick('',this.panename);
       if(this.panename == 'myrewardlist' ){
@@ -312,7 +313,11 @@ export default {
     },
     // 企业微信登录处理函数
     async weworkLogin(){
-      return await query.queryWeworkUser();
+      try {
+        return await query.queryWeworkUser();
+      } catch (error) {
+        console.log(error);
+      }
     },
 },
 };
