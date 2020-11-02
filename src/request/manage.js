@@ -416,6 +416,39 @@ export async function queryUserByNameHRM(name) {
 }
 
 /**
+ * @function 获取当前名字的用户信息
+ */
+export async function queryUserByNameFindOne(realname, username) {
+
+    if (tools.isNull(realname) || tools.isNull(username)) {
+        return [];
+    }
+
+    try {
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27${realname}%27)~and(loginid,like,%27${username}%27))~and(status,ne,5)`).set('accept', 'json');
+
+        //剔除掉，没有loginid的用户信息
+        maxinfo.body = maxinfo.body.filter(item => {
+            return !tools.isNull(item.loginid);
+        })
+
+        //返回用户信息
+        if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
+            return true;
+        } else if (maxinfo && maxinfo.body && maxinfo.body.length == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+/**
  * 查询数据
  * @param {*} tableName
  * @param {*} whereSQL

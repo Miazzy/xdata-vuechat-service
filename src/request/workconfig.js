@@ -168,7 +168,7 @@ export const reward = (that) => {
             href: "/account/todolist",
             description: '业绩考核奖罚申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply?type=0&reward_name=业绩考核`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=0&reward_name=业绩考核`, '_blank');
             }
         }, {
             name: "总裁专项奖",
@@ -176,7 +176,7 @@ export const reward = (that) => {
             href: "/account/donelist",
             description: '总裁专项奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply?type=1&reward_name=总裁专项`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=1&reward_name=总裁专项`, '_blank');
             }
         }, {
             name: "总经理专项奖",
@@ -184,7 +184,7 @@ export const reward = (that) => {
             href: "/account/donelist",
             description: '总经理专项奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply?type=2&reward_name=总经理专项`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=2&reward_name=总经理专项`, '_blank');
             }
         }, {
             name: "特殊贡献奖",
@@ -192,7 +192,7 @@ export const reward = (that) => {
             href: "/account/myrewards",
             description: '特殊贡献奖申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply?type=3&reward_name=特殊贡献`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=3&reward_name=特殊贡献`, '_blank');
             },
         }, {
             name: "其他奖罚",
@@ -200,7 +200,7 @@ export const reward = (that) => {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-                window.open(`/#/reward/rewardapply?type=4&reward_name=其他奖惩`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=4&reward_name=其他奖惩`, '_blank');
             },
         }, {
             name: "月度报表",
@@ -231,7 +231,7 @@ export const reward = (that) => {
         id: 'common-pane',
         title: '常用应用',
         taskflows: [{
-            name: "月度奖惩报表",
+            name: "月度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png`,
             href: "/account/todolist",
             description: '查看/导出月度奖惩明细及汇总',
@@ -239,7 +239,7 @@ export const reward = (that) => {
 
             }
         }, {
-            name: "季度奖惩报表",
+            name: "季度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png`,
             href: "/account/donelist",
             description: '查看/导出月度奖惩明细及汇总',
@@ -249,6 +249,124 @@ export const reward = (that) => {
         }],
     }]
 };
+
+export const getRewardQuickTag = (that) => {
+    return [{
+        name: '我的待办',
+        color: 'purple',
+        click: () => {
+
+        },
+    }, {
+        name: '我的已办',
+        color: 'cyan',
+        click: () => {
+
+        },
+    }, {
+        name: '我的已办',
+        color: 'cyan',
+        click: () => {
+
+        },
+    }, {
+        name: '我的奖惩',
+        color: 'pink',
+        click: () => {
+
+        },
+    }, {
+        name: '统计分析',
+        color: 'blue',
+        click: () => {
+
+        },
+    }, {
+        name: '报表导出',
+        color: 'red',
+        click: () => {
+
+        },
+    }, {
+        name: '月度报表',
+        color: 'green',
+        click: () => {
+
+        },
+    }, {
+        name: '季度报表',
+        color: 'blue',
+        click: () => {
+
+        },
+    }, {
+        name: '部门分布',
+        color: 'orange',
+        click: () => {
+
+        },
+    }, {
+        name: '类别分布',
+        color: 'pink',
+        click: () => {
+
+        },
+    }, {
+        name: '奖惩排行榜',
+        color: 'cyan',
+        click: () => {
+
+        },
+    }, {
+        name: '奖惩个人榜',
+        color: 'blue',
+        click: () => {
+
+        },
+    }, {
+        name: '奖惩团队榜',
+        color: 'red',
+        click: () => {
+
+        },
+    }, ];
+};
+
+export const getRewardWflow = (that) => {
+    return [{
+            name: "月度流程",
+            avatar: "//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/icon-file-04.svg",
+            href: "/account/center",
+            click: () => {
+
+            }
+        },
+        {
+            name: "季度流程",
+            avatar: "//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/icon-file-04.svg",
+            href: "/account/authors/index",
+            click: () => {
+
+            }
+        },
+        {
+            name: "年度流程",
+            avatar: "//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/icon-file-04.svg",
+            href: "/blog/rank",
+            click: () => {
+
+            }
+        },
+        {
+            name: "流程报表",
+            avatar: "//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/icon-rank-01.svg",
+            href: "/blog/center",
+            click: () => {
+
+            }
+        }
+    ];
+}
 
 /**
  * @description 奖惩明细默认配置
@@ -696,7 +814,7 @@ export function getPaneflows(this_) {
         },
         {
             id: 4,
-            name: "月度奖惩报表",
+            name: "月度报表",
             ename: "mymonthlist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png`,
             href: "/account/mymonthlist",
@@ -710,7 +828,7 @@ export function getPaneflows(this_) {
         },
         {
             id: 5,
-            name: "季度奖惩报表",
+            name: "季度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png`,
             href: "/account/myquanterlist",
             description: "查看/导出月度奖惩明细及汇总",

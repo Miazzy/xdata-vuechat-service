@@ -412,3 +412,30 @@ export async function queryUserInfoByAccount(userid) {
         console.log(err);
     }
 }
+
+/**
+ * @function 企业微信查询登录用户函数
+ */
+export async function queryWeworkUser() {
+    let userinfo = null;
+    try {
+        //获取用户CODE
+        let code = tools.queryUrlString('code', 'search');
+        if (code) {
+            //获取用户信息
+            var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v3/wework_user_code/${code}`);
+            userinfo = response.body.userinfo;
+            //设置system_userinfo
+            storage.setStore('system_linfo', JSON.stringify({ username: response.body.userinfo.userid, password: '************' }), 3600 * 24 * 30);
+            storage.setStore('system_userinfo', JSON.stringify(response.body.userinfo), 3600 * 24 * 30);
+            storage.setStore('system_token', JSON.stringify(code), 3600 * 24 * 30);
+            storage.setStore('system_department', JSON.stringify(response.body.userinfo.department), 3600 * 24 * 30);
+            storage.setStore('system_login_time', dayjs().format('YYYY-MM-DD HH:mm:ss'), 3600 * 24 * 30);
+        } else {
+            userinfo = storage.getStore('system_userinfo');
+        }
+        return userinfo;
+    } catch (error) {
+        console.log(error);
+    }
+}

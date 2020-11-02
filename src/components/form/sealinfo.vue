@@ -82,7 +82,7 @@
 
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
+                <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" @change="querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
                 <van-field v-show="item.sealtype == '合同类' && isGroupHeader" required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
                 <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
@@ -768,6 +768,11 @@ export default {
         //获取盖章人信息
         const sealman = this.item.sealman;
 
+        //姓名输入至少2个字才开始查询
+        if(sealman && sealman.length <= 1){
+          return false;
+        }
+
         try {
           if(!!sealman){
 
@@ -1327,6 +1332,14 @@ export default {
           await this.queryHContract();
         }
 
+        //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
+        if(!(await manageAPI.queryUserByNameFindOne(this.item.sealman , this.item.seal))){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请在盖印人下拉列表，点击选择盖印人后在进行提交，或认真检查盖印人名字是否拼写错误！',
+          });
+        }
+
         //如果不是总部员工，则前台移交人员、财务人员、档案人员都设置为印章管理员
         if(!!this.item.seal && (!this.item.front || !this.item.finance || !this.item.record || !this.item.archive)){
           this.item.front == this.item.seal;
@@ -1363,6 +1376,7 @@ export default {
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
+
         //用印注意，此处需要找到用印人的同组用户，写入数据库
         const seal = item.seal;
         const seal_man = item.sealman;

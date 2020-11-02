@@ -180,6 +180,7 @@
                     </a-col>
                     <a-col :span="20">
                       <a-textarea
+                        v-model="item.remark"
                         placeholder="请输入奖罚申请流程的申请事由！"
                         :auto-size="{ minRows: 10, maxRows: 50 }"
                         style="height:80px; border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;"
@@ -386,62 +387,66 @@ export default {
     this.queryInfo();
   },
   methods: {
-    //上传提示
-    async toastUpload(flag){
+      // 上传提示
+      async toastUpload(flag){
       if(flag == 'start'){
         vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
       } else if(flag == 'fail'){
         this.$toast.success('文件上传失败，请稍后重试！');
       }
     },
-    //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess(file , res){
         vant.Toast.clear();
         this.item.files = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_00(file , res){
         vant.Toast.clear();
         this.item.files_00 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_01(file , res){
         vant.Toast.clear();
         this.item.files_01 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_02(file , res){
         vant.Toast.clear();
         this.item.files_02 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_03(file , res){
         vant.Toast.clear();
         this.item.files_03 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_04(file , res){
         vant.Toast.clear();
         this.item.files_04 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_05(file , res){
         vant.Toast.clear();
         this.item.files_05 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
+      },
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        return await query.queryWeworkUser();
       },
       /**
        * @function 获取处理日志
