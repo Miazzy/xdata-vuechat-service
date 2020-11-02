@@ -416,7 +416,4 @@ export default {
 <style scoped>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/entrylist.css";
-    #van-cell-export .van-cell__title span {
-        float: left;
-    }
 </style>

@@ -546,9 +546,9 @@ export default {
               this.item = {
                 id: item.id,
                 serialid: item.serialid,
-                create_time: item.create_time,
+                create_time: dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss'),
                 create_by: item.create_by,
-                apply_date: dayjs(item.apply_date).format('YYYY-MM-DD'),
+                apply_date: dayjs(item.apply_date).format('YYYY-MM-DD HH:mm:ss'),
                 title: item.title,
                 company: item.company,
                 department: item.department,
@@ -722,15 +722,4 @@ export default {
 <style scoped >
     @import "../../assets/css/reward.home.css";
     @import "../../assets/css/reward.apply.css";
-
-.van-button[name="file"] {
-    background-image: linear-gradient(to right, #f96033, red);
-    margin: 5px 10px;
-    padding: 1px 20px;
-    border-radius: 8px;
-    color: #f0f0f0;
-    font-size: 12px;
-    height: 27px;
-}
-
 </style>

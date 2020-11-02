@@ -1,16 +1,16 @@
 <template>
-  <div id="reward-message">
-    <div>
+  <div id="reward-message" style="background-color:#f0f0f0; height:auto;" >
+    <div style="background-color:#f0f0f0; height:auto;">
       <a-row :gutter="24">
         <keep-alive>
           <a-col :xl="1" :lg="24" :md="24" :sm="24" :xs="24">
             <van-sidebar v-model="activeTabKey">
-              <van-sidebar-item title="消息" :to="`/reward/message`" />
-              <van-sidebar-item title="云文档" :to="`/reward/netdisk`" />
-              <van-sidebar-item title="联系人" :to="`/reward/contact`" />
-              <van-sidebar-item title="工作台" :to="`/reward/workspace`" />
-              <van-sidebar-item title="收藏" :to="`/reward/collect`" />
-              <van-sidebar-item title="设置" :to="`/reward/setup`" />
+              <van-sidebar-item style="display:block;" title="审批" :to="`/reward/message`" />
+              <van-sidebar-item style="display:none;" title="云文档" :to="`/reward/netdisk`" />
+              <van-sidebar-item style="display:none;" title="联系人" :to="`/reward/contact`" />
+              <van-sidebar-item style="display:block;" title="工作台" :to="`/reward/workspace`" />
+              <van-sidebar-item style="display:none;" title="收藏" :to="`/reward/collect`" />
+              <van-sidebar-item style="display:none;" title="设置" :to="`/reward/setup`" />
             </van-sidebar>
           </a-col>
         </keep-alive>
@@ -34,12 +34,12 @@
                   v-show="item.show"
                   @click="menuCardClick(item.id);"
                   :style="item.css"
-                  style="border-bottom: 1px solid #f9f9f9; border-radius: 15px;"
+                  style="border-bottom: 1px solid #f9f9f9; border-radius: 4px;"
                 >
                   <a-card-meta>
                     <div slot="title" class="card-title pane-flow-card-meta"  @click="item.click">
                       <div class="pane-flow-card-meta-icon">
-                        <a-avatar size="large" :src="item.avatar" />
+                        <a-avatar size="middle" :src="item.avatar" style="margin-top: 5px;" />
                       </div>
                       <div class="pane-flow-card-meta-title">
                         <a class="pane-flow-card-meta-tname">{{ item.name }}</a>
@@ -60,43 +60,57 @@
               <a-card
                 :key="paneflow.name"
                 v-show=" panename == paneflow.ename "
-                style="margin-top: 0px"
+                style="margin-top: 0px; height: 800px; overflow-y:scroll;"
                 :bordered="false"
                 :title="paneflow.name">
 
                 <div slot="extra">
-                  <a-radio-group v-model="year" style="margin-right:20px;">
+
+                  <a-radio-group v-show="paneflow.periodTabsFlag" v-model="year" style="margin-right:20px;">
                     <a-radio-button value="all">所有</a-radio-button>
                     <a-radio-button value="half">半年</a-radio-button>
                     <a-radio-button value="year">全年</a-radio-button>
                   </a-radio-group>
+
                   <a-radio-group v-model="status">
-                    <a-radio-button value="all">{{ paneflow.tabs[0]}}</a-radio-button>
-                    <a-radio-button value="processing">{{ paneflow.tabs[1] }}</a-radio-button>
-                    <a-radio-button value="waiting">{{ paneflow.tabs[2] }}</a-radio-button>
+                    <a-radio-button v-show="paneflow.tabs[0]" value="all">{{ paneflow.tabs[0]}}</a-radio-button>
+                    <a-radio-button v-show="paneflow.tabs[1]" value="processing">{{ paneflow.tabs[1] }}</a-radio-button>
+                    <a-radio-button v-show="paneflow.tabs[2]" value="waiting">{{ paneflow.tabs[2] }}</a-radio-button>
+                    <a-radio-button v-show="paneflow.tabs[3]" value="reject">{{ paneflow.tabs[3] }}</a-radio-button>
                   </a-radio-group>
                   <a-input-search style="margin-left: 16px; width: 272px;" />
                 </div>
 
-                <div style="background:#fefefe;margin:10px 10px;pading:10px 10px;">
+                <div id="reward-list-item" style="background:#fefefe;margin:10px 10px;pading:10px 10px;  height: 650px; overflow-y:scroll;">
                   <a-list-item :key="index" v-for="(item, index) in paneflow.dataSource" style="background:#fefefe;margin:10px 10px;pading:10px 10px;border-bottom:1px solid #f0f0f0;">
-                    <a-list-item-meta :description="item.description">
-                      <a-avatar slot="avatar" size="large" shape="square" :src="item.avatar"/>
-                      <a slot="title">{{ item.title }}</a>
+                    <a-list-item-meta :description="item.description" style="display:block;">
+                      <a-avatar style="display:none;" slot="avatar" size="large" shape="square" :src="item.avatar"/>
+                      <a slot="title">
+                        <span style="display:block;"> {{ item.title }} </span>
+                        <span style="display:block;margin-top:5px;">{{ item.content ? (item.content.slice(0,30) + '...') : '' }} </span>
+                      </a>
                     </a-list-item-meta>
                     <div slot="actions">
                       <a @click="edit(item)">查看</a>
                     </div>
                     <div class="list-content">
                       <div class="list-content-item">
-                        <span>流程发起</span>
-                        <p>{{ item.owner }}</p>
+                        <span>申请奖金</span>
+                        <p>{{ item.amount }}</p>
+                      </div>
+                      <div class="list-content-item">
+                        <span>所属周期</span>
+                        <p>{{ item.reward_period }}</p>
                       </div>
                       <div class="list-content-item">
                         <span>开始时间</span>
                         <p>{{ item.startAt }}</p>
                       </div>
                       <div class="list-content-item">
+                        <span>流程发起</span>
+                        <p>{{ item.apply_realname }}</p>
+                      </div>
+                      <div class="list-content-item" style="display:none;">
                         <a-progress :percent="item.progress.value" :status="!item.progress.status ? null : item.progress.status" style="width: 180px" />
                       </div>
                     </div>
@@ -116,6 +130,8 @@ import * as storage from "@/request/storage";
 import * as tools from "@/request/tools";
 import * as workconfig from "@/request/workconfig";
 import * as menulist from "./component/menulist.vue";
+import * as task from '@/request/task';
+import * as manageAPI from '@/request/manage';
 
 export default {
   mixins: [window.mixin],
@@ -127,39 +143,41 @@ export default {
       paneflowcard: "",
       paneflowcardGrid: "",
       searchwords: "",
-      panename:'mytodolist', // todo done
+      tabname: 1,
+      tablename:'bs_reward_apply',
+      panename:'myrewardlist',
       constpaneflows: workconfig.getPaneflows(this),
       paneflows: workconfig.getPaneflows(this),
+      initList:[],
+      confirmList:[],
+      doneList:[],
+      rejectList:[],
       status: 'all',
       year:'all',
     };
   },
   activated() {
     this.init();
-    this.changeStyle();
-    this.displayFoot();
   },
   mounted() {
     this.init();
-    this.changeStyle();
-    this.displayFoot();
   },
   methods: {
     async init() {
-      this.activeTabKey = 0;
+      this.panename = tools.getUrlParam('panename') || 'myrewardlist';
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
-    },
-    async changeStyle(winHeight) {
-      if (window.innerHeight) {
-        winHeight = window.innerHeight;
-      } else if (document.body && document.body.clientHeight) {
-        winHeight = document.body.clientHeight;
+      this.menuCardClick('',this.panename);
+
+      if(this.panename == 'myrewardlist' ){
+        const tlist =  await this.queryRewardList();
+        debugger;
+        this.paneflows.map( item => { //遍历paneflows
+          if( this.panename == item.ename){
+            item.dataSource = tlist;
+          }
+        })
       }
-      this.paneflowcard = `height:${winHeight}px; overflow-y: scroll;`;
     },
-    async displayFoot() {},
-    async userLogin() {},
-    async clearLoginInfo() {},
     async searchWordChange() {
       this.paneflows.map((item, index) => {
         if (
@@ -173,14 +191,115 @@ export default {
       });
       this.paneflows.sort();
     },
-    async menuCardClick(id) {
+    async menuCardClick(id , panename) {
       this.paneflows.map((item) => {
-        if (item.id === id) {
+        if (item.id === id || item.ename == panename) {
           item.css = "background:#f9f9f9;";
         } else {
           item.css = "";
         }
       });
+    },
+    async queryRewardList(){
+
+        const userinfo = await storage.getStore('system_userinfo');  //获取当前用户信息
+        const tabname = this.tabname;
+
+        //获取最近6个月对应的日期
+        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+
+        //设置查询语句
+        var searchSql = '';
+
+        //如果存在搜索关键字
+        if(this.searchWord) {
+          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
+        }
+
+        if(tabname == 1){
+          //获取最近6个月的待用印记录
+          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.initList.map((item , index) => {
+            item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`;
+            item.title = item.name;
+            item.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+            item.description = '';
+            item.owner = item.create_by;
+            item.tel = '';
+            item.all = '待审批';
+            item.progress = { value: 90 };
+            item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          return this.initList;
+
+        } else if(tabname == 2){
+          //获取最近6个月的已用印记录
+          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.confirmList.map((item , index) => {
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
+            item.title = item.name;
+            item.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+            item.description = '';
+            item.owner = item.create_by;
+            item.tel = '';
+            item.all = '审批中';
+            item.progress = { value: 90 };
+            item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+            item.tel = '';
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          return this.confirmList;
+
+        } else if(tabname == 3) {
+          //获取最近6个月的已领取记录
+          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.doneList.map((item , index) => {
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
+            item.title = item.name;
+            item.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+            item.description = '';
+            item.owner = item.create_by;
+            item.tel = '';
+            item.all = '已完成';
+            item.progress = { value: 90 };
+            item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+            item.tel = '';
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          return this.doneList;
+
+         } else if(tabname == 4) {
+          //获取最近6个月的已领取记录
+          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.rejectList.map((item , index) => {
+            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
+            item.title = item.name;
+            item.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+            item.description = '';
+            item.owner = item.create_by;
+            item.tel = '';
+            item.all = '已驳回';
+            item.progress = { value: 90 };
+            item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+            item.tel = '';
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          return this.rejectList;
+
+        }
     },
   },
 };

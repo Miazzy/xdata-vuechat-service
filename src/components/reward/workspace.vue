@@ -6,7 +6,7 @@
         <keep-alive>
           <a-col :xl="1" :lg="24" :md="24" :sm="24" :xs="24">
             <van-sidebar v-model="activeTabKey">
-              <van-sidebar-item style="display:none;" title="消息" :to="`/reward/message`" />
+              <van-sidebar-item style="display:block;" title="审批" :to="`/reward/message`" />
               <van-sidebar-item style="display:none;" title="云文档" :to="`/reward/netdisk`" />
               <van-sidebar-item style="display:none;" title="联系人" :to="`/reward/contact`" />
               <van-sidebar-item title="工作台" :to="`/reward/workspace`" />
@@ -105,8 +105,7 @@ export default {
       momentNewMsg: true,
       activeTabKey: 3,
       iswechat:'',
-      paneflows: workconfig.reward.paneflows,
-
+      paneflows: workconfig.reward(this),
       wflows: [
         {
           name: "月度流程",
