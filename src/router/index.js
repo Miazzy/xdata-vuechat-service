@@ -292,6 +292,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/borrow.vue"], resolve)
         }
     }, {
+        path: '/app/borrowview',
+        name: "物品借用",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/borrow.vue"], resolve)
+        }
+    }, {
         path: '/app/rewardlist',
         name: "借用进度",
         components: {
