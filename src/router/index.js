@@ -124,6 +124,13 @@ const routes = [{
             "subPage": resolve => require(["../components/reward/rewardapply.vue"], resolve)
         }
     }, {
+        path: '/reward/rewardview',
+        name: "奖惩申请查看",
+        components: {
+            "default": resolve => require(["../components/reward/home.vue"], resolve),
+            "subPage": resolve => require(["../components/reward/rewardview.vue"], resolve)
+        }
+    }, {
         path: '/reward/netdisk',
         name: "奖惩云文件",
         components: {
