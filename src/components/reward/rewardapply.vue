@@ -275,7 +275,13 @@
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>分配人员</span>
                     </a-col>
                     <a-col :span="8">
-                      <a-input v-model="release_username" placeholder="请输入奖罚申请中的奖罚明细分配人员！" @blur="queryNotifyMan();" @click="queryNotifyMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                      <a-input v-model="release_username" placeholder="请输入奖罚明细中的分配人员！" @blur="queryReleaseMan();" @click="queryReleaseMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>分配金额</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="release_amount" placeholder="请输入奖罚明细中的奖罚金额！" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
                     </a-col>
                   </a-row>
                   <a-row>
@@ -283,7 +289,7 @@
                     </a-col>
                     <a-col :span="9">
                       <div style="margin-left: 10px;">
-                        <van-address-list v-show="release_userlist.length > 0" v-model="release_userid" :list="release_userlist" default-tag-text="默认" edit-disabled @select="selectNotifyUser();" />
+                        <van-address-list v-show="release_userlist.length > 0" v-model="release_userid" :list="release_userlist" default-tag-text="默认" edit-disabled @select="selectReleaseUser();" />
                       </div>
                     </a-col>
                   </a-row>
@@ -415,8 +421,9 @@ export default {
       tablename:'bs_reward_apply',
       readonly: false,
       userList:[],
-      release_userid:null,
-      release_username:null,
+      release_userid:'',
+      release_username:'',
+      release_amount:'',
       release_userlist:[],
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
@@ -624,7 +631,7 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   //将用户数据推送至对方数组
-                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.userList.length });
 
                   //获取盖印人姓名
                   this.item.hr_name = user.lastname;
@@ -658,6 +665,89 @@ export default {
       async selectNotifyUser(value){
         const user = this.userList.find((item,index) => {return this.item.hr_id == item.id});
         this.item.hr_name = user.name;
+      },
+
+      async queryReleaseMan(){
+
+        //获取盖章人信息
+        const user_admin_name = this.release_username;
+
+        //如果
+        if(!user_admin_name || user_admin_name.length < 1){
+          return;
+        }
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.release_username = user[0].lastname;
+                  //当前盖印人编号
+                  this.release_userid = this.userid = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //将用户数据推送至对方数组
+                  this.release_userlist.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
+
+                  //获取盖印人姓名
+                  this.release_username = user.lastname;
+                  //当前盖印人编号
+                  this.release_userid = this.userid = user.loginid;
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.release_userlist = this.release_userlist.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.release_userlist.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前知会人员
+      async selectReleaseUser(value){
+        const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id});
+        this.release_username = user.name;
       },
       // 获取URL或者二维码信息
       async queryInfo() {
