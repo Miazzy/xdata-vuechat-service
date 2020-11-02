@@ -71,7 +71,7 @@
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>申请人员</span>
                     </a-col>
                     <a-col :span="8">
-                      <a-input v-model="item.apply_realname" :readonly="!!item.apply_realname" placeholder="请输入申请人员姓名！" @blur="validFieldToast('apply_realname')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                      <a-input v-model="item.apply_realname" :readonly="!!item.apply_realname" placeholder="请输入申请人员姓名！" @blur="validFieldToast('apply_realname');" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
                     </a-col>
                   </a-row>
                 </div>
@@ -101,13 +101,22 @@
                    </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
                   <a-row>
                     <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>人力经理</span>
                     </a-col>
                     <a-col :span="8">
-                      <a-input v-model="item.hr_name" placeholder="请输入奖罚申请流程需要知会的人力职能人员！" @blur="validFieldToast('hr_name')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                      <a-input v-model="item.hr_name" placeholder="请输入奖罚申请流程需要知会的人力职能人员！" @blur="validFieldToast('hr_name');queryNotifyMan();" @click="queryNotifyMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                  </a-row>
+                  <a-row>
+                    <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                    </a-col>
+                    <a-col :span="9">
+                      <div style="margin-left: 10px;">
+                        <van-address-list v-show="userList.length > 0" v-model="item.hr_id" :list="userList" default-tag-text="默认" edit-disabled @select="selectNotifyUser();" />
+                      </div>
                     </a-col>
                   </a-row>
                 </div>
@@ -342,6 +351,7 @@ export default {
               hr_admin_names: '',
               hr_id: '',
               hr_name: '',
+              user_admin_name:'',
               apply_username: '',
               apply_realname: '',
               files: '',
@@ -369,6 +379,7 @@ export default {
       ],
       tablename:'bs_reward_apply',
       readonly: false,
+      userList:[],
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
       valid: workconfig.compValidation.rewardapply.valid,
@@ -527,7 +538,89 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
+      //用户选择知会人员
+      async queryNotifyMan(){
 
+        //获取盖章人信息
+        const user_admin_name = this.item.hr_name;
+
+        //如果
+        if(!user_admin_name || user_admin_name.length < 1){
+          return;
+        }
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.item.hr_name = user[0].lastname;
+                  //当前盖印人编号
+                  this.item.hr_id = this.userid = user[0].loginid;
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  //将用户数据推送至对方数组
+                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+
+                  //获取盖印人姓名
+                  this.item.hr_name = user.lastname;
+                  //当前盖印人编号
+                  this.item.hr_id = this.userid = user.loginid;
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.userList = this.userList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前知会人员
+      async selectNotifyUser(value){
+        const user = this.userList.find((item,index) => {return this.item.hr_id == item.id});
+        this.item.hr_name = user.name;
+      },
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -816,4 +909,40 @@ export default {
 <style scoped >
     @import "../../assets/css/reward.home.css";
     @import "../../assets/css/reward.apply.css";
+
+#van-user-list .van-address-item__edit {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    color: #969799;
+    font-size: 20px;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    display: none;
+}
+
+#van-user-list .van-address-list__add {
+    height: 40px;
+    margin: 5px 0;
+    line-height: 38px;
+    display:none;
+}
+
+#van-user-list .van-radio__icon {
+    -webkit-box-flex: 0;
+    -webkit-flex: none;
+    flex: none;
+    height: 1em;
+    font-size: 20px;
+    line-height: 1em;
+    cursor: pointer;
+    display: none;
+}
+
+#van-user-list .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 12px 10px 12px 10px;
+}
+
 </style>
