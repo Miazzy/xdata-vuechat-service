@@ -674,6 +674,28 @@ export default {
         const type = tools.getUrlParam('statustype');
         const pid = tools.getUrlParam('pid');
 
+        //检查用户是否具有权限进行审批
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+
+        //获取到印章管理员组信息
+        const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+
+        //获取到用户列表数据
+        if(tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '您没有物品领用的审批权限，请联系管理员进行处理！',
+          });
+        }
+
+        //返回驳回理由
+        if(!this.item.disagree_remark){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请输入驳回原因！',
+          });
+        }
+
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
 
@@ -707,11 +729,11 @@ export default {
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        //const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
+        const front = user_group_ids;
+        const front_name = user_group_ids;
 
         //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -909,6 +931,7 @@ export default {
         this.status = elem.status;
         this.readonly = true;
         this.item.status = elem.status;
+        this.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({
@@ -985,6 +1008,7 @@ export default {
         this.status = elem.status;
         this.readonly = true;
         this.item.status = elem.status;
+        this.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({
