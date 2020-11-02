@@ -137,6 +137,12 @@
                     <a-col :span="8">
                       <a-input v-model="item.amount"  placeholder="请输入本次奖罚申请的单项奖金总额！" @blur="validFieldToast('amount')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
                     </a-col>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>发放周期</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="item.reward_release_period"  placeholder="请输入本次奖罚/激励申请的发放周期，注意是发放周期！" @blur="validFieldToast('reward_release_period')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
                   </a-row>
                 </div>
 
@@ -258,6 +264,34 @@
                 <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
+                      分配信息
+                    </a-col>
+                   </a-row>
+                </div>
+
+                <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                  <a-row>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>分配人员</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="release_username" placeholder="请输入奖罚申请中的奖罚明细分配人员！" @blur="queryNotifyMan();" @click="queryNotifyMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                  </a-row>
+                  <a-row>
+                    <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                    </a-col>
+                    <a-col :span="9">
+                      <div style="margin-left: 10px;">
+                        <van-address-list v-show="release_userlist.length > 0" v-model="release_userid" :list="release_userlist" default-tag-text="默认" edit-disabled @select="selectNotifyUser();" />
+                      </div>
+                    </a-col>
+                  </a-row>
+                </div>
+
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
+                   <a-row style="border-top: 1px dash #f0f0f0;" >
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
                       奖惩明细
                     </a-col>
                    </a-row>
@@ -347,6 +381,7 @@ export default {
               reward_type: '',
               reward_name: '',
               reward_period: dayjs().format('YYYY年MM月'),
+              reward_release_period: dayjs().format('YYYY年MM月'),
               hr_admin_ids: '',
               hr_admin_names: '',
               hr_id: '',
@@ -380,6 +415,9 @@ export default {
       tablename:'bs_reward_apply',
       readonly: false,
       userList:[],
+      release_userid:null,
+      release_username:null,
+      release_userlist:[],
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
       valid: workconfig.compValidation.rewardapply.valid,
