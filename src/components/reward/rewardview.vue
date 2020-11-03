@@ -134,6 +134,23 @@
                 <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
                   <a-row>
                     <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>发放周期</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="item.reward_release_period"  placeholder="请输入本次奖罚/激励申请的发放周期，注意是发放周期！" @blur="validFieldToast('reward_release_period')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>发放性质</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="item.reward_release_feature"  placeholder="请输入本次奖罚/激励申请的发放性质，如当期分配/延期分配！" @blur="validFieldToast('reward_release_feature')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                  </a-row>
+                </div>
+
+                <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                  <a-row>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>所属周期</span>
                     </a-col>
                     <a-col :span="8">
@@ -240,7 +257,7 @@
                 <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
-                      奖惩明细
+                      奖罚明细
                     </a-col>
                    </a-row>
                 </div>
@@ -252,7 +269,7 @@
                    </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                <div v-show="panename != 'myapplylist'" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
 
@@ -305,7 +322,7 @@ export default {
   mixins: [window.mixin],
   data() {
     return {
-      pageName: "奖惩管理",
+      pageName: "奖罚管理",
       momentNewMsg: true,
       activeTabKey: 3,
       acceptType:'*/*',
@@ -329,10 +346,13 @@ export default {
               reward_type: '',
               reward_name: '',
               reward_period: dayjs().format('YYYY年MM月'),
+              reward_release_period: dayjs().format('YYYY年MM月'),
+              reward_release_feature: '当期分配',
               hr_admin_ids: '',
               hr_admin_names: '',
               hr_id: '',
               hr_name: '',
+              user_admin_name:'',
               apply_username: '',
               apply_realname: '',
               files: '',
@@ -345,19 +365,7 @@ export default {
               status: '',
             },
       columns: workconfig.columns.reward.items,
-      data: [
-        {
-          key: '1',
-          type: '当前分配',
-          period: '2020年10月',
-          username: '张晓明',
-          account: 'zhangxm0101',
-          company: '领地集团',
-          department: '人力行政中心',
-          position:'软件工程师',
-          amount:'400.00',
-        },
-      ],
+      data: [],
       tablename:'bs_reward_apply',
       readonly: false,
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
@@ -370,6 +378,7 @@ export default {
       acceptType: workconfig.compcolumns.acceptType,
       commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
       sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+      panename:'',
     };
   },
   activated() {
@@ -525,18 +534,6 @@ export default {
           return false;
         }
       },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -547,10 +544,17 @@ export default {
 
           this.back = tools.getUrlParam('back') || '/app'; //查询上一页
           this.type = tools.getUrlParam('type') || '0'; //查询type
-          this.item.id = tools.getUrlParam('id') || '';  //查询奖惩模块编号
+          this.item.id = tools.getUrlParam('id') || '';  //查询奖罚模块编号
+          this.panename = tools.getUrlParam('panename'); //获取panename
 
           const userinfo = await storage.getStore('system_userinfo'); //获取用户基础信息
           const item = await query.queryTableData(this.tablename , this.item.id); //查询数据
+
+          try {
+            this.data = await query.queryTableDataByPid('bs_reward_items' , this.item.id); //查询奖罚明细数据
+          } catch (error) {
+            console.log(error);
+          }
 
           try {
             if(item){
@@ -571,6 +575,8 @@ export default {
                 reward_type: item.reward_type,
                 reward_name: item.reward_name,
                 reward_period: item.reward_period,
+                reward_release_period: item.reward_release_period,
+                reward_release_feature: item.reward_release_feature,
                 hr_admin_ids: item.hr_admin_ids,
                 hr_admin_names: item.hr_admin_names,
                 hr_id: item.hr_id,
@@ -587,6 +593,7 @@ export default {
                 status: item.status,
               }
             }
+
           } catch (error) {
             console.log(error);
           }

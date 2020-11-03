@@ -665,7 +665,7 @@ export default {
           }
 
           try {
-            //查询奖惩类型
+            //查询奖罚类型
             this.item.reward_type = workconfig.rewardtype[type];
           } catch (error) {
             console.log(error);
@@ -791,14 +791,14 @@ export default {
           proponents: userinfo.username,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
+          process_name   : '奖罚流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起奖惩申请[待处理]',//text          null comment '操作意见',
+          action_opinion : '发起奖罚申请[待处理]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
+          process_station   : '奖罚审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
           content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
@@ -819,14 +819,14 @@ export default {
           proponents: front,
           business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
           business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '奖惩流程审批',//varchar(100)  null comment '流程名称',
+          process_name   : '奖罚流程审批',//varchar(100)  null comment '流程名称',
           employee       : front_name ,//varchar(1000) null comment '操作职员',
           approve_user   : front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批奖惩申请',//text          null comment '操作意见',
+          action_opinion : '审批奖罚申请',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '奖惩审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
+          process_station   : '奖罚审批[奖罚申请]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
           content           : `奖罚申请(${this.item.reward_type}) ` + this.item.reward_period + '#待审批 #经办人: ' + userinfo.username,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',

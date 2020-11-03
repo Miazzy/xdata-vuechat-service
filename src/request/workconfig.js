@@ -116,11 +116,11 @@ export const rewardtype = {
     '1': '总裁专项奖',
     '2': '总经理专项奖',
     '3': '特殊贡献奖',
-    '4': '其他奖惩',
+    '4': '其他奖罚',
 };
 
 /**
- * @description 奖惩界面默认配置
+ * @description 奖罚界面默认配置
  */
 export const reward = (that) => {
     return [{
@@ -130,33 +130,41 @@ export const reward = (that) => {
             name: "我的待办",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png`,
             href: "/account/todolist",
-            description: '查看待处理的奖惩申请流程',
+            description: '查看待处理的奖罚申请流程',
             click: () => {
-
+                that.$router.push(`/reward/message?panename=mytodolist&type=7&back=/reward/workspace`, '_blank');
             }
         }, {
             name: "我的已办",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png`,
             href: "/account/donelist",
-            description: '查看已处理的奖惩申请流程',
+            description: '查看已处理的奖罚申请流程',
             click: () => {
-
+                that.$router.push(`/reward/message?panename=mydonelist&type=7&back=/reward/workspace`, '_blank');
             }
         }, {
-            name: "我的奖惩",
+            name: "我的申请",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png`,
+            href: "/account/donelist",
+            description: '查看我发起的奖罚申请流程',
+            click: () => {
+                that.$router.push(`/reward/message?panename=myapplylist&type=7&back=/reward/workspace`, '_blank');
+            }
+        }, {
+            name: "我的奖罚",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/绩效管理.png`,
             href: "/account/myrewards",
-            description: '查看涉及自己的奖惩明细',
+            description: '查看涉及我的奖罚明细',
             click: () => {
-
+                that.$router.push(`/reward/message?panename=myrewarditemslist&type=7&back=/reward/workspace`, '_blank');
             },
         }, {
             name: "统计分析",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png`,
             href: "/account/myanalyse",
-            description: '查看自己的奖惩月/季度报表',
+            description: '查看自己的奖罚月/季度报表',
             click: () => {
-
+                that.$router.push(`/reward/message?panename=myanalyselist&type=7&back=/reward/workspace`, '_blank');
             },
         }],
     }, {
@@ -200,7 +208,7 @@ export const reward = (that) => {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-                that.$router.push(`/reward/rewardapply?type=4&reward_name=其他奖惩`, '_blank');
+                that.$router.push(`/reward/rewardapply?type=4&reward_name=其他奖罚`, '_blank');
             },
         }, {
             name: "月度报表",
@@ -234,7 +242,7 @@ export const reward = (that) => {
             name: "月度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png`,
             href: "/account/todolist",
-            description: '查看/导出月度奖惩明细及汇总',
+            description: '查看/导出月度奖罚明细及汇总',
             click: () => {
 
             }
@@ -242,7 +250,7 @@ export const reward = (that) => {
             name: "季度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png`,
             href: "/account/donelist",
-            description: '查看/导出月度奖惩明细及汇总',
+            description: '查看/导出月度奖罚明细及汇总',
             click: () => {
 
             }
@@ -270,7 +278,7 @@ export const getRewardQuickTag = (that) => {
 
         },
     }, {
-        name: '我的奖惩',
+        name: '我的奖罚',
         color: 'pink',
         click: () => {
 
@@ -312,19 +320,19 @@ export const getRewardQuickTag = (that) => {
 
         },
     }, {
-        name: '奖惩排行榜',
+        name: '奖罚排行榜',
         color: 'cyan',
         click: () => {
 
         },
     }, {
-        name: '奖惩个人榜',
+        name: '奖罚个人榜',
         color: 'blue',
         click: () => {
 
         },
     }, {
-        name: '奖惩团队榜',
+        name: '奖罚团队榜',
         color: 'red',
         click: () => {
 
@@ -369,7 +377,7 @@ export const getRewardWflow = (that) => {
 }
 
 /**
- * @description 奖惩明细默认配置
+ * @description 奖罚明细默认配置
  */
 export const columns = {
     reward: {
@@ -722,11 +730,11 @@ export const commonUserInfo = { username: 'common', realname: '', main_departmen
 export function getPaneflows(this_) {
     return [{
             id: 100,
-            name: "奖惩审批",
+            name: "奖罚审批",
             ename: "myrewardlist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png`,
             href: "/account/myrewardlist",
-            description: "查看待处理的奖惩申请流程",
+            description: "查看待处理的奖罚申请流程",
             show: true,
             css: "",
             all: '全部',
@@ -742,12 +750,12 @@ export function getPaneflows(this_) {
             ename: "mytodolist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/time_00.png`,
             href: "/account/mytodolist",
-            description: "查看待处理的奖惩申请流程",
+            description: "查看待处理的奖罚申请流程",
             show: true,
             css: "",
             all: '全部',
-            periodTabsFlag: true,
-            tabs: ['全部', '待处理', '抄送我'],
+            periodTabsFlag: false,
+            tabs: ['待审批', '审批中', '已完成', '已驳回'],
             dataSource: [],
             click: () => {
                 this_.panename = 'mytodolist';
@@ -759,41 +767,48 @@ export function getPaneflows(this_) {
             ename: "mydonelist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/home_00.png`,
             href: "/account/mydonelist",
-            description: "查看已处理的奖惩申请流程",
+            description: "查看已处理的奖罚申请流程",
             show: true,
             css: "",
             all: '全部',
-            periodTabsFlag: true,
-            tabs: ['全部', '待处理', '抄送我'],
+            periodTabsFlag: false,
+            tabs: ['待审批', '审批中', '已完成', '已驳回'],
             dataSource: [],
             click: () => {
                 this_.panename = 'mydonelist';
             },
         },
         {
-            id: 2,
-            name: "我的奖惩",
-            ename: "myrewardslist",
-            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/绩效管理.png`,
-            href: "/account/myrewardslist",
-            description: "查看涉及自己的奖惩明细",
+            id: 200,
+            name: "我的申请",
+            ename: "myapplylist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png`,
+            href: "/account/myapplylist",
+            description: "查看我发起的奖罚申请流程",
             show: true,
             css: "",
             all: '全部',
-            periodTabsFlag: true,
-            tabs: ['全部', '待处理', '已处理', '抄送我'],
-            dataSource: [{
-                title: '关于财务共享中心的奖罚申请【2020年7月】',
-                avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
-                description: '那是一种内在的东西， 他们到达不了，也无法触及的',
-                owner: '付晓晓',
-                startAt: '2018-07-26 22:44',
-                all: '全部',
-                tabs: ['待处理', '抄送我'],
-                progress: {
-                    value: 90
-                }
-            }, ],
+            periodTabsFlag: false,
+            tabs: ['待审批', '审批中', '已完成', '已驳回'],
+            dataSource: [],
+            click: () => {
+                this_.panename = 'myapplylist';
+            },
+        },
+        
+        {
+            id: 2,
+            name: "我的奖罚",
+            ename: "myrewardslist",
+            avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/绩效管理.png`,
+            href: "/account/myrewardslist",
+            description: "查看涉及我的奖罚明细",
+            show: true,
+            css: "",
+            all: '全部',
+            periodTabsFlag: false,
+            tabs: ['待审批', '审批中', '已完成', '已驳回'],
+            dataSource: [],
             click: () => {
                 this_.panename = 'myrewardslist';
             },
@@ -804,10 +819,12 @@ export function getPaneflows(this_) {
             ename: "myanalyselist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/zhushou.png`,
             href: "/account/myanalyselist",
-            description: "查看自己的奖惩月/季度报表",
+            description: "查看自己的奖罚月/季度报表",
             show: true,
             css: "",
-            tabs: ['全部', '待处理', '抄送我'],
+            all: '全部',
+            periodTabsFlag: false,
+            tabs: ['全部'],
             click: () => {
                 this_.panename = 'myanalyselist';
             },
@@ -818,7 +835,7 @@ export function getPaneflows(this_) {
             ename: "mymonthlist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png`,
             href: "/account/mymonthlist",
-            description: "查看/导出月度奖惩明细及汇总",
+            description: "查看/导出月度奖罚明细及汇总",
             show: true,
             css: "",
             tabs: ['全部', '待处理', '抄送我'],
@@ -831,7 +848,7 @@ export function getPaneflows(this_) {
             name: "季度报表",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/position.png`,
             href: "/account/myquanterlist",
-            description: "查看/导出月度奖惩明细及汇总",
+            description: "查看/导出月度奖罚明细及汇总",
             show: true,
             css: "",
             tabs: ['全部', '待处理', '抄送我'],

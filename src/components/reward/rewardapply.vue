@@ -312,7 +312,7 @@
                 <div class="reward-apply-content-item reward-apply-content-title" style="">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
-                      奖惩明细
+                      奖罚明细
                     </a-col>
                    </a-row>
                 </div>
@@ -377,7 +377,7 @@ export default {
   mixins: [window.mixin],
   data() {
     return {
-      pageName: "奖惩管理",
+      pageName: "奖罚管理",
       momentNewMsg: true,
       activeTabKey: 3,
       acceptType:'*/*',
@@ -430,6 +430,7 @@ export default {
       release_department:'',
       release_position:'',
       release_amount:'',
+      release_mobile:'',
       release_userlist:[],
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
@@ -761,6 +762,8 @@ export default {
         this.release_username = user.name;
         this.release_company = user.company;
         this.release_department = user.department;
+        this.release_mobile = user.mobile;
+
         //查询员工职务
         const temp = await query.queryUserInfoByMobile(user.mobile);
         //设置员工职务
@@ -810,7 +813,7 @@ export default {
           }
 
           try {
-            //查询奖惩类型
+            //查询奖罚类型
             this.item.reward_type = workconfig.rewardtype[type];
           } catch (error) {
             console.log(error);
@@ -852,95 +855,126 @@ export default {
           return false;
         }
 
-        //查询直接所在工作组，注意此处是奖罚人力经理管理员
-        const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
+        //是否确认提交此自由流程?
+        this.$confirm({
+            title: "确认操作",
+            content: "是否确认提交此自由流程?",
+            onOk: async() => {
+                  //查询直接所在工作组，注意此处是奖罚人力经理管理员
+                  const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
+                  //获取到印章管理员组信息
+                  let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+                  let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
+                  //如果未获取用户名称，则直接设置用印人为分组成员
+                  if(tools.isNull(user_group_ids)){
+                    user_group_ids = this.item.hr_id;
+                    user_group_names = this.item.hr_name;
+                  }
+                  // 返回预览URL
+                  const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
+                  //第一步 保存用户数据到数据库中
+                  const elem = {
+                    id,
+                    serialid:'',
+                    create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                    create_by: userinfo.username,
+                    apply_date: dayjs().format('YYYY-MM-DD'),
+                    title: this.item.title,
+                    company: this.item.company,
+                    department: this.item.department,
+                    content: this.item.content,
+                    remark: this.item.remark, //备注
+                    amount: this.item.amount,
+                    wflowid: '',
+                    bpm_status: '',
+                    reward_type: this.item.reward_type,
+                    reward_name: this.item.reward_name,
+                    reward_period: this.item.reward_period,
+                    reward_release_period: this.item.reward_release_period,
+                    reward_release_feature: this.item.reward_release_feature,
+                    hr_admin_ids: user_group_ids,
+                    hr_admin_names: user_group_names,
+                    hr_id: this.item.hr_id,
+                    hr_name: this.item.hr_name,
+                    apply_username: userinfo.username,
+                    apply_realname: userinfo.realname,
+                    files: this.item.files,
+                    files_00: this.item.files_00,
+                    files_01: this.item.files_01,
+                    files_02: this.item.files_02,
+                    files_03: this.item.files_03,
+                    files_04: this.item.files_04,
+                    files_05: this.item.files_05,
+                    status: '待审批',
+                  }; // 待处理元素
 
-        //获取到印章管理员组信息
-        let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
-        let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
+                  //第二步，向表单提交form对象数据
+                  const result = await manageAPI.postTableData(this.tablename , elem);
 
-        //如果未获取用户名称，则直接设置用印人为分组成员
-        if(tools.isNull(user_group_ids)){
-          user_group_ids = this.item.hr_id;
-          user_group_names = this.item.hr_name;
-        }
+                  //提交此表单对应的奖罚明细数据
+                  for(let item of this.data){
+                    item.id = `${item.key}`;
+                    item.unique_key = `${item.key}`;
+                    item.create_by = userinfo.username;
+                    item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+                    item.pid = id;
+                    delete item.key;
+                    await manageAPI.postTableData('bs_reward_items' , item);
+                  }
 
-        // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
+                  //发送自动设置排序号请求
+                  const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
-        //第一步 保存用户数据到数据库中
-        const elem = {
-          id,
-          serialid:'',
-          create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          create_by: userinfo.username,
-          apply_date: dayjs().format('YYYY-MM-DD'),
-          title: this.item.title,
-          company: this.item.company,
-          department: this.item.department,
-          content: this.item.content,
-          remark: this.item.remark, //备注
-          amount: this.item.amount,
-          wflowid: '',
-          bpm_status: '',
-          reward_type: this.item.reward_type,
-          reward_name: this.item.reward_name,
-          reward_period: this.item.reward_period,
-          hr_admin_ids: user_group_ids,
-          hr_admin_names: user_group_names,
-          hr_id: this.item.hr_id,
-          hr_name: this.item.hr_name,
-          apply_username: userinfo.username,
-          apply_realname: userinfo.realname,
-          files: this.item.files,
-          files_00: this.item.files_00,
-          files_01: this.item.files_01,
-          files_02: this.item.files_02,
-          files_03: this.item.files_03,
-          files_04: this.item.files_04,
-          files_05: this.item.files_05,
-          status: '待审批',
-        }; // 待处理元素
+                  //查询数据
+                  const value = await query.queryTableData(this.tablename , id);
 
-        //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData(this.tablename , elem);
+                  //显示序列号
+                  this.item.serialid = value.serialid;
 
-        //提交此表单对应的奖罚明细数据
-        for(let item of this.data){
-          item.id = item.key;
-          item.unique_key = item.key;
-          item.create_by = userinfo.username;
-          item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-          item.pid = id;
-          delete item.key;
-          await manageAPI.postTableData('bs_reward_items' , item);
-        }
+                  //第三步 向HR推送，HR确认后
+                  await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
+                          .set('accept', 'json');
 
-        //发送自动设置排序号请求
-        const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+                  /************************  工作流程日志(开始)  ************************/
 
-         //查询数据
-        const value = await query.queryTableData(this.tablename , id);
+                  //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+                  const prLogHisNode = {
+                    id: tools.queryUniqueID(),
+                    table_name: this.tablename,
+                    main_value: id,
+                    proponents: userinfo.username,
+                    business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+                    business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+                    process_name   : '奖罚申请流程审批',//varchar(100)  null comment '流程名称',
+                    employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+                    approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+                    action         : '发起'    ,//varchar(100)  null comment '操作动作',
+                    action_opinion : '发起奖罚申请[待处理]',//text          null comment '操作意见',
+                    operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+                    functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+                    process_station   : '奖罚申请[发起节点]',//varchar(100)  null comment '流程岗位',
+                    business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+                    content           : `奖罚申请-${this.item.reward_type}：` + this.item.reward_name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
+                    process_audit     : this.item.id,//varchar(100)  null comment '流程编码',
+                    create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+                    relate_data       : '',//text null comment '关联数据',
+                    origin_data       : '',
+                  }
 
-        //显示序列号
-        this.item.serialid = value.serialid;
+                  await workflow.approveViewProcessLog(prLogHisNode);
 
-        //第三步 向HR推送，HR确认后
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+                  //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+                  await this.handleSubmitWF(userinfo , '' , '' , 'zhaozy1028' , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
-        /************************  工作流程日志(开始)  ************************/
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        await this.handleSubmitWF(userinfo , '' , '' , 'zhaozy1028' , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
-
-        /************************  工作流程日志(结束)  ************************/
-
-        //设置状态
-        this.loading = false;
-        this.status = elem.status;
-        this.readonly = true;
-
+                  /************************  工作流程日志(结束)  ************************/
+          
+                  //设置状态
+                  this.loading = false;
+                  this.status = elem.status;
+                  this.readonly = true;
+               }
+          });
+          
       },
 
       // 提交自由流程
@@ -951,24 +985,14 @@ export default {
           let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID); //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
           let vflag_ = storage.getStore(`start_free_process_@table_name#${curTableName}@id#${curItemID}`);
 
-          debugger;
-
           //如果校验标识有误，则直接返回
           if ( tools.isNull(approver) || !checkFlag || vflag || vflag_ == "true") {
               debugger;
               return !checkFlag ? null : vant.Toast.fail("已提交过申请，无法再次提交审批！"); //数据库中已经存在此记录，提示用户无法提交审批
           }
-
-          debugger;
-
-          //是否确认提交此自由流程?
-          this.$confirm({
-              title: "确认操作",
-              content: "是否确认提交此自由流程?",
-              onOk: async() => {
-                await this.handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime);
-              }
-          });
+          
+          await this.handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime);
+             
       },
 
       // 启动自由流程
@@ -1054,13 +1078,14 @@ export default {
             console.log(error);
         }
       },
+
       //执行奖罚明细分配函数
       async rewardRelease(){
         if(this.release_username && !this.release_userid){
           return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
         }
         if(!this.release_username || !this.release_userid){
-          return this.$toast.fail('请输入奖惩明细的分配人员，并选择下拉列表中人员！');
+          return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
         }
         if(!this.release_amount){
           return this.$toast.fail('请输入奖罚明细的分配金额！');
@@ -1093,17 +1118,18 @@ export default {
           company: `${this.release_company}`,
           department: `${this.release_department}`,
           position: `${this.release_position}`,
+          mobile: `${this.release_mobile}`,
           amount: `${parseFloat(this.release_amount).toFixed(2)}`,
         });
 
         this.release_userlist = [];
-
         this.release_username = '';
         this.release_amount = '';
         this.release_company = '';
         this.release_department = '';
         this.release_position = '';
         this.release_userid = '';
+        this.release_mobile = '';
 
       },
   },

@@ -32,7 +32,7 @@
                     class="pane-flow-card-grid"
                     :key="item.href"
                     v-show="item.show"
-                    @click="menuCardClick(item.id);"
+                    @click="menuCardClick(item.id , item.ename);"
                     :style="item.css"
                     style="border-bottom: 1px solid #f9f9f9; border-radius: 4px;"
                   >
@@ -91,7 +91,7 @@
                           </a>
                         </a-list-item-meta>
                         <div slot="actions">
-                          <a @click="queryRewardView(item.id)">查看</a>
+                          <a @click="queryRewardView(item.id , panename)">查看</a>
                         </div>
                         <div class="list-content">
                           <div class="list-content-item">
@@ -145,7 +145,7 @@ export default {
   data() {
     return {
       activeTabKey: 0,
-      pageName: "奖惩消息",
+      pageName: "奖罚消息",
       momentNewMsg: true,
       paneflowcard: "",
       paneflowcardGrid: "",
@@ -176,7 +176,13 @@ export default {
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
       this.menuCardClick('',this.panename);
       if(this.panename == 'myrewardlist' ){
-        this.queryRewardListByType(1);
+        this.queryRewardListByType(1 , 'hr_admin_ids');
+      } else if(this.panename == 'mytodolist'){ //我的待办
+        this.queryRewardListByType(1 , 'wflow_todo');
+      } else if(this.panename == 'mydonelist'){ //我的已办
+        this.queryRewardListByType(1 , 'wflow_done');
+      } else if(this.panename == 'myapplylist'){ //我的奖罚申请
+        this.queryRewardListByType(1 , 'create_by');
       }
     },
     async searchWordChange() {
@@ -193,15 +199,23 @@ export default {
       this.paneflows.sort();
     },
     async menuCardClick(id , panename) {
+      // 设置panename属性
+      this.paneanme = panename;
+      // 遍历paneflows
       this.paneflows.map((item) => {
-        if (item.id === id || item.ename == panename) {
-          item.css = "background:#f9f9f9;";
-        } else {
-          item.css = "";
+        item.css =  item.id === id || item.ename == panename ? "background:#f9f9f9;" : '';
+        if(this.panename == 'myrewardlist' ){
+          this.queryRewardListByType(1 , 'hr_admin_ids');
+        } else if(this.panename == 'mytodolist'){ //我的待办
+          this.queryRewardListByType(1 , 'wflow_todo');
+        } else if(this.panename == 'mydonelist'){ //我的已办
+          this.queryRewardListByType(1 , 'wflow_done');
+        } else if(this.panename == 'myapplylist'){ //我的奖罚申请
+          this.queryRewardListByType(1 , 'create_by');
         }
       });
     },
-    async queryRewardList(tabname){
+    async queryRewardList(tabname , typename){
 
         const userinfo = await storage.getStore('system_userinfo');  //获取当前用户信息
 
@@ -219,7 +233,7 @@ export default {
         if(tabname == 1){
           debugger;
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = `#${item.serialid} ` + item.reward_type + '申请: ' + item.title ;
@@ -239,7 +253,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = `#${item.serialid} ` + item.reward_type + '奖罚申请: ' + item.title ,
@@ -260,7 +274,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = `#${item.serialid} ` +  item.reward_type + '奖罚申请: ' + item.title ,
@@ -281,7 +295,7 @@ export default {
 
          } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = `#${item.serialid} ` + item.reward_type + '奖罚申请: ' + item.title ,
@@ -302,16 +316,21 @@ export default {
 
         }
     },
-    async queryRewardListByType(tabname = 1){
-      const tlist =  await this.queryRewardList(tabname);
+    async queryRewardListByType(tabname = 1 , typename ){
+      const tlist =  await this.queryRewardList(tabname , typename);
       this.paneflows.map( item => { //遍历paneflows
         if( this.panename == item.ename){
           item.dataSource = tlist;
         }
       })
     },
-    async queryRewardView(id){
-      this.$router.push(`/reward/rewardview?id=${id}`);
+    // 跳转到详情页面
+    async queryRewardView(id , panename){
+      try {
+        this.$router.push(`/reward/rewardview?id=${id}&panename=${panename}`);
+      } catch (error) {
+        console.log(error);
+      }
     },
     // 企业微信登录处理函数
     async weworkLogin(){

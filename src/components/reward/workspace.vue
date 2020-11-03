@@ -56,7 +56,7 @@
                     </div>
                   </div>
                 </a-card>
-                <a-card :loading="loading" title="奖惩流程" :bordered="false" style="margin-top:20px;">
+                <a-card :loading="loading" title="奖罚流程" :bordered="false" style="margin-top:20px;">
                   <a-tag
                     color="blue"
                     @click="handleWriteBlog()"
@@ -98,7 +98,7 @@ export default {
   mixins: [window.mixin],
   data() {
     return {
-      pageName: "奖惩管理",
+      pageName: "奖罚管理",
       momentNewMsg: true,
       activeTabKey: 3,
       iswechat:'',

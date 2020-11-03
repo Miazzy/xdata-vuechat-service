@@ -68,7 +68,7 @@
       </div>
 
       <div class="weui-cells" style="display:block;position:relative;">
-        <div class="weui-cell-title">奖惩管理</div>
+        <div class="weui-cell-title">奖罚管理</div>
         <div style="display:block;">
           <div style="position:absolute; top: 0.6rem; right:25px;">
             <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -118,10 +118,10 @@
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="rewardApply('其他奖惩' , '4');">
+              <div class="weui-cell_app_hd" @click="rewardApply('其他奖罚' , '4');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.2/images/pay07.png" >
                 <div class="weui-cell_app_bd">
-                  其他奖惩
+                  其他奖罚
                 </div>
               </div>
             </van-col>
@@ -716,10 +716,10 @@ export default {
           }
         },
         /**
-         * @function 奖惩申请
+         * @function 奖罚申请
          */
         async rewardApply(name , type){
-          if(['业绩考核','总裁专项','总经理专项','特殊贡献','其他奖惩'].includes(name)){
+          if(['业绩考核','总裁专项','总经理专项','特殊贡献','其他奖罚'].includes(name)){
             this.$router.push(`/app/rewardapply?type=${type}&reward_name=${name}`);
           } else if(name == '月度报表'){
             this.$toast.fail('您暂时没有权限! ');
