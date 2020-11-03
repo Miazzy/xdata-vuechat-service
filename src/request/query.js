@@ -230,6 +230,40 @@ export async function queryRoleGroupList(name, username = '') {
 
 /**
  * 查询数据
+ * @param {*} mobile
+ */
+export async function queryUserInfoByMobile(mobile) {
+
+    //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
+    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_mobile/${mobile}`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_user_cache_mobile_userinfo${mobile}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache;
+        }
+
+        debugger;
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        debugger;
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_user_cache_mobile_userinfo${mobile}`, res.body, 3600 * 24 * 7);
+        }
+
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * 查询数据
  * @param {*} tableName
  * @param {*} id
  */

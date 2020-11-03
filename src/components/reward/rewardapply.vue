@@ -137,11 +137,22 @@
                     <a-col :span="8">
                       <a-input v-model="item.amount"  placeholder="请输入本次奖罚申请的单项奖金总额！" @blur="validFieldToast('amount')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
                     </a-col>
+                  </a-row>
+                </div>
+
+                <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                  <a-row>
                     <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>发放周期</span>
                     </a-col>
                     <a-col :span="8">
                       <a-input v-model="item.reward_release_period"  placeholder="请输入本次奖罚/激励申请的发放周期，注意是发放周期！" @blur="validFieldToast('reward_release_period')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                    </a-col>
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;">*</span>发放性质</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="item.reward_release_feature"  placeholder="请输入本次奖罚/激励申请的发放性质，如当期分配/延期分配！" @blur="validFieldToast('reward_release_feature')" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
                     </a-col>
                   </a-row>
                 </div>
@@ -391,6 +402,7 @@ export default {
               reward_name: '',
               reward_period: dayjs().format('YYYY年MM月'),
               reward_release_period: dayjs().format('YYYY年MM月'),
+              reward_release_feature: '当期分配',
               hr_admin_ids: '',
               hr_admin_names: '',
               hr_id: '',
@@ -408,24 +420,15 @@ export default {
               status: '',
             },
       columns: workconfig.columns.reward.items,
-      data: [
-        {
-          key: '1',
-          type: '当前分配',
-          period: '2020年10月',
-          username: '张晓明',
-          account: 'zhangxm0101',
-          company: '领地集团',
-          department: '人力行政中心',
-          position:'软件工程师',
-          amount:'400.00',
-        },
-      ],
+      data: [],
       tablename:'bs_reward_apply',
       readonly: false,
       userList:[],
       release_userid:'',
       release_username:'',
+      release_company:'',
+      release_department:'',
+      release_position:'',
       release_amount:'',
       release_userlist:[],
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
@@ -658,7 +661,6 @@ export default {
         const user = this.userList.find((item,index) => {return this.item.hr_id == item.id});
         this.item.hr_name = user.name;
       },
-
       async queryReleaseMan(){
 
         //获取盖章人信息
@@ -686,13 +688,20 @@ export default {
                     company = company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
-                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
+                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
                   //获取盖印人姓名
                   this.release_username = user[0].lastname;
                   //当前盖印人编号
                   this.release_userid = this.userid = user[0].loginid;
+
+                  try {
+                    this.selectReleaseUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
 
                 } catch (error) {
                   console.log(error);
@@ -705,13 +714,21 @@ export default {
                   company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
+                  let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
                   //将用户数据推送至对方数组
-                  this.release_userlist.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
+                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
 
                   //获取盖印人姓名
                   this.release_username = user.lastname;
                   //当前盖印人编号
                   this.release_userid = this.userid = user.loginid;
+
+                  try {
+                    this.selectReleaseUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -738,8 +755,16 @@ export default {
       },
       //选中当前知会人员
       async selectReleaseUser(value){
+        //获取员工基本信息
         const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id});
+        //设置员工
         this.release_username = user.name;
+        this.release_company = user.company;
+        this.release_department = user.department;
+        //查询员工职务
+        const temp = await query.queryUserInfoByMobile(user.mobile);
+        //设置员工职务
+        this.release_position = temp.position;
       },
       // 获取URL或者二维码信息
       async queryInfo() {
@@ -880,6 +905,17 @@ export default {
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
 
+        //提交此表单对应的奖罚明细数据
+        for(let item of this.data){
+          item.id = item.key;
+          item.unique_key = item.key;
+          item.create_by = userinfo.username;
+          item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          item.pid = id;
+          delete item.key;
+          await manageAPI.postTableData('bs_reward_items' , item);
+        }
+
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
@@ -1018,10 +1054,57 @@ export default {
             console.log(error);
         }
       },
-      rewardRelease(){
-        if(!this.release_username || !this.release_userid){
-          this.$toast.fail('请输入奖惩明细的分配人员，并选择！');
+      //执行奖罚明细分配函数
+      async rewardRelease(){
+        if(this.release_username && !this.release_userid){
+          return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
         }
+        if(!this.release_username || !this.release_userid){
+          return this.$toast.fail('请输入奖惩明细的分配人员，并选择下拉列表中人员！');
+        }
+        if(!this.release_amount){
+          return this.$toast.fail('请输入奖罚明细的分配金额！');
+        }
+        if(!this.item.reward_release_feature){
+          return this.$toast.fail('请输入奖罚申请的分配性质！');
+        }
+        if(!this.item.reward_release_period){
+          return this.$toast.fail('请输入奖罚申请的发放周期！');
+        }
+        if(!/^[0-9]+.{0,1}[0-9]{0,2}$/g.test(this.release_amount)){
+          return this.$toast.fail('请在分配金额处输入数字！');
+        }
+
+        //查询用户数据是否已经被分配过
+        const findElem = this.data.find( item => {
+          return item.username == this.release_username;
+        })
+        //用户数据已经被分配过，无法再次分配
+        if(findElem && findElem.username == this.release_username){
+          return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
+        }
+
+        this.data.push({
+          key: tools.queryUniqueID(),
+          type: this.item.reward_release_feature,
+          period: this.item.reward_release_period,
+          username: `${this.release_username}`,
+          account: `${this.release_userid}`,
+          company: `${this.release_company}`,
+          department: `${this.release_department}`,
+          position: `${this.release_position}`,
+          amount: `${parseFloat(this.release_amount).toFixed(2)}`,
+        });
+
+        this.release_userlist = [];
+
+        this.release_username = '';
+        this.release_amount = '';
+        this.release_company = '';
+        this.release_department = '';
+        this.release_position = '';
+        this.release_userid = '';
+
       },
   },
 };

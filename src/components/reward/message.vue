@@ -138,6 +138,7 @@ import * as workconfig from "@/request/workconfig";
 import * as menulist from "./component/menulist.vue";
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
+import * as query from '@/request/query';
 
 export default {
   mixins: [window.mixin],
@@ -216,6 +217,7 @@ export default {
         }
 
         if(tabname == 1){
+          debugger;
           //获取最近6个月的待用印记录
           this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
