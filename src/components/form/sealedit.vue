@@ -299,13 +299,10 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
-        //this.userStatus();
     },
     async mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -315,6 +312,14 @@ export default {
       }
     },
     methods: {
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
@@ -322,7 +327,7 @@ export default {
           console.log(error);
         }
       },
-      //获取合同编号
+      // 获取合同编号
       async queryHContract(){
         //获取盖章人信息
         const prefix = this.item.prefix = this.item.prefix.toUpperCase();
@@ -393,7 +398,7 @@ export default {
 
       },
 
-      //查询归档人员
+      // 查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
         const archive_name = this.item.archive_name;
@@ -454,7 +459,7 @@ export default {
           console.log(error);
         }
       },
-      //用户选择前台接待
+      // 用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
         const front_name = this.item.front_name;
@@ -516,7 +521,7 @@ export default {
           console.log(error);
         }
       },
-      //用户选择盖印人
+      // 用户选择盖印人
       async querySealMan(){
 
         //获取盖章人信息
@@ -636,7 +641,7 @@ export default {
           console.log(error);
         }
       },
-      //选中当前填报人
+      // 选中当前填报人
       async selectCreateUser(value){
         await tools.sleep(0);
 
@@ -820,6 +825,7 @@ export default {
           const that = this;
           this.iswechat = tools.isWechat();
           this.groupid = tools.getUrlParam('groupid') || 'Group_LD';
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取view状态
           this.view = tools.getUrlParam('view');

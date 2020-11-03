@@ -314,13 +314,21 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
     },
     methods: {
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // 上传前检查上传文件信息
       beforeUpload($e){
         try {
           const file = $e.target.files[0];
@@ -335,6 +343,7 @@ export default {
           console.log(error);
         }
       },
+      // 下载或保存文件
       async saveAsFile(file , name){
         try {
           window.open(file , '_blank');
@@ -352,11 +361,11 @@ export default {
         await this.saveAsFile(this.downloadURL + this.item[file] , name + ' ' + this.item[file].split('/')[1]);
         vant.Toast.clear();
       },
-      //点击显示或者隐藏菜单
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
@@ -369,7 +378,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
-      //上传提示
+      // 上传提示
       async toastUpload(flag){
         if(flag == 'start'){
           vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
@@ -377,7 +386,7 @@ export default {
           this.$toast.success('文件上传失败，请稍后重试！');
         }
       },
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -399,57 +408,56 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess(file , res){
         vant.Toast.clear();
         this.item.files = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_00(file , res){
         vant.Toast.clear();
         this.item.files_00 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_01(file , res){
         vant.Toast.clear();
         this.item.files_01 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_02(file , res){
         vant.Toast.clear();
         this.item.files_02 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_03(file , res){
         vant.Toast.clear();
         this.item.files_03 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_04(file , res){
         vant.Toast.clear();
         this.item.files_04 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-      //上传文件成功后回调函数
+      // 上传文件成功后回调函数
       async uploadSuccess_05(file , res){
         vant.Toast.clear();
         this.item.files_05 = JSON.parse(res).message;
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
-
-      //用户选择盖印人
+      // 用户选择盖印人
       async queryHRMan(){
 
         //获取盖章人信息
@@ -526,7 +534,7 @@ export default {
         }
 
       },
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectHRUser(value){
         await tools.sleep(0);
         const id = this.item.hr_id;
@@ -568,9 +576,7 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
+      // 获取处理日志
       async queryProcessLog(){
         const id = tools.getUrlParam('id');
         try {
@@ -613,8 +619,10 @@ export default {
       async queryInfo() {
 
         try {
-          //查询当前是否微信端
-          this.iswechat = tools.isWechat();
+
+          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
+
           //查询上一页
           this.back = tools.getUrlParam('back') || '/app';
           //查询type

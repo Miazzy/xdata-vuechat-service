@@ -255,13 +255,20 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
     },
     methods: {
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -411,8 +418,9 @@ export default {
       async queryInfo() {
 
         try {
-          //查询当前是否微信端
-          this.iswechat = tools.isWechat();
+
+          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');

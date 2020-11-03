@@ -433,18 +433,25 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
     },
     methods: {
-      //点击显示或者隐藏菜单
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
@@ -457,7 +464,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -491,7 +498,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      //用户选择盖印人
+      // 用户选择盖印人
       async querySealMan(){
 
         //获取盖章人信息
@@ -564,7 +571,7 @@ export default {
         }
 
       },
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.userid;
@@ -595,9 +602,7 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
+      // 获取处理日志
       async queryProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -626,6 +631,7 @@ export default {
           console.log(error);
         }
       },
+      // 删除处理日志
       async deleteProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -657,7 +663,7 @@ export default {
 
       },
 
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);
         const id = this.item.front_id;
@@ -666,7 +672,7 @@ export default {
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
-
+      // 字段必填有效验证
       validField(fieldName){
         //获取用户基础信息
         let userinfo = storage.getStore('system_userinfo') || workconfig.commonUserInfo;
@@ -689,45 +695,13 @@ export default {
 
         return tools.isNull(this.message[fieldName]);
       },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-
-      // 显示用户信息，如显示HR信息，显示行政人员信息
-      displayUserInfo(fieldName){
-
-      },
-
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
         try {
-          //查询当前是否微信端
-          this.iswechat = tools.isWechat();
+
+          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
           this.back = tools.getUrlParam('back') || '/app';

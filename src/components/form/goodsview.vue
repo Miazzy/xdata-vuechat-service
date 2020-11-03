@@ -189,67 +189,54 @@
               </van-cell-group>
 
               <van-cell-group v-show="size>=14" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name13"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount13"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#14</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=15" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name14"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount14"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#15</span>
               </van-cell-group>
 
                <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name15"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount15"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#16</span>
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 领用人员（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
                 <!-- 单位名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <!-- 部门名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
-
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
-                <van-field :readonly="readonly" :required="false" clearable label="驳回理由" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
-              </van-cell-group>
-
               <van-cell-group style="margin-top:10px;" v-show="!!item.status">
-
                 <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 流程状态（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
+              </van-cell-group>
 
+              <van-cell-group v-show="((item.status == '待处理' || item.status == '已驳回' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;" >
+                <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :readonly="readonly" :required="false" clearable label="驳回原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -407,18 +394,25 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
     },
     methods: {
-      //点击显示或者隐藏菜单
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
@@ -431,7 +425,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -486,9 +480,7 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
+      // 获取处理日志
       async queryProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -517,6 +509,7 @@ export default {
           console.log(error);
         }
       },
+      // 删除流程日志
       async deleteProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -544,7 +537,7 @@ export default {
         }
 
       },
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);
         const id = this.item.front_id;
@@ -571,38 +564,13 @@ export default {
 
         return tools.isNull(this.message[fieldName]);
       },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-      // 选择入职时间
-      async joinTimeConfirm(value){
-        this.item.join_time = dayjs(value).format('YYYY-MM-DD');
-        this.validField('join_time');
-        await tools.sleep(100);
-        this.tag.showPickerJoinTime = false;
-      },
-      // 选择是否
-      async commonTypeConfirm(value){
-        this.item[this.currentKey] = value;
-        this.validField(value);
-        await tools.sleep(100);
-        this.tag.showPickerCommon = false;
-      },
-
       // 获取URL或者二维码信息
       async queryInfo() {
 
         try {
-          //查询当前是否微信端
-          this.iswechat = tools.isWechat();
+
+          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');

@@ -302,7 +302,6 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
@@ -316,6 +315,14 @@ export default {
       }
     },
     methods: {
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
@@ -1133,6 +1140,7 @@ export default {
 
         try {
           this.iswechat = tools.isWechat();
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;
 

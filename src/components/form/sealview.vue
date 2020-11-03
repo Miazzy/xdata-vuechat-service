@@ -336,6 +336,14 @@ export default {
       //this.userStatus();
     },
     methods: {
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
       validField(fieldName){
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -876,6 +884,7 @@ export default {
 
         try {
           this.iswechat = tools.isWechat();
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;
           that.item.id = tools.getUrlParam('id');

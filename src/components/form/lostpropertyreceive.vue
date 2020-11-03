@@ -238,18 +238,25 @@ export default {
         }
     },
     async activated() {
-        this.$store.commit("toggleTipsStatus", -1);
         this.queryInfo();
     },
     async mounted() {
       this.queryInfo();
     },
     methods: {
-      //点击显示或者隐藏菜单
+      // 企业微信登录处理函数
+      async weworkLogin(){
+        try {
+          return await query.queryWeworkUser();
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
@@ -262,7 +269,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -285,7 +292,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      //用户选择盖印人
+      // 用户选择盖印人
       async querySealMan(){
 
         //获取盖章人信息
@@ -357,7 +364,7 @@ export default {
         }
 
       },
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectSealUser(value){
         await tools.sleep(0);
         const id = this.userid;
@@ -389,9 +396,7 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
+      // 获取处理日志
       async queryProcessLog(){
         const id = tools.getUrlParam('id');
         try {
@@ -402,6 +407,7 @@ export default {
           console.log(error);
         }
       },
+      // 删除处理日志
       async deleteProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -429,7 +435,7 @@ export default {
         }
 
       },
-      //选中当前盖印人
+      // 选中当前盖印人
       async selectFrontUser(value){
         await tools.sleep(0);
         const id = this.item.front_id;
@@ -476,8 +482,9 @@ export default {
       async queryInfo() {
 
         try {
-          //查询当前是否微信端
-          this.iswechat = tools.isWechat();
+
+          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
           this.back = tools.getUrlParam('back') || '/app/lostpropertylist';
