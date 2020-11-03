@@ -44,3 +44,38 @@
     font-size: 12px;
     height: 27px;
 }
+
+#van-user-list .van-address-item__edit {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    color: #969799;
+    font-size: 20px;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    display: none;
+}
+
+#van-user-list .van-address-list__add {
+    height: 40px;
+    margin: 5px 0;
+    line-height: 38px;
+    display: none;
+}
+
+#van-user-list .van-radio__icon {
+    -webkit-box-flex: 0;
+    -webkit-flex: none;
+    flex: none;
+    height: 1em;
+    font-size: 20px;
+    line-height: 1em;
+    cursor: pointer;
+    display: none;
+}
+
+#van-user-list .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 12px 10px 12px 10px;
+}

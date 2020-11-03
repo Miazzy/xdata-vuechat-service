@@ -261,7 +261,7 @@
                   </van-cell-group>
                 </div>
 
-                <div class="reward-apply-content-item reward-apply-content-title" style="">
+                <div class="reward-apply-content-item reward-apply-content-title" style="margin-top: 35px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
                       分配信息
@@ -270,7 +270,7 @@
                 </div>
 
                 <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
-                  <a-row>
+                  <a-row style="position:relative;">
                     <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>分配人员</span>
                     </a-col>
@@ -281,8 +281,11 @@
                       <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>分配金额</span>
                     </a-col>
                     <a-col :span="8">
-                      <a-input v-model="release_amount" placeholder="请输入奖罚明细中的奖罚金额！" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;" />
+                      <a-input v-model="release_amount" placeholder="请输入奖罚明细中的奖罚金额！" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0; width: 320px; " />
                     </a-col>
+                    <div style="position:absolute; right: 5px; top: -2px;">
+                      <van-button name="file" @click="rewardRelease();"  >分配</van-button>
+                    </div>
                   </a-row>
                   <a-row>
                     <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
@@ -571,17 +574,6 @@ export default {
           this.$toast.fail(`${this.message[fieldName]}！` );
           return false;
         }
-      },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
       },
       //用户选择知会人员
       async queryNotifyMan(){
@@ -915,9 +907,7 @@ export default {
 
       },
 
-      /**
-       * @function 提交自由流程
-       */
+      // 提交自由流程
       async handleSubmitWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime) {
 
           //校验提交信息是否准确
@@ -945,9 +935,7 @@ export default {
           });
       },
 
-      /**
-       * @function 启动自由流程
-       */
+      // 启动自由流程
       async handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime){
 
         try {
@@ -1029,48 +1017,16 @@ export default {
         } catch (error) {
             console.log(error);
         }
-      }
-
+      },
+      rewardRelease(){
+        if(!this.release_username || !this.release_userid){
+          this.$toast.fail('请输入奖惩明细的分配人员，并选择！');
+        }
+      },
   },
 };
 </script>
 <style scoped >
     @import "../../assets/css/reward.home.css";
     @import "../../assets/css/reward.apply.css";
-
-#van-user-list .van-address-item__edit {
-    position: absolute;
-    top: 50%;
-    right: 16px;
-    color: #969799;
-    font-size: 20px;
-    -webkit-transform: translate(0, -50%);
-    transform: translate(0, -50%);
-    display: none;
-}
-
-#van-user-list .van-address-list__add {
-    height: 40px;
-    margin: 5px 0;
-    line-height: 38px;
-    display:none;
-}
-
-#van-user-list .van-radio__icon {
-    -webkit-box-flex: 0;
-    -webkit-flex: none;
-    flex: none;
-    height: 1em;
-    font-size: 20px;
-    line-height: 1em;
-    cursor: pointer;
-    display: none;
-}
-
-#van-user-list .van-address-list {
-    box-sizing: border-box;
-    height: 100%;
-    padding: 12px 10px 12px 10px;
-}
-
 </style>
