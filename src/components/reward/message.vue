@@ -209,7 +209,7 @@ export default {
         if(panename == 'myrewardlist'){
           this.queryRewardListByType(1 , 'hr_admin_ids' , panename);
         } else if(panename == 'mytodolist'){ //我的待办
-          this.queryRewardTodoList(1 , 'wflow_todo' , panename);
+          this.queryRewardTodoListByType(1 , 'wflow_todo' , panename);
         } else if(panename == 'mydonelist'){ //我的已办
           this.queryRewardDoneListByType(1 , 'wflow_done' , panename);
         } else if(panename == 'myapplylist'){ //我的奖罚申请
@@ -323,14 +323,14 @@ export default {
 
         }
     },
-    async queryRewardTodoList(tabname = '', typeame = ''){
+    async queryRewardTodoList(tabname = '', typename = ''){
 
       try {
-        const logList = query.queryProcessLogHistoryByUserName(this.tablename , this.userinfo.username);
+        const logList = await query.queryProcessLogByUserName(this.tablename , this.userinfo.username);
 
         logList.map((item , index) => {
           item.id = item.business_data_id;
-          item.name = `#${item.serialid} ` + item.reward_type + '申请: ' + item.title ;
+          item.name = `发起：${item.content} `;
           item.title = item.name;
           item.avatar = '',
           item.description = '';
@@ -342,11 +342,21 @@ export default {
           item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
         })
 
-        return [];
+        return logList;
       } catch (error) {
         console.log(error);
       }
 
+    },
+    async queryRewardTodoListByType(tabname = '', typename = '' , panename){
+      const tlist =  await this.queryRewardTodoList(tabname , typename , panename);
+      debugger;
+      this.paneflows.map( item => { //遍历paneflows
+        if( panename == item.ename){
+          item.dataSource = tlist;
+          item.ename = panename;
+        }
+      })
     },
     async queryRewardDoneList(tabname = '', typename = ''){
 

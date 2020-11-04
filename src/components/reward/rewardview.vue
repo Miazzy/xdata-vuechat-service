@@ -269,6 +269,28 @@
                    </a-row>
                 </div>
 
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
+                   <a-row style="border-top: 1px dash #f0f0f0;" >
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
+                      审批记录
+                    </a-col>
+                   </a-row>
+                </div>
+
+                 <div class="reward-apply-content-item reward-apply-content-title" style="">
+                  <div>
+                    <van-steps direction="vertical" :active="processLogList.length - 1">
+                      <template v-for="value in processLogList">
+                        <van-step :key="value.id">
+                          <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                          <p>{{ value.create_time }}</p>
+                        </van-step>
+                      </template>
+                    </van-steps>
+                  </div>
+                </div>
+
+
                 <div v-show="!(panename == 'myapplylist' || panename == 'mydonelist' || typename == 'hr_admin_ids')" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
@@ -390,6 +412,7 @@ export default {
       sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
       panename:'',
       typename:'',
+      processLogList:[],
     };
   },
   activated() {
@@ -640,15 +663,10 @@ export default {
           let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID); //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
           let vflag_ = storage.getStore(`start_free_process_@table_name#${curTableName}@id#${curItemID}`);
 
-          debugger;
-
           //如果校验标识有误，则直接返回
           if ( tools.isNull(approver) || !checkFlag || vflag || vflag_ == "true") {
-              debugger;
               return !checkFlag ? null : vant.Toast.fail("已提交过申请，无法再次提交审批！"); //数据库中已经存在此记录，提示用户无法提交审批
           }
-
-          debugger;
 
           //是否确认提交此自由流程?
           this.$confirm({

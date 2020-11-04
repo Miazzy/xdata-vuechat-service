@@ -429,6 +429,42 @@ export const columns = {
                 ellipsis: true,
             },
         ],
+        wfcolumns: [{
+            title: '流程顺序',
+            dataIndex: 'key',
+            key: 'key',
+            ellipsis: true,
+        }, {
+            title: '审批人员',
+            dataIndex: 'username',
+            key: 'username',
+            ellipsis: true,
+        }, {
+            title: '审批账户',
+            dataIndex: 'userid',
+            key: 'userid',
+            ellipsis: true,
+        }, {
+            title: '所属单位',
+            dataIndex: 'company',
+            key: 'company',
+            ellipsis: true,
+        }, {
+            title: '所属部门',
+            dataIndex: 'department',
+            key: 'department',
+            ellipsis: true,
+        }, {
+            title: '审批职务',
+            dataIndex: 'position',
+            key: 'position',
+            ellipsis: true,
+        }, {
+            title: '联系电话',
+            dataIndex: 'mobile',
+            key: 'mobile',
+            ellipsis: true,
+        }, ],
     }
 }
 
@@ -795,7 +831,7 @@ export function getPaneflows(this_) {
                 this_.panename = 'myapplylist';
             },
         },
-        
+
         {
             id: 2,
             name: "我的奖罚",

@@ -380,8 +380,6 @@ export async function deleteViewProcessLog(node) {
  */
 export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType = 'workflowing') {
 
-    debugger;
-
     try {
         //审批用户不能为空
         if (tools.deNull(approver) == "" && pageType == "workflowing") {

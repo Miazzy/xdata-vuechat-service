@@ -324,13 +324,51 @@
                    </a-row>
                 </div>
 
+                <div class="reward-apply-content-item reward-apply-content-title" style="margin-top: 35px;">
+                   <a-row style="border-top: 1px dash #f0f0f0;" >
+                    <a-col class="reward-apply-content-title-text" :span="4" style="">
+                      流程设置
+                    </a-col>
+                   </a-row>
+                </div>
+
+                <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                  <a-row style="position:relative;">
+                    <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>审批人员</span>
+                    </a-col>
+                    <a-col :span="8">
+                      <a-input v-model="approve_username" placeholder="请输入申请流程的审批人员！" @blur="queryApproveMan();" @click="queryApproveMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0; width:320px;" />
+                      <div style="position:absolute; right: 5px; top: -2px;">
+                        <van-button name="file" @click="rewardApproveAdd();"  >添加</van-button>
+                      </div>
+                    </a-col>
+                  </a-row>
+                  <a-row>
+                    <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                    </a-col>
+                    <a-col :span="9">
+                      <div style="margin-left: 10px;">
+                        <van-address-list v-show="approve_userlist.length > 0" v-model="approve_userid" :list="approve_userlist" default-tag-text="默认" edit-disabled @select="selectApproveUser();" />
+                      </div>
+                    </a-col>
+                  </a-row>
+                </div>
+
+                <div class="reward-apply-content-item reward-apply-content-title" style="">
+                  <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
+                    <a-table :columns="wfcolumns" :data-source="approve_executelist">
+                    </a-table>
+                   </a-row>
+                </div>
+
                 <div v-show="role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
 
                     </a-col>
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
-                      <a-button type="primary" style="width: 120px;color:c0c0c0;" @click="handleApply();"  >
+                      <a-button type="primary" style="width: 120px;color:c0c0c0;" @click="handleSave();"  >
                         保存
                       </a-button>
                     </a-col>
@@ -420,6 +458,7 @@ export default {
               status: '',
             },
       columns: workconfig.columns.reward.items,
+      wfcolumns: workconfig.columns.reward.wfcolumns,
       data: [],
       tablename:'bs_reward_apply',
       readonly: false,
@@ -432,6 +471,14 @@ export default {
       release_amount:'',
       release_mobile:'',
       release_userlist:[],
+      approve_userid:'',
+      approve_username:'',
+      approve_mobile:'',
+      approve_department:'',
+      approve_company:'',
+      approve_position:'',
+      approve_userlist:[],
+      approve_executelist:[],
       role:'',
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
@@ -586,8 +633,7 @@ export default {
         //获取盖章人信息
         const user_admin_name = this.item.hr_name;
 
-        //如果
-        if(!user_admin_name || user_admin_name.length < 1){
+        if(!user_admin_name || user_admin_name.length <= 1){
           return;
         }
 
@@ -668,8 +714,8 @@ export default {
         //获取盖章人信息
         const user_admin_name = this.release_username;
 
-        //如果
-        if(!user_admin_name || user_admin_name.length < 1){
+        //输入的用户
+        if(!user_admin_name || user_admin_name.length <= 1){
           return;
         }
 
@@ -770,6 +816,112 @@ export default {
         //设置员工职务
         this.release_position = temp.position;
       },
+      async queryApproveMan(){
+
+        //获取盖章人信息
+        const user_admin_name = this.approve_username;
+
+        //输入的用户
+        if(!user_admin_name || user_admin_name.length <= 1){
+          return;
+        }
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
+                    this.approve_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.approve_username = user[0].lastname;
+                  //当前盖印人编号
+                  this.approve_userid = this.userid = user[0].loginid;
+
+                  try {
+                    this.selectApproveUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
+                  //将用户数据推送至对方数组
+                  this.approve_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
+
+                  //获取盖印人姓名
+                  this.approve_username = user.lastname;
+                  //当前盖印人编号
+                  this.approve_userid = this.userid = user.loginid;
+
+                  try {
+                    this.selectApproveUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.approve_userlist = this.approve_userlist.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.approve_userlist.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      //选中当前知会人员
+      async selectApproveUser(value){
+        //获取员工基本信息
+        const user = this.approve_userlist.find((item,index) => {return this.approve_userid == item.id});
+        //设置员工
+        this.approve_username = user.name;
+        this.approve_mobile = user.mobile;
+        this.approve_company = user.company;
+        this.approve_department = user.department;
+        //查询员工职务
+        const temp = await query.queryUserInfoByMobile(user.mobile);
+        //设置员工职务
+        this.approve_position = temp.position;
+      },
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -840,6 +992,10 @@ export default {
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
+        //流程审批人员
+        let wfUsers = '';  //流程审批人员
+        let approver = ''; //最终审批人员
+
         //验证数据是否已经填写
         const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
 
@@ -854,6 +1010,23 @@ export default {
             message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
           });
           return false;
+        }
+
+        if(!this.approve_executelist || this.approve_executelist.length <= 0){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请在流程设置处，添加审批人员！`,
+          });
+          return false;
+        } else {
+          if(this.approve_executelist.length == 1){
+            approver = this.approve_executelist[0].userid;
+          } else {
+            const tempIndex = this.approve_executelist.length - 1;
+            const templist = this.approve_executelist.slice(0,tempIndex);
+            approver = this.approve_executelist[tempIndex].userid;
+            wfUsers = (templist.map(obj => {return obj.userid})).toString();
+          }
         }
 
         //是否确认提交此自由流程?
@@ -942,7 +1115,7 @@ export default {
                   await this.handleStartWFLog(this.tablename , elem , userinfo);
 
                   //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-                  await this.handleSubmitWF(userinfo , '' , '' , 'zhaozy1028' , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
+                  await this.handleSubmitWF(userinfo , wfUsers , '' , approver , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
                   /************************  工作流程日志(结束)  ************************/
 
@@ -1108,8 +1281,11 @@ export default {
           console.log(error);
         }
       },
-
-      //执行奖罚明细分配函数
+      // 保存用户数据但是不提交
+      async handleSave(){
+        this.$toast.success('保存奖惩申请成功！');
+      },
+      // 执行奖罚明细分配函数
       async rewardRelease(){
 
         try {
@@ -1174,6 +1350,35 @@ export default {
           this.release_position = '';
           this.release_userid = '';
           this.release_mobile = '';
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      // 审批人员添加函数
+      async rewardApproveAdd(){
+
+        if(!this.approve_userid){
+          return this.$toast.success('请选择审批人员处下拉列表中的待选审批人员！');
+        }
+
+        const index = this.approve_executelist.findIndex( item => {
+          return item.userid == this.approve_userid;
+        })
+
+        if(index>=0){
+          return this.$toast.success('该审批人员已经添加，请重新输入！');
+        }
+
+        try {
+          const mobile = this.approve_mobile ? `${this.approve_mobile.slice(0,3)}****${this.approve_mobile.slice(-4)}` : '';
+          const user = {key: this.approve_executelist.length + 1 , id:tools.queryUniqueID(),username:this.approve_username , userid: this.approve_userid , mobile , company: this.approve_company , department : this.approve_department , position : this.approve_position};
+          this.approve_executelist.push(JSON.parse(JSON.stringify(user)));
+          this.approve_userid = '';
+          this.approve_username = '';
+          this.approve_mobile = '';
+          this.approve_position = '';
+          this.approve_userlist = [];
         } catch (error) {
           console.log(error);
         }

@@ -246,11 +246,7 @@ export async function queryUserInfoByMobile(mobile) {
             return cache;
         }
 
-        debugger;
-
         var res = await superagent.get(queryURL).set('accept', 'json');
-
-        debugger;
 
         if (res.body != null && res.body.length > 0) {
             storage.setStore(`sys_user_cache_mobile_userinfo${mobile}`, res.body, 3600 * 24 * 7);
@@ -474,6 +470,25 @@ export async function queryWeworkUser() {
     }
 }
 
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessLogByUserName(tableName, username) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //提交URL
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_code,eq,000000000)~and(employee,eq,${username})&_sort=-operate_time`;
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 /**
  * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
  */
@@ -481,7 +496,7 @@ export async function queryProcessLogHistoryByUserName(tableName, username) {
     //大写转小写
     tableName = tableName.toLowerCase();
     //提交URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_history?_where=(table_name,eq,${tableName})~and(business_code,eq,000000000)~and(proponents,eq,${username})&_sort=-operate_time`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_history?_where=(table_name,eq,${tableName})~and(business_code,eq,000000000)~and(employee,eq,${username})&_sort=-operate_time`;
 
     try {
         var res = await superagent.get(queryURL).set('accept', 'json');
