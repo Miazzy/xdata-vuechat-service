@@ -324,7 +324,7 @@
                    </a-row>
                 </div>
 
-                <div class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                <div v-show="role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
 
@@ -432,6 +432,7 @@ export default {
       release_amount:'',
       release_mobile:'',
       release_userlist:[],
+      role:'',
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
       valid: workconfig.compValidation.rewardapply.valid,
@@ -930,56 +931,35 @@ export default {
 
                   //显示序列号
                   this.item.serialid = value.serialid;
+                  elem.serialid = value.serialid;
 
                   //第三步 向HR推送，HR确认后
-                  await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 奖罚申请登记完毕，请确认！?rurl=${receiveURL}`)
-                          .set('accept', 'json');
+                  await this.handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL);
 
                   /************************  工作流程日志(开始)  ************************/
 
                   //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-                  const prLogHisNode = {
-                    id: tools.queryUniqueID(),
-                    table_name: this.tablename,
-                    main_value: id,
-                    proponents: userinfo.username,
-                    business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-                    business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-                    process_name   : '奖罚申请流程审批',//varchar(100)  null comment '流程名称',
-                    employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-                    approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-                    action         : '发起'    ,//varchar(100)  null comment '操作动作',
-                    action_opinion : '发起奖罚申请[待处理]',//text          null comment '操作意见',
-                    operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-                    functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-                    process_station   : '奖罚申请[发起节点]',//varchar(100)  null comment '流程岗位',
-                    business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-                    content           : `奖罚申请-${this.item.reward_type}：` + this.item.reward_name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
-                    process_audit     : this.item.id,//varchar(100)  null comment '流程编码',
-                    create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-                    relate_data       : '',//text null comment '关联数据',
-                    origin_data       : '',
-                  }
-
-                  await workflow.approveViewProcessLog(prLogHisNode);
+                  await this.handleStartWFLog(this.tablename , elem , userinfo);
 
                   //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
                   await this.handleSubmitWF(userinfo , '' , '' , 'zhaozy1028' , this.tablename , id , elem  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
                   /************************  工作流程日志(结束)  ************************/
-          
+
                   //设置状态
                   this.loading = false;
                   this.status = elem.status;
                   this.readonly = true;
+                  this.role = 'view';
                }
           });
-          
+
       },
 
       // 提交自由流程
       async handleSubmitWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime) {
 
+        try {
           //校验提交信息是否准确
           var checkFlag = workflow.checkSubmitInfo( wfUsers,  nfUsers, approver, );
           let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID); //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
@@ -987,12 +967,19 @@ export default {
 
           //如果校验标识有误，则直接返回
           if ( tools.isNull(approver) || !checkFlag || vflag || vflag_ == "true") {
-              debugger;
               return !checkFlag ? null : vant.Toast.fail("已提交过申请，无法再次提交审批！"); //数据库中已经存在此记录，提示用户无法提交审批
           }
-          
-          await this.handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime);
-             
+
+          try {
+            await this.handleStartWF(userinfo, wfUsers, nfUsers , approver , curTableName , curItemID , data , ctime);
+          } catch (error) {
+            console.log(error);
+          }
+
+        } catch (error) {
+          console.log(error);
+        }
+
       },
 
       // 启动自由流程
@@ -1079,57 +1066,117 @@ export default {
         }
       },
 
+      // 处理流程日志
+      async handleStartWFLog(tablename , elem , userinfo){
+
+        try {
+          const prLogHisNode = {
+              id: tools.queryUniqueID(),
+              table_name: tablename,
+              main_value: elem.id,
+              proponents: userinfo.username,
+              business_data_id : elem.id ,//varchar(100)  null comment '业务数据主键值',
+              business_code  : '000000100' ,//varchar(100)  null comment '业务编号',
+              process_name   : '奖罚申请流程审批',//varchar(100)  null comment '流程名称',
+              employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+              approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+              action         : '发起'    ,//varchar(100)  null comment '操作动作',
+              action_opinion : '发起奖罚申请',//text          null comment '操作意见',
+              operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+              functions_station : userinfo.position, //varchar(100)  null comment '职能岗位',
+              process_station   : '奖罚申请', //varchar(100) null comment '流程岗位',
+              business_data     : JSON.stringify(elem), //text null comment '业务数据',
+              content           : `${elem.content}`,//text          null comment '业务内容',
+              process_audit     : elem.id, //varchar(100)  null comment '流程编码',
+              create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+              relate_data       : JSON.stringify(userinfo), //text null comment '关联数据',
+              origin_data       : JSON.stringify(elem),
+            }
+            await workflow.approveViewProcessLog(prLogHisNode);
+        } catch (error) {
+            console.log(error);
+        }
+
+      },
+
+      // 通知HR（人力薪资相关专职人员查看数据）
+      async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
+        try {
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请知会：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 流水号:‘${value.serialid}’ 提交了奖罚申请流程！?rurl=${receiveURL}`)
+                          .set('accept', 'json');
+        } catch (error) {
+          console.log(error);
+        }
+      },
+
       //执行奖罚明细分配函数
       async rewardRelease(){
-        if(this.release_username && !this.release_userid){
-          return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
-        }
-        if(!this.release_username || !this.release_userid){
-          return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
-        }
-        if(!this.release_amount){
-          return this.$toast.fail('请输入奖罚明细的分配金额！');
-        }
-        if(!this.item.reward_release_feature){
-          return this.$toast.fail('请输入奖罚申请的分配性质！');
-        }
-        if(!this.item.reward_release_period){
-          return this.$toast.fail('请输入奖罚申请的发放周期！');
-        }
-        if(!/^[0-9]+.{0,1}[0-9]{0,2}$/g.test(this.release_amount)){
-          return this.$toast.fail('请在分配金额处输入数字！');
+
+        try {
+          if(this.release_username && !this.release_userid){
+            return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
+          }
+          if(!this.release_username || !this.release_userid){
+            return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
+          }
+          if(!this.release_amount){
+            return this.$toast.fail('请输入奖罚明细的分配金额！');
+          }
+          if(!this.item.reward_release_feature){
+            return this.$toast.fail('请输入奖罚申请的分配性质！');
+          }
+          if(!this.item.reward_release_period){
+            return this.$toast.fail('请输入奖罚申请的发放周期！');
+          }
+          if(!/^[0-9]+.{0,1}[0-9]{0,2}$/g.test(this.release_amount)){
+            return this.$toast.fail('请在分配金额处输入数字！');
+          }
+        } catch (error) {
+          console.log(error);
         }
 
-        //查询用户数据是否已经被分配过
-        const findElem = this.data.find( item => {
-          return item.username == this.release_username;
-        })
-        //用户数据已经被分配过，无法再次分配
-        if(findElem && findElem.username == this.release_username){
-          return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
+        try {
+          //查询用户数据是否已经被分配过
+          const findElem = this.data.find( item => {
+            return item.username == this.release_username;
+          })
+          //用户数据已经被分配过，无法再次分配
+          if(findElem && findElem.username == this.release_username){
+            return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
+          }
+        } catch (error) {
+          console.log(error);
         }
 
-        this.data.push({
-          key: tools.queryUniqueID(),
-          type: this.item.reward_release_feature,
-          period: this.item.reward_release_period,
-          username: `${this.release_username}`,
-          account: `${this.release_userid}`,
-          company: `${this.release_company}`,
-          department: `${this.release_department}`,
-          position: `${this.release_position}`,
-          mobile: `${this.release_mobile}`,
-          amount: `${parseFloat(this.release_amount).toFixed(2)}`,
-        });
+        try {
+          this.data.push({
+            key: tools.queryUniqueID(),
+            type: this.item.reward_release_feature,
+            period: this.item.reward_release_period,
+            username: `${this.release_username}`,
+            account: `${this.release_userid}`,
+            company: `${this.release_company}`,
+            department: `${this.release_department}`,
+            position: `${this.release_position}`,
+            mobile: `${this.release_mobile}`,
+            amount: `${parseFloat(this.release_amount).toFixed(2)}`,
+          });
+        } catch (error) {
+          console.log(error);
+        }
 
-        this.release_userlist = [];
-        this.release_username = '';
-        this.release_amount = '';
-        this.release_company = '';
-        this.release_department = '';
-        this.release_position = '';
-        this.release_userid = '';
-        this.release_mobile = '';
+        try {
+          this.release_userlist = [];
+          this.release_username = '';
+          this.release_amount = '';
+          this.release_company = '';
+          this.release_department = '';
+          this.release_position = '';
+          this.release_userid = '';
+          this.release_mobile = '';
+        } catch (error) {
+          console.log(error);
+        }
 
       },
   },

@@ -58,7 +58,7 @@
                 <template v-for=" paneflow in paneflows ">
 
                   <a-card
-                    :key="paneflow.name"
+                    :key="paneflow.ename"
                     v-show=" panename == paneflow.ename "
                     style="margin-top: 0px; height: 800px; overflow-y:scroll;"
                     :bordered="false"
@@ -91,14 +91,14 @@
                           </a>
                         </a-list-item-meta>
                         <div slot="actions">
-                          <a @click="queryRewardView(item.id , panename)">查看</a>
+                          <a @click="queryRewardView(item.id , panename , item.typename)">查看</a>
                         </div>
                         <div class="list-content">
-                          <div class="list-content-item">
+                          <div v-show="item.reward_period" class="list-content-item">
                             <span>申请奖金</span>
                             <p>{{ item.amount }}</p>
                           </div>
-                          <div class="list-content-item">
+                          <div v-show="item.reward_period" class="list-content-item">
                             <span>所属周期</span>
                             <p>{{ item.reward_period }}</p>
                           </div>
@@ -108,7 +108,7 @@
                           </div>
                           <div class="list-content-item">
                             <span>流程发起</span>
-                            <p>{{ item.apply_realname }}</p>
+                            <p>{{ item.apply_realname || item.proponents }}</p>
                           </div>
                           <div class="list-content-item" style="display:none;">
                             <a-progress :percent="item.progress.value" :status="!item.progress.status ? null : item.progress.status" style="width: 180px" />
@@ -161,6 +161,7 @@ export default {
       rejectList:[],
       status: 'all',
       year:'all',
+      business_code: '000000000',
     };
   },
   activated() {
@@ -176,13 +177,13 @@ export default {
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
       this.menuCardClick('',this.panename);
       if(this.panename == 'myrewardlist' ){
-        this.queryRewardListByType(1 , 'hr_admin_ids');
+        this.queryRewardListByType(1 , 'hr_admin_ids' , this.panename);
       } else if(this.panename == 'mytodolist'){ //我的待办
-        this.queryRewardListByType(1 , 'wflow_todo');
+        this.queryRewardListByType(1 , 'wflow_todo' , this.panename);
       } else if(this.panename == 'mydonelist'){ //我的已办
-        this.queryRewardListByType(1 , 'wflow_done');
+        this.queryRewardListByType(1 , 'wflow_done' , this.panename);
       } else if(this.panename == 'myapplylist'){ //我的奖罚申请
-        this.queryRewardListByType(1 , 'create_by');
+        this.queryRewardListByType(1 , 'create_by' , this.panename);
       }
     },
     async searchWordChange() {
@@ -200,22 +201,23 @@ export default {
     },
     async menuCardClick(id , panename) {
       // 设置panename属性
-      this.paneanme = panename;
+      this.panename = panename;
       // 遍历paneflows
       this.paneflows.map((item) => {
         item.css =  item.id === id || item.ename == panename ? "background:#f9f9f9;" : '';
-        if(this.panename == 'myrewardlist' ){
-          this.queryRewardListByType(1 , 'hr_admin_ids');
-        } else if(this.panename == 'mytodolist'){ //我的待办
-          this.queryRewardListByType(1 , 'wflow_todo');
-        } else if(this.panename == 'mydonelist'){ //我的已办
-          this.queryRewardListByType(1 , 'wflow_done');
-        } else if(this.panename == 'myapplylist'){ //我的奖罚申请
-          this.queryRewardListByType(1 , 'create_by');
+        item.dataSource = item.id === id || item.ename == panename ? item.dataSource : [];
+        if(panename == 'myrewardlist'){
+          this.queryRewardListByType(1 , 'hr_admin_ids' , panename);
+        } else if(panename == 'mytodolist'){ //我的待办
+          this.queryRewardTodoList(1 , 'wflow_todo' , panename);
+        } else if(panename == 'mydonelist'){ //我的已办
+          this.queryRewardDoneListByType(1 , 'wflow_done' , panename);
+        } else if(panename == 'myapplylist'){ //我的奖罚申请
+          this.queryRewardListByType(1 , 'create_by' , panename);
         }
       });
     },
-    async queryRewardList(tabname , typename){
+    async queryRewardList(tabname = '', typename = ''){
 
         const userinfo = await storage.getStore('system_userinfo');  //获取当前用户信息
 
@@ -225,24 +227,26 @@ export default {
         //设置查询语句
         var searchSql = '';
 
+        const titlePrefix = typename == 'hr_admin_ids' ? '知会人力' : '申请历史';
+
         //如果存在搜索关键字
         if(this.searchWord) {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
 
         if(tabname == 1){
-          debugger;
           //获取最近6个月的待用印记录
           this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = `#${item.serialid} ` + item.reward_type + '申请: ' + item.title ;
+            item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '申请: ' + item.title ;
             item.title = item.name;
             item.avatar = '',
             item.description = '';
             item.owner = item.create_by;
             item.tel = '';
             item.all = '待审批';
+            item.typename = typename;
             item.progress = { value: 90 };
             item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
             item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
@@ -256,13 +260,14 @@ export default {
           this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = `#${item.serialid} ` + item.reward_type + '奖罚申请: ' + item.title ,
+            item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '奖罚申请: ' + item.title ,
             item.title = item.name;
             item.avatar = '',
             item.description = '';
             item.owner = item.create_by;
             item.tel = '';
             item.all = '审批中';
+            item.typename = typename;
             item.progress = { value: 90 };
             item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
             item.tel = '';
@@ -277,13 +282,14 @@ export default {
           this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = `#${item.serialid} ` +  item.reward_type + '奖罚申请: ' + item.title ,
+            item.name = `#${item.serialid} `  + ` ${titlePrefix} ` +  item.reward_type + '奖罚申请: ' + item.title ,
             item.title = item.name;
             item.avatar = '',
             item.description = '';
             item.owner = item.create_by;
             item.tel = '';
             item.all = '已完成';
+            item.typename = typename;
             item.progress = { value: 90 };
             item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
             item.tel = '';
@@ -298,13 +304,14 @@ export default {
           this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
-            item.name = `#${item.serialid} ` + item.reward_type + '奖罚申请: ' + item.title ,
+            item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '奖罚申请: ' + item.title ,
             item.title = item.name;
             item.avatar = '',
             item.description = '';
             item.owner = item.create_by;
             item.tel = '';
             item.all = '已驳回';
+            item.typename = typename;
             item.progress = { value: 90 };
             item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
             item.tel = '';
@@ -316,18 +323,78 @@ export default {
 
         }
     },
-    async queryRewardListByType(tabname = 1 , typename ){
-      const tlist =  await this.queryRewardList(tabname , typename);
+    async queryRewardTodoList(tabname = '', typeame = ''){
+
+      try {
+        const logList = query.queryProcessLogHistoryByUserName(this.tablename , this.userinfo.username);
+
+        logList.map((item , index) => {
+          item.id = item.business_data_id;
+          item.name = `#${item.serialid} ` + item.reward_type + '申请: ' + item.title ;
+          item.title = item.name;
+          item.avatar = '',
+          item.description = '';
+          item.owner = item.create_by;
+          item.tel = '';
+          item.all = '';
+          item.typename = typename;
+          item.progress = { value: 90 };
+          item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+        })
+
+        return [];
+      } catch (error) {
+        console.log(error);
+      }
+
+    },
+    async queryRewardDoneList(tabname = '', typename = ''){
+
+      try {
+        const logList = await query.queryProcessLogHistoryByUserName(this.tablename , this.userinfo.username);
+
+        logList.map((item , index) => {
+          item.id = item.business_data_id;
+          item.name = `发起：${item.content} `;
+          item.title = item.name;
+          item.avatar = '',
+          item.description = '';
+          item.owner = item.create_by;
+          item.tel = '';
+          item.all = '';
+          item.typename = typename;
+          item.progress = { value: 90 };
+          item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+        })
+
+        return logList;
+      } catch (error) {
+        console.log(error);
+      }
+
+    },
+    async queryRewardDoneListByType(tabname = '', typename = '' , panename){
+      const tlist =  await this.queryRewardDoneList(tabname , typename , panename);
       this.paneflows.map( item => { //遍历paneflows
-        if( this.panename == item.ename){
+        if( panename == item.ename){
           item.dataSource = tlist;
+          item.ename = panename;
+        }
+      })
+    },
+    async queryRewardListByType(tabname = 1 , typename = '' , panename){
+      const tlist =  await this.queryRewardList(tabname , typename , panename);
+      this.paneflows.map( item => { //遍历paneflows
+        if( panename == item.ename){
+          item.dataSource = tlist;
+          item.ename = panename;
         }
       })
     },
     // 跳转到详情页面
-    async queryRewardView(id , panename){
+    async queryRewardView(id , panename , typename){
       try {
-        this.$router.push(`/reward/rewardview?id=${id}&panename=${panename}`);
+        this.$router.push(`/reward/rewardview?id=${id}&panename=${panename}&typename=${typename}`);
       } catch (error) {
         console.log(error);
       }

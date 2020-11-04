@@ -473,3 +473,21 @@ export async function queryWeworkUser() {
         console.log(error);
     }
 }
+
+/**
+ * 根据数据字典中的节点编号，查询到这个节点对应的流程岗位名称
+ */
+export async function queryProcessLogHistoryByUserName(tableName, username) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //提交URL
+    var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_history?_where=(table_name,eq,${tableName})~and(business_code,eq,000000000)~and(proponents,eq,${username})&_sort=-operate_time`;
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+        console.log(res);
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}

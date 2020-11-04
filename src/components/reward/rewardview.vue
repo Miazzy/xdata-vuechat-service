@@ -269,7 +269,7 @@
                    </a-row>
                 </div>
 
-                <div v-show="panename != 'myapplylist'" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                <div v-show="!(panename == 'myapplylist' || panename == 'mydonelist' || typename == 'hr_admin_ids')" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
 
@@ -289,6 +289,16 @@
                     </a-col>
                    </a-row>
                 </div>
+                <div v-show="typename == 'hr_admin_ids'" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                   <a-row style="border-top: 1px dash #f0f0f0;" >
+                    <a-col class="reward-apply-content-title-text" :span="24" style="">
+                      <a-button type="primary" style="width: 120px;" @click="handleNotifyConfirm();"  >
+                        知会确认
+                      </a-button>
+                    </a-col>
+                   </a-row>
+                </div>
+
 
                 <div style="height:100px;">
 
@@ -379,6 +389,7 @@ export default {
       commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
       sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
       panename:'',
+      typename:'',
     };
   },
   activated() {
@@ -546,6 +557,7 @@ export default {
           this.type = tools.getUrlParam('type') || '0'; //查询type
           this.item.id = tools.getUrlParam('id') || '';  //查询奖罚模块编号
           this.panename = tools.getUrlParam('panename'); //获取panename
+          this.typename = tools.getUrlParam('typename'); //获取typename
 
           const userinfo = await storage.getStore('system_userinfo'); //获取用户基础信息
           const item = await query.queryTableData(this.tablename , this.item.id); //查询数据
@@ -732,6 +744,13 @@ export default {
         } catch (error) {
             console.log(error);
         }
+      },
+
+      /**
+       * @function 处理知会确认
+       */
+      async handleNotifyConfirm(){
+        this.$toast.success('人力知会确认成功！');
       },
   },
 };
