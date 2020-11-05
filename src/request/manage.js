@@ -952,3 +952,22 @@ export async function queryTableDataByField(tableName, field, value) {
         console.log(err);
     }
 }
+
+/**
+ * 添加数据
+ * @param {*} tableName
+ * @param {*} id
+ */
+export async function deleteTableData(tableName, id) {
+    //大写转小写
+    tableName = tableName.toLowerCase();
+    //Post数据的URL地址
+    var deleteURL = `${window.requestAPIConfig.restapi}/api/${tableName}/${id}`;
+
+    try {
+        var res = await superagent.delete(deleteURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+}

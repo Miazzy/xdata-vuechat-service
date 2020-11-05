@@ -350,7 +350,6 @@ export default {
     },
     async queryRewardTodoListByType(tabname = '', typename = '' , panename){
       const tlist =  await this.queryRewardTodoList(tabname , typename , panename);
-      debugger;
       this.paneflows.map( item => { //遍历paneflows
         if( panename == item.ename){
           item.dataSource = tlist;

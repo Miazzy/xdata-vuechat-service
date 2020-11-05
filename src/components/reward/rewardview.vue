@@ -555,8 +555,12 @@ export default {
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await workflow.queryPRLogByDataID(id);
 
+        //如果存在当前待办数据，则删除待办数据
         if(tlist && tlist.length > 0){
-          debugger;
+          //先遍历删除一次，然后批量在删除一次，因为发现批量删除有时，执行不正常
+          for(let item of tlist){
+            await manageAPI.deleteTableData('pr_log', item.id);
+          }
           //同时删除本条待办记录当前(印章管理员)
           await manageAPI.deleteProcessLog('' , tlist);
         }
