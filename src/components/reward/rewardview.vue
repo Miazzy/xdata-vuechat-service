@@ -561,6 +561,7 @@ export default {
           for(let item of tlist){
             await manageAPI.deleteTableData('pr_log', item.id);
           }
+          await storage.clearStore(`sys_workflow_cache@$now&id${id}`);
           //同时删除本条待办记录当前(印章管理员)
           await manageAPI.deleteProcessLog('' , tlist);
         }
@@ -699,6 +700,9 @@ export default {
 
         //新增驳回记录
         await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '驳回' , this.approve_content);
+
+        //查询最新审批记录
+        await this.queryProcessLog();
 
         this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('驳回流程审批成功！');
