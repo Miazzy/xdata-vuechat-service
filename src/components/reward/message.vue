@@ -16,7 +16,7 @@
               </van-sidebar>
             </div>
 
-            <div style="position:absolute; left:80px; width:300px;">
+            <div style="position:absolute; left:80px; width:240px;">
               <a-card class="pane-flow-card" :style="paneflowcard">
                 <div style="margin:10px 15px 10px 25px;">
                   <a-input-search
@@ -53,7 +53,7 @@
               </a-card>
             </div>
 
-            <div style="position:absolute; left:400px; width:1050px;">
+            <div id="van-reward-content" style="position:absolute; left:325px; width:1100px;">
               <a-col style="padding: 0 12px 0 0" >
                 <template v-for=" paneflow in paneflows ">
 
@@ -81,12 +81,12 @@
                       <a-input-search style="margin-left: 16px; width: 272px;" />
                     </div>
 
-                    <div id="reward-list-item" style="background:#fefefe;margin:10px 10px;pading:10px 10px;  height: 650px; overflow-y:scroll;">
+                    <div id="reward-list-item" style="background:#fefefe;margin:10px 2px; pading:10px 2px; height: 650px; overflow-y:scroll;">
                       <a-list-item :key="index" v-for="(item, index) in paneflow.dataSource" style="background:#fefefe;margin:10px 10px;pading:10px 10px;border-bottom:1px solid #f0f0f0;">
                         <a-list-item-meta :description="item.description" style="display:block;">
                           <a-avatar style="display:none;" slot="avatar" size="large" shape="square" :src="item.avatar"/>
                           <a slot="title">
-                            <span style="display:block;"> {{ item.title }} </span>
+                            <span style="display:block;"> {{ item.title ? (item.title) : ''}} </span>
                             <span style="display:block;margin-top:5px;">{{ item.content ? (item.content.slice(0,30) + '...') : '' }} </span>
                           </a>
                         </a-list-item-meta>
@@ -106,9 +106,17 @@
                             <span>开始时间</span>
                             <p>{{ item.startAt }}</p>
                           </div>
-                          <div class="list-content-item">
+                          <div v-show="item.apply_realname || item.proponents" class="list-content-item">
                             <span>流程发起</span>
                             <p>{{ item.apply_realname || item.proponents }}</p>
+                          </div>
+                          <div v-show="item.action" class="list-content-item">
+                            <span>审批操作</span>
+                            <p>{{ item.action }}</p>
+                          </div>
+                          <div v-show="bpm_status[item.bpm_status]" class="list-content-item">
+                            <span>流程发起</span>
+                            <p>{{ bpm_status[item.bpm_status] }}</p>
                           </div>
                           <div class="list-content-item" style="display:none;">
                             <a-progress :percent="item.progress.value" :status="!item.progress.status ? null : item.progress.status" style="width: 180px" />
@@ -161,6 +169,7 @@ export default {
       rejectList:[],
       status: 'all',
       year:'all',
+      bpm_status:{1:'待提交',2:'审核中',3:'审批中',4:'已完成',5:'已完成',10:'已作废' , 100:'已驳回',}, //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
       business_code: '000000000',
     };
   },

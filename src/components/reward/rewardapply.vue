@@ -555,6 +555,7 @@ export default {
         await tools.sleep(0);
         this.$toast.success('上传成功');
       },
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -563,6 +564,7 @@ export default {
           console.log(error);
         }
       },
+
       /**
        * @function 获取处理日志
        */
@@ -576,6 +578,7 @@ export default {
           console.log(error);
         }
       },
+
       async deleteProcessLog(){
 
         const id = tools.getUrlParam('id');
@@ -603,6 +606,7 @@ export default {
         }
 
       },
+
       validField(fieldName){
         //获取用户基础信息
         const userinfo = storage.getStore('system_userinfo');
@@ -620,6 +624,7 @@ export default {
 
         return tools.isNull(this.message[fieldName]);
       },
+
       validFieldToast(fieldName){
         const flag = !this.validField(fieldName);
         if(flag){
@@ -627,6 +632,7 @@ export default {
           return false;
         }
       },
+
       //用户选择知会人员
       async queryNotifyMan(){
 
@@ -704,11 +710,13 @@ export default {
         }
 
       },
+
       //选中当前知会人员
       async selectNotifyUser(value){
         const user = this.userList.find((item,index) => {return this.item.hr_id == item.id});
         this.item.hr_name = user.name;
       },
+
       async queryReleaseMan(){
 
         //获取盖章人信息
@@ -801,6 +809,7 @@ export default {
         }
 
       },
+
       //选中当前知会人员
       async selectReleaseUser(value){
         //获取员工基本信息
@@ -816,6 +825,7 @@ export default {
         //设置员工职务
         this.release_position = temp.position;
       },
+
       async queryApproveMan(){
 
         //获取盖章人信息
@@ -908,6 +918,7 @@ export default {
         }
 
       },
+
       //选中当前知会人员
       async selectApproveUser(value){
         //获取员工基本信息
@@ -922,6 +933,7 @@ export default {
         //设置员工职务
         this.approve_position = temp.position;
       },
+
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -1060,7 +1072,7 @@ export default {
                     remark: this.item.remark, //备注
                     amount: this.item.amount,
                     wflowid: '',
-                    bpm_status: '',
+                    bpm_status: '', //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
                     reward_type: this.item.reward_type,
                     reward_name: this.item.reward_name,
                     reward_period: this.item.reward_period,
@@ -1281,10 +1293,12 @@ export default {
           console.log(error);
         }
       },
+
       // 保存用户数据但是不提交
       async handleSave(){
         this.$toast.success('保存奖惩申请成功！');
       },
+
       // 执行奖罚明细分配函数
       async rewardRelease(){
 
@@ -1355,6 +1369,7 @@ export default {
         }
 
       },
+
       // 审批人员添加函数
       async rewardApproveAdd(){
 
@@ -1384,6 +1399,7 @@ export default {
         }
 
       },
+
   },
 };
 </script>

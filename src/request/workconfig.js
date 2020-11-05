@@ -766,11 +766,11 @@ export const commonUserInfo = { username: 'common', realname: '', main_departmen
 export function getPaneflows(this_) {
     return [{
             id: 100,
-            name: "奖罚审批",
+            name: "我的知会",
             ename: "myrewardlist",
             avatar: `//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png`,
             href: "/account/myrewardlist",
-            description: "查看待处理的奖罚申请流程",
+            description: "查看知会(人力专项)申请流程",
             show: true,
             css: "",
             all: '全部',

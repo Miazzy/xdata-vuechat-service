@@ -391,7 +391,7 @@ export default {
               remark: '',//备注
               amount: '',
               wflowid: '',
-              bpm_status: '',
+              bpm_status: '', //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
               reward_type: '',
               reward_name: '',
               reward_period: dayjs().format('YYYY年MM月'),
@@ -635,7 +635,7 @@ export default {
                 remark: item.remark, //备注
                 amount: item.amount,
                 wflowid: item.wflowid,
-                bpm_status: item.bpm_status,
+                bpm_status: item.bpm_status, //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
                 reward_type: item.reward_type,
                 reward_name: item.reward_name,
                 reward_period: item.reward_period,

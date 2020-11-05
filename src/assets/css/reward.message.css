@@ -48,3 +48,7 @@
     box-shadow: 0 0 0 0 #e8e8e8, 0 0 0 0 #e8e8e8, 0 0 0 0 #e8e8e8, inset 0 0 0 0 #e8e8e8, inset 0 0 0 0 #e8e8e8;
     transition: all .3s;
 }
+
+#van-reward-content .ant-card-wider-padding .ant-card-body {
+    padding: 24px 2px 24px 12px;
+}
