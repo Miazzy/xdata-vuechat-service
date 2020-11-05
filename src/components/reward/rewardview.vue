@@ -278,7 +278,7 @@
                 </div>
 
                  <div class="reward-apply-content-item reward-apply-content-title" style="">
-                  <div>
+                  <div style="margin-left:100px;">
                     <van-steps direction="vertical" :active="processLogList.length - 1">
                       <template v-for="value in processLogList">
                         <van-step :key="value.id">
@@ -291,7 +291,24 @@
                 </div>
 
 
-                <div v-show="!(panename == 'myapplylist' || panename == 'mydonelist' || typename == 'hr_admin_ids')" class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                <div v-show="(!(panename == 'myapplylist' || panename == 'mydonelist' || typename == 'hr_admin_ids')) && workflowLogList.length > 0 && role !='view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+
+                  <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                    <a-row>
+                      <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                        审批意见
+                      </a-col>
+                      <a-col :span="20">
+                        <a-textarea
+                          v-model="approve_content"
+                          placeholder="请输入此申请流程的审批意见！"
+                          :auto-size="{ minRows: 10, maxRows: 50 }"
+                          style="height:80px; border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;"
+                        />
+                      </a-col>
+                    </a-row>
+                  </div>
+
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
 
@@ -412,7 +429,9 @@ export default {
       sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
       panename:'',
       typename:'',
+      approve_content:'',
       processLogList:[],
+      workflowLogList:[],
     };
   },
   activated() {
@@ -510,8 +529,12 @@ export default {
       async queryProcessLog(){
         const id = tools.getUrlParam('id');
         try {
-          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          const historyLogList = await workflow.queryPRLogHistoryByDataID(id);
+          const logList = await workflow.queryPRLogByDataID(id);
+          logList.map(item => { item.action = '待审批'; item.action_opinion = '尚未审批，请等待审批完成！'; });
+          this.processLogList = [...historyLogList , ...logList];
+          this.workflowLogList = logList;
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') ; item.action_opinion = item.action_opinion ? item.action_opinion : ''; });
           this.processLogList.sort();
         } catch (error) {
           console.log(error);
@@ -520,10 +543,9 @@ export default {
       async deleteProcessLog(){
 
         const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
-        if(tools.isNull(id) || tools.isNull(pid)){
+        if(tools.isNull(id)){
           return ;
         }
 
@@ -531,16 +553,12 @@ export default {
         const userinfo = await storage.getStore('system_userinfo');
 
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        let tlist = await workflow.queryPRLogByDataID(id);
 
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        if(tlist.length > 0){
+        if(tlist && tlist.length > 0){
+          debugger;
           //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          await manageAPI.deleteProcessLog('' , tlist);
         }
 
       },
@@ -592,6 +610,12 @@ export default {
           }
 
           try {
+            this.workflowLogList = await workflow.queryPRLogByDataID(this.item.id);
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
             if(item){
               this.item = {
                 id: item.id,
@@ -629,6 +653,8 @@ export default {
               }
             }
 
+            await this.queryProcessLog(); //查询流程日志
+
           } catch (error) {
             console.log(error);
           }
@@ -650,7 +676,62 @@ export default {
        * @function 驳回流程申请
        */
       async handleDisagree(){
+
+        if(!this.approve_content){
+          return this.$toast.fail('请输入此申请流程的驳回意见！');
+        }
+
+        const id = tools.getUrlParam('id');
+        const logList = await workflow.queryPRLogByDataID(id);
+
+        if(logList.length <= 0){
+          return this.$toast.fail('此流程的审批已处理完毕，请不要重复审批！');
+        }
+
+        const userinfo = await storage.getStore('system_userinfo'); //获取用户基础信息
+
+        //删除当前流程中待处理流程记录
+        await this.deleteProcessLog();
+
+        //新增驳回记录
+        await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '驳回' , this.approve_content);
+
+        this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('驳回流程审批成功！');
+        this.role = 'view';
+      },
+
+      // 处理流程日志
+      async handleSaveHistoryWFLog(tablename , elem , userinfo , action , action_opinion){
+
+        try {
+          const prLogHisNode = {
+              id: tools.queryUniqueID(),
+              table_name: tablename,
+              main_value: elem.id,
+              proponents: userinfo.username,
+              business_data_id : elem.id , //varchar(100)  null comment '业务数据主键值',
+              business_code  : '000000100' , //varchar(100)  null comment '业务编号',
+              process_name   : '奖罚申请流程审批', //varchar(100)  null comment '流程名称',
+              employee       : userinfo.realname , //varchar(1000) null comment '操作职员',
+              approve_user   : userinfo.username , //varchar(100)  null comment '审批人员',
+              action         : action    , //varchar(100)  null comment '操作动作',
+              action_opinion : action_opinion , //text          null comment '操作意见',
+              operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+              functions_station : userinfo.position, //varchar(100)  null comment '职能岗位',
+              process_station   : '自由流程审批', //varchar(100) null comment '流程岗位',
+              business_data     : JSON.stringify(elem), //text null comment '业务数据',
+              content           : `${elem.content}`,//text          null comment '业务内容',
+              process_audit     : elem.id, //varchar(100)  null comment '流程编码',
+              create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+              relate_data       : JSON.stringify(userinfo), //text null comment '关联数据',
+              origin_data       : JSON.stringify(elem),
+            }
+            await workflow.approveViewProcessLog(prLogHisNode);
+        } catch (error) {
+            console.log(error);
+        }
+
       },
 
       /**
