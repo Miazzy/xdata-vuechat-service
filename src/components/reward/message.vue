@@ -73,10 +73,11 @@
                       </a-radio-group>
 
                       <a-radio-group v-model="status">
-                        <a-radio-button v-show="paneflow.tabs[0]" @click="queryRewardListByType(1);" value="all">{{ paneflow.tabs[0]}}</a-radio-button>
-                        <a-radio-button v-show="paneflow.tabs[1]" @click="queryRewardListByType(2);" value="processing">{{ paneflow.tabs[1] }}</a-radio-button>
-                        <a-radio-button v-show="paneflow.tabs[2]" @click="queryRewardListByType(3);" value="waiting">{{ paneflow.tabs[2] }}</a-radio-button>
-                        <a-radio-button v-show="paneflow.tabs[3]" @click="queryRewardListByType(4);" value="reject">{{ paneflow.tabs[3] }}</a-radio-button>
+                        <a-radio-button v-show="paneflow.tabs[0]" @click="queryRewardListByType(0 , typename , panename);" value="all">{{ paneflow.tabs[0]}}</a-radio-button>
+                        <a-radio-button v-show="paneflow.tabs[1]" @click="queryRewardListByType(1 , typename , panename);" value="init">{{ paneflow.tabs[1] }}</a-radio-button>
+                        <a-radio-button v-show="paneflow.tabs[2]" @click="queryRewardListByType(2 , typename , panename);" value="processing">{{ paneflow.tabs[2] }}</a-radio-button>
+                        <a-radio-button v-show="paneflow.tabs[3]" @click="queryRewardListByType(3 , typename , panename);" value="complete">{{ paneflow.tabs[3] }}</a-radio-button>
+                        <a-radio-button v-show="paneflow.tabs[3]" @click="queryRewardListByType(4 , typename , panename);" value="reject">{{ paneflow.tabs[4] }}</a-radio-button>
                       </a-radio-group>
                       <a-input-search style="margin-left: 16px; width: 272px;" />
                     </div>
@@ -90,8 +91,8 @@
                             <span style="display:block;margin-top:5px;">{{ item.content ? (item.content.slice(0,30) + '...') : '' }} </span>
                           </a>
                         </a-list-item-meta>
-                        <div slot="actions">
-                          <a @click="queryRewardView(item.id , panename , item.typename)">查看</a>
+                     <div slot="actions">
+                          <a @click="queryRewardView(item.id , panename , item.typename , item.bpm_status , item.apply_realname || item.proponents)">查看</a>
                         </div>
                         <div class="list-content">
                           <div v-show="item.reward_period" class="list-content-item">
@@ -163,6 +164,7 @@ export default {
       panename:'myrewardlist',
       constpaneflows: workconfig.getPaneflows(this),
       paneflows: workconfig.getPaneflows(this),
+      allList:[],
       initList:[],
       confirmList:[],
       doneList:[],
@@ -171,6 +173,7 @@ export default {
       year:'all',
       bpm_status:{1:'待提交',2:'审核中',3:'审批中',4:'已完成',5:'已完成',10:'已作废' , 100:'已驳回',}, //流程状态 1：待提交  2：审核中  3：审批中  4：已完成  5：已完成  10：已作废
       business_code: '000000000',
+      typename:'',
     };
   },
   activated() {
@@ -186,13 +189,17 @@ export default {
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
       this.menuCardClick('',this.panename);
       if(this.panename == 'myrewardlist' ){
-        this.queryRewardListByType(1 , 'hr_admin_ids' , this.panename);
+        this.typename = 'hr_admin_ids';
+        this.queryRewardListByType(0 , 'hr_admin_ids' , this.panename);
       } else if(this.panename == 'mytodolist'){ //我的待办
-        this.queryRewardListByType(1 , 'wflow_todo' , this.panename);
+        this.typename = 'wflow_todo';
+        this.queryRewardListByType(0 , 'wflow_todo' , this.panename);
       } else if(this.panename == 'mydonelist'){ //我的已办
-        this.queryRewardListByType(1 , 'wflow_done' , this.panename);
+        this.typename = 'wflow_done';
+        this.queryRewardListByType(0 , 'wflow_done' , this.panename);
       } else if(this.panename == 'myapplylist'){ //我的奖罚申请
-        this.queryRewardListByType(1 , 'create_by' , this.panename);
+        this.typename = 'create_by';
+        this.queryRewardListByType(0 , 'create_by' , this.panename);
       }
     },
     async searchWordChange() {
@@ -216,13 +223,17 @@ export default {
         item.css =  item.id === id || item.ename == panename ? "background:#f9f9f9;" : '';
         item.dataSource = item.id === id || item.ename == panename ? item.dataSource : [];
         if(panename == 'myrewardlist'){
-          this.queryRewardListByType(1 , 'hr_admin_ids' , panename);
+          this.typename = 'hr_admin_ids';
+          this.queryRewardListByType(0 , 'hr_admin_ids' , panename);
         } else if(panename == 'mytodolist'){ //我的待办
+          this.typename = 'wflow_todo';
           this.queryRewardTodoListByType(1 , 'wflow_todo' , panename);
         } else if(panename == 'mydonelist'){ //我的已办
+          this.typename = 'wflow_done';
           this.queryRewardDoneListByType(1 , 'wflow_done' , panename);
         } else if(panename == 'myapplylist'){ //我的奖罚申请
-          this.queryRewardListByType(1 , 'create_by' , panename);
+          this.typename = 'create_by';
+          this.queryRewardListByType(0 , 'create_by' , panename);
         }
       });
     },
@@ -243,9 +254,30 @@ export default {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
 
-        if(tabname == 1){
+        if(tabname == 0){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.allList = await manageAPI.queryTableData(this.tablename , `_where=(bpm_status,in,1,2,3,4,5,10,100,0)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+
+          this.allList.map((item , index) => {
+            item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '申请: ' + item.title ;
+            item.title = item.name;
+            item.avatar = '',
+            item.description = '';
+            item.owner = item.create_by;
+            item.tel = '';
+            item.all = '待审批';
+            item.typename = typename;
+            item.progress = { value: 90 };
+            item.startAt = dayjs(item.create_time).format('YYYY-MM-DD');
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+
+          return this.allList;
+
+        } else if(tabname == 1){
+          //获取最近6个月的待用印记录
+          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(bpm_status,in,1)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '申请: ' + item.title ;
@@ -266,7 +298,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(bpm_status,in,2,3)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '奖罚申请: ' + item.title ,
@@ -288,7 +320,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(bpm_status,in,4,5)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = `#${item.serialid} `  + ` ${titlePrefix} ` +  item.reward_type + '奖罚申请: ' + item.title ,
@@ -310,7 +342,7 @@ export default {
 
          } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(bpm_status,in,10,100)~and(${typename},like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = `#${item.serialid} ` + ` ${titlePrefix} ` + item.reward_type + '奖罚申请: ' + item.title ,
@@ -410,9 +442,9 @@ export default {
       })
     },
     // 跳转到详情页面
-    async queryRewardView(id , panename , typename){
+    async queryRewardView(id = '', panename = '', typename = '', bpm_status = 1 , proponents = ''){
       try {
-        this.$router.push(`/reward/rewardview?id=${id}&panename=${panename}&typename=${typename}`);
+        this.$router.push(`/reward/rewardview?id=${id}&panename=${panename}&typename=${typename}&bpm_status=${bpm_status}&proponents=${proponents}`);
       } catch (error) {
         console.log(error);
       }

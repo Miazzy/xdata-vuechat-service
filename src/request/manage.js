@@ -723,6 +723,8 @@ export async function transFreeWflowHis(id) {
  */
 export async function patchTableData(tableName, id, node) {
 
+    debugger;
+
     //大写转小写
     tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
