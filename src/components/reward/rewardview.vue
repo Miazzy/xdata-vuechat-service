@@ -391,9 +391,39 @@
                     </a-row>
                   </div>
 
-                  <div class="reward-apply-content-item reward-apply-content-title" style="">
+                  <div v-show="approve_executelist.length > 0" class="reward-apply-content-item reward-apply-content-title" style="">
                     <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
                       <a-table :columns="wfcolumns" :data-source="approve_executelist">
+                      </a-table>
+                    </a-row>
+                  </div>
+
+                  <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                    <a-row style="position:relative;">
+                      <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                        <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>知会人员</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <a-input v-model="approve_notify_username" placeholder="请输入申请流程的知会人员！" @blur="queryNotifyMan();" @click="queryNotifyMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0; width:320px;" />
+                        <div style="position:absolute; right: 5px; top: -2px;">
+                          <van-button name="file" @click="rewardNotifyAdd();"  >添加</van-button>
+                        </div>
+                      </a-col>
+                    </a-row>
+                    <a-row>
+                      <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      </a-col>
+                      <a-col :span="9">
+                        <div style="margin-left: 10px;">
+                          <van-address-list v-show="approve_notify_userlist.length > 0" v-model="approve_notify_userid" :list="approve_notify_userlist" default-tag-text="默认" edit-disabled @select="selectNotifyUser();" />
+                        </div>
+                      </a-col>
+                    </a-row>
+                  </div>
+
+                  <div v-show="approve_notifylist.length > 0" class="reward-apply-content-item reward-apply-content-title" style="">
+                    <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
+                      <a-table :columns="wfcolumns" :data-source="approve_notifylist">
                       </a-table>
                     </a-row>
                   </div>
@@ -424,7 +454,73 @@
 
                 </div>
 
-                <div v-show="panename == 'myapplylist' && typename == 'create_by' && (bpm_status == '2' || bpm_status == '3') && workflowLogList.length > 0 && role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+                <div v-show="panename == 'myapplylist' && typename == 'create_by' && (bpm_status == '4' || bpm_status == '5') && workflowLogList.length == 0 && role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
+
+                  <div class="reward-apply-content-item reward-apply-content-title" style="margin-top: 35px;">
+                    <a-row style="border-top: 1px dash #f0f0f0;" >
+                      <a-col class="reward-apply-content-title-text" :span="4" style="">
+                        知会设置
+                      </a-col>
+                    </a-row>
+                  </div>
+
+                  <div id="van-user-list" class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                    <a-row style="position:relative;">
+                      <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                        <span style="position:relative;" ><span style="color:red;margin-right:0px;position:absolute;left:-10px;top:0px;"></span>知会人员</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <a-input v-model="approve_notify_username" placeholder="请输入申请流程的知会人员！" @blur="queryNotifyMan();" @click="queryNotifyMan();" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0; width:320px;" />
+                        <div style="position:absolute; right: 5px; top: -2px;">
+                          <van-button name="file" @click="rewardNotifyAdd();"  >添加</van-button>
+                        </div>
+                      </a-col>
+                    </a-row>
+                    <a-row>
+                      <a-col :span="3" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                      </a-col>
+                      <a-col :span="9">
+                        <div style="margin-left: 10px;">
+                          <van-address-list v-show="approve_notify_userlist.length > 0" v-model="approve_notify_userid" :list="approve_notify_userlist" default-tag-text="默认" edit-disabled @select="selectNotifyUser();" />
+                        </div>
+                      </a-col>
+                    </a-row>
+                  </div>
+
+                  <div class="reward-apply-content-item reward-apply-content-title" style="">
+                    <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
+                      <a-table :columns="wfcolumns" :data-source="approve_notifylist">
+                      </a-table>
+                    </a-row>
+                  </div>
+
+                  <div class="reward-apply-content-item" style="margin-top:5px;margin-bottom:5px; margin-right:10px;">
+                    <a-row>
+                      <a-col :span="4" style="font-size:1.0rem; margin-top:5px; text-align: center;">
+                        知会意见
+                      </a-col>
+                      <a-col :span="20">
+                        <a-textarea
+                          v-model="approve_content"
+                          placeholder="请输入此申请流程的申请意见！"
+                          :auto-size="{ minRows: 10, maxRows: 50 }"
+                          style="height:80px; border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0;"
+                        />
+                      </a-col>
+                    </a-row>
+                  </div>
+
+                  <a-row style="border-top: 1px dash #f0f0f0;" >
+                    <a-col class="reward-apply-content-title-text" :span="24" style="">
+                      <a-button type="primary" style="width: 120px;" @click="handleNotifyConfirm();"  >
+                        知会
+                      </a-button>
+                    </a-col>
+                  </a-row>
+
+                </div>
+
+                <div v-show="panename == 'myapplylist' && typename == 'create_by' && (bpm_status == '2' || bpm_status == '3') && workflowLogList.length >= 0 && role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
 
                   <div class="reward-apply-content-item reward-apply-content-title" style="">
                     <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
@@ -451,7 +547,7 @@
 
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col class="reward-apply-content-title-text" :span="24" style="">
-                      <a-button type="primary" style="width: 120px;" @click="handleStartConfirm();"  >
+                      <a-button type="primary" style="width: 120px;" @click="handleRejectConfirm();"  >
                         撤销审批
                       </a-button>
                     </a-col>
@@ -487,6 +583,7 @@ import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
+import * as contact from '@/vuex/contacts';
 
 export default {
   mixins: [window.mixin],
@@ -499,6 +596,7 @@ export default {
       uploadURL:'',
       tablename:'bs_reward_apply',
       size: 0,
+      loading:false,
       item:{
               id: '',
               serialid:'',
@@ -538,6 +636,7 @@ export default {
       wfcolumns: workconfig.columns.reward.wfcolumns,
       data: [],
       userList:[],
+
       approve_userid:'',
       approve_username:'',
       approve_mobile:'',
@@ -545,7 +644,18 @@ export default {
       approve_company:'',
       approve_position:'',
       approve_userlist:[],
+
+      approve_notify_userid:'',
+      approve_notify_username:'',
+      approve_notify_mobile:'',
+      approve_notify_department:'',
+      approve_notify_company:'',
+      approve_notify_position:'',
+      approve_notify_userlist:[],
+
       approve_executelist:[],
+      approve_notifylist:[],
+
       role:'',
       tablename:'bs_reward_apply',
       readonly: false,
@@ -668,7 +778,22 @@ export default {
           logList.map(item => { item.action = '待审批'; item.action_opinion = '尚未审批，请等待审批完成！'; });
           this.processLogList = [...historyLogList , ...logList];
           this.workflowLogList = logList;
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') ; item.action_opinion = item.action_opinion ? item.action_opinion : ''; });
+
+          for(let item of this.processLogList){
+            try {
+              item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') ;
+              item.action_opinion = item.action_opinion ? item.action_opinion : '';
+            } catch (error) {
+              console.log(error);
+            }
+            try {
+              item.empinfo =  (await manageAPI.queryUserByNameHRM(item.employee))[0];
+              item.employee = item.empinfo && item.empinfo.lastname ? `${item.empinfo.lastname}(${item.employee})` : item.employee;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
           this.processLogList.sort();
         } catch (error) {
           console.log(error);
@@ -834,6 +959,117 @@ export default {
         this.approve_position = temp.position;
       },
 
+      async queryNotifyMan(){
+
+        //获取盖章人信息
+        const user_admin_name = this.approve_notify_username;
+
+        //输入的用户
+        if(!user_admin_name || user_admin_name.length <= 1){
+          return;
+        }
+
+        try {
+          if(!!user_admin_name){
+
+            //从用户表数据中获取填报人资料
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+
+            if(!!user){
+
+              //如果是用户数组列表，则展示列表，让用户自己选择
+              if(Array.isArray(user)){
+
+                try {
+                  user.map((elem,index) => {
+                    let company = elem.textfield1.split('||')[0];
+                    company = company.slice(company.lastIndexOf('>')+1);
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
+                    this.approve_notify_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                  })
+
+                  //获取盖印人姓名
+                  this.approve_notify_username = user[0].lastname;
+                  //当前盖印人编号
+                  this.approve_notify_userid = this.userid = user[0].loginid;
+
+                  try {
+                    this.selectNotifyUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              } else { //如果只有一个用户数据，则直接设置
+
+                try {
+                  let company = user.textfield1.split('||')[0];
+                  company = company.slice(company.lastIndexOf('>')+1);
+                  let department = user.textfield1.split('||')[1];
+                  department = department.slice(department.lastIndexOf('>')+1);
+                  let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
+                  //将用户数据推送至对方数组
+                  this.approve_notify_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
+
+                  //获取盖印人姓名
+                  this.approve_notify_username = user.lastname;
+                  //当前盖印人编号
+                  this.approve_notify_userid = this.userid = user.loginid;
+
+                  try {
+                    this.selectNotifyUser();
+                  } catch (error) {
+                    console.log(error);
+                  }
+
+                } catch (error) {
+                  console.log(error);
+                }
+
+              }
+
+              //遍历去重
+              try {
+                this.approve_notify_userlist = this.approve_notify_userlist.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.approve_notify_userlist.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+
+      //选中当前知会人员
+      async selectNotifyUser(value){
+        //获取员工基本信息
+        const user = this.approve_notify_userlist.find((item,index) => {return this.approve_notify_userid == item.id});
+        //设置员工
+        this.approve_notify_username = user.name;
+        this.approve_notify_mobile = user.mobile;
+        this.approve_notify_company = user.company;
+        this.approve_notify_department = user.department;
+
+        debugger;
+        //查询员工职务
+        const temp = await query.queryUserInfoByMobile(user.mobile);
+        //设置员工职务
+        this.approve_notify_position = temp.position;
+      },
+
+
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -919,7 +1155,25 @@ export default {
        * @function 同意流程申请
        */
       async handleAgree() {
-        this.$toast.success('同意流程审批成功！');
+
+        if(!this.approve_content){
+          return this.$toast.fail('请输入此申请流程的审批意见！');
+        }
+
+        const id = tools.getUrlParam('id');
+        const logList = await workflow.queryPRLogByDataID(id);
+
+        if(logList.length <= 0){
+          return this.$toast.fail('此流程的审批已处理完毕，请不要重复审批！');
+        }
+
+        // 执行审批业务
+        await this.handleAgreeWF();
+        // 清除缓存信息
+        await storage.clearStore(`sys_workflow_cache@$now&id${id}`);
+
+        // 提示执行成功！
+        // this.$toast.success('同意流程审批成功！');
       },
 
       /**
@@ -1101,18 +1355,46 @@ export default {
         } catch (error) {
             console.log(error);
         }
+
       },
 
       /**
        * @function 处理知会确认
        */
       async handleNotifyConfirm(){
+        if(!this.approve_content){
+          return this.$toast.fail('请输入此申请流程的人力确认意见！');
+        }
+
+        const id = tools.getUrlParam('id');
+        const logList = await workflow.queryPRLogByDataID(id);
+
+        if(logList.length > 0 || (this.item.bpm_status != '4' && this.item.bpm_status != '5')){
+          return this.$toast.fail('此流程申请尚在审批中，请审批完成后在进行确认操作！');
+        }
+
+        const userinfo = await storage.getStore('system_userinfo'); //获取用户基础信息
+
+        //修改表单流程状态bpm_status为已驳回
+        await manageAPI.patchTableData(this.tablename , id , { id,  status: '待审批', bpm_status: '6', });
+
+        //新增知会确认记录
+        await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '人力确认' , this.approve_content);
+
+        //查询最新审批记录
+        await this.queryProcessLog();
+
         this.$toast.success('知会确认成功！');
+        this.role = 'view';
+
       },
       async handleStartConfirm(){
 
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
+
+        //查询最新审批记录
+        await this.queryProcessLog();
 
         if(!this.approve_content){
           return this.$toast.fail('请输入此申请流程的提交意见！');
@@ -1128,6 +1410,8 @@ export default {
          //流程审批人员
         let wfUsers = '';  //流程审批人员
         let approver = ''; //最终审批人员
+        let nfUsers = '';  //流程知会人员
+        let wfAll = '';    //流程所有人员
 
         if(!this.approve_executelist || this.approve_executelist.length <= 0){
           await vant.Dialog.alert({
@@ -1141,8 +1425,15 @@ export default {
           } else {
             const tempIndex = this.approve_executelist.length - 1;
             const templist = this.approve_executelist.slice(0,tempIndex);
+
             approver = this.approve_executelist[tempIndex].userid;
             wfUsers = (templist.map(obj => {return obj.userid})).toString();
+
+            nfUsers = (this.approve_notifylist.map(obj => {return obj.userid})).toString();
+            wfAll = (this.approve_executelist.map(obj => {return obj.userid})).toString();
+
+            //保存流程审批人员、知会人员
+            await manageAPI.patchTableData(this.tablename , this.item.id , { id : this.item.id ,  wflow_all: wfAll , wflow_notify: nfUsers, });
           }
         }
 
@@ -1179,10 +1470,13 @@ export default {
                     debugger;
 
                     //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-                    await this.handleSubmitWF(userinfo , wfUsers , '' , approver , this.tablename , this.item.id , this.item  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
+                    await this.handleSubmitWF(userinfo , wfUsers , nfUsers , approver , this.tablename , this.item.id , this.item  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
                     debugger;
 
                     /************************  工作流程日志(结束)  ************************/
+
+                    //查询最新审批记录
+                    await this.queryProcessLog();
 
                     //设置状态
                     this.loading = false;
@@ -1232,7 +1526,7 @@ export default {
 
       },
 
-       // 审批人员添加函数
+      // 审批人员添加函数
       async rewardApproveAdd(){
 
         if(!this.approve_userid){
@@ -1261,6 +1555,35 @@ export default {
         }
 
       },
+      async rewardNotifyAdd(){
+
+        if(!this.approve_notify_userid){
+          return this.$toast.success('请选择知会人员处下拉列表中的待选知会人员！');
+        }
+
+        const index = this.approve_notifylist.findIndex( item => {
+          return item.userid == this.approve_notify_userid;
+        })
+
+        if(index>=0){
+          return this.$toast.success('该知会人员已经添加，请重新输入！');
+        }
+
+        try {
+          const mobile = this.approve_notify_mobile ? `${this.approve_notify_mobile.slice(0,3)}****${this.approve_notify_mobile.slice(-4)}` : '';
+          const user = {key: this.approve_notifylist.length + 1 , id:tools.queryUniqueID(),username:this.approve_notify_username , userid: this.approve_notify_userid , mobile , company: this.approve_notify_company , department : this.approve_notify_department , position : this.approve_notify_position};
+          this.approve_notifylist.push(JSON.parse(JSON.stringify(user)));
+          this.approve_notify_userid = '';
+          this.approve_notify_username = '';
+          this.approve_notify_mobile = '';
+          this.approve_notify_position = '';
+          this.approve_notify_userlist = [];
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
@@ -1269,6 +1592,65 @@ export default {
         } catch (error) {
           console.log(error);
         }
+      },
+      // 撤销审批流程
+      async handleRejectConfirm(){
+        if(!this.approve_content){
+          return this.$toast.fail('请输入此申请流程的撤销意见！');
+        }
+
+        const id = tools.getUrlParam('id');
+        const userinfo = await storage.getStore('system_userinfo'); //获取用户基础信息
+
+        //修改表单流程状态bpm_status为已驳回
+        await manageAPI.patchTableData(this.tablename , id , { id,  status: '待审批', bpm_status: '1', });
+
+        //删除当前流程中待处理流程记录
+        await this.deleteProcessLog();
+
+        //新增驳回记录
+        await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '撤销' , this.approve_content);
+
+        //查询最新审批记录
+        await this.queryProcessLog();
+
+        this.workflowLogList = await workflow.queryPRLogByDataID(id);
+        this.$toast.fail('撤销流程审批成功！');
+        this.role = 'view';
+      },
+
+      // 执行驳回功能
+      async handleDisagreeWF(){
+        this.loading = true;
+        let result = await wflowprocess.handleRejectWF();
+        result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+          this.loading = false;
+        } , 3500);
+      },
+
+      // 执行知会确认功能
+      async handleConfirmWF(){
+        this.loading = true;
+        debugger;
+        let result = await wflowprocess.handleConfirmWF();
+        result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+          this.loading = false;
+        } , 3500);
+      },
+
+      // 执行审批同意操作
+      async handleAgreeWF(){
+        this.loading = true;
+        let result = await wflowprocess.handleApproveWF();
+        result == 'success' ? (this.tasktype = 'done', this.role = 'view') : '';
+        setTimeout(async () => {
+          await this.queryInfo();
+          this.loading = false;
+        } , 3500);
       },
   },
 };

@@ -18,6 +18,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //查询业务编号
     var bussinessCodeID = tools.queryUrlString("id");
 
+    debugger;
+
     //获取表单名称
     var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
 

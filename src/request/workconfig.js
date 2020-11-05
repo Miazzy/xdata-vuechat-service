@@ -791,7 +791,7 @@ export function getPaneflows(this_) {
             css: "",
             all: '全部',
             periodTabsFlag: false,
-            tabs: ['全部', '待审批', '审批中', '已完成', '已驳回'],
+            tabs: ['全部', '待审批', '知会我'],
             dataSource: [],
             click: () => {
                 this_.panename = 'mytodolist';
@@ -808,7 +808,7 @@ export function getPaneflows(this_) {
             css: "",
             all: '全部',
             periodTabsFlag: false,
-            tabs: ['全部', '待审批', '审批中', '已完成', '已驳回'],
+            tabs: ['全部', '我发起', '已审批', '已驳回', '知会我'],
             dataSource: [],
             click: () => {
                 this_.panename = 'mydonelist';
