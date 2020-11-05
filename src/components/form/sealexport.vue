@@ -3,7 +3,7 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header">
+    <header id="wx-header" style="overflow-x: hidden;">
       <div class="center" style="position:relative;">
         <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>

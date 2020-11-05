@@ -5,7 +5,7 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header" v-if="iswechat" >
+    <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center">
             <span>入职管理</span>
         </div>

@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@nutui/nutui": "^2.2.10",
+        "ant-design-vue": "^2.0.0-beta.13",
         "await-sleep": "0.0.1",
         "egg-http-proxy": "^1.0.1",
         "element-ui": "^2.13.2",

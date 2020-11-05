@@ -4,7 +4,7 @@
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
-    <header id="wx-header" class="header-menu" v-show="!searchFlag" >
+    <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center" style="position:relative;">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
               <span>返回</span>

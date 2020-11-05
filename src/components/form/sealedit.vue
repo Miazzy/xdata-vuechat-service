@@ -3,7 +3,7 @@
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
 
-    <header id="wx-header" v-if="iswechat" >
+    <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center" >
             <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
