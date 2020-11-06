@@ -484,6 +484,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             //获取下一审核节点
             firstAuditor = firstAuditor.split(",")[0];
 
+
+
             //设置流程 检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中，否则，状态为 状态为2：审核中
             approveNode == firstAuditor ?
                 (bpmStatus = { bpm_status: "3" }) :
@@ -612,6 +614,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                     curAuditor
                 );
 
+                //此处获取到待审核人员firstAuditor,可以向此用户推送审批消息，打开消息即可审批。
+                await handleNotifyHR(firstAuditor, curRow["proponents"], '', encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curRow.business_data_id}&pid=${pnode.id}&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=${bpmStatus.bpm_status}&proponents=${curRow["proponents"]}`));
+
                 //提示信息 //console.log(" 修改当前记录审批状态为处理中返回结果:" + JSON.stringify(result) );
                 vant.Dialog.alert({
                     message: "同意审批成功，审批流程已推向后续处理人！",
@@ -626,6 +631,16 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     return 'success';
 
 }
+
+// 通知HR（人力薪资相关专职人员查看数据）
+async function handleNotifyHR(user_group_ids, userinfo, value, receiveURL) {
+    try {
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，员工‘${userinfo}’提交了的奖罚申请流程，请到奖惩申请服务进行流程审批操作！?rurl=${receiveURL}`)
+            .set('accept', 'json');
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 /**
  * @function 生成任务记录数据
