@@ -1636,6 +1636,7 @@ export default {
         debugger;
         let result = await wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
+        this.role = 'view';
         setTimeout(async () => {
           await this.queryInfo();
           this.loading = false;
@@ -1647,6 +1648,7 @@ export default {
         this.loading = true;
         let result = await wflowprocess.handleApproveWF();
         result == 'success' ? (this.tasktype = 'done', this.role = 'view') : '';
+        this.role = 'view';
         setTimeout(async () => {
           await this.queryInfo();
           this.loading = false;
