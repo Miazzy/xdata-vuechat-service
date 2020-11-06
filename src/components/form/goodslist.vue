@@ -123,7 +123,6 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-
 try {
   Vue.component("downloadExcel", JsonExcel);
 } catch (error) {

@@ -227,6 +227,15 @@
                   <van-cell-group style="margin-left:5rem;width:45%;" >
                     <van-icon name="add-o" style="position:absolute;top:0px;right:0px;z-index:100;" @click="size <= 6 ? size++ : size;"/>
                     <van-icon name="circle" style="position:absolute;top:45px;right:0px;z-index:100;" @click="size > 0 ? size-- : size;"  />
+                    <download-excel id="reward-download-excel-button"
+                      :data="datas"
+                      :fields="fields"
+                      style="position:absolute;top:7px;right: -160px;z-index:100;"
+                      worksheet="奖罚明细模板"
+                      name="奖罚明细模板.xls"
+                    >
+                      下载模板
+                    </download-excel>
 
                     <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
 
@@ -413,8 +422,13 @@ import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
-
 import readXlsxFile from 'read-excel-file';
+
+try {
+  Vue.component("downloadExcel", JsonExcel);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
   mixins: [window.mixin],
@@ -498,6 +512,26 @@ export default {
       selectedSheet: null,
       sheetName: null,
       sheets: [{ name: "Sheet1", data: [{}] }],
+      fields: {
+              '分配性质':'type',
+              '发放期间': 'period',
+              '员工姓名':'username',
+              '员工OA':'account',
+              '所属单位':'company',
+              '所属部门':'department',
+              '员工职务':'position',
+              '分配金额':'amount',
+            },
+      datas:[{
+              'type':'当前分配',
+              'period': '‘2020年01月’',
+              'username':'员工姓名XXX',
+              'account':'account',
+              'company':'领地集团总部',
+              'department':'XX部',
+              'position':'XXX专员',
+              'amount':'10000.00',
+            },],
       collection: [{ }]
     };
   },
@@ -520,8 +554,35 @@ export default {
         }
       },
       async beforeUpload($e) {
+
+        // 定义待遍历数据
+        let trows = [] ;
+        // 获取excel文档数据
         const rows = await readXlsxFile($e.target.files[0]);
-        debugger;
+        // trows过滤掉第一组数据
+        [_, ...trows] = rows;
+        // 重置数据
+        this.data = [];
+
+        try {
+          for(let item of trows){
+            this.data.push({
+              key: tools.queryUniqueID(),
+              type: this.item.reward_release_feature,
+              period: this.item.reward_release_period,
+              username: item[2],
+              account: item[3],
+              company: item[4],
+              department: item[5],
+              position: item[6],
+              mobile: '',
+              amount: item[7],
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
         return { event:$e };
       },
       // 上传文件成功后回调函数
@@ -1568,4 +1629,19 @@ export default {
 <style scoped >
     @import "../../assets/css/reward.home.css";
     @import "../../assets/css/reward.apply.css";
+
+
+#reward-download-excel-button {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 10px 10px 10px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+    height: 27px;
+    line-height: 27px;
+}
+
 </style>
