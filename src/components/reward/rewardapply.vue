@@ -1125,18 +1125,22 @@ export default {
             title: "确认操作",
             content: "是否确认提交此自由流程?",
             onOk: async() => {
+
                   //查询直接所在工作组，注意此处是奖罚人力经理管理员
                   const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
+
                   //获取到印章管理员组信息
                   let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
                   let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
+
                   //如果未获取用户名称，则直接设置用印人为分组成员
                   if(tools.isNull(user_group_ids)){
                     user_group_ids = this.item.hr_id;
                     user_group_names = this.item.hr_name;
                   }
                   // 返回预览URL
-                  const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
+                  const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${id}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${user_group_ids}&role=hr`);
+
                   //第一步 保存用户数据到数据库中
                   const elem = {
                     id,
@@ -1367,7 +1371,7 @@ export default {
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请知会：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 流水号:‘${value.serialid}’ 提交了奖罚申请流程！?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’提交了的奖罚申请流程，请在流程审批完成后进行知会确认操作！?rurl=${receiveURL}`)
                           .set('accept', 'json');
         } catch (error) {
           console.log(error);
