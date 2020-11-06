@@ -229,9 +229,11 @@
                     <van-icon name="circle" style="position:absolute;top:45px;right:0px;z-index:100;" @click="size > 0 ? size-- : size;"  />
 
                     <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
+
                       <template #right-icon>
                         <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
                       </template>
+
                     </van-cell>
 
                     <van-cell v-show="size >= 1" title="相关附件 #1" class="van-cell-upload" :label="item.files_00.slice(0,30)">
@@ -269,6 +271,7 @@
                         <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess_05"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
                       </template>
                     </van-cell>
+
                   </van-cell-group>
                 </div>
 
@@ -411,6 +414,8 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
+import readXlsxFile from 'read-excel-file';
+
 export default {
   mixins: [window.mixin],
   data() {
@@ -480,6 +485,7 @@ export default {
       approve_userlist:[],
       approve_executelist:[],
       role:'',
+      file:'',
       uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
       message: workconfig.compValidation.rewardapply.message,
       valid: workconfig.compValidation.rewardapply.valid,
@@ -489,6 +495,10 @@ export default {
       acceptType: workconfig.compcolumns.acceptType,
       commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
       sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+      selectedSheet: null,
+      sheetName: null,
+      sheets: [{ name: "Sheet1", data: [{}] }],
+      collection: [{ }]
     };
   },
   activated() {
@@ -498,14 +508,22 @@ export default {
     this.queryInfo();
   },
   methods: {
+      onChange(event) {
+        this.file = event.target.files ? event.target.files[0] : null;
+      },
       // 上传提示
       async toastUpload(flag){
-      if(flag == 'start'){
-        vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
-      } else if(flag == 'fail'){
-        this.$toast.success('文件上传失败，请稍后重试！');
-      }
-    },
+        if(flag == 'start'){
+          vant.Toast.loading({duration: 0, forbidClick: true, message: '上传中...',});
+        } else if(flag == 'fail'){
+          this.$toast.success('文件上传失败，请稍后重试！');
+        }
+      },
+      async beforeUpload($e) {
+        const rows = await readXlsxFile($e.target.files[0]);
+        debugger;
+        return { event:$e };
+      },
       // 上传文件成功后回调函数
       async uploadSuccess(file , res){
         vant.Toast.clear();
