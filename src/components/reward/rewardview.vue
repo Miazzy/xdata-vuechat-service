@@ -1209,6 +1209,17 @@ export default {
         this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('驳回流程审批成功！');
         this.role = 'view';
+        this.status = '已驳回';
+
+        //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
+        try {
+            const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${id}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_done&bpm_status=4&proponents=${this.item.create_by}`);
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/亲爱的同事，您提交的奖罚申请流程已被驳回：${this.item["title"]}，内容：${this.item['content']}，驳回意见：${this.approve_content}，请修改申请内容后重新提交流程?rurl=${receiveURL}`)
+                .set('accept', 'json');
+        } catch (error) {
+            console.log(error);
+        }
+
       },
 
       // 处理流程日志
