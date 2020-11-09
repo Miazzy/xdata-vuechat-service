@@ -1670,10 +1670,9 @@ export default {
         let result = await wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
         this.role = 'view';
-        setTimeout(async () => {
-          await this.queryInfo();
-          this.loading = false;
-        } , 1500);
+        await tools.sleep(300);
+        await this.queryInfo();
+        this.loading = false;
       },
 
       // 执行审批同意操作
@@ -1682,10 +1681,9 @@ export default {
         let result = await wflowprocess.handleApproveWF();
         result == 'success' ? (this.tasktype = 'done', this.role = 'view') : '';
         this.role = 'view';
-        setTimeout(async () => {
-          await this.queryInfo();
-          this.loading = false;
-        } , 1500);
+        await tools.sleep(300);
+        await this.queryInfo();
+        this.loading = false;
       },
   },
 };
