@@ -480,8 +480,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             let receiveURL = null;
             //发送企业微信通知，知会人力/财务人员，进行知会确认操作！
             try {
-                receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessNode.id}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${bussinessNode.user_group_ids}&role=hr`);
-                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${bussinessNode.user_group_ids}/亲爱的同事，${bussinessNode.create_by}提交的奖罚申请流程已处理完毕：${bussinessNode["title"]}，内容：${bussinessNode['content']}，请及时进行知会确认操作！?rurl=${receiveURL}`)
+                receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessNode.id}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${bussinessNode.hr_admin_ids}&role=hr`);
+                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${bussinessNode.hr_admin_ids}/亲爱的同事，${bussinessNode.create_by}提交的奖罚申请流程已处理完毕：${bussinessNode["title"]}，内容：${bussinessNode['content']}，请及时进行知会确认操作！?rurl=${receiveURL}`)
                     .set('accept', 'json');
             } catch (error) {
                 console.log(error);
@@ -731,6 +731,9 @@ export async function handleRejectWF() {
             //查询当前数据
             var curRow = await query.queryTableData(tableName, bussinessCodeID);
 
+            //克隆当前业务数据
+            const bussinessNode = JSON.parse(JSON.stringify(curRow));
+
             //获取当前用户
             var userInfo = storage.getStore("system_userinfo");
 
@@ -811,6 +814,15 @@ export async function handleRejectWF() {
             vant.Dialog.alert({
                 message: "驳回审批成功！"
             });
+
+            //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
+            try {
+                receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessCodeID}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_done&bpm_status=4&proponents=${bussinessNode.create_by}`);
+                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${bussinessNode.create_by}/亲爱的同事，您提交的奖罚申请流程已被驳回：${bussinessNode["title"]}，内容：${bussinessNode['content']}，驳回意见：${message}，请修改申请内容后重新提交流程?rurl=${receiveURL}`)
+                    .set('accept', 'json');
+            } catch (error) {
+                console.log(error);
+            }
 
             result = 'success';
 
