@@ -1336,10 +1336,17 @@ export default {
                business_data: JSON.stringify(node)
            };
 
-           //保存审批相关处理信息
+           // 此处推送消息至第一个审批处
+           try {
+             const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curItemID}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${firstWflowUser}&role=hr`);
+           } catch (error) {
+             console.log(error);
+           }
+
+           // 保存审批相关处理信息
            const nextWflowNode = JSON.parse(JSON.stringify(node));
 
-           //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
+           // 提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
            if (await manageAPI.queryApprovalExist(curTableName,  curItemID)) {
              return vant.Toast.fail("已提交过申请，无法再次提交审批！");
            }
@@ -1460,6 +1467,13 @@ export default {
                     // 返回预览URL
                     const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${this.item.id}&statustype=office&typename=${this.typename}&panename=${this.panename}&role=hr`);
 
+                    try {
+                      // 第一位审批人预览URL
+                      const firstURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${this.item.id}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=`);
+                    } catch (error) {
+                      console.log(error);
+                    }
+
                     /************************  工作流程日志(开始)  ************************/
                     //修改bpm流程状态为 2:审批中
                     await manageAPI.patchTableData(this.tablename , this.item.id , { id : this.item.id ,  status: '审批中', bpm_status: '2', });
@@ -1479,10 +1493,14 @@ export default {
                     await this.queryProcessLog();
 
                     //设置状态
-                    this.loading = false;
-                    this.status = elem.status;
-                    this.readonly = true;
-                    this.role = 'view';
+                    try {
+                      this.loading = false;
+                      this.status = '审批中';
+                      this.readonly = true;
+                      this.role = 'view';
+                    } catch (error) {
+                      console.log(error);
+                    }
 
                     this.$toast.success('提交奖惩申请流程成功，请等待审批完成！');
                   } catch (error) {
