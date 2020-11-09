@@ -1338,7 +1338,9 @@ export default {
 
            // 此处推送消息至第一个审批处
            try {
-             const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curItemID}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${firstWflowUser}&role=hr`);
+              const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curItemID}&pid=${node.id}&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=${firstWflowUser}`);
+              await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstWflowUser}/亲爱的同事，${userinfo['name']||userinfo['realname']}(${userinfo["username"]})提交了奖罚申请流程：${data["title"]}，内容：${data['content']}，请您及时进行审批处理！?rurl=${receiveURL}`)
+                          .set('accept', 'json');
            } catch (error) {
              console.log(error);
            }
@@ -1465,27 +1467,17 @@ export default {
                     }
 
                     // 返回预览URL
-                    const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/reward?id=${this.item.id}&statustype=office&typename=${this.typename}&panename=${this.panename}&role=hr`);
-
-                    try {
-                      // 第一位审批人预览URL
-                      const firstURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${this.item.id}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=`);
-                    } catch (error) {
-                      console.log(error);
-                    }
+                    const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${this.item.id}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${user_group_ids}&role=hr`);
 
                     /************************  工作流程日志(开始)  ************************/
                     //修改bpm流程状态为 2:审批中
                     await manageAPI.patchTableData(this.tablename , this.item.id , { id : this.item.id ,  status: '审批中', bpm_status: '2', });
-                    debugger;
 
                     //向HR推送，HR确认后
                     await this.handleNotifyHR(user_group_ids , userinfo ,  this.item , receiveURL);
-                    debugger;
 
                     //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
                     await this.handleSubmitWF(userinfo , wfUsers , nfUsers , approver , this.tablename , this.item.id , this.item  , dayjs().format('YYYY-MM-DD HH:mm:ss'));
-                    debugger;
 
                     /************************  工作流程日志(结束)  ************************/
 
@@ -1605,7 +1597,7 @@ export default {
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/奖罚申请知会：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 流水号:‘${value.serialid}’ 提交了奖罚申请流程！?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的人力/财务同事，${userinfo.realname}(${userinfo.username})提交了奖罚申请流程，请您在流程审批完成后及时进行确认处理！?rurl=${receiveURL}`)
                           .set('accept', 'json');
         } catch (error) {
           console.log(error);
