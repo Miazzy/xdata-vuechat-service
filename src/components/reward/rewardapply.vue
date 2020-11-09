@@ -1371,7 +1371,7 @@ export default {
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’提交了的奖罚申请流程，请在流程审批完成后进行知会确认操作！?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’提交了奖罚申请流程，请在流程审批完成后及时进行知会确认操作！?rurl=${receiveURL}`)
                           .set('accept', 'json');
         } catch (error) {
           console.log(error);
