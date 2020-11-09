@@ -166,6 +166,20 @@ const routes = [{
             "subPage": resolve => require(["../components/reward/message.vue"], resolve)
         }
     }, {
+        path: '/reward/rewardmonth',
+        name: "奖罚月度报表",
+        components: {
+            "default": resolve => require(["../components/reward/home.vue"], resolve),
+            "subPage": resolve => require(["../components/reward/rewardmonth.vue"], resolve)
+        }
+    }, {
+        path: '/reward/rewardquarter',
+        name: "奖罚季度报表",
+        components: {
+            "default": resolve => require(["../components/reward/home.vue"], resolve),
+            "subPage": resolve => require(["../components/reward/rewardquarter.vue"], resolve)
+        }
+    }, {
         path: '/app/moments',
         name: "圈子",
         components: {
