@@ -775,6 +775,7 @@ export default {
         const id = tools.getUrlParam('id');
         //获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
+
         try {
           const historyLogList = await workflow.queryPRLogHistoryByDataID(id);
           const logList = await workflow.queryPRLogByDataID(id);
@@ -801,8 +802,14 @@ export default {
           }
 
           // 如果不存在本人待审批记录，则无法处理
-          if(tools.isNull(mylog)){
+          if(tools.isNull(mylog) && !tools.isNull(logList) && logList.length > 0){
             this.role = 'view';
+          }
+
+          // 如果存在待审批处理日志，则状态不应该不是审批中
+          if(!tools.isNull(logList) && logList.length > 0 && !(this.item.bpm_status == 2 || this.item.bpm_status == 3)){
+            //修改表单流程状态bpm_status为审批中
+            await manageAPI.patchTableData(this.tablename , id , { id,  status: '审批中', bpm_status: '2', });
           }
 
           this.processLogList.sort();
