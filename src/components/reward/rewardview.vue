@@ -1673,7 +1673,7 @@ export default {
         setTimeout(async () => {
           await this.queryInfo();
           this.loading = false;
-        } , 3500);
+        } , 1500);
       },
 
       // 执行审批同意操作
@@ -1685,7 +1685,7 @@ export default {
         setTimeout(async () => {
           await this.queryInfo();
           this.loading = false;
-        } , 3500);
+        } , 1500);
       },
   },
 };
