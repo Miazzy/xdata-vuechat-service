@@ -461,7 +461,7 @@ export default {
         } else if(tabname == 3){
           logList = logList.filter(item => {  return item.action == '驳回';  });
         } else if(tabname == 4){
-          logList = logList.filter(item => {  return item.action == '知会';  });
+          logList = logList.filter(item => {  return item.action == '知会' || item.action == '人力确认';  });
         }
 
         return logList;
