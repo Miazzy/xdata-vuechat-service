@@ -1628,6 +1628,8 @@ export default {
 
       // 撤销审批流程
       async handleRejectConfirm(){
+        this.loading = true;
+
         if(!this.approve_content){
           return this.$toast.fail('请输入此申请流程的撤销意见！');
         }
@@ -1649,7 +1651,11 @@ export default {
 
         this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('撤销流程审批成功！');
+
         this.role = 'view';
+        await tools.sleep(300);
+        await this.queryInfo();
+        this.loading = false;
       },
 
       // 执行驳回功能
@@ -1657,10 +1663,11 @@ export default {
         this.loading = true;
         let result = await wflowprocess.handleRejectWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
-        setTimeout(async () => {
-          await this.queryInfo();
-          this.loading = false;
-        } , 3500);
+
+        this.role = 'view';
+        await tools.sleep(300);
+        await this.queryInfo();
+        this.loading = false;
       },
 
       // 执行知会确认功能
@@ -1669,6 +1676,7 @@ export default {
         debugger;
         let result = await wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
+
         this.role = 'view';
         await tools.sleep(300);
         await this.queryInfo();
