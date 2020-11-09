@@ -196,10 +196,10 @@ export default {
         this.queryRewardListByType(this.tabname , this.typename , this.panename);
       } else if(this.panename == 'mytodolist'){ //我的待办
         this.typename = 'wflow_todo';
-        this.queryRewardTodoListByType(this.tabname, this.typename , panename);
+        this.queryRewardTodoListByType(this.tabname, this.typename , this.panename);
       } else if(this.panename == 'mydonelist'){ //我的已办
         this.typename = 'wflow_done';
-        this.queryRewardDoneListByType(this.tabname , this.typename , panename);
+        this.queryRewardDoneListByType(this.tabname , this.typename , this.panename);
       } else if(this.panename == 'myapplylist'){ //我的奖罚申请
         this.typename = 'create_by';
         this.queryRewardListByType(this.tabname , this.typename , this.panename);
