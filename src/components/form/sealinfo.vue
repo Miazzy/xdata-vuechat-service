@@ -1046,6 +1046,7 @@ export default {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
                     company = company.slice(company.lastIndexOf('>')+1);
+
                     this.cuserList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
                   })
                 } catch (error) {
