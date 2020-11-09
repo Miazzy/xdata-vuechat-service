@@ -1597,12 +1597,13 @@ export default {
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的人力/财务同事，${userinfo.realname}(${userinfo.username})提交了奖罚申请流程，请您在流程审批完成后及时进行确认处理！?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，${userinfo.realname}(${userinfo.username})提交了奖罚申请流程，请您在流程审批完成后及时进行确认处理！?rurl=${receiveURL}`)
                           .set('accept', 'json');
         } catch (error) {
           console.log(error);
         }
       },
+
       // 撤销审批流程
       async handleRejectConfirm(){
         if(!this.approve_content){
