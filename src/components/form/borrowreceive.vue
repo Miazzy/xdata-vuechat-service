@@ -59,7 +59,16 @@
                 <!-- 借用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="借用时间" v-model="item.receive_time"  placeholder="请填写借用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 借用类别（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="借用类别" v-model="item.type"  placeholder="请填写借用物品/设备的类别，如信息设备、传屏设备！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="false" clearable clickable label="借用类别" v-model="item.type"  placeholder="请填写借用物品/设备的类别，如信息设备、传屏设备！" @click="showTypePicker = true;"  @blur="validField('type')" :error-message="message.type"  />
+                <van-popup v-model="showTypePicker" round position="bottom">
+                  <van-picker
+                    show-toolbar
+                    :columns="typeColumns"
+                    @cancel="showTypePicker=false;"
+                    @confirm="onTypeConfirm"
+                  />
+                </van-popup>
+
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable :label="item.type == '传屏设备' ? '传屏编号': '设备名称'" v-model="item.name"  :placeholder="item.type == '传屏设备' ? '请填写传屏编号!': '请填写设备名称!'" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 借用数量（HR需要确认/修改） -->
@@ -336,6 +345,8 @@ export default {
             iswechat:false,
             isfirst:true,
             dockFlag: false,
+            typeColumns:['信息设备','传屏设备'],
+            showTypePicker:false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.borrowreceive.message,
             valid: workconfig.compValidation.borrowreceive.valid,
@@ -437,6 +448,10 @@ export default {
       this.queryInfo();
     },
     methods: {
+      onTypeConfirm(value) {
+        this.item.type = value;
+        this.showTypePicker = false;
+      },
       // 企业微信登录处理函数
       async weworkLogin(){
         try {

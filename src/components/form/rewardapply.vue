@@ -57,7 +57,16 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 申请时间 -->
-                <van-field :readonly="true"     :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" @blur="validField('reward_type')" :error-message="message.reward_type"  />
+                <van-field :readonly="true"     :required="false" clearable label="奖罚类别" v-model="item.reward_type"  placeholder="请填写奖罚类别！" @blur="validField('reward_type')"  :error-message="message.reward_type"  />
+                <van-popup v-model="showRewardTypePicker" round position="bottom">
+                  <van-picker
+                    show-toolbar
+                    :columns="rewardTypeColumns"
+                    @cancel="showRewardTypePicker=false;"
+                    @confirm="onRewardTypeConfirm"
+                  />
+                </van-popup>
+
                 <!-- 申请时间 -->
                 <van-field :readonly="true"     :required="false" clearable label="申请时间" v-model="item.apply_date"  placeholder="请填写申请时间！" @blur="validField('apply_date')" :error-message="message.apply_date"  />
                 <!-- 流程标题 -->
@@ -238,6 +247,7 @@ export default {
             userList:[],
             size: 0,
             processLogList:[],
+            rewardTypeColumns:['办公用品','药品','防疫物资'],
             iswechat:false,
             isfirst:true,
             dockFlag: false,
@@ -307,6 +317,7 @@ export default {
             currentKey:'',
             tablename:'bs_reward_apply',
             readonly: false,
+            showRewardTypePicker:false,
             goodstype: workconfig.goodstype,
             goodsborrowtype: workconfig.goodsborrowtype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,
@@ -322,6 +333,10 @@ export default {
       this.queryInfo();
     },
     methods: {
+      onRewardTypeConfirm(value) {
+        this.item.reward_type = value;
+        this.showRewardTypePicker = false;
+      },
       // 企业微信登录处理函数
       async weworkLogin(){
         try {

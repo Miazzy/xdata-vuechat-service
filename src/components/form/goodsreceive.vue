@@ -59,7 +59,16 @@
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
+                <van-field :readonly="readonly" :required="false" clearable clickable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" @click="showTypePicker = true;"  :error-message="message.type"  />
+                <van-popup v-model="showTypePicker" round position="bottom">
+                  <van-picker
+                    show-toolbar
+                    :columns="typeColumns"
+                    @cancel="showTypePicker=false;"
+                    @confirm="onTypeConfirm"
+                  />
+                </van-popup>
+
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" required clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
@@ -338,6 +347,8 @@ export default {
             iswechat:false,
             isfirst:true,
             dockFlag: false,
+            typeColumns:['办公用品','药品','防疫物资'],
+            showTypePicker:false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.goodsreceive.message,
             valid: workconfig.compValidation.goodsreceive.valid,
@@ -439,6 +450,10 @@ export default {
       this.queryInfo();
     },
     methods: {
+      onTypeConfirm(value) {
+        this.item.type = value;
+        this.showTypePicker = false;
+      },
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
