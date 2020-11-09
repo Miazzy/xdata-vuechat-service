@@ -1,6 +1,7 @@
 import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
+import * as constant from '@/request/constant';
 
 export async function queryUserInfoByView(username) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key http://api.shengtai.club/api/v_admin?_where=(username,eq,zhaoziyun)
@@ -520,6 +521,38 @@ export async function deleteTableData(tableName, id) {
 
     try {
         var res = await superagent.delete(deleteURL).set('accept', 'json');
+        return res.body;
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+/**
+ * 获取奖罚月度/季度报表
+ */
+export async function queryRewardDataByID(period) {
+
+    //提交URL
+    var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/v_reward_data?_where=(period,like,${period})&_sort=amount&_p=0&_size=1000`;
+
+    //获取缓存中的数据
+    var cache = storage.getStore(`sys_v_reward_data&id${period}`);
+
+    //返回缓存值
+    if (typeof cache != 'undefined' && cache != null && cache != '') {
+        return cache;
+    }
+
+    try {
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        console.log(res);
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_v_reward_data&id${period}`, res.body, 60);
+        }
+
         return res.body;
     } catch (err) {
         console.log(err);
