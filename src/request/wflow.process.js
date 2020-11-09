@@ -32,6 +32,9 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //查询当前数据
     curRow = await query.queryTableData(tableName, bussinessCodeID);
 
+    //流程的创建人员
+    const bussinessNode = JSON.parse(JSON.stringify(curRow));
+
     //如果加签、会签同时选择，则无法提交
     if (
         tools.deNull(wflowAddUsers) != "" &&
@@ -474,9 +477,25 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 message: "同意审批成功，审批流程处理完毕！"
             });
 
-            //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
-
+            let receiveURL = null;
             //发送企业微信通知，知会人力/财务人员，进行知会确认操作！
+            try {
+                receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessNode.id}&pid=&tname=bs_reward_apply&panename=myrewardlist&typename=hr_admin_ids&bpm_status=4&proponents=${bussinessNode.user_group_ids}&role=hr`);
+                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${bussinessNode.user_group_ids}/亲爱的同事，${bussinessNode.create_by}提交的奖罚申请流程已处理完毕：${bussinessNode["title"]}，内容：${bussinessNode['content']}，请及时进行知会确认操作！?rurl=${receiveURL}`)
+                    .set('accept', 'json');
+            } catch (error) {
+                console.log(error);
+            }
+            //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
+            try {
+                receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessCodeID}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_done&bpm_status=4&proponents=${bussinessNode.create_by}`);
+                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${bussinessNode.create_by}/亲爱的同事，您提交的奖罚申请流程已处理完毕：${bussinessNode["title"]}，内容：${bussinessNode['content']}！?rurl=${receiveURL}`)
+                    .set('accept', 'json');
+            } catch (error) {
+                console.log(error);
+            }
+
+            debugger;
 
         } else {
             //如果firstAuditor是逗号开头，则去掉开头的逗号
@@ -487,8 +506,6 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
             //获取下一审核节点
             firstAuditor = firstAuditor.split(",")[0];
-
-
 
             //设置流程 检查当前审核节点是否为审批节点，如果是，则bpm_status_code设置为3：审批中，否则，状态为 状态为2：审核中
             approveNode == firstAuditor ?
@@ -631,7 +648,6 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 //发送审批流程通知，通知流程下一位审批人，点击审批详情，处理用户提交的奖罚流程审批通知。
                 try {
                     const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessCodeID}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=${firstAuditor}`);
-                    debugger;
                     await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstAuditor}/亲爱的同事，您收到奖罚申请流程审批处理请求：${curRow["title"]}，内容：${curRow['content']}，请您及时进行审批处理！?rurl=${receiveURL}`)
                         .set('accept', 'json');
                 } catch (error) {
