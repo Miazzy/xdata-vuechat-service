@@ -15,7 +15,7 @@
         </router-link>
       </div>
 
-      <div class="weui-cells">
+      <div class="weui-cells" style="display:none;">
         <div class="weui-cell-title">常用应用</div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="weui-cells" style="display:block;position:relative;">
+      <div class="weui-cells" style="display:none;position:relative;">
         <div class="weui-cell-title">奖罚管理</div>
         <div style="display:block;">
           <div style="position:absolute; top: 0.6rem; right:25px;">
@@ -387,7 +387,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" style="display:none;">
               <div class="weui-cell_app_hd" @click="goodsReceive('drug');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/sweet_00.png" >
                 <div class="weui-cell_app_bd">
@@ -395,7 +395,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" style="display:none;">
               <div class="weui-cell_app_hd" @click="goodsReceive('prevent');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiushui_00.png" >
                 <div class="weui-cell_app_bd" >
@@ -411,11 +411,6 @@
                 </div>
               </div>
             </van-col>
-          </van-row>
-        </div>
-
-        <div class="flex-layout-content" id="scanCell">
-          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
@@ -424,8 +419,7 @@
                 </div>
               </div>
             </van-col>
-
-            <van-col span="6">
+            <van-col span="6" style="display:none;">
               <div class="weui-cell_app_hd" @click="goodsBorrow('box');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/robot.png" >
                 <div class="weui-cell_app_bd" >
@@ -433,16 +427,6 @@
                 </div>
               </div>
             </van-col>
-
-            <van-col span="6">
-              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
-                <div class="weui-cell_app_bd" >
-                  失物招领
-                </div>
-              </div>
-            </van-col>
-
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
@@ -451,8 +435,19 @@
                 </div>
               </div>
             </van-col>
+          </van-row>
+        </div>
 
-
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+                <div class="weui-cell_app_bd" >
+                  失物招领
+                </div>
+              </div>
+            </van-col>
           </van-row>
 
         </div>
