@@ -771,13 +771,19 @@ export default {
        * @function 获取处理日志
        */
       async queryProcessLog(){
+        //获取当前业务编号
         const id = tools.getUrlParam('id');
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
         try {
           const historyLogList = await workflow.queryPRLogHistoryByDataID(id);
           const logList = await workflow.queryPRLogByDataID(id);
           logList.map(item => { item.action = '待审批'; item.action_opinion = '尚未审批，请等待审批完成！'; });
           this.processLogList = [...historyLogList , ...logList];
           this.workflowLogList = logList;
+
+          // 查找是否有本人的待审批记录，如果不存在，则无法进行驳回及同意操作
+          const mylog = logList.find(item => {return item.employee == userinfo.username});
 
           for(let item of this.processLogList){
             try {
@@ -792,6 +798,11 @@ export default {
             } catch (error) {
               console.log(error);
             }
+          }
+
+          // 如果不存在本人待审批记录，则无法处理
+          if(tools.isNull(mylog)){
+            this.role = 'view';
           }
 
           this.processLogList.sort();
