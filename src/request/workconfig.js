@@ -216,7 +216,7 @@ export const reward = (that) => {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-                vant.Toast.fail('暂时没有权限！');
+                that.$router.push(`/reward/rewardmonth?type=month`);
             },
         }, {
             name: "季度报表",
@@ -224,7 +224,7 @@ export const reward = (that) => {
             href: "/account/myanalyse",
             description: '其他奖罚申请流程',
             click: () => {
-                vant.Toast.fail('暂时没有权限！');
+                that.$router.push(`/reward/rewardmonth?type=quarter`);
             },
         }, {
             name: "奖罚审批",
