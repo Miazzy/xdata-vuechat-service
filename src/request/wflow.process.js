@@ -474,6 +474,10 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 message: "同意审批成功，审批流程处理完毕！"
             });
 
+            //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
+
+            //发送企业微信通知，知会人力/财务人员，进行知会确认操作！
+
         } else {
             //如果firstAuditor是逗号开头，则去掉开头的逗号
             firstAuditor =
@@ -623,6 +627,16 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 })
 
                 console.log("operationData : " + operationData);
+
+                //发送审批流程通知，通知流程下一位审批人，点击审批详情，处理用户提交的奖罚流程审批通知。
+                try {
+                    const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${bussinessCodeID}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=${firstAuditor}`);
+                    debugger;
+                    await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstAuditor}/亲爱的同事，您收到奖罚申请流程审批处理请求：${curRow["title"]}，内容：${curRow['content']}，请您及时进行审批处理！?rurl=${receiveURL}`)
+                        .set('accept', 'json');
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
     }

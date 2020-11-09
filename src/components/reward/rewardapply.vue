@@ -1328,6 +1328,17 @@ export default {
            vant.Toast.success("提交自由流程审批成功！");
            //记录当前流程已经提交，短时间内无法再次提交
            storage.setStore(`start_free_process_@table_name#${curTableName}@id#${curItemID}`,  "true", 60 );
+
+
+           // 此处推送消息至第一个审批处
+           try {
+              const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curItemID}&pid=${node.id}&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=${firstWflowUser}`);
+              await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstWflowUser}/亲爱的同事，${userinfo['name']||userinfo['realname']}(${userinfo["username"]})提交了奖罚申请流程：${data["title"]}，内容：${data['content']}，请您及时进行审批处理！?rurl=${receiveURL}`)
+                          .set('accept', 'json');
+           } catch (error) {
+             console.log(error);
+           }
+
            //操作完毕，返回结果
            return true;
         } catch (error) {
