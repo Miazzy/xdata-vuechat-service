@@ -802,7 +802,7 @@ export default {
           }
 
           // 如果不存在本人待审批记录，则无法处理
-          if(tools.isNull(mylog) && !tools.isNull(logList) && logList.length > 0){
+          if(tools.isNull(mylog) && !tools.isNull(logList) && logList.length > 0 && this.item.create_by !== userinfo.username){
             this.role = 'view';
           }
 
