@@ -3,8 +3,10 @@
     <section>
       <div class="weui-cells" style="margin-top:0px;">
 
-        <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-          <van-swipe-item>欢迎来到移动办公中心</van-swipe-item>
+        <van-swipe :autoplay="3000">
+          <van-swipe-item v-for="(image, index) in images" :key="index">
+            <img width="100%" height="200px;" v-lazy="image.files" />
+          </van-swipe-item>
         </van-swipe>
 
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
@@ -479,36 +481,20 @@ export default {
                 front:[],
               },
             },
+            imageTableName: 'bs_home_pictures',
+            images: [],
         }
     },
     activated() {
-      this.$store.commit("toggleTipsStatus", -1);
       this.weworkLogin();
-      this.changeStyle();
-      this.displayFoot();
     },
     mounted() {
       this.weworkLogin();
-      this.changeStyle();
-      this.displayFoot();
     },
     methods: {
-        changeStyle(name) {
-          try {
-            var name = window.location.hash.slice(2);
-            name = name.includes('?') ? name.split('?')[0] : name;
-            name = name.includes('/') ? name.split('/')[0] : name;
-            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-            $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-            $(`#wx-nav-${name}`).addClass('router-link-active');
-            console.log(name);
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        displayFoot() {
-          $('.app-footer').css('display','block');
+        async queryImagesUrl(){
+          this.images = await query.queryTableDataByWhereSQL(this.imageTableName , '_where=(status,in,3)&_fields=files');
+          this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; })
         },
         /**
          * @function 企业微信登录处理函数
@@ -519,19 +505,32 @@ export default {
           let code = tools.queryUrlString('code' , 'search');
 
           if(code){
-            //获取用户信息
-            var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
-
-            this.userinfo = response.body.userinfo;
-
-            //设置system_userinfo
-            storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);
-            storage.setStore('system_userinfo' , JSON.stringify(response.body.userinfo) , 3600 * 24 * 30);
-            storage.setStore('system_token' , JSON.stringify(code) , 3600 * 24 * 30);
-            storage.setStore('system_department' , JSON.stringify(response.body.userinfo.department) , 3600 * 24 * 30);
-            storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+            try {
+              //获取用户信息
+              var response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
+              this.userinfo = response.body.userinfo;
+              //设置system_userinfo
+              storage.setStore('system_linfo' , JSON.stringify({username:response.body.userinfo.userid,password:'************'}) , 3600 * 24 * 30);
+              storage.setStore('system_userinfo' , JSON.stringify(response.body.userinfo) , 3600 * 24 * 30);
+              storage.setStore('system_token' , JSON.stringify(code) , 3600 * 24 * 30);
+              storage.setStore('system_department' , JSON.stringify(response.body.userinfo.department) , 3600 * 24 * 30);
+              storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+            } catch (error) {
+              console.log(error);
+            }
           } else {
-            this.userinfo = storage.getStore('system_userinfo');
+            try {
+              this.userinfo = storage.getStore('system_userinfo');
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          try {
+            this.changeStyle();
+            this.queryImagesUrl();
+          } catch (error) {
+            console.log(error);
           }
         },
         async userLogin(){
@@ -776,6 +775,22 @@ export default {
 
           //跳转到相应界面
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
+        },
+        // 修改界面样式
+        changeStyle(name) {
+          try {
+            var name = window.location.hash.slice(2);
+            name = name.includes('?') ? name.split('?')[0] : name;
+            name = name.includes('/') ? name.split('/')[0] : name;
+            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
+            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
+            $(`#wx-nav-${name}`).addClass('router-link-exact-active');
+            $(`#wx-nav-${name}`).addClass('router-link-active');
+            $('.app-footer').css('display','block'); // displayFoot
+            console.log(name);
+          } catch (error) {
+            console.log(error);
+          }
         },
     }
 }

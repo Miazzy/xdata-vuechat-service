@@ -478,7 +478,6 @@ export default {
         }
     },
     activated() {
-      this.$store.commit("toggleTipsStatus", -1);
       this.weworkLogin();
       this.changeStyle();
       this.displayFoot();
