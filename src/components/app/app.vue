@@ -492,11 +492,6 @@ export default {
       this.weworkLogin();
     },
     methods: {
-        async queryImagesUrl(){
-          const whereSQL = this.userinfo && this.userinfo.department && this.userinfo.department.name && this.userinfo.department.name.includes('行政') && this.userinfo.userid != 9058 ? '' : '~and(bpm_status,in,4,5)';
-          this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
-          this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
-        },
         /**
          * @function 企业微信登录处理函数
          * @description https://api.yunwisdom.club:30443/api/v2/wework_user_code/6asBC1NWc1X_mXckfORq-MncHF7ALSLvBAV_A-jeGxw
@@ -789,6 +784,17 @@ export default {
             $(`#wx-nav-${name}`).addClass('router-link-active');
             $('.app-footer').css('display','block'); // displayFoot
             console.log(name);
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        // 查询首页图片
+        async queryImagesUrl(){
+          let whereSQL = null;
+          try {
+            whereSQL = this.userinfo && this.userinfo.department && this.userinfo.department.name && this.userinfo.department.name.includes('行政') && this.userinfo.userid != 9058 ? '' : '~and(bpm_status,in,4,5)';
+            this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
+            this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
           } catch (error) {
             console.log(error);
           }
