@@ -493,8 +493,9 @@ export default {
     },
     methods: {
         async queryImagesUrl(){
-          this.images = await query.queryTableDataByWhereSQL(this.imageTableName , '_where=(status,in,3)&_fields=files');
-          this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; })
+          const whereSQL = this.userinfo && this.userinfo.department && this.userinfo.department.name && this.userinfo.department.name.includes('行政') && this.userinfo.userid != 9058 ? '' : '~and(bpm_status,in,4,5)';
+          this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
+          this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
         },
         /**
          * @function 企业微信登录处理函数
