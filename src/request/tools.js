@@ -496,7 +496,14 @@ export function queryUrlString(name, flag = 'history') {
         if (flag == 'history') {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
             var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg); //匹配目标参数
-            if (r != null) return decodeURI(r[2]);
+            if (r != null) {
+                if (name == 'system_type') {
+                    localStorage.setItem('system_type', decodeURI(r[2]));
+                }
+                return decodeURI(r[2]);
+            } else if (name == 'system_type') {
+                return localStorage.getItem('system_type') || 'v2'
+            }
             return null; //返回参数值
         } else {
             var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');

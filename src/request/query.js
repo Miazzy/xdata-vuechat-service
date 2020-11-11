@@ -448,10 +448,14 @@ export async function queryUserInfoByAccount(userid) {
  * @function 企业微信查询登录用户函数
  */
 export async function queryWeworkUser() {
+
     let userinfo = null;
+    let response = null;
+
     try {
         //获取用户CODE
         let code = tools.queryUrlString('code', 'search');
+        let system_type = tools.queryUrlString('system_type', 'history');
 
         //获取用户信息
         if (code) {
@@ -464,16 +468,11 @@ export async function queryWeworkUser() {
                 return cache;
             }
 
-            let response = await superagent.get(`https://api.yunwisdom.club:30443/api/v2/wework_user_code/${code}`);
-            let response_ = await superagent.get(`https://api.yunwisdom.club:30443/api/v3/wework_user_code/${code}`);
-            let response_cd = await superagent.get(`https://api.yunwisdom.club:30443/api/v1_cd/wework_user_code/${code}`);
-
-            if (response && response.body && response.body.userinfo && response.body.userinfo.errcode == 0) {
-                userinfo = response.body.userinfo;
-            } else if (response_ && response_.body && response_.body.userinfo && response_.body.userinfo.errcode == 0) {
-                userinfo = response_.body.userinfo;
-            } else if (response_cd && response_cd.body && response_cd.body.userinfo && response_cd.body.userinfo.errcode == 0) {
-                userinfo = response_cd.body.userinfo;
+            try {
+                response = await superagent.get(`https://api.yunwisdom.club:30443/api/${system_type}/wework_user_code/${code}`);
+                userinfo = response && response.body && response.body.userinfo && response.body.userinfo.errcode == 0 ? response.body.userinfo : null;
+            } catch (error) {
+                console.log(error);
             }
 
             //设置system_userinfo
