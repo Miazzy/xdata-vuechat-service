@@ -21,7 +21,7 @@
                 <!--如果没有备注好友，则显示微信昵称-->
                 <div class="desc-author" v-else>{{item.user[0].name}}</div>
                 <div class="desc-msg">
-                    <div class="desc-mute iconfont icon-mute" v-show="item.quiet">
+                    <div class="desc-mute iconfont icon-mute" style="display:none;" v-show="item.quiet">
                     </div>
                     <span v-show="item.type=='group'">{{item.msg[item.msg.length-1].name}}:</span>
                     <span>{{item.msg[item.msg.length-1].text}}</span>
@@ -139,3 +139,10 @@
         }
     }
 </script>
+<style scoped>
+#wechat .wechat-list .list-row .list-info .desc-box .desc-msg .desc-mute {
+    display: none;
+    float: right;
+    color: #b8b8b8;
+}
+</style>

@@ -169,7 +169,7 @@ export default {
               this.position = info.position;
               this.mobile = info.mobile;
               this.department = info.systemuserinfo.textfield1.split('||')[1];
-              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+              this.avatar = info.avatar && (info.avatar.startsWith('https://') || info.avatar.startsWith('http://')) ? info.avatar : '';
             }
           } catch (error) {
             console.log(error);

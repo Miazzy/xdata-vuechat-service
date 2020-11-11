@@ -138,10 +138,6 @@ export default {
     }
 }
 </script>
-<style>
-    @import "../../assets/css/wechat.css";
-
-    .app-footer {
-      display:block;
-    }
+<style scoped>
+@import "../../assets/css/wechat.css";
 </style>

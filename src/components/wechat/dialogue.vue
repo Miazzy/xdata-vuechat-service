@@ -316,7 +316,12 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 @import "../../assets/css/dialogue.css";
 @import "../../assets/css/dialogue.global.css";
+#wechat .wechat-list .list-row .list-info .desc-box .desc-msg .desc-mute {
+    display: none;
+    float: right;
+    color: #b8b8b8;
+}
 </style>

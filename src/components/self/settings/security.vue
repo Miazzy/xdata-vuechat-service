@@ -124,7 +124,7 @@ export default {
               this.mobile = info.mobile;
               this.qrcode = info.qr_code;
               this.mail = info.mail;
-              this.avatar = info.avatar.startsWith('https://') ? info.avatar : window._CONFIG['uploaxURL'] + '/' + info.avatar;
+              this.avatar = info.avatar && (info.avatar.startsWith('https://') || info.avatar.startsWith('http://')) ? info.avatar : '';
             }
           } catch (error) {
             console.log(error);

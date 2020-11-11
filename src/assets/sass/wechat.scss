@@ -62,7 +62,7 @@
                         img {
                             width: 10%;
                             height: auto;
-                             flex-grow: 2;
+                            flex-grow: 2;
                             border: 0;
                         }
                         &.multi-header {
@@ -90,6 +90,7 @@
                         font-size: 14px;
                         color: #888;
                         .desc-mute {
+                            display: none;
                             float: right;
                             color: #b8b8b8;
                         }
@@ -118,4 +119,8 @@
             }
         }
     }
+}
+
+.app-footer {
+    display: block;
 }

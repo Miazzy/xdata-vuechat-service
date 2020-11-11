@@ -40,3 +40,7 @@
     border: 6px solid transparent;
     border-right-color: #f0f0f0;
 }
+
+.desc-msg .desc-mute {
+    display: none;
+}
