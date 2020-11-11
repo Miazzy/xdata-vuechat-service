@@ -171,7 +171,7 @@
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="entryjob('hr');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_03.png" >
                 <div class="weui-cell_app_bd">
                   入职审批
                 </div>
@@ -407,7 +407,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_02.png" >
                 <div class="weui-cell_app_bd" >
                   领用审批
                 </div>
