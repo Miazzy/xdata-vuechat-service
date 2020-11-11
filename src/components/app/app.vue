@@ -359,7 +359,7 @@
             </van-col>
             <van-col span="6">
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
                 <div class="weui-cell_app_bd">
                   台账导出
                 </div>
