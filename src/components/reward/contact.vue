@@ -137,30 +137,15 @@ export default {
   },
   activated() {
     this.init();
-    this.changeStyle();
-    this.displayFoot();
   },
   mounted() {
     this.init();
-    this.changeStyle();
-    this.displayFoot();
   },
   methods: {
     async init() {
       this.activeTabKey = 2;
       this.constpaneflows = JSON.parse(JSON.stringify(this.paneflows));
     },
-    async changeStyle(winHeight) {
-      if (window.innerHeight) {
-        winHeight = window.innerHeight;
-      } else if (document.body && document.body.clientHeight) {
-        winHeight = document.body.clientHeight;
-      }
-      this.paneflowcard = `height:${winHeight}px; overflow-y: scroll;`;
-    },
-    async displayFoot() {},
-    async userLogin() {},
-    async clearLoginInfo() {},
     async searchWordChange() {
       this.paneflows.map((item, index) => {
         if (

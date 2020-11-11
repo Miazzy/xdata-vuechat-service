@@ -19,9 +19,9 @@ const contact = { contacts: null };
 
 export default contact;
 
-export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V9';
-export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V9';
-export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V9';
+export const ALL_USER_CACHE_KEY = 'ALL_USER_CACHE_KEY_V10';
+export const ALL_USER_CACHE_WORK_KEY = 'ALL_USER_CACHE_WORK_KEY_V10';
+export const ALL_USER_CACHE_DEPART_KEY = 'ALL_USER_CACHE_DEPART_KEY_V10';
 
 /**
  * 查询审批处理页面的记录
@@ -30,6 +30,7 @@ export const queryDepartUserList = async() => {
 
     //获取当前登录用户信息
     const userinfo = await storage.getStore('system_userinfo');
+    const system_type = tools.queryUrlString('system_type', 'history');
 
     //如果没有获取到用户数据，则无法获取部门信息
     if (tools.isNull(userinfo) || tools.isNull(userinfo.main_department)) {
@@ -45,8 +46,10 @@ export const queryDepartUserList = async() => {
         return cache;
     }
 
+    debugger;
+
     //查询部门URL
-    const queryDepartURL = `https://api.yunwisdom.club:30443/api/v2/wework_depart_list/${userinfo.main_department}`;
+    const queryDepartURL = `https://api.yunwisdom.club:30443/api/${system_type}/wework_depart_list/${userinfo.main_department}`;
 
     //获取上级部门编号
     const respDepart = await superagent.get(queryDepartURL).set('accept', 'json');
@@ -57,7 +60,7 @@ export const queryDepartUserList = async() => {
     });
 
     //查询URL
-    const queryURL = `${window.requestAPIConfig.restapi}/api/v2/wework_depart_user/${department.parentid}/1`
+    const queryURL = `${window.requestAPIConfig.restapi}/api/${system_type}/wework_depart_user/${department.parentid}/1`
 
     var result = {};
 

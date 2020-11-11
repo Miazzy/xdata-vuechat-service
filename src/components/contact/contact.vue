@@ -61,8 +61,8 @@ import * as storage from '@/request/storage';
 import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
 
-const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V7';
-const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V7';
+const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V9';
+const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V9';
 
 export default {
     mixins: [window.mixin],
@@ -75,18 +75,11 @@ export default {
         }
     },
     async mounted() {
-      this.$store.commit("toggleTipsStatus", -1);
-      this.changeStyle();
-      this.displayFoot();
       this.userStatus();
       this.contactsInitialList = await this.queryContactsInitialList();
       this.contactsList = await this.queryContactsList();
     },
     async activated() {
-      $('#return[tag=div]').remove();
-      this.$store.commit("toggleTipsStatus", -1)
-      this.changeStyle();
-      this.displayFoot();
       this.userStatus();
       this.contactsInitialList = await this.queryContactsInitialList();
       this.contactsList = await this.queryContactsList();
@@ -101,6 +94,8 @@ export default {
     methods: {
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
+
+          debugger;
 
             const userinfo = await storage.getStore('system_userinfo');
 
@@ -123,6 +118,8 @@ export default {
 
         // 将联系人根据首字母进行分类
         async queryContactsList() {
+
+          debugger;
 
             const userinfo = await storage.getStore('system_userinfo');
 
@@ -152,23 +149,6 @@ export default {
         },
         toPs(i) {
             window.scrollTo(0,this.$refs['key_'+i][0].offsetTop)
-        },
-        changeStyle(name) {
-          try {
-            let name = window.location.hash.slice(2);
-            name = name.includes('?') ? name.split('?')[0] : name;
-            name = name.includes('/') ? name.split('/')[0] : name;
-            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-            $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-            $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-            $(`#wx-nav-${name}`).addClass('router-link-active');
-            console.log(name);
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        displayFoot() {
-          $('.app-footer').css('display','block');
         },
         async clearLoginInfo(){
           try {
