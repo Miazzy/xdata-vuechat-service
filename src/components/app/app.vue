@@ -351,7 +351,7 @@
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="sealMyList();" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png" >
                 <div class="weui-cell_app_bd" >
                   用印历史
                 </div>
@@ -359,7 +359,7 @@
             </van-col>
             <van-col span="6">
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
                 <div class="weui-cell_app_bd">
                   台账导出
                 </div>
@@ -407,7 +407,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_02.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_05.png" >
                 <div class="weui-cell_app_bd" >
                   领用审批
                 </div>
@@ -431,7 +431,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_06.png" >
                 <div class="weui-cell_app_bd" >
                   借用审批
                 </div>
