@@ -158,7 +158,7 @@ export default {
               }
 
               //显示用户头像
-              this.avatar = userinfo && userinfo.avatar && userinfo.avatar.startsWith('https://') ? userinfo.thumb_avatar : '';
+              this.avatar = userinfo && userinfo.avatar && (userinfo.avatar.startsWith('https://') || userinfo.avatar.startsWith('http://')) ? userinfo.thumb_avatar : '';
 
             }
           } catch (error) {

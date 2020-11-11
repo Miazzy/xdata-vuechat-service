@@ -103,6 +103,6 @@
     }
 
     .add-friend.weui-cell__bd p:first-child {
-        font-size: 15px
+        font-size: 0.95rem;
     }
 </style>
