@@ -388,27 +388,29 @@ export async function queryUsernameByIDs(ids) {
  */
 export async function queryUserByNameHRM(name, seclevel = 30) {
 
+    let result = [];
+
     if (tools.isNull(name)) {
         return [];
     }
 
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${name}~%27))~and(status,ne,5)~and(seclevel,lt,${seclevel})`).set('accept', 'json');
+        var temp = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${name}~%27))~and(status,ne,5)~and(seclevel,lt,${seclevel})`).set('accept', 'json');
+
+        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        var temp_ = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${name}~)~or(loginid,like,~${name}~))~and(status,ne,5)~and(seclevel,lt,${seclevel})`).set('accept', 'json');
+
+        result = [...temp.body, ...temp_.body];
 
         //剔除掉，没有loginid的用户信息
-        maxinfo.body = maxinfo.body.filter(item => {
+        result = result.filter(item => {
             return !tools.isNull(item.loginid);
         })
 
         //返回用户信息
-        if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
-            return maxinfo.body;
-        } else if (maxinfo && maxinfo.body && maxinfo.body.length == 1) {
-            return maxinfo.body;
-        } else {
-            return [];
-        }
+        return result;
+
     } catch (error) {
         console.log(error);
     }
