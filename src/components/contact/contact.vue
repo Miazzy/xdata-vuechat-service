@@ -95,8 +95,6 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
 
-          debugger;
-
             const userinfo = await storage.getStore('system_userinfo');
 
             var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
@@ -118,8 +116,6 @@ export default {
 
         // 将联系人根据首字母进行分类
         async queryContactsList() {
-
-          debugger;
 
             const userinfo = await storage.getStore('system_userinfo');
 

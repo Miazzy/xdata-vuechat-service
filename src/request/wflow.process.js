@@ -18,8 +18,6 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //查询业务编号
     var bussinessCodeID = tools.queryUrlString("id");
 
-    debugger;
-
     //获取表单名称
     var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
 
@@ -495,8 +493,6 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 console.log(error);
             }
 
-            debugger;
-
         } else {
             //如果firstAuditor是逗号开头，则去掉开头的逗号
             firstAuditor =
@@ -823,7 +819,6 @@ export async function handleRejectWF() {
             } catch (error) {
                 console.log(error);
             }
-            debugger;
 
             result = 'success';
 

@@ -1079,14 +1079,11 @@ export default {
         this.approve_notify_mobile = user.mobile;
         this.approve_notify_company = user.company;
         this.approve_notify_department = user.department;
-
-        debugger;
         //查询员工职务
         const temp = await query.queryUserInfoByMobile(user.mobile);
         //设置员工职务
         this.approve_notify_position = temp.position;
       },
-
 
       // 获取URL或者二维码信息
       async queryInfo() {
@@ -1680,10 +1677,8 @@ export default {
       // 执行知会确认功能
       async handleConfirmWF(){
         this.loading = true;
-        debugger;
         let result = await wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
-
         this.role = 'view';
         await tools.sleep(300);
         await this.queryInfo();

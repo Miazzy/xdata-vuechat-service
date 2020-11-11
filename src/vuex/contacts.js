@@ -46,8 +46,6 @@ export const queryDepartUserList = async() => {
         return cache;
     }
 
-    debugger;
-
     //查询部门URL
     const queryDepartURL = `https://api.yunwisdom.club:30443/api/${system_type}/wework_depart_list/${userinfo.main_department}`;
 
