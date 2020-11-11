@@ -143,7 +143,7 @@ export const queryDepartUserList = async() => {
 export const queryWorkUserList = async() => {
 
     //查询URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/v2/employee`;
+    var queryURL = `${window.requestAPIConfig.restapi}/api/v3/employee`;
     var result = {};
 
     const cache = await storage.getStoreDB(ALL_USER_CACHE_WORK_KEY);
