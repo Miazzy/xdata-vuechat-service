@@ -195,7 +195,7 @@
             </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="entryjob('meal');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxi_00.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png" >
                 <div class="weui-cell_app_bd">
                   食堂审批
                 </div>
@@ -469,7 +469,7 @@
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
             <van-col span="6" style="display:block;">
               <div class="weui-cell_app_hd" @click="cooperate('share');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiejing.png" >
                 <div class="weui-cell_app_bd" >
                   共享服务
                 </div>
