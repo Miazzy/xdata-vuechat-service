@@ -10,7 +10,7 @@
         </van-swipe>
 
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
-          <van-notice-bar style="width:100%;" color="#1989fa" background="#ecf9ff"
+          <van-notice-bar v-show="showNotice" style="width:100%;" color="#1989fa" background="#ecf9ff"
             left-icon="volume-o"
             text="欢迎使用OA移动APP"
           />
@@ -301,12 +301,12 @@
       <div class="weui-cells" style="display: block; position:relative;">
         <div class="weui-cell-title">用印管理</div>
         <div style="display:none;">
-          <div style="position:absolute; top: 0.6rem; right:25px;">
+          <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
             <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
               更多
             </span>
           </div>
-          <div style="position:absolute; top: 0.57rem; right:10px;">
+          <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
             <van-icon name="arrow" />
           </div>
         </div>
@@ -371,12 +371,12 @@
 
       <div class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">领用借用</div>
-        <div style="position:absolute; top: 0.6rem; right:25px;">
+        <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
             更多
           </span>
         </div>
-        <div style="position:absolute; top: 0.57rem; right:10px;">
+        <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
           <van-icon name="arrow" />
         </div>
         <div class="flex-layout-content" id="scanCell">
@@ -455,6 +455,39 @@
         </div>
       </div>
 
+      <div class="weui-cells" style="display: block;position:relative;">
+        <div class="weui-cell-title">协同办公</div>
+        <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
+          <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
+            更多
+          </span>
+        </div>
+        <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
+          <van-icon name="arrow" />
+        </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="cooperate('share');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png" >
+                <div class="weui-cell_app_bd" >
+                  共享服务
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="cooperate('property');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png" >
+                <div class="weui-cell_app_bd">
+                  资产盘点
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
+
+      </div>
+
       <div class="weui-cells" style="margin-top:80px;height:0px;">
       </div>
 
@@ -472,7 +505,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "应用",
+            pageName: "智慧行政",
             momentNewMsg: true,
             userinfo:{
               grouplimits: {
@@ -483,6 +516,7 @@ export default {
             },
             imageTableName: 'bs_home_pictures',
             images: [],
+            showNotice:false,
         }
     },
     activated() {
@@ -501,9 +535,9 @@ export default {
         },
         async queryInfo(){
           try {
-            this.changeStyle();
-            this.queryImagesUrl();
-            this.weworkLogin();
+            await this.weworkLogin();
+            await this.changeStyle();
+            await this.queryImagesUrl();
           } catch (error) {
             console.log(error);
           }
@@ -751,6 +785,14 @@ export default {
           //跳转到相应界面
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
         },
+        // 执行协同办公类跳转
+        cooperate(name) {
+          if(name == 'share'){
+            window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
+          } else if(name == 'property') {
+            window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
+          }
+        },
         // 修改界面样式
         changeStyle(name) {
           try {
@@ -769,14 +811,20 @@ export default {
         },
         // 查询首页图片
         async queryImagesUrl(){
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+          //查询SQL
           let whereSQL = null;
+
           try {
-            whereSQL = this.userinfo && this.userinfo.department && this.userinfo.department.name && this.userinfo.department.name.includes('行政') && this.userinfo.userid != 9058 ? '' : '~and(bpm_status,in,4,5)';
+            whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
+            this.showNotice = userinfo && userinfo.userid == 9058 ? true : false;
             this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
             this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
           } catch (error) {
             console.log(error);
           }
+
         },
     }
 }

@@ -15,14 +15,13 @@ export default {
             psrc:`http://oa.leading-group.com:90/page/resource/userfile/image/ecology8/leading.jpg`,
         }
     },
-    mounted() {
-        const timestamp = tools.isPCWeb() ? 300 : 500;
-        setTimeout(() => {
-            this.hide = true
-        }, timestamp);
+    async mounted() {
+        const timestamp = tools.isPCWeb() ? 300 : 300;
+        await tools.sleep(timestamp);
+        this.hide = true;
     },
     created(){
-      this.src = tools.isPCWeb() ? this.psrc : this.msrc;
+      this.src = tools.isPCWeb() ? this.src : this.src;
     },
 }
 </script>

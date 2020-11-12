@@ -7,7 +7,7 @@
                 <wx-header :pageName="pageName"></wx-header>
             </header>
             <!--搜索框 只在“微信”和“联系人”页面下显示-->
-            <search v-show="$route.path.indexOf('explore')===-1&&$route.path.indexOf('self')===-1"></search>
+            <search v-show="false"></search>
             <!--四个门面页 “微信” “联系人” “发现” “我”-->
             <section class="app-content">
                 <keep-alive>
@@ -15,7 +15,7 @@
                 </keep-alive>
             </section>
             <!--底部导航 路由 -->
-            <footer class="app-footer">
+            <footer class="app-footer" style="display:block;">
                 <wx-nav></wx-nav>
             </footer>
         </div>

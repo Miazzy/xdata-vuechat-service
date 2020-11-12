@@ -59,8 +59,18 @@
 }
 
 .flex-layout-content {
-    margin-top: 10px;
+    margin-top: 20px;
     margin-bottom: 10px;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.weui-cell-title {
+    margin-left: 20px;
+    margin-top: 2px;
+    padding-top: 4px;
+    border: 0px solid #fefefe;
+    width: 100px;
+    font-size: 0.95rem;
+    color: #a0a0a0;
 }
