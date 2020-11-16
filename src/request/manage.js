@@ -386,7 +386,7 @@ export async function queryUsernameByIDs(ids) {
 /**
  * @function 获取当前名字的用户信息
  */
-export async function queryUserByNameHRM(name, seclevel = 30) {
+export async function queryUserByNameHRM(name, seclevel = 50) {
 
     let result = [];
 
