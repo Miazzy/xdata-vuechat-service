@@ -112,7 +112,7 @@
                 </div>
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" >
+              <van-cell-group style="margin-top:10px;" v-show=" role != 'common' && item.status == '已认领' ">
 
                 <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
