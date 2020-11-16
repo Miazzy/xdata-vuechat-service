@@ -3,19 +3,31 @@
 <keep-alive>
 
   <!--首页组件-->
-  <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
+  <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
 
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>奖罚申请</span>
+            <span>物品认领</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出台账" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data"
+                        :fields="json_fields"
+                        worksheet="导出台账"
+                        name="失物招领台账.xls" >
+                        导出台账
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -36,35 +48,9 @@
 
     <section>
 
-      <div class="weui-cells" style="margin-top: 0px;">
-        <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            待审批
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            审批中
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已完成
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(tabname , 0);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已驳回
-          </div>
-        </div>
-      </div>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待审批" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="审批中" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 4 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
         </template>
       </div>
 
@@ -81,7 +67,7 @@ import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
-
+import * as query from '@/request/query';
 
 try {
   Vue.component("downloadExcel", JsonExcel);
@@ -93,7 +79,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "奖罚申请",
+            pageName: "认领进度",
             momentNewMsg: true,
             tabname: '1',
             id:'',
@@ -102,20 +88,21 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_reward_apply',
-            tablename: 'bs_reward_apply',
+            tname: 'bs_lost_property',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
               '3': 'doneList',
               '4': 'rejectList',
             },
-            back:'/app',
+            back:'/app/lostpropertylist',
+            role:'common',
             searchWord:'',
             searchFlag: false,
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
+              { text: '登记', value: 1 , icon: 'edit' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -124,10 +111,27 @@ export default {
             ],
             isLoading:false,
             loading:false,
+            json_fields: {
+              '排序号': 'serialid',
+              '业务编号': 'id',
+              '登记时间': 'create_time',
+              '登记人员': 'create_by',
+              '物品名称': 'lost_name',
+              '物品数量': 'lost_amount',
+              '丢失时间': 'lost_time',
+              '领取人员': 'claim_name',
+              '领取时间': 'claim_time',
+              '领取公司': 'company',
+              '领取部门':'department',
+              '联系电话':'mobile',
+              '处理人员': 'user_admin_name',
+              '电话号码':'mobile',
+              '审批状态': 'status',
+            },
+            json_data: [],
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
@@ -169,6 +173,9 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
+          case 1: //刷新数据
+            this.$router.push(`/app/lostpropertyreceive`);
+            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
@@ -195,21 +202,22 @@ export default {
         }
       },
       async queryInfo(){
-
         //强制渲染
         this.$forceUpdate();
-
+        //获取用户基础信息
+        const userinfo = await storage.getStore('system_userinfo');
+        //获取后端配置前端管理员组
+        this.role = 'common';
         //获取tabname
-        this.tabname = storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
-
+        this.tabname = 1;
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
-
+        //查询台账数据
+        this.queryTabList('认领' , 0);
         //获取返回页面
         this.back = tools.getUrlParam('back') || '/app';
-
       },
-      async queryTabList(tabname , page){
+      async queryTabList(tabname = 1 , page){
 
         //获取当前用户信息
         const userinfo = await storage.getStore('system_userinfo');
@@ -227,49 +235,53 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
-            item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.initList = this.initList.filter(item => {
+            return item.id == item.pid;
+          });
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已认领)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
+
+          this.confirmList = this.confirmList.filter(item => {
+            return item.id == item.pid;
+          });
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
+            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
-         } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.rejectList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-        }
+          this.doneList = this.doneList.filter(item => {
+            return item.id == item.pid;
+          });
+         } else if(tabname == '认领') {
+           //获取最近6个月的已领取记录
+          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
+         }
 
       },
       async selectHContract(){
@@ -281,22 +293,19 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-        storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
+        storage.setStore('system_lost_property_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertyclist`);
         } else if(this.tabname == '2'){
           //跳转到相应的用印界面
-          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertyclist`);
         } else if(this.tabname == '3' ){
           //跳转到相应的用印界面
-          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
-         } else if(this.tabname == '4' ){
-          //跳转到相应的用印界面
-          this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
-        }
+          this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertyclist`);
+         }
 
       },
     }

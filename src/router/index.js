@@ -285,6 +285,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/lostproperty.vue"], resolve)
         }
     }, {
+        path: '/app/lostpropertyclist',
+        name: "失物招领",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/lostpropertyclist.vue"], resolve)
+        }
+    }, {
         path: '/app/lostpropertylist',
         name: "认领进度",
         components: {

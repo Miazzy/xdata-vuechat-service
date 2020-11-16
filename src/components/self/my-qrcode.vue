@@ -40,14 +40,14 @@ export default {
       }
     },
     mounted() {
-      this.$store.commit("toggleTipsStatus", -1);
+
       this.changeStyle();
       this.displayFoot();
       this.userStatus();
     },
     activated() {
       $('#return[tag=div]').remove();
-      this.$store.commit("toggleTipsStatus", -1);
+
       this.changeStyle();
       this.displayFoot();
       this.userStatus();

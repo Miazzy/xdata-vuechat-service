@@ -207,7 +207,7 @@ export default {
         }
     },
     activated() {
-        this.$store.commit("toggleTipsStatus", -1);
+
         this.queryInfo();
     },
     mounted() {

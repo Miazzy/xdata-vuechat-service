@@ -441,12 +441,29 @@
         </div>
 
         <div class="flex-layout-content" id="scanCell">
+
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','apply');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_08.png" >
+                <div class="weui-cell_app_bd" >
+                  失物登记
+                </div>
+              </div>
+            </van-col>
             <van-col span="6">
-              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty');" >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','clist');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
                 <div class="weui-cell_app_bd" >
-                  失物招领
+                  失物认领
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','approve');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_06.png" >
+                <div class="weui-cell_app_bd" >
+                  失物审批
                 </div>
               </div>
             </van-col>
@@ -517,6 +534,7 @@ export default {
             imageTableName: 'bs_home_pictures',
             images: [],
             showNotice:false,
+            role:'view',
         }
     },
     activated() {
@@ -531,6 +549,11 @@ export default {
          */
         async weworkLogin(){
           this.userinfo = await query.queryWeworkUser();
+          const userinfo = await storage.getStore('system_userinfo');
+          const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            this.role += ',COMMON_RECEIVE_BORROW';
+          };
           return this.userinfo;
         },
         async queryInfo(){
@@ -694,26 +717,25 @@ export default {
             this.$router.push(`/app/goodsreceive?type=${type}`);
           }
         },
-        async goodsBorrow(type){
+        async goodsBorrow(type , name){
           //获取当前登录用户信息
           const userinfo = await storage.getStore('system_userinfo');
-
           if(type == 'approve'){
-
             //验证是否为办公用品管理员，如果不是，则没有权限进入
             const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有物品管理-物品借用角色的权限！');
               return false;
             }
-
             this.$router.push(`/app/borrowlist?type=${type}`);
-
           } else if(type == 'lostproperty'){//失物招领都有权限
-
-            this.$router.push(`/app/lostpropertylist`);
-
+            if(name == 'apply'){
+              this.$router.push(`/app/lostpropertyreceive?back=/app`);
+            } else if(name == 'clist'){
+              this.$router.push(`/app/lostpropertyclist`);
+            } else if(name == 'approve'){
+              this.$router.push(`/app/lostpropertylist`);
+            }
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }

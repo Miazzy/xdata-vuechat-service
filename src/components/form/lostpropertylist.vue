@@ -152,7 +152,7 @@ export default {
         }
     },
     activated() {
-        this.$store.commit("toggleTipsStatus", -1);
+
         this.queryInfo();
     },
     mounted() {
@@ -274,7 +274,7 @@ export default {
           this.initList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
@@ -289,7 +289,7 @@ export default {
           this.confirmList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 
@@ -304,7 +304,7 @@ export default {
           this.doneList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = '物品:' + item.lost_name + ' 备注:' + item.description + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
 

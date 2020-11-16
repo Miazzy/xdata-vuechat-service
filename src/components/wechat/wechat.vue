@@ -37,7 +37,7 @@ export default {
       this.queryInfo();
     },
     mounted() {
-      this.$store.commit("toggleTipsStatus", -1);
+
       this.changeStyle();
       this.displayFoot();
       this.userStatus();

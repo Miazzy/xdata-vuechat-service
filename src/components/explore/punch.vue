@@ -142,7 +142,7 @@ export default {
         }
     },
     async activated() {
-      this.$store.commit("toggleTipsStatus", -1);
+
       try {
         this.relocation();
       } catch (error) {

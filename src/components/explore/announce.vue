@@ -70,7 +70,7 @@ export default {
         }
     },
     activated() {
-        this.$store.commit("toggleTipsStatus", -1);
+
         this.queryAnnounce();
         this.queryEach();
         this.queryInfo();

@@ -211,6 +211,7 @@ export default {
               company:'', //单位名称
               mobile: '', //联系电话
               description:'', //备注说明
+              user_group_ids:'', //用户权限组
 
               serialid: '', //序列编号
               status: '',
@@ -455,6 +456,7 @@ export default {
               company: userinfo.parent_company.name, //单位名称
               mobile: userinfo.mobile, //联系电话
               description: item.description, //备注说明
+              user_group_ids: item.user_group_ids,
 
               serialid: item.serialid, //序列编号
               status: item.status,
@@ -516,7 +518,7 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/失物招领被驳回通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 已驳回，请沟通后重新发起借用！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
@@ -598,20 +600,18 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           status: '已认领',
+          claim_name: userinfo.username, //认领人员
+          claim_time: dayjs().format('YYYY-MM-DD'), //认领时间
+          mobile: userinfo.mobile,
+          department: userinfo.department.name, //部门名称
+          company: userinfo.parent_company.name, //单位名称
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
 
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
-        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/失物招领认领通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 物品已认领，请确认认领无误！?rurl=${receiveURL}`)
+        //第三步 向物品管理员推送消息确认，物品管理员确认后，将遗失物品递交给认领人员
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.user_group_ids},${this.item.create_by}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’在失物招领处认领了‘${this.item.lost_name}’，请及时审核确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
@@ -627,7 +627,7 @@ export default {
           process_name   : '流程审批',//varchar(100)  null comment '流程名称',
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '确认'    ,//varchar(100)  null comment '操作动作',
+          action         : '认领'    ,//varchar(100)  null comment '操作动作',
           action_opinion : '审批借用申请[已认领]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
@@ -700,6 +700,10 @@ export default {
           const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
+
+        //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被确认，请到失物招领处领取遗失物品！?rurl=${receiveURL}`)
+                .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 

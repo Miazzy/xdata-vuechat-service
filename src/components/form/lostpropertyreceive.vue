@@ -71,6 +71,12 @@
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
               </van-cell-group>
 
+              <van-cell-group v-show="item.address" id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="地址信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :required="false" clearable label="登记地址" v-model="item.address" placeholder="请输入失物招领处的地址信息!" @blur="validField('address');" :error-message="message.address" />
+                <van-field :required="false" clearable label="登记区域" v-model="item.zone_name" placeholder="请输入失物招领处的登记区域!" @blur="validField('zone_name');" :error-message="message.zone_name" />
+              </van-cell-group>
+
               <van-cell-group style="margin-top:10px;">
 
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
@@ -194,6 +200,9 @@ export default {
               user_group_ids:'',
               user_group_names:'',
               user_admin_name:'',
+
+              address:'',
+              zone_name:'',
 
               serialid: '', //序列编号
               status: '',
@@ -323,6 +332,13 @@ export default {
                   //当前盖印人编号
                   this.item.userid = this.userid = user[0].loginid;
 
+                  //选择物品管理员后，查询此物品管理员对应的区域及地址信息
+                  const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+                  //获取到印章管理员组信息
+                  this.item.address = response && response.length > 0 ? response[0].address : '';
+                  this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -340,6 +356,14 @@ export default {
                   this.item.user_admin_name = user.lastname;
                   //当前盖印人编号
                   this.item.userid = this.userid = user.loginid;
+
+                  //选择物品管理员后，查询此物品管理员对应的区域及地址信息
+                  const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+                  //获取到印章管理员组信息
+                  this.item.address = response && response.length > 0 ? response[0].address : '';
+                  this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -372,6 +396,14 @@ export default {
         //获取盖印人姓名
         this.item.user_admin_name = user.name;
         this.item.userid = id;
+
+        //选择物品管理员后，查询此物品管理员对应的区域及地址信息
+        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+        //获取到印章管理员组信息
+        this.item.address = response && response.length > 0 ? response[0].address : '';
+        this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
+
       },
       // 设置重置
       async reduction(){
@@ -588,6 +620,8 @@ export default {
           user_group_ids,
           user_group_names,
           pid: id,
+          zone_name:this.item.zone_name,
+          address: this.item.address,
           status: '待处理',
         }; // 待处理元素
 
@@ -603,15 +637,8 @@ export default {
         //显示序列号
         this.item.serialid = value.serialid;
 
-        //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
-
-        //获取后端配置前端管理员组
-        const front = resp[0].userlist;
-        const front_name = resp[0].enuserlist;
-
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front},${user_group_ids},${userinfo.username}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/失物招领登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 失物招领登记完毕！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
@@ -648,6 +675,7 @@ export default {
         this.loading = false;
         this.status = elem.status;
         this.readonly = true;
+        thir.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({
