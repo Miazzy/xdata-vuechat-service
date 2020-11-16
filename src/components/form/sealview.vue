@@ -406,8 +406,6 @@ export default {
                 console.log(error);
               }
 
-              debugger;
-
               //遍历去重
               try {
 
@@ -1218,6 +1216,19 @@ export default {
         const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=seal&type=front`);
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
+
+
+        // 用印前，检查合同编号是否已经存在
+        const cresponse = await query.queryTableDataByField('bs_seal_regist', 'contract_id', contract_id);
+
+        if(cresponse && cresponse.length > 0){
+          //提示确认用印操作
+          await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '此合同编号已经存在，请刷新页面后，在重试用印操作！',
+          })
+          return;
+        }
 
         try {
           //修改状态为已用印，保存当前合同编号
