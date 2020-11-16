@@ -54,7 +54,7 @@ export async function queryProcessLogDone(
                 try {
                     if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         const temp = await query.queryUserInfoByAccount(item.proponents);
-                        item['sponsor'] = temp.realname;
+                        item['sponsor'] = temp.realname || temp.lastname;
                     }
                 } catch (error) {
                     console.log(error);
@@ -133,7 +133,7 @@ export async function queryProcessLogWait(
                     if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
-                            item['sponsor'] = temp.realname;
+                            item['sponsor'] = temp.realname || temp.lastname;
                         }
                     }
                 } catch (error) {
@@ -205,7 +205,7 @@ export async function queryProcessLogWaitSeal(
                     if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
-                            item['sponsor'] = temp.realname;
+                            item['sponsor'] = temp.realname || temp.lastname;
                         }
                     }
                 } catch (error) {

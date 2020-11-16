@@ -429,14 +429,14 @@ export async function queryUserInfoByAccount(userid) {
 
     try {
 
-        var res = await superagent.get(queryURL).set('accept', 'json');
+        var res = await queryTableDataByField('bs_hrmresource', 'loginid', userid); // await superagent.get(queryURL).set('accept', 'json');
 
-        if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.body, 3600 * 24 * 31);
-            return res.body;
+        if (res != null && res.length > 0) {
+            storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res[0], 3600 * 24 * 31);
+            return res[0];
         } else if (!tools.isNull(res.text)) {
             storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.text, 3600 * 24 * 31);
-            return JSON.parse(res.text)
+            return JSON.parse(res.text);
         }
 
     } catch (err) {
