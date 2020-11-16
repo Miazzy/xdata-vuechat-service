@@ -964,8 +964,8 @@ export default {
           await this.queryHContract();
           await this.queryProcessLog();
 
-          //如果合同编号存在
-          this.item.contractId = value.contract_id || this.item.contractId;
+          //如果合同编号存在，合同编号应该按照计算出来的取最大
+          this.item.contractId = this.item.contractId || value.contract_id;
 
         } catch (error) {
           console.log(error);

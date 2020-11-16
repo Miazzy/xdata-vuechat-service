@@ -406,6 +406,8 @@ export default {
                 console.log(error);
               }
 
+              debugger;
+
               //遍历去重
               try {
 
@@ -1030,7 +1032,7 @@ export default {
           }
 
           //如果合同编号存在
-          this.item.contractId = value.contract_id || this.item.contractId;
+          this.item.contractId = this.item.contractId || value.contract_id;
 
           await this.queryFinanceArchiveMan();
           await this.queryRecordArchiveMan();
