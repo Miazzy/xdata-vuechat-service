@@ -459,11 +459,11 @@ export default {
               lost_name: item.lost_name, //失物名称
               lost_amount: item.lost_amount,//失物数量
 
-              claim_name: userinfo.realname, //认领人员
-              claim_time: dayjs().format('YYYY-MM-DD'), //认领时间
-              department: userinfo.department.name, //部门名称
-              company: userinfo.parent_company.name, //单位名称
-              mobile: userinfo.mobile, //联系电话
+              claim_name: item.claim_name || userinfo.realname, //认领人员
+              claim_time: dayjs(item.claim_time).format('YYYY-MM-DD') || dayjs().format('YYYY-MM-DD'), //认领时间
+              department: item.department || userinfo.department.name, //部门名称
+              company: item.company || userinfo.parent_company.name , //单位名称
+              mobile: item.mobile || userinfo.mobile, //联系电话
               description: item.description, //备注说明
               user_group_ids: item.user_group_ids,
 
