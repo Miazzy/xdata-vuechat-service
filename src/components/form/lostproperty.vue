@@ -112,6 +112,15 @@
                 </div>
               </van-cell-group>
 
+              <van-cell-group style="margin-top:10px;" >
+
+                <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+
+                <!-- 备注说明（HR需要确认/修改） -->
+                <van-field :required="false" clearable label="驳回原因" v-model="item.reason"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写驳回原因！"  />
+
+              </van-cell-group>
+
             </van-form>
 
           </van-cell-group>
@@ -480,7 +489,12 @@ export default {
         const resp_ = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         if(resp_.length == 0 || !resp_[0].userlist.includes(userinfo.username)){
-          vant.Toast('您没有物品管理-失物招领角色的权限！');
+          this.$toast.fail('您没有物品管理-失物招领角色的权限！');
+          return false;
+        }
+
+        if(!this.item.reason){
+          this.$toast.fail('请输入驳回原因！');
           return false;
         }
 
@@ -518,7 +532,7 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通，驳回原因：${this.item.reason}！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
