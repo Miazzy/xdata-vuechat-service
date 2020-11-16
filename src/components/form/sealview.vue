@@ -1221,7 +1221,7 @@ export default {
         // 用印前，检查合同编号是否已经存在
         const cresponse = await query.queryTableDataByField('bs_seal_regist', 'contract_id', contract_id);
 
-        if(cresponse && cresponse.length > 0){
+        if(this.item.sealtype == '合同类' && cresponse && cresponse.length > 0){
           //提示确认用印操作
           await vant.Dialog.confirm({
               title: '用印确认',
