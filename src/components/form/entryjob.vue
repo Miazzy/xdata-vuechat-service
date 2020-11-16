@@ -1133,7 +1133,7 @@ export default {
         let hrinfo = {};
 
         // 查询SQL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${hr_name}~%27)~or(loginid,like,%27~${hr_name}~%27))~and(status,ne,5)&_fields=id,lastname,loginid`;
+        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${hr_name}~)~or(loginid,like,~${hr_name}~))~and(status,ne,5)&_fields=id,lastname,loginid`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         const resp = await superagent.get(queryURL).set('accept', 'json');

@@ -361,7 +361,8 @@ export async function queryUsernameByID(id) {
 
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(loginid,eq,%27${id}%27)~and(status,ne,5)&_fields=id,lastname,loginid`).set('accept', 'json');
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=(loginid,eq,~${id}~)~and(status,ne,5)&_fields=id,lastname,loginid`).set('accept', 'json');
+
         //返回用户信息
         return maxinfo.body[0]['lastname'];
     } catch (error) {
@@ -374,7 +375,8 @@ export async function queryUsernameByIDs(ids) {
 
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=(loginid,in,${ids})~and(status,ne,5)`).set('accept', 'json');
+        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=(loginid,in,${ids})~and(status,ne,5)`).set('accept', 'json');
+
         //返回用户信息
         return maxinfo.body;
     } catch (error) {
@@ -395,13 +397,11 @@ export async function queryUserByNameHRM(name, seclevel = 50) {
     }
 
     try {
-        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var temp = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27~${name}~%27)~or(loginid,like,%27~${name}~%27))~and(status,ne,5)~and(seclevel,lt,${seclevel})`).set('accept', 'json');
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var temp_ = await superagent.get(`${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${name}~)~or(loginid,like,~${name}~))~and(status,ne,5)~and(seclevel,lt,${seclevel})`).set('accept', 'json');
 
-        result = [...temp.body, ...temp_.body];
+        result = [...temp_.body];
 
         //剔除掉，没有loginid的用户信息
         result = result.filter(item => {
@@ -426,14 +426,16 @@ export async function queryUserByNameFindOne(realname, username) {
         return [];
     }
 
+    const queryURL = realname.includes('(') || realname.includes('（') ? `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((loginid,like,~${username}~))~and(status,ne,5)` : `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${realname}~)~and(loginid,like,~${username}~))~and(status,ne,5)`;
+
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/hrmresource/id?_where=((lastname,like,%27${realname}%27)~and(loginid,like,%27${username}%27))~and(status,ne,5)`).set('accept', 'json');
+        var maxinfo = await superagent.get(queryURL).set('accept', 'json');
 
         //剔除掉，没有loginid的用户信息
         maxinfo.body = maxinfo.body.filter(item => {
             return !tools.isNull(item.loginid);
-        })
+        });
 
         //返回用户信息
         if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
