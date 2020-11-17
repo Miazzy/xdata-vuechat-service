@@ -32,7 +32,7 @@
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
-            <vue-excel-editor v-model="json_data" width="100%">
+            <vue-excel-editor v-model="json_data" ref="grid" width="100%" @delete="onDelete" @update="onUpdate" >
 
                 <vue-excel-column field="serialid"     label="序号"     width="50px" />
                 <vue-excel-column field="create_time"  label="登记时间"  width="100px" />
@@ -105,7 +105,7 @@ export default {
               '用印部门':'deal_depart',
               '经办人员':'deal_manager',
               '合同编号':'contract_id',
-              '签收人员':'signman',
+              '签收人员':'sign_man',
               '审批类型':'approve_type',
               '关联流程':'workno',
               '用印类型': 'seal_type',
@@ -128,6 +128,7 @@ export default {
               { text: '重置', value: 4 , icon: 'aim' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
+              { text: '导出', value: 7 , icon: 'wap-home-o' },
             ],
             menuCssValue:'',
             isLoading:false,
@@ -158,6 +159,21 @@ export default {
       }
     },
     methods: {
+      exportAsExcel () {
+          this.$refs.grid.exportTable('xlsx', true, '用印登记表单');
+      },
+      async onDelete(records){
+        console.log('delete');
+      },
+      async onUpdate(records){
+        const temp = this.$refs.grid.$options.propsData.value;
+        for(const record of records){
+          const item = temp.find( item => { return item.$id == record.$id });
+          const elem = new Object() ;
+          elem[record.name] = record.newVal ;
+          await manageAPI.patchTableData('bs_seal_regist' , item.id , elem);
+        }
+      },
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
@@ -230,6 +246,9 @@ export default {
           case 6: //返回首页
             this.$router.push(`/explore`);
             break;
+          case 7: //导出表单
+            this.exportAsExcel();
+            break;
           default:
             console.log(`no operate. out of switch. `);
         }
@@ -265,10 +284,9 @@ export default {
           this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.initContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.initContractList.sort();
@@ -278,10 +296,9 @@ export default {
           this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.sealContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.sealContractList.sort();
@@ -291,10 +308,9 @@ export default {
           this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.receiveContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.receiveContractList.sort();
@@ -304,10 +320,9 @@ export default {
           this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.frontContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.frontContractList.sort();
@@ -317,10 +332,9 @@ export default {
           this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.doneContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.doneContractList.sort();
@@ -330,10 +344,9 @@ export default {
           this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.failContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
 
           this.failContractList.sort();
@@ -345,10 +358,9 @@ export default {
           //获取最近6个月的已归档记录
           this.json_data = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.json_data.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
           this.json_data.sort();
         } else if(tabname == '非合同类') {
@@ -358,10 +370,9 @@ export default {
           //获取最近6个月的已归档记录
           this.json_data_common = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.json_data_common.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
           });
           this.json_data_common.sort();
         }

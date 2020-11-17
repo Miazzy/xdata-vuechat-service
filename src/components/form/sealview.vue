@@ -359,7 +359,7 @@ export default {
         await tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
-        if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+        if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('购房合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
           return;
         } else if(id.includes('[') && id.includes(']')){
           let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
@@ -421,7 +421,7 @@ export default {
                 debugger;
 
                 const id = this.hContractList[0].id;
-                if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+                if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('购房合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
                   console.log('买卖合同等');
                 } else if(id.includes('[') && id.includes(']')){
                   let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
@@ -445,7 +445,7 @@ export default {
               debugger;
 
               const id = this.hContractList[0].id;
-              if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+              if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('购房合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
                 console.log('买卖合同等');
               } else if(id.includes('[') && id.includes(']')){
                 let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
