@@ -1217,9 +1217,8 @@ export default {
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
-
         // 用印前，检查合同编号是否已经存在
-        const cresponse = await query.queryTableDataByField('bs_seal_regist', 'contract_id', contract_id);
+        const cresponse = await query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
 
         if(this.item.sealtype == '合同类' && cresponse && cresponse.length > 0){
           //提示确认用印操作
