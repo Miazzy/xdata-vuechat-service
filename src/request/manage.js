@@ -426,7 +426,7 @@ export async function queryUserByNameFindOne(realname, username) {
         return [];
     }
 
-    const queryURL = realname.includes('(') || realname.includes('（') ? `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((loginid,like,~${username}~))~and(status,ne,5)` : `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${realname}~)~and(loginid,like,~${username}~))~and(status,ne,5)`;
+    const queryURL = realname.includes('(') || realname.includes('（') || !/^[\u4e00-\u9fa5_a-zA-Z0-9]+$/.test(realname) ? `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((loginid,like,~${username}~))~and(status,ne,5)` : `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${realname}~)~and(loginid,like,~${username}~))~and(status,ne,5)`;
 
     try {
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
@@ -438,9 +438,7 @@ export async function queryUserByNameFindOne(realname, username) {
         });
 
         //返回用户信息
-        if (maxinfo && maxinfo.body && maxinfo.body.length > 1) {
-            return true;
-        } else if (maxinfo && maxinfo.body && maxinfo.body.length == 1) {
+        if (maxinfo && maxinfo.body && maxinfo.body.length >= 1) {
             return true;
         } else {
             return false;
