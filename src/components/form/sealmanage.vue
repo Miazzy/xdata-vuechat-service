@@ -32,7 +32,7 @@
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
-            <vue-excel-editor v-model="json_data" ref="grid" width="100%" filter-row @delete="onDelete" @update="onUpdate" >
+            <vue-excel-editor v-model="json_data" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
 
                 <vue-excel-column field="serialid"     label="序号"     width="50px" />
                 <vue-excel-column field="create_time"  label="登记时间"  width="100px" />
