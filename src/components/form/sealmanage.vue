@@ -32,7 +32,7 @@
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
-            <vue-excel-editor v-model="json_data" ref="grid" width="100%" @delete="onDelete" @update="onUpdate" >
+            <vue-excel-editor v-model="json_data" ref="grid" width="100%" filter-row @delete="onDelete" @update="onUpdate" >
 
                 <vue-excel-column field="serialid"     label="序号"     width="50px" />
                 <vue-excel-column field="create_time"  label="登记时间"  width="100px" />
@@ -47,7 +47,7 @@
                 <vue-excel-column field="seal_type"     label="用印类型"  width="80px" :options="sealTypeColumns" />
                 <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
                 <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
-                <vue-excel-column field="status"        label="状态"      width="80px" :options="sealStatusColumns" />
+                <vue-excel-column field="status"        label="状态"      width="80px" type="select" :options="sealStatusColumns" />
 
             </vue-excel-editor>
         </template>
@@ -128,17 +128,18 @@ export default {
               { text: '重置', value: 4 , icon: 'aim' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
-              { text: '导出', value: 7 , icon: 'wap-home-o' },
+              { text: '导出', value: 7 , icon: 'description' },
             ],
             menuCssValue:'',
             isLoading:false,
             loading:false,
-            currentPage:1,
+            currentPage: 1,
             archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
             approveColumns: workconfig.compcolumns.approveColumns,
             sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
+            statusType:{'待用印':'待用印','已用印':'已用印','已领取':'已用印','移交前台':'已用印','财务归档':'已用印','档案归档':'已用印','已完成':'已用印','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
         }
     },
     activated() {
@@ -218,11 +219,13 @@ export default {
         switch (val) {
           case 0: //只显示合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
+            //await this.queryFresh();
+            this.queryTabList('合同类',0);
             break;
           case 1: //只显示非合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
+            //await this.queryFresh();
+            await this.queryTabList('非合同类',0);
             break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
@@ -247,6 +250,8 @@ export default {
             this.$router.push(`/explore`);
             break;
           case 7: //导出表单
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
             this.exportAsExcel();
             break;
           default:
@@ -287,6 +292,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.initContractList.sort();
@@ -299,6 +305,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.sealContractList.sort();
@@ -311,6 +318,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.receiveContractList.sort();
@@ -323,6 +331,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.frontContractList.sort();
@@ -335,6 +344,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.doneContractList.sort();
@@ -347,6 +357,7 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            item.status = this.statusType[item.status];
           });
 
           this.failContractList.sort();
@@ -361,6 +372,9 @@ export default {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            console.log(JSON.stringify(this.statusType));
+            item.status = this.statusType[item.status];
+            debugger;
           });
           this.json_data.sort();
         } else if(tabname == '非合同类') {
@@ -368,13 +382,15 @@ export default {
           sealTypeSql = `~and(seal_type,like,非合同类)`;
           const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           //获取最近6个月的已归档记录
-          this.json_data_common = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
-          this.json_data_common.map((item , index) => {
+          this.json_data = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data.map((item , index) => {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            console.log(JSON.stringify(this.statusType));
+            item.status = this.statusType[item.status];
           });
-          this.json_data_common.sort();
+          this.json_data.sort();
         }
       },
       async queryInfo(){
@@ -396,7 +412,7 @@ export default {
         this.queryTabList('合同类',0);
 
         //查询非合同类数据
-        this.queryTabList('非合同类',0);
+        //this.queryTabList('非合同类',0);
 
       },
       async selectHContract(){
