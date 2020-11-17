@@ -100,12 +100,7 @@
             </van-cell-group>
 
             <van-popup v-model="tag.showPicker" round position="bottom">
-              <van-picker
-                show-toolbar
-                :columns="archiveTypeColumns"
-                @cancel="tag.showPicker = false"
-                @confirm="archiveTypeConfirm"
-              />
+              <van-picker  show-toolbar :columns="archiveTypeColumns" @cancel="tag.showPicker = false"  @confirm="archiveTypeConfirm"  />
             </van-popup>
           </van-cell-group>
 
@@ -192,6 +187,7 @@
           <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;" >加载中...</van-loading>
 
           <div style="height:100px;" ></div>
+
         </div>
       </div>
 
@@ -1189,6 +1185,28 @@ export default {
           return;
         }
 
+        //合同编号
+        const contract_id = this.item.contractId;
+
+        if(contract_id && contract_id.includes('NaN')){
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '此合同编号有误，请检查是否符合编码规则！',
+          });
+        }
+
+        // 用印前，检查合同编号是否已经存在
+        const cresponse = await query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
+
+        if(this.item.sealtype == '合同类' && cresponse && cresponse.length > 0){
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '此合同编号已经存在，请刷新页面后，重试用印操作！',
+          });
+        }
+
         //提示确认用印操作
         await vant.Dialog.confirm({
           title: '用印确认',
@@ -1204,8 +1222,6 @@ export default {
         const email = this.item.dealMail;
         //领取人OA账户
         const username = this.item.username;
-        //合同编号
-        const contract_id = this.item.contractId;
         //前缀编号
         const prefix = this.item.prefix;
         //提示信息
@@ -1216,18 +1232,6 @@ export default {
         const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=seal&type=front`);
         //领取地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
-
-        // 用印前，检查合同编号是否已经存在
-        const cresponse = await query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
-
-        if(this.item.sealtype == '合同类' && cresponse && cresponse.length > 0){
-          //提示确认用印操作
-          await vant.Dialog.confirm({
-              title: '用印确认',
-              message: '此合同编号已经存在，请刷新页面后，重试用印操作！',
-          })
-          return;
-        }
 
         try {
           //修改状态为已用印，保存当前合同编号

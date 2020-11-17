@@ -10,7 +10,7 @@
             <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>物品领用</span>
+            <span>访客登记</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 15px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" />
@@ -316,7 +316,7 @@ export default {
             active: 1,
             id:'',
             type:'',
-            title:'办公用品预约',
+            title:'访客登记',
             content:'',
             files:'',
             from:'',
@@ -347,7 +347,7 @@ export default {
             iswechat:false,
             isfirst:true,
             dockFlag: false,
-            typeColumns:['办公用品','药品','防疫物资'],
+            typeColumns:['访客登记'],
             showTypePicker:false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: workconfig.compValidation.goodsreceive.message,
