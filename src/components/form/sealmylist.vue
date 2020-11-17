@@ -41,15 +41,6 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已用印
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已领取
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已移交
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已归档
-          </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已退回
           </div>
@@ -66,15 +57,6 @@
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 3 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 4 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 5 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 6 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
@@ -167,11 +149,6 @@ export default {
       async userStatus(){
         try {
           let info = await storage.getStore('system_userinfo');
-          // if( tools.isNull(info) ){
-          //   vant.Toast('尚未登录！');
-          //   await this.clearLoginInfo();
-          //   this.$router.push(`/login`);
-          // }
         } catch (error) {
           console.log(error);
         }
@@ -279,7 +256,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -364,7 +341,7 @@ export default {
         })
 
         //获取最近6个月的已用印记录
-        this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
+        this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
 
         this.sealContractList.map((item , index) => {
           item.name = item.filename.slice(0,16) ,

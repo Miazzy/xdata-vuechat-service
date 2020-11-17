@@ -70,13 +70,13 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已用印
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
             已领取
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
             已移交
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
             已归档
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -354,7 +354,7 @@ export default {
 
           this.initContractList.sort();
         } else if(tabname == 2){
-          const whereSQL = `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          const whereSQL = `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已用印记录
           this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , whereSQL);
           this.totalpages = await manageAPI.queryTableDataCount('bs_seal_regist' , whereSQL);

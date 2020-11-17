@@ -358,6 +358,14 @@
               </div>
             </van-col>
             <van-col span="6">
+              <div class="weui-cell_app_hd" @click="sealManage();" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png" >
+                <div class="weui-cell_app_bd" >
+                  用印管理
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6">
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
                 <div class="weui-cell_app_bd">
@@ -657,6 +665,18 @@ export default {
           }
 
         },
+        async sealManage(){
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+          //获取角色列表
+          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            this.$router.push(`/app/sealmanage`);
+          } else {
+            vant.Toast('您没有用印合同资料审批的权限！');
+          }
+        },
         async sealFront(){
 
           //获取当前登录用户信息
@@ -683,21 +703,21 @@ export default {
             vant.Toast('您没有用印合同资料归档的权限！');
           }
         },
+        async sealMyList(){
+          this.$router.push(`/app/sealmylist`);
+        },
         async sealExport(){
 
           //获取当前登录用户信息
           const userinfo = await storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_EXPORT' , userinfo.username);
+          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealexport`);
           } else {
             vant.Toast('您没有用印合同资料导出的权限！');
           }
-        },
-        async sealMyList(){
-          this.$router.push(`/app/sealmylist`);
         },
         async goodsReceive(type){
           //获取当前登录用户信息
