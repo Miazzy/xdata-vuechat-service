@@ -1380,7 +1380,7 @@ export default {
         const username = item.username;
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
-        const contract_id = item.contractId;
+        const contract_id = item && item.contractId ? item.contractId.trim() : '';
         const prefix = item.prefix;
         const sign_man = item.signman;
         const workno = item.workno;
@@ -1402,6 +1402,14 @@ export default {
         const company = item.company;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
+
+        //验证合同编号是否含有特殊字符串
+        if(contract_id.includes('【')||contract_id.includes('】')||contract_id.includes('、')||contract_id.includes(' ')){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号且一次只能输入一条合同编号！',
+          });
+        }
 
         //查询直接所在工作组
         const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);

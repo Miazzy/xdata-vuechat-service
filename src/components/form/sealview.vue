@@ -1224,7 +1224,7 @@ export default {
           //提示确认用印操作
           await vant.Dialog.confirm({
               title: '用印确认',
-              message: '此合同编号已经存在，请刷新页面后，在重试用印操作！',
+              message: '此合同编号已经存在，请刷新页面后，重试用印操作！',
           })
           return;
         }
