@@ -434,7 +434,7 @@ export default {
             config: workconfig.config,
             group: workconfig.group,
             currentKey:'',
-            tablename:'bs_goods_receive',
+            tablename:'bs_visit_apply',
             readonly: false,
             goodstype: workconfig.goodstype,
             diplomaType: workconfig.compcolumns.diplomaTypeColumns,

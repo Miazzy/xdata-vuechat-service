@@ -1404,7 +1404,7 @@ export default {
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
         //验证合同编号是否含有特殊字符串
-        if(contract_id.includes('【')||contract_id.includes('】')||contract_id.includes('、')||contract_id.includes(' ')){
+        if(contract_id.includes('【') || contract_id.includes('】') || contract_id.includes('、') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')){
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号且一次只能输入一条合同编号！',

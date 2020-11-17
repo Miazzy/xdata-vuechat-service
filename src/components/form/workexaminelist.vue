@@ -3,14 +3,14 @@
 <keep-alive>
 
   <!--首页组件-->
-  <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
+  <div id="workexaminelist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
 
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>领用进度</span>
+            <span>工程巡检</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
@@ -18,42 +18,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data_office"
-                        :fields="json_fields_office"
-                        worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xls"
-                      >
-                        办公台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_drug"
-                        :fields="json_fields_drug"
-                        worksheet="药品领用台账"
-                        name="药品领用台账.xls"
-                      >
-                        药品台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_prevent"
-                        :fields="json_fields_prevent"
-                        worksheet="防疫物资领用台账"
-                        name="防疫物资领用台账.xls"
-                      >
-                        防疫台账
-                      </download-excel>
+                      <download-excel :data="json_data" :fields="json_fields" worksheet="工程巡检整改台账" name="工程巡检整改台账.xls" >工程巡检整改台账</download-excel>
                     </span>
                   </template>
                 </van-cell>
@@ -61,13 +26,10 @@
             </van-dropdown-menu>
         </div>
     </header>
-     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search  v-model="searchWord" show-action placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
@@ -83,10 +45,10 @@
             待处理
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已准备
+            审批中
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已完成
+            已整改
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(tabname , 0);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已驳回
@@ -133,7 +95,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "领用进度",
+            pageName: "工程巡检",
             momentNewMsg: true,
             tabname: '1',
             id:'',
@@ -142,12 +104,12 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_goods_receive',
+            tname: 'bs_work_examine',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
               '3': 'doneList',
-              '4':'rejectList',
+              '4': 'rejectList',
             },
             back:'/app',
             searchWord:'',
@@ -163,7 +125,7 @@ export default {
             ],
             isLoading:false,
             loading:false,
-            json_fields_office: {
+            json_fields: {
               '排序编号':'serialid',
               '登记时间': 'create_time',
               '物品名称':'name',
@@ -176,39 +138,10 @@ export default {
               '备注说明':'remark',
               '审批状态': 'status',
             },
-            json_fields_drug: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_fields_prevent: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_data_office: [],
-            json_data_drug: [],
-            json_data_prevent: [],
+            json_data: [],
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
