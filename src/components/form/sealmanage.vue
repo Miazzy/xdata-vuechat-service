@@ -31,7 +31,26 @@
 
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
+        <template>
+            <vue-excel-editor v-model="json_data" width="120%">
 
+                <vue-excel-column field="serialid"     label="序号"     width="50px" />
+                <vue-excel-column field="create_time"  label="登记时间"  width="100px" />
+                <vue-excel-column field="filename"     label="文件名称"  width="200px" />
+                <vue-excel-column field="count"        label="数量"      width="50px" />
+                <vue-excel-column field="deal_depart"  label="经办部门"  width="100px"/>
+                <vue-excel-column field="deal_manager" label="经办人"    width="60px" />
+                <vue-excel-column field="contract_id"  label="合同编号"  width="180px"/>
+                <vue-excel-column field="sign_man"      label="签收人"   width="60px" />
+                <vue-excel-column field="approve_type"  label="审批类型"  width="80px" :options="approveColumns" />
+                <vue-excel-column field="workno"        label="关联流程"  width="180px"/>
+                <vue-excel-column field="seal_type"     label="用印类型"  width="80px" :options="sealTypeColumns" />
+                <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
+                <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
+                <vue-excel-column field="status"        label="状态"      width="80px" :options="sealStatusColumns" />
+
+            </vue-excel-editor>
+        </template>
       </div>
     </section>
 
@@ -46,6 +65,14 @@ import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
+import * as workconfig from '@/request/workconfig';
+import VueExcelEditor from 'vue-excel-editor';
+
+try {
+  Vue.use(VueExcelEditor);
+} catch (error) {
+  console.log(error);
+}
 
 export default {
     mixins: [window.mixin],
@@ -106,6 +133,11 @@ export default {
             isLoading:false,
             loading:false,
             currentPage:1,
+            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            approveColumns: workconfig.compcolumns.approveColumns,
+            sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
         }
     },
     activated() {

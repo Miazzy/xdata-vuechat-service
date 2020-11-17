@@ -475,9 +475,17 @@ export default {
                 });
 
                 const id = this.hContractList[0].id;
-                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                no = `00000${no}`.slice(-3);
-                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+                if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+                  console.log('买卖合同等');
+                } else if(id.includes('[') && id.includes(']')){
+                  let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                  no = `00000${no}`.slice(-3);
+                  this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+                } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+                  let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+                  no = `00000${no}`.slice(-3);
+                  this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+                }
 
               } catch (error) {
                 console.log(error);
@@ -488,9 +496,17 @@ export default {
               this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
 
               const id = this.hContractList[0].id;
-              let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-              no = `00000${no}`.slice(-3);
-              this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+              if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+                console.log('买卖合同等');
+              } else if(id.includes('[') && id.includes(']')){
+                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+              } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+                let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+              }
             }
           }
         } catch (error) {
@@ -961,9 +977,17 @@ export default {
         await tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
-        let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-        no = `00000${no}`.slice(-3);
-        this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+        if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+          console.log('买卖合同等');
+        } else if(id.includes('[') && id.includes(']')){
+          let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+          no = `00000${no}`.slice(-3);
+          this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+        } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+          let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+          no = `00000${no}`.slice(-3);
+          this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+        }
       },
       //选中当前前台人
       async selectFrontUser(value){
@@ -1404,10 +1428,10 @@ export default {
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
         //验证合同编号是否含有特殊字符串
-        if(contract_id.includes('【') || contract_id.includes('】') || contract_id.includes('、') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')){
+        if(contract_id.includes('【') || contract_id.includes('】') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')){
           return await vant.Dialog.alert({
             title: '温馨提示',
-            message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号且一次只能输入一条合同编号！',
+            message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号！',
           });
         }
         if(contract_id && contract_id.includes('NaN')){

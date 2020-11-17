@@ -323,13 +323,10 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
-        //this.userStatus();
     },
     mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     methods: {
       // 企业微信登录处理函数
@@ -362,14 +359,24 @@ export default {
         await tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
-        let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-        no = `00000${no}`.slice(-3);
-        this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+        if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+          return;
+        } else if(id.includes('[') && id.includes(']')){
+          let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+          no = `00000${no}`.slice(-3);
+          this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+        } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+          let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+          no = `00000${no}`.slice(-3);
+          this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+        }
       },
       //获取合同编号
       async queryHContract(){
         //获取盖章人信息
         const prefix = this.item.prefix = this.item.prefix.toUpperCase();
+
+        debugger;
 
         try {
           if(!!prefix){
@@ -411,10 +418,20 @@ export default {
                   return index == findex;
                 });
 
+                debugger;
+
                 const id = this.hContractList[0].id;
-                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                no = `00000${no}`.slice(-3);
-                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+                if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+                  console.log('买卖合同等');
+                } else if(id.includes('[') && id.includes(']')){
+                  let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                  no = `00000${no}`.slice(-3);
+                  this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+                } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+                  let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+                  no = `00000${no}`.slice(-3);
+                  this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+                }
 
               } catch (error) {
                 console.log(error);
@@ -425,10 +442,21 @@ export default {
               const contract_id = `${prefix}[${dayjs().format('YYYY')}]000`;
               this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
 
+              debugger;
+
               const id = this.hContractList[0].id;
-              let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-              no = `00000${no}`.slice(-3);
-              this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+              if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('贷款合同') || this.item.filename.includes('借款合同') || this.item.filename.includes('推介合同')){
+                console.log('买卖合同等');
+              } else if(id.includes('[') && id.includes(']')){
+                let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
+              } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
+                let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
+                no = `00000${no}`.slice(-3);
+                this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
+              }
+
             }
           }
         } catch (error) {
