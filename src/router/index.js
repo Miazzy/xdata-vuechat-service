@@ -236,6 +236,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealreceive.vue"], resolve)
         }
     }, {
+        path: '/app/sealmanage',
+        name: "用印管理",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealmanage.vue"], resolve)
+        }
+    }, {
         path: '/app/sealmylist',
         name: "用印历史",
         components: {

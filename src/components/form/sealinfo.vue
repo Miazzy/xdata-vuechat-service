@@ -1295,7 +1295,7 @@ export default {
 
       async handleConfirm(){
 
-        //TODO:{*} 此处可以加分布式锁，防止高并发合同编号相同
+        //TODO 此处可以加分布式锁，防止高并发合同编号相同
 
         //获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
@@ -1408,6 +1408,13 @@ export default {
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号且一次只能输入一条合同编号！',
+          });
+        }
+        if(contract_id && contract_id.includes('NaN')){
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '此合同编号有误，请检查是否符合编码规则，注不能出现NaN！',
           });
         }
 
