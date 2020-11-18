@@ -947,7 +947,6 @@ export default {
         //第二步，向表单提交form对象数据
         const result = await manageAPI.patchTableData(this.tablename , id , elem);
 
-
         //批量领取物品修改状态
         for(let i = 0 ; i < this.tlist.length ; i++){
 
