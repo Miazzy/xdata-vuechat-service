@@ -164,20 +164,20 @@
             </div>
 
             <van-goods-action v-if="item.status =='待用印' && item.type !== 'finish' " >
-              <van-goods-action-button type="warning" text="作废" @click="handleDisagree();" />
+              <van-goods-action-button type="warning" text="退回" @click="handleDisagree();" />
               <van-goods-action-button type="danger" text="确认" @click="handleAgree();" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取' || item.status == '已寄送' ) && item.type == 'front' ">
+            <van-goods-action  v-if=" (item.status == '已用印' || item.status == '已领取' || item.status == '已寄送' ) && item.type == 'front' && zonename == '集团总部' ">
               <van-goods-action-button v-show=" (item.ordertype == '我方先印' && (item.status == '已用印' || item.status == '已领取')) " id="informed_confirm" type="danger" native-type="submit" text="确认寄送"  @click="handleSending();" style="border-radius: 10px 10px 10px 10px;" />
               <van-goods-action-button v-show=" (item.ordertype != '我方先印' && (item.status == '已用印' || item.status == '已领取')) || (item.ordertype == '我方先印' && item.status == '已寄送')" id="informed_confirm" type="danger" native-type="submit" text="确认移交"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time) && !tag.showPicker">
+            <van-goods-action  v-if=" item.type == 'done' && (!item.finance_time || !item.doc_time) && !tag.showPicker && zonename == '集团总部'">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认归档"  @click="handleArchive();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
-            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' && !item.done_time ">
+            <van-goods-action  v-if=" item.status == '已归档' && item.type == 'archive' && !item.done_time && zonename == '集团总部' ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="完成归档"  @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
