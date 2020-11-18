@@ -481,6 +481,39 @@
       </div>
 
       <div class="weui-cells" style="display: block;position:relative;">
+        <div class="weui-cell-title">来访管理</div>
+        <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
+          <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
+            更多
+          </span>
+        </div>
+        <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
+          <van-icon name="arrow" />
+        </div>
+        <div class="flex-layout-content" id="scanCell">
+          <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="visitmanage('apply');">
+              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
+                <div class="weui-cell_app_bd" >
+                  来访预约
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="visitmanage('approve');">
+              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_02.png" >
+                <div class="weui-cell_app_bd">
+                  来访审批
+                </div>
+              </div>
+            </van-col>
+          </van-row>
+        </div>
+
+      </div>
+
+      <div class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">协同办公</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -513,7 +546,7 @@
 
       </div>
 
-      <div class="weui-cells" style="display: block;position:relative;">
+      <div class="weui-cells" style="display:none; position:relative;">
         <div class="weui-cell-title">数据管理</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -882,6 +915,14 @@ export default {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
           } else if(name == 'property') {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
+          }
+        },
+        // 来访管理
+        visitmanage(name) {
+          if(name == 'apply'){
+            this.$router.push(`/app/visitorreceive?back=/app&type=${name}`);
+          } else if(name == 'approve'){
+            this.$router.push(`/app/visitorlist?back=/app&type=${name}`);
           }
         },
         // 修改界面样式
