@@ -1027,6 +1027,8 @@ export default {
 
           if(resp && resp.length > 0 && resp[0].zonename){
             this.zonename = resp[0].zonename;
+          } else {
+            this.zonename = '';
           }
 
           //如果分组用户不存在，则将分组角色填入

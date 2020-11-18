@@ -84,14 +84,14 @@
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" @blur="validField('sealman');querySealMan();" @change="querySealMan();" :error-message="message.sealman" @click="querySealMan();" />
                 <van-address-list v-show="suserList.length > 0" v-model="suserid" :list="suserList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
-                <van-field v-show="item.sealtype == '合同类' && isGroupHeader" required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
-                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field v-show="item.sealtype == '合同类' && isGroupHeader && zonename == '集团总部' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="validField('front');queryFrontMan();" :error-message="message.front" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部' " v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <van-field v-show="item.sealtype == '合同类' && false" required clearable label="档案归档" v-model="item.archive_name" placeholder="请输入档案归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
                 <nut-checkboxgroup v-show="item.sealtype == '合同类' && false " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
-                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader" required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="validField('finance');queryFinanceArchiveMan();" :error-message="message.finance" @click="queryFinanceArchiveMan();" />
-                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
-                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader" required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="validField('record');queryRecordArchiveMan();"  :error-message="message.record" @click="queryRecordArchiveMan();" />
-                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
+                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader && zonename == '集团总部'" required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="validField('finance');queryFinanceArchiveMan();" :error-message="message.finance" @click="queryFinanceArchiveMan();" />
+                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
+                <van-field v-show="item.sealtype == '合同类'  && isGroupHeader && zonename == '集团总部' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="validField('record');queryRecordArchiveMan();"  :error-message="message.record" @click="queryRecordArchiveMan();" />
+                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
                 <van-field clearable label="盖印时间" v-model="item.sealtime" placeholder="--" readonly v-show="!!item.sealtime"/>
               </van-cell-group>
 
@@ -298,7 +298,8 @@ export default {
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
             approveColumns: workconfig.compcolumns.approveColumns,
             //非集团总部成员，合同盖印也不显示前台和归档字段
-            isGroupHeader:false
+            isGroupHeader:false,
+            zonename:'',
         }
     },
     async activated() {
@@ -822,6 +823,9 @@ export default {
                   //当前盖印人编号
                   this.item.seal = this.sealuserid = user[0].loginid;
 
+                  //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
+                  this.zoneNameValid();
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -839,6 +843,10 @@ export default {
                   this.item.sealman = user.lastname;
                   //当前盖印人编号
                   this.item.seal = this.sealuserid = user.loginid;
+
+                  //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
+                  this.zoneNameValid();
+
                 } catch (error) {
                   console.log(error);
                 }
@@ -913,6 +921,18 @@ export default {
           file.status = 'failed';
           file.message = '上传成功';
         }, 1000);
+      },
+      // 校验是否为集团总部
+      async zoneNameValid(){
+        //查询直接所在工作组
+        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal);
+
+        if(resp && resp.length > 0 && resp[0].zonename){
+          this.zonename = resp[0].zonename;
+        } else {
+          this.zonename = '';
+        }
+
       },
 
       sealTypeConfirm(value) {
@@ -1036,6 +1056,10 @@ export default {
         this.item.seal = id;
         //当前盖印人编号
         this.sealuserid = id;
+
+        //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
+        this.zoneNameValid();
+
       },
       //选中当前归档人员
       async selectArchiveUser(values){
