@@ -926,13 +926,12 @@ export default {
       async zoneNameValid(){
         //查询直接所在工作组
         const resp = await query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal);
-
+        //如果查询到管理组数据，则设置区域名称
         if(resp && resp.length > 0 && resp[0].zonename){
           this.zonename = resp[0].zonename;
         } else {
           this.zonename = '';
         }
-
       },
       sealTypeConfirm(value) {
         const userInfo = storage.getStore('system_userinfo');
