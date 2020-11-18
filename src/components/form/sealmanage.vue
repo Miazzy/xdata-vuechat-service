@@ -168,10 +168,16 @@ export default {
       },
       async onUpdate(records){
         const temp = this.$refs.grid.$options.propsData.value;
+        if(records.length > 1){
+          return this.$toast.fail('管理员您好，一次只能更新一条数据！');
+        }
         for(const record of records){
           const item = temp.find( item => { return item.$id == record.$id });
           const elem = new Object() ;
           elem[record.name] = record.newVal ;
+          if(record.newVal == ''){
+            return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
+          }
           await manageAPI.patchTableData('bs_seal_regist' , item.id , elem);
         }
       },
