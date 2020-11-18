@@ -829,8 +829,6 @@ export default {
           this.item.position = userinfo.position;
           this.item.create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
-          debugger;
-
         } catch (error) {
           console.log(error);
         }
@@ -883,6 +881,7 @@ export default {
         let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
         let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
         let zone = response && response.length > 0 ? response[0].zonename : '';
+        let visitors = '';
 
         //如果未获取用户名称，则直接设置用印人为分组成员
         if(tools.isNull(user_group_ids)){
@@ -918,6 +917,8 @@ export default {
           pid: id,
           status: 'init',
         }; // 待处理元素
+
+        visitors = `${elem.visitor_name}(${elem.visitor_company} 电话:${elem.visitor_mobile.slice(0,3) + '****' + elem.visitor_mobile.slice(-4)})`;
 
         //第二步，向表单提交form对象数据
         const result = await manageAPI.postTableData(this.tablename , elem);
@@ -957,6 +958,8 @@ export default {
 
             //向表单提交form对象数据
             await manageAPI.postTableData(this.tablename , element);
+
+            visitors += `,${element.visitor_name}(${element.visitor_company} 电话:${element.visitor_mobile.slice(0,3) + '****' + element.visitor_mobile.slice(-4)})`;
           }
         }
 
@@ -970,7 +973,7 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向物品管理员推送通知，已准备办公用品等
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/访客预约通知：${elem.visitor_name}(${elem.company})等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
