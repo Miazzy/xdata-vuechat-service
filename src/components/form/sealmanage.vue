@@ -68,11 +68,7 @@ import * as manageAPI from '@/request/manage';
 import * as workconfig from '@/request/workconfig';
 import VueExcelEditor from 'vue-excel-editor';
 
-try {
-  Vue.use(VueExcelEditor);
-} catch (error) {
-  console.log(error);
-}
+Vue.use(VueExcelEditor);
 
 export default {
     mixins: [window.mixin],
@@ -380,7 +376,6 @@ export default {
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
             console.log(JSON.stringify(this.statusType));
             item.status = this.statusType[item.status];
-            debugger;
           });
           this.json_data.sort();
         } else if(tabname == '非合同类') {
