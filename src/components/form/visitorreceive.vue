@@ -699,19 +699,128 @@ export default {
         this.item = {
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
-              name:'', //领用访客姓名
-              amount:'',//领用数量
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+
+              visitor_name:'',     //访客姓名
+              visitor_company:'',  //访客单位
+              visitor_mobile:'',   //访客电话
+              visitor_position:'', //访客职务
+
+              visitor_name1:'',
+              visitor_company1:'',
+              visitor_mobile1:'',
+              visitor_position1:'',
+
+              visitor_name2:'',
+              visitor_company2:'',
+              visitor_mobile2:'',
+              visitor_position2:'',
+
+              visitor_name3:'',
+              visitor_company3:'',
+              visitor_mobile3:'',
+              visitor_position3:'',
+
+              visitor_name4:'',
+              visitor_company4:'',
+              visitor_mobile4:'',
+              visitor_position4:'',
+
+              visitor_name5:'',
+              visitor_company5:'',
+              visitor_mobile5:'',
+              visitor_position5:'',
+
+              visitor_name6:'',
+              visitor_company6:'',
+              visitor_mobile6:'',
+              visitor_position6:'',
+
+              visitor_name7:'',
+              visitor_company7:'',
+              visitor_mobile7:'',
+              visitor_position7:'',
+
+              visitor_name8:'',
+              visitor_company8:'',
+              visitor_mobile8:'',
+              visitor_position8:'',
+
+              visitor_name9:'',
+              visitor_company9:'',
+              visitor_mobile9:'',
+              visitor_position9:'',
+
+              visitor_name10:'',
+              visitor_company10:'',
+              visitor_mobile10:'',
+              visitor_position10:'',
+
+              visitor_name11:'',
+              visitor_company11:'',
+              visitor_mobile11:'',
+              visitor_position11:'',
+
+              visitor_name12:'',
+              visitor_company12:'',
+              visitor_mobile12:'',
+              visitor_position12:'',
+
+              visitor_name13:'',
+              visitor_company13:'',
+              visitor_mobile13:'',
+              visitor_position13:'',
+
+              visitor_name14:'',
+              visitor_company14:'',
+              visitor_mobile14:'',
+              visitor_position14:'',
+
+              visitor_name15:'',
+              visitor_company15:'',
+              visitor_mobile15:'',
+              visitor_position15:'',
+
+              visitor_name16:'',
+              visitor_company16:'',
+              visitor_mobile16:'',
+              visitor_position16:'',
+
+              visitor_name17:'',
+              visitor_company17:'',
+              visitor_mobile17:'',
+              visitor_position17:'',
+
+              visitor_name18:'',
+              visitor_company18:'',
+              visitor_mobile18:'',
+              visitor_position18:'',
+
+              visitor_name19:'',
+              visitor_company19:'',
+              visitor_mobile19:'',
+              visitor_position19:'',
+
+              visitor_name20:'',
+              visitor_company20:'',
+              visitor_mobile20:'',
+              visitor_position20:'',
+
+              employee:'',  //填报人名称
+              mobile:'',    //填报人电话
+              department:'',//填报人部门名称
+              company:'',   //填报人单位名称
+              position:'',  //填报人岗位
+
               remark:'',//备注说明
-              type:this.item.type,//领用类别
-              approve_name:'',//领用审批人员
-              workflow:'',//关联流程
-              approve:'',//领用审批人员
-              receive_name : this.item.receive_name , //领用人员名称
-              department : this.item.department, //领用部门名称
-              company : this.item.company, //单位名称
+
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
+
               status: '',
             };
       },

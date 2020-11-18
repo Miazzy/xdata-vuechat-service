@@ -18,7 +18,7 @@
         </div>
     </header>
 
-    <section v-if="iswechat">
+    <section>
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -56,176 +56,226 @@
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                <!-- 领用时间（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
-                <!-- 领用类别（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" :error-message="message.type"  />
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
 
-                 <span class="van-goods-span-number" style="top:180px;">#1</span>
+                <van-field :readonly="readonly" :required="false" clearable label="预约时间" v-model="item.time"  placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time"  />
+                <van-field :readonly="readonly" :required="false" clearable label="访客单位" v-model="item.visitor_company"  placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company"  />
+
+
+                <van-field :readonly="readonly" required clearable label="访客姓名" v-model="item.visitor_name"     placeholder="请填写访客姓名！" @blur="validField('visitor_name')" :error-message="message.visitor_name"  />
+                <van-field :readonly="readonly" required clearable label="访客职务" v-model="item.visitor_position" placeholder="请填写访客职务！" @blur="validField('visitor_position')" :error-message="message.visitor_position"  />
+                <van-field :readonly="readonly" required clearable label="访客电话" v-model="item.visitor_mobile"   placeholder="请填写访客电话！" @blur="validField('visitor_mobile')" :error-message="message.visitor_mobile"  />
+
+                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 20 ? size++ : size;"/>
+                <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;"  />
+                <span class="van-goods-span-number" style="top:130px;">#1</span>
+
               </van-cell-group>
 
               <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name1"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount1"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name1"  placeholder="请填写访客姓名！" @blur="validField('visitor_name1')" :error-message="message.visitor_name1"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position1" placeholder="请填写访客职务！" @blur="validField('visitor_position1')" :error-message="message.visitor_position1"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile1"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile1')" :error-message="message.visitor_mobile1"  />
                 <span class="van-goods-span-number">#2</span>
+
               </van-cell-group>
 
               <van-cell-group v-show="size>=3" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name2"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount2"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name2"  placeholder="请填写访客姓名！" @blur="validField('visitor_name2')" :error-message="message.visitor_name2"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position2" placeholder="请填写访客职务！" @blur="validField('visitor_position2')" :error-message="message.visitor_position2"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile2"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile2')" :error-message="message.visitor_mobile2"  />
                 <span class="van-goods-span-number">#3</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=4" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name3"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount3"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name3"  placeholder="请填写访客姓名！" @blur="validField('visitor_name3')" :error-message="message.visitor_name3"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position3" placeholder="请填写访客职务！" @blur="validField('visitor_position3')" :error-message="message.visitor_position3"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile3"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile3')" :error-message="message.visitor_mobile3"  />
                 <span class="van-goods-span-number">#4</span>
+
               </van-cell-group>
 
               <van-cell-group v-show="size>=5" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name4"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount4"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name4"  placeholder="请填写访客姓名！" @blur="validField('visitor_name4')" :error-message="message.visitor_name4"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position4" placeholder="请填写访客职务！" @blur="validField('visitor_position4')" :error-message="message.visitor_position4"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile4"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile4')" :error-message="message.visitor_mobile4"  />
 
                 <span class="van-goods-span-number">#5</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=6" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name5"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount5"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name5"  placeholder="请填写访客姓名！" @blur="validField('visitor_name5')" :error-message="message.visitor_name5"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position5" placeholder="请填写访客职务！" @blur="validField('visitor_position5')" :error-message="message.visitor_position5"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile5"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile5')" :error-message="message.visitor_mobile5"  />
 
                 <span class="van-goods-span-number">#6</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=7" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name6"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount6"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name6"  placeholder="请填写访客姓名！" @blur="validField('visitor_name6')" :error-message="message.visitor_name6"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position6" placeholder="请填写访客职务！" @blur="validField('visitor_position6')" :error-message="message.visitor_position6"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile6"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile6')" :error-message="message.visitor_mobile6"  />
 
                 <span class="van-goods-span-number">#7</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=8" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name7"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount7"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name7"  placeholder="请填写访客姓名！" @blur="validField('visitor_name7')" :error-message="message.visitor_name7"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position7" placeholder="请填写访客职务！" @blur="validField('visitor_position7')" :error-message="message.visitor_position7"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile7"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile7')" :error-message="message.visitor_mobile7"  />
 
                 <span class="van-goods-span-number">#8</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=9" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name8"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount8"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name8"  placeholder="请填写访客姓名！" @blur="validField('visitor_name8')" :error-message="message.visitor_name8"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position8" placeholder="请填写访客职务！" @blur="validField('visitor_position8')" :error-message="message.visitor_position8"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile8"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile8')" :error-message="message.visitor_mobile8"  />
 
                 <span class="van-goods-span-number">#9</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=10" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name9"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount9"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name9"  placeholder="请填写访客姓名！" @blur="validField('visitor_name9')" :error-message="message.visitor_name9"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position9" placeholder="请填写访客职务！" @blur="validField('visitor_position9')" :error-message="message.visitor_position9"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile9"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile9')" :error-message="message.visitor_mobile9"  />
 
                 <span class="van-goods-span-number">#10</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=11" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name10"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount10"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name10"  placeholder="请填写访客姓名！" @blur="validField('visitor_name10')" :error-message="message.visitor_name10"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position10" placeholder="请填写访客职务！" @blur="validField('visitor_position10')" :error-message="message.visitor_position10"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile10"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile10')" :error-message="message.visitor_mobile10"  />
 
                 <span class="van-goods-span-number">#11</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=12" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name11"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount11"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name11"  placeholder="请填写访客姓名！" @blur="validField('visitor_name11')" :error-message="message.visitor_name11"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position11" placeholder="请填写访客职务！" @blur="validField('visitor_position11')" :error-message="message.visitor_position11"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile11"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile11')" :error-message="message.visitor_mobile11"  />
 
                 <span class="van-goods-span-number">#12</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=13" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
 
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name12"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount12"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name12"  placeholder="请填写访客姓名！" @blur="validField('visitor_name12')" :error-message="message.visitor_name12"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position12" placeholder="请填写访客职务！" @blur="validField('visitor_position12')" :error-message="message.visitor_position12"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile12"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile12')" :error-message="message.visitor_mobile12"  />
 
                 <span class="van-goods-span-number">#13</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=14" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name13"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount13"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name13"  placeholder="请填写访客姓名！" @blur="validField('visitor_name13')" :error-message="message.visitor_name13"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position13" placeholder="请填写访客职务！" @blur="validField('visitor_position13')" :error-message="message.visitor_position13"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile13"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile13')" :error-message="message.visitor_mobile13"  />
+
                 <span class="van-goods-span-number">#14</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=15" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name14"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount14"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name14"  placeholder="请填写访客姓名！" @blur="validField('visitor_name14')" :error-message="message.visitor_name14"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position14" placeholder="请填写访客职务！" @blur="validField('visitor_position14')" :error-message="message.visitor_position14"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile14"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile14')" :error-message="message.visitor_mobile14"  />
+
                 <span class="van-goods-span-number">#15</span>
               </van-cell-group>
 
-               <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-                <!-- 物品名称（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name15"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
-                <!-- 领用数量（HR需要确认/修改） -->
-                <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount15"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
+              <van-cell-group v-show="size>=16" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name15"  placeholder="请填写访客姓名！" @blur="validField('visitor_name15')" :error-message="message.visitor_name15"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position15" placeholder="请填写访客职务！" @blur="validField('visitor_position15')" :error-message="message.visitor_position15"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile15"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile15')" :error-message="message.visitor_mobile15"  />
+
                 <span class="van-goods-span-number">#16</span>
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;">
-                <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <!-- 领用人员（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="领用人员" v-model="item.receive_name"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
-                <!-- 单位名称（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
-                <!-- 部门名称（HR需要确认/修改） -->
-                <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
+              <van-cell-group v-show="size>=17" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name16"  placeholder="请填写访客姓名！" @blur="validField('visitor_name16')" :error-message="message.visitor_name16"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position16" placeholder="请填写访客职务！" @blur="validField('visitor_position16')" :error-message="message.visitor_position16"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile16"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile16')" :error-message="message.visitor_mobile16"  />
+
+                <span class="van-goods-span-number">#17</span>
               </van-cell-group>
 
-              <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
+              <van-cell-group v-show="size>=18" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name17"  placeholder="请填写访客姓名！" @blur="validField('visitor_name17')" :error-message="message.visitor_name17"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position17" placeholder="请填写访客职务！" @blur="validField('visitor_position17')" :error-message="message.visitor_position17"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile17"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile17')" :error-message="message.visitor_mobile17"  />
+
+                <span class="van-goods-span-number">#18</span>
+              </van-cell-group>
+
+              <van-cell-group v-show="size>=19" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name18"  placeholder="请填写访客姓名！" @blur="validField('visitor_name18')" :error-message="message.visitor_name18"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position18" placeholder="请填写访客职务！" @blur="validField('visitor_position18')" :error-message="message.visitor_position18"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile18"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile18')" :error-message="message.visitor_mobile18"  />
+
+                <span class="van-goods-span-number">#19</span>
+              </van-cell-group>
+
+              <van-cell-group v-show="size>=20" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
+
+
+                <van-field :readonly="readonly"  clearable label="访客姓名" v-model="item.visitor_name19"  placeholder="请填写访客姓名！" @blur="validField('visitor_name19')" :error-message="message.visitor_name19"  />
+                <van-field :readonly="readonly"  clearable label="访客职务" v-model="item.visitor_position19" placeholder="请填写访客职务！" @blur="validField('visitor_position19')" :error-message="message.visitor_position19"  />
+                <van-field :readonly="readonly"  clearable label="访客电话" v-model="item.visitor_mobile19"  placeholder="请填写访客电话！" @blur="validField('visitor_mobile19')" :error-message="message.visitor_mobile19"  />
+
+                <span class="van-goods-span-number">#20</span>
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+
+                <van-cell value="登记人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :readonly="readonly" required clearable label="填报人员" v-model="item.create_by"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
+                <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写您的部门名称！" @blur="validField('department');" :error-message="message.department" />
+
+              </van-cell-group>
+
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="接待管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!"  />
+              </van-cell-group>
+
+              <van-cell-group style="margin-top:10px;">
+
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" @blur="validField('remark')" :error-message="message.remark"  />
+                <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
+
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="!!item.status">
@@ -271,12 +321,6 @@
       </div>
 
     </section>
-
-    <setion v-if="!iswechat" >
-      <div class="section-nowechat">
-        请使用微信客户端打开
-      </div>
-    </setion>
 
   </div>
   </keep-alive>
@@ -339,21 +383,129 @@ export default {
             item:{
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
-              name:'', //领用物品名称
-              amount:'',//领用数量
-              receive_name:'',//领用人员名称
-              department:'',//领用部门名称
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+
+              visitor_name:'',     //访客姓名
+              visitor_company:'',  //访客单位
+              visitor_mobile:'',   //访客电话
+              visitor_position:'', //访客职务
+
+              visitor_name1:'',
+              visitor_company1:'',
+              visitor_mobile1:'',
+              visitor_position1:'',
+
+              visitor_name2:'',
+              visitor_company2:'',
+              visitor_mobile2:'',
+              visitor_position2:'',
+
+              visitor_name3:'',
+              visitor_company3:'',
+              visitor_mobile3:'',
+              visitor_position3:'',
+
+              visitor_name4:'',
+              visitor_company4:'',
+              visitor_mobile4:'',
+              visitor_position4:'',
+
+              visitor_name5:'',
+              visitor_company5:'',
+              visitor_mobile5:'',
+              visitor_position5:'',
+
+              visitor_name6:'',
+              visitor_company6:'',
+              visitor_mobile6:'',
+              visitor_position6:'',
+
+              visitor_name7:'',
+              visitor_company7:'',
+              visitor_mobile7:'',
+              visitor_position7:'',
+
+              visitor_name8:'',
+              visitor_company8:'',
+              visitor_mobile8:'',
+              visitor_position8:'',
+
+              visitor_name9:'',
+              visitor_company9:'',
+              visitor_mobile9:'',
+              visitor_position9:'',
+
+              visitor_name10:'',
+              visitor_company10:'',
+              visitor_mobile10:'',
+              visitor_position10:'',
+
+              visitor_name11:'',
+              visitor_company11:'',
+              visitor_mobile11:'',
+              visitor_position11:'',
+
+              visitor_name12:'',
+              visitor_company12:'',
+              visitor_mobile12:'',
+              visitor_position12:'',
+
+              visitor_name13:'',
+              visitor_company13:'',
+              visitor_mobile13:'',
+              visitor_position13:'',
+
+              visitor_name14:'',
+              visitor_company14:'',
+              visitor_mobile14:'',
+              visitor_position14:'',
+
+              visitor_name15:'',
+              visitor_company15:'',
+              visitor_mobile15:'',
+              visitor_position15:'',
+
+              visitor_name16:'',
+              visitor_company16:'',
+              visitor_mobile16:'',
+              visitor_position16:'',
+
+              visitor_name17:'',
+              visitor_company17:'',
+              visitor_mobile17:'',
+              visitor_position17:'',
+
+              visitor_name18:'',
+              visitor_company18:'',
+              visitor_mobile18:'',
+              visitor_position18:'',
+
+              visitor_name19:'',
+              visitor_company19:'',
+              visitor_mobile19:'',
+              visitor_position19:'',
+
+              visitor_name20:'',
+              visitor_company20:'',
+              visitor_mobile20:'',
+              visitor_position20:'',
+
+              employee:'',  //填报人名称
+              mobile:'',    //填报人电话
+              department:'',//填报人部门名称
+              company:'',   //填报人单位名称
+              position:'',  //填报人岗位
+
               remark:'',//备注说明
-              type:'',//领用类别
-              company:'',//单位名称
-              approve_name:'',//领用审批人员
-              workflow:'',//关联流程
-              approve:'',//领用审批人员
+
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
+
               status: '',
-              disagree_remark: '',//驳回理由
             },
             tlist:[],
             back:'/app',
@@ -464,19 +616,128 @@ export default {
         this.item = {
               id: '',
               serialid:'',
-              create_time: dayjs().format('YYYY-MM-DD'),
+              time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-              receive_time: dayjs().format('YYYY-MM-DD'), //领用时间
-              name:'', //领用物品名称
-              amount:'',//领用数量
+              create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+
+              visitor_name:'',     //访客姓名
+              visitor_company:'',  //访客单位
+              visitor_mobile:'',   //访客电话
+              visitor_position:'', //访客职务
+
+              visitor_name1:'',
+              visitor_company1:'',
+              visitor_mobile1:'',
+              visitor_position1:'',
+
+              visitor_name2:'',
+              visitor_company2:'',
+              visitor_mobile2:'',
+              visitor_position2:'',
+
+              visitor_name3:'',
+              visitor_company3:'',
+              visitor_mobile3:'',
+              visitor_position3:'',
+
+              visitor_name4:'',
+              visitor_company4:'',
+              visitor_mobile4:'',
+              visitor_position4:'',
+
+              visitor_name5:'',
+              visitor_company5:'',
+              visitor_mobile5:'',
+              visitor_position5:'',
+
+              visitor_name6:'',
+              visitor_company6:'',
+              visitor_mobile6:'',
+              visitor_position6:'',
+
+              visitor_name7:'',
+              visitor_company7:'',
+              visitor_mobile7:'',
+              visitor_position7:'',
+
+              visitor_name8:'',
+              visitor_company8:'',
+              visitor_mobile8:'',
+              visitor_position8:'',
+
+              visitor_name9:'',
+              visitor_company9:'',
+              visitor_mobile9:'',
+              visitor_position9:'',
+
+              visitor_name10:'',
+              visitor_company10:'',
+              visitor_mobile10:'',
+              visitor_position10:'',
+
+              visitor_name11:'',
+              visitor_company11:'',
+              visitor_mobile11:'',
+              visitor_position11:'',
+
+              visitor_name12:'',
+              visitor_company12:'',
+              visitor_mobile12:'',
+              visitor_position12:'',
+
+              visitor_name13:'',
+              visitor_company13:'',
+              visitor_mobile13:'',
+              visitor_position13:'',
+
+              visitor_name14:'',
+              visitor_company14:'',
+              visitor_mobile14:'',
+              visitor_position14:'',
+
+              visitor_name15:'',
+              visitor_company15:'',
+              visitor_mobile15:'',
+              visitor_position15:'',
+
+              visitor_name16:'',
+              visitor_company16:'',
+              visitor_mobile16:'',
+              visitor_position16:'',
+
+              visitor_name17:'',
+              visitor_company17:'',
+              visitor_mobile17:'',
+              visitor_position17:'',
+
+              visitor_name18:'',
+              visitor_company18:'',
+              visitor_mobile18:'',
+              visitor_position18:'',
+
+              visitor_name19:'',
+              visitor_company19:'',
+              visitor_mobile19:'',
+              visitor_position19:'',
+
+              visitor_name20:'',
+              visitor_company20:'',
+              visitor_mobile20:'',
+              visitor_position20:'',
+
+              employee:'',  //填报人名称
+              mobile:'',    //填报人电话
+              department:'',//填报人部门名称
+              company:'',   //填报人单位名称
+              position:'',  //填报人岗位
+
               remark:'',//备注说明
-              type:this.item.type,//领用类别
-              approve_name:'',//领用审批人员
-              workflow:'',//关联流程
-              approve:'',//领用审批人员
-              receive_name : this.item.receive_name , //领用人员名称
-              department : this.item.department, //领用部门名称
-              company : this.item.company, //单位名称
+
+              userid:'',
+              user_group_ids:'',
+              user_group_names:'',
+              user_admin_name:'',
+
               status: '',
             };
       },
@@ -592,34 +853,44 @@ export default {
 
           const item = tlist[0];
 
+          debugger;
+
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){
-            this.item.id = id;
-            this.item.serialid = item.serialid || this.item.serialid;
-            this.item.create_by = item.create_by || this.item.create_by;
-            this.item.name = item.name || this.item.name;
-            this.item.amount = item.amount || this.item.amount;
-            this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
-            this.item.department = item.department || this.item.department;
-            this.item.remark = item.remark || this.item.remark;
-            this.item.type = item.type || this.item.type || '办公用品';
-            this.item.company = item.company || this.item.company;
-            this.item.approve_name = item.approve_name || this.item.approve_name;
-            this.item.workflow = item.workflow || this.item.workflow;
-            this.item.approve = item.approve || this.item.approve;
-            this.item.status = item.status || this.item.status;
-            this.item.disagree_remark = item.disagree_remark || this.item.disagree_remark;
+              this.item.id = item.id;
+              this.item.serialid = item.serialid || this.item.serialid
+              this.item.time = dayjs(item.time).format('YYYY-MM-DD') || this.item.time
+              this.item.create_by = item.create_by || this.item.create_by;
+              this.item.create_time = item.create_time || this.item.create_time;
+              this.item.visitor_name = item.visitor_name || this.item.visitor_name;
+              this.item.visitor_company = item.visitor_company || this.item.visitor_company;
+              this.item.visitor_mobile = item.visitor_mobile || this.item.visitor_mobile;
+              this.item.visitor_position = item.visitor_position || this.item.visitor_position;
+              this.item.employee = item.employee || this.item.employee;
+              this.item.mobile = item.mobile || this.item.mobile;
+              this.item.department = item.department || this.item.department;
+              this.item.company = item.company || this.item.company;
+              this.item.position = item.position || this.item.position;
+              this.item.remark = item.remark || this.item.remark;
+              this.item.userid = item.userid || this.item.userid;
+              this.item.user_group_ids = item.user_group_ids || this.item.user_group_ids;
+              this.item.user_group_names = item.user_group_names || this.item.user_group_names;
+              this.item.user_admin_name = item.user_admin_name || this.item.user_admin_name;
+              this.item.status = item.status || this.item.status;
           }
+
           if (this.item && this.item.status === '已驳回') {
             this.readonly = true
           }
 
           for(let i = 1 ; i < tlist.length ; i++){
-            this.item['name'+i] = tlist[i].name ;
-            this.item['amount'+i] = tlist[i].amount ;
+            this.item['visitor_name'+i] = tlist[i].visitor_name ;
+            this.item['visitor_company'+i] = tlist[i].visitor_company ;
+            this.item['visitor_position'+i] = tlist[i].visitor_position ;
+            this.item['visitor_mobile'+i] = tlist[i].visitor_mobile ;
           }
 
           await this.queryProcessLog();
