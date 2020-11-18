@@ -278,6 +278,48 @@ const routes = [{
             "subPage": resolve => require(["../components/form/goodslist.vue"], resolve)
         }
     }, {
+        path: '/app/visitorlist',
+        name: "访客记录",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitorlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/visitorreceive',
+        name: "访客登记",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitorreceive.vue"], resolve)
+        }
+    }, {
+        path: '/app/visitorview',
+        name: "访客审批",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitorview.vue"], resolve)
+        }
+    }, {
+        path: '/app/workexaminelist',
+        name: "巡检记录",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitorlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/workexaminereceive',
+        name: "巡检登记",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/workexaminereceive.vue"], resolve)
+        }
+    }, {
+        path: '/app/workexamineview',
+        name: "巡检整改",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/workexamineview.vue"], resolve)
+        }
+    }, {
         path: '/app/lostpropertyreceive',
         name: "失物招领",
         components: {
