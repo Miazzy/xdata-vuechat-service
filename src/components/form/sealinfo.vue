@@ -934,7 +934,6 @@ export default {
         }
 
       },
-
       sealTypeConfirm(value) {
         const userInfo = storage.getStore('system_userinfo');
         //非总部的人不需要展示前台、档案、财务人员
