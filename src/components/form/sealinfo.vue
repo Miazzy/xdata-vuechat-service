@@ -507,6 +507,7 @@ export default {
                 no = `00000${no}`.slice(-3);
                 this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
               }
+
             }
           }
         } catch (error) {
