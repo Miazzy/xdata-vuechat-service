@@ -75,14 +75,14 @@
             <van-cell-group style="margin-top:10px;">
                 <van-cell value="印章管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field readonly required clearable label="盖印人" v-model="item.sealman" placeholder="请输入印章管理员(盖印人)" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="queryFrontMan();" @click="queryFrontMan();" />
-                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
+                <van-field v-show="item.sealtype == '合同类' && zonename == '集团总部' " required clearable label="前台客服" v-model="item.front_name" placeholder="请输入前台客服人员名称" @blur="queryFrontMan();" @click="queryFrontMan();" />
+                <van-address-list v-show="fuserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部'" v-model="fuserid" :list="fuserList" default-tag-text="默认" edit-disabled @select="selectFrontUser()" />
                 <van-field v-show="item.sealtype == '合同类' && false " required clearable label="归档人员" v-model="item.archive_name" placeholder="请输入归档人员名称" @blur="queryArchiveMan();" @click="queryArchiveMan();" />
                 <nut-checkboxgroup v-show="item.sealtype == '合同类' && false " ref="checkboxGroup" :checkBoxData="auserList" v-model="agroup" @change="selectArchiveUser()"></nut-checkboxgroup>
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="queryFinanceArchiveMan();"  @click="queryFinanceArchiveMan();" />
-                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类'" v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
-                <van-field v-show="item.sealtype == '合同类' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="queryRecordArchiveMan();"  @click="queryRecordArchiveMan();" />
-                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类'" v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
+                <van-field v-show="item.sealtype == '合同类' && zonename == '集团总部' " required clearable label="财务归档" v-model="item.finance_name" placeholder="请输入财务归档人员名称" @blur="queryFinanceArchiveMan();"  @click="queryFinanceArchiveMan();" />
+                <van-address-list v-show="financeuserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部' " v-model="financeUserid" :list="financeuserList" default-tag-text="默认" edit-disabled @select="selectFinanceUser()" />
+                <van-field v-show="item.sealtype == '合同类' && zonename == '集团总部' " required clearable label="档案归档" v-model="item.record_name" placeholder="请输入档案归档人员名称" @blur="queryRecordArchiveMan();"  @click="queryRecordArchiveMan();" />
+                <van-address-list v-show="recorduserList.length > 0 && item.sealtype == '合同类' && zonename == '集团总部' " v-model="recordUserid" :list="recorduserList" default-tag-text="默认" edit-disabled @select="selectRecordUser()" />
               </van-cell-group>
 
             <van-cell-group style="margin-top:10px;">
@@ -319,6 +319,7 @@ export default {
             orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
             approveColumns: workconfig.compcolumns.approveColumns,
+            zonename:'',
         }
     },
     activated() {
@@ -1021,11 +1022,15 @@ export default {
             await this.queryHContract();
           }
 
+          //查询直接所在工作组
+          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , value.seal);
+
+          if(resp && resp.length > 0 && resp[0].zonename){
+            this.zonename = resp[0].zonename;
+          }
+
           //如果分组用户不存在，则将分组角色填入
           if(tools.isNull(value.seal_group_ids)){
-
-            //查询直接所在工作组
-            const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);
 
             //获取到印章管理员组信息
             let seal_group_ids = resp[0].userlist;
