@@ -1342,15 +1342,18 @@ export default {
 
       async handleConfirm(){
 
-        //TODO 此处可以加分布式锁，防止高并发合同编号相同
+        // TODO 此处可以加分布式锁，防止高并发合同编号相同
 
-        //获取用户信息
+        // 可能盖印人没有被选中，此处在选择一次
+        await this.querySealMan();
+
+        // 获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
         // 缓存填报人信息
         this.cacheUserInfo();
 
-        //先验证是否合法
+        // 先验证是否合法
         const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
           Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
           Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
@@ -1368,7 +1371,7 @@ export default {
           return false;
         }
 
-        //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+        // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
         var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
 
         maxinfo = maxinfo.body[0];
@@ -1476,6 +1479,14 @@ export default {
         if(tools.isNull(seal_group_ids)){
           seal_group_ids = seal;
           seal_group_names = seal_man;
+        }
+
+        if(!seal_group_ids.includes(seal) && !seal_group_names.includes(seal_man)){
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '请在下拉列表中，选择印章管理员后在提交！',
+          });
         }
 
         if((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)){
