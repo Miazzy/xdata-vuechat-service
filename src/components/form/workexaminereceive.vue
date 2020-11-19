@@ -18,7 +18,7 @@
         </div>
     </header>
 
-    <section v-if="iswechat">
+    <section>
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -284,12 +284,6 @@
       </div>
 
     </section>
-
-    <setion v-if="!iswechat" >
-      <div class="section-nowechat">
-        请使用微信客户端打开
-      </div>
-    </setion>
 
   </div>
   </keep-alive>
