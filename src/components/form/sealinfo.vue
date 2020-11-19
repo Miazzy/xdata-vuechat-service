@@ -1347,6 +1347,16 @@ export default {
         // 可能盖印人没有被选中，此处在选择一次
         await this.querySealMan();
 
+        debugger;
+
+        if(!this.item.seal || !this.item.sealman){
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
+              title: '用印确认',
+              message: '请输入盖印人，并在下拉框中选择盖印人后，进行提交操作！',
+          });
+        }
+
         // 获取用户信息
         let userinfo = await storage.getStore('system_userinfo');
 
@@ -1460,6 +1470,7 @@ export default {
             message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号！',
           });
         }
+
         if(contract_id && contract_id.includes('NaN')){
           //提示确认用印操作
           return await vant.Dialog.confirm({
