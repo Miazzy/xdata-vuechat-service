@@ -40,10 +40,11 @@
                 <vue-excel-column field="count"        label="数量"      width="50px" />
                 <vue-excel-column field="deal_depart"  label="经办部门"  width="100px"/>
                 <vue-excel-column field="deal_manager" label="经办人"    width="60px" />
-                <vue-excel-column field="contract_id"  label="合同编号"  width="180px"/>
+                <vue-excel-column field="company"       label="用印公司"  width="120px" />
+                <vue-excel-column field="contract_id"   label="合同编号"  width="180px"/>
                 <vue-excel-column field="sign_man"      label="签收人"   width="60px" />
                 <vue-excel-column field="approve_type"  label="审批类型"  width="80px" :options="approveColumns" />
-                <vue-excel-column field="workno"        label="关联流程"  width="180px"/>
+                <vue-excel-column field="workno"        label="关联流程"  width="120px"/>
                 <vue-excel-column field="seal_type"     label="用印类型"  width="80px" :options="sealTypeColumns" />
                 <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
                 <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
