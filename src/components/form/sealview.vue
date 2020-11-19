@@ -371,10 +371,18 @@ export default {
           this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
         }
       },
-      //获取合同编号
+      // 获取合同编号
       async queryHContract(){
-        //获取盖章人信息
-        const prefix = this.item.prefix = this.item.prefix.toUpperCase();
+
+        // 获取盖章人信息
+        let prefix = this.item.prefix = this.item.prefix.toUpperCase();
+
+        // 如果contract_id存在，则从contract_id提取前缀
+        try {
+          prefix = this.item.contractId ? this.item.contractId.split(`-${dayjs().format('YYYY')}-`)[0].toUpperCase() : prefix ;
+        } catch (error) {
+          console.log(error);
+        }
 
         try {
           if(!!prefix){
