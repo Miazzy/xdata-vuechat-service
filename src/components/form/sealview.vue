@@ -379,7 +379,8 @@ export default {
 
         // 如果contract_id存在，则从contract_id提取前缀
         try {
-          prefix = this.item.contractId ? this.item.contractId.split(`-${dayjs().format('YYYY')}-`)[0].toUpperCase() : prefix ;
+          prefix = this.item.contractId && this.item.contractId.includes(`-${dayjs().format('YYYY')}-`) ? this.item.contractId.split(`-${dayjs().format('YYYY')}-`)[0].toUpperCase() : prefix ;
+          prefix = this.item.contractId && this.item.contractId.includes(`[${dayjs().format('YYYY')}]`) ? this.item.contractId.split(`[${dayjs().format('YYYY')}]`)[0].toUpperCase() : prefix ;
         } catch (error) {
           console.log(error);
         }
