@@ -527,8 +527,8 @@ export default {
         async queryInfo(){
           try {
             await this.weworkLogin();
-            await this.changeStyle();
             await this.queryImagesUrl();
+            await this.changeStyle();
           } catch (error) {
             console.log(error);
           }
