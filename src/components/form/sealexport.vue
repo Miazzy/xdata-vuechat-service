@@ -85,12 +85,6 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
-// import { RadioGroup, Radio } from 'vant';
-// import JsonExcel from 'vue-json-excel'
-
-// Vue.use(Radio);
-// Vue.use(RadioGroup);
-
 Vue.component('downloadExcel', JsonExcel)
 
 export default {
