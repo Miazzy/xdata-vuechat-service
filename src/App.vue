@@ -15,7 +15,7 @@
                 </keep-alive>
             </section>
             <!--底部导航 路由 -->
-            <footer class="app-footer" style="display:block;">
+            <footer class="app-footer" style="display:none;">
                 <wx-nav></wx-nav>
             </footer>
         </div>
