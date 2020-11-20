@@ -228,7 +228,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="role.includes('SEAL_ADMIN')" >
               <div v-show="true " class="weui-cell_app_hd" @click="sealApprove();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
@@ -236,23 +236,23 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" >
-              <div v-show="true"  class="weui-cell_app_hd" @click="sealFront();" >
+            <van-col span="6" v-show="role.includes('SEAL_FRONT_SERVICE')" >
+              <div class="weui-cell_app_hd" @click="sealFront();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
                 <div class="weui-cell_app_bd" >
                   用印移交
                 </div>
               </div>
             </van-col>
-            <van-col span="6" >
-              <div v-show="true"  class="weui-cell_app_hd" @click="sealArchive();">
+            <van-col span="6" v-show="role.includes('SEAL_ARCHIVE_ADMIN')" >
+              <div class="weui-cell_app_hd" @click="sealArchive();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd" >
                   用印归档
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" v-show="!role.includes('SEAL_ADMIN')" >
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png" >
                 <div class="weui-cell_app_bd" >
@@ -521,6 +521,14 @@ export default {
           resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.role += ',SEAL_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            this.role += ',SEAL_FRONT_SERVICE';
+          };
+          resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            this.role += ',SEAL_ARCHIVE_ADMIN';
           };
           return this.userinfo;
         },
