@@ -14,10 +14,11 @@
                     <router-view name="default" ></router-view>
                 </keep-alive>
             </section>
-            <!--底部导航 路由 -->
+            <!--底部导航 路由
             <footer class="app-footer" style="display:none;">
                 <wx-nav></wx-nav>
             </footer>
+            -->
         </div>
         <!--其他店内页集合 有过渡效果-->
         <transition name="custom-classes-transition" :enter-active-class="enterAnimate" :leave-active-class="leaveAnimate">
