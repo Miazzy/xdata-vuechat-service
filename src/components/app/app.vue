@@ -10,7 +10,7 @@
         </van-swipe>
 
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
-          <van-notice-bar v-show="showNotice" style="width:100%;" color="#1989fa" background="#ecf9ff"
+          <van-notice-bar v-show="showNotice" style="width:100%;display:none;" color="#1989fa" background="#ecf9ff"
             left-icon="volume-o"
             text="欢迎使用OA移动APP"
           />
@@ -495,7 +495,7 @@ export default {
               },
             },
             imageTableName: 'bs_home_pictures',
-            images: [],
+            images: storage.getStore('system_app_image'),
             showNotice:false,
             role:'view',
         }
@@ -821,16 +821,28 @@ export default {
         },
         // 查询首页图片
         async queryImagesUrl(){
+
+          // 获取缓存中的图片
+          const image = await storage.getStore('system_app_image');
+
+          // 如果存在图片数据，则直接使用图片数据
+          if(image){
+            return this.images = image;
+          }
+
           //获取当前登录用户信息
           const userinfo = await storage.getStore('system_userinfo');
           //查询SQL
           let whereSQL = null;
 
           try {
+
             whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
-            this.showNotice = userinfo && userinfo.userid == 9058 ? true : false;
             this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
             this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
+
+            storage.setStore('system_app_image',JSON.stringify(this.images), 3600 * 24 * 3);
+
           } catch (error) {
             console.log(error);
           }
