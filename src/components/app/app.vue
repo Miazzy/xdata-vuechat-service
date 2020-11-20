@@ -236,7 +236,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('SEAL_FRONT_SERVICE')" >
+            <van-col span="6" v-if="role.includes('SEAL_FRONT_SERVICE')" >
               <div class="weui-cell_app_hd" @click="sealFront();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
                 <div class="weui-cell_app_bd" >
@@ -244,7 +244,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('SEAL_ARCHIVE_ADMIN')" >
+            <van-col span="6" v-if="role.includes('SEAL_ARCHIVE_ADMIN')" >
               <div class="weui-cell_app_hd" @click="sealArchive();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd" >
@@ -252,7 +252,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="!role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="!role.includes('SEAL_ADMIN')" >
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png" >
                 <div class="weui-cell_app_bd" >
@@ -260,7 +260,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="role.includes('SEAL_ADMIN')" >
               <div class="weui-cell_app_hd" @click="sealManage();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png" >
                 <div class="weui-cell_app_bd" >
@@ -300,7 +300,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')">
+            <van-col span="6" v-if="role.includes('COMMON_RECEIVE_BORROW')">
               <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_05.png" >
                 <div class="weui-cell_app_bd" >
