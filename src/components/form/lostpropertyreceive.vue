@@ -18,7 +18,7 @@
         </div>
     </header>
 
-    <section v-if="iswechat">
+    <section>
 
       <div class="weui-cells" style="margin-top:0px;">
 
@@ -56,34 +56,28 @@
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                <!-- 借用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="遗失时间" v-model="item.lost_time"  placeholder="请填写遗失时间！" @blur="validField('lost_time');" :error-message="message.lost_time"  />
-                <!-- 失物名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="true" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name');" :error-message="message.lost_name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="true" clearable label="数量/单位" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount');" :error-message="message.lost_amount"  />
 
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="招领管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入失物招领处的物品管理员!" @blur="validField('user_admin_name');querySealMan();" :error-message="message.user_admin_name"  @click="querySealMan();" />
-                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+                <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入失物招领处的物品管理员!" @blur="validField('user_admin_name');queryAdminMan();" :error-message="message.user_admin_name"  @click="queryAdminMan();" @change="queryAdminMan();"/>
+                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectAdminMan()" />
               </van-cell-group>
 
-              <van-cell-group v-show="item.address" id="van-user-list" class="van-user-list" style="margin-top:10px;">
+              <van-cell-group id="van-zone-list" class="van-zone-list" style="margin-top:10px;">
                 <van-cell value="地址信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :required="false" clearable label="登记地址" v-model="item.address" placeholder="请输入失物招领处的地址信息!" @blur="validField('address');" :error-message="message.address" />
-                <van-field :required="false" clearable label="登记区域" v-model="item.zone_name" placeholder="请输入失物招领处的登记区域!" @blur="validField('zone_name');" :error-message="message.zone_name" />
+                <van-field :required="false" clearable label="登记地址" v-model="item.address" placeholder="请输入失物招领处的地址信息!" @blur="validField('address');queryZoneName();" :error-message="message.address" @click="queryZoneName();" @change="queryZoneName();" />
+                <van-address-list v-show="zoneList.length > 0" v-model="zoneid" :list="zoneList" default-tag-text="默认" edit-disabled @select="selectZoneName()" />
+                <van-field :required="false" clearable label="登记区域" v-model="item.zone_name" v-show="item.zone_name" placeholder="请输入失物招领处的登记区域!" @blur="validField('zone_name');" :error-message="message.zone_name" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.description"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如失物品相，颜色，遗失地点以及其他情况！" @blur="validField('description')" :error-message="message.description"  />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -113,12 +107,6 @@
       </div>
 
     </section>
-
-    <setion v-if="!iswechat" >
-      <div class="section-nowechat">
-        请使用微信客户端打开
-      </div>
-    </setion>
 
   </div>
   </keep-alive>
@@ -163,6 +151,8 @@ export default {
             sealuserid:'',
             userid:'',
             userList:[],
+            zoneid:'',
+            zoneList:[],
             huserid:'',
             huserList:[],
             auserid:'',
@@ -301,11 +291,15 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      // 用户选择盖印人
-      async querySealMan(){
+      // 用户选择物品管理员
+      async queryAdminMan(){
 
         //获取盖章人信息
         const user_admin_name = this.item.user_admin_name;
+
+        if(user_admin_name.length<=1){
+          return;
+        }
 
         try {
           if(!!user_admin_name){
@@ -388,11 +382,12 @@ export default {
         }
 
       },
-      // 选中当前盖印人
-      async selectSealUser(value){
-        await tools.sleep(0);
+      // 选中当前物品管理员
+      async selectAdminMan(value){
+
         const id = this.userid;
         const user = this.userList.find((item,index) => {return id == item.id});
+
         //获取盖印人姓名
         this.item.user_admin_name = user.name;
         this.item.userid = id;
@@ -404,6 +399,67 @@ export default {
         this.item.address = response && response.length > 0 ? response[0].address : '';
         this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
 
+      },
+      // 根据输入地址信息获取失物招领处地址信息
+      async queryZoneName(){
+
+        // 获取地址信息
+        const address = this.item.address;
+
+        if(address.length <= 1){
+          return;
+        }
+
+        try {
+          if(!!address){
+
+            // 获取地址列表信息
+            let addressName = await manageAPI.queryAddressByName(address.trim());
+
+            if(!!addressName){
+
+              if(Array.isArray(addressName)){
+                try {
+                  addressName.map((elem,index) => { this.zoneList.push({id:elem.id , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
+                  this.item.address = this.item.user_zone_name = addressName[0].address; // 设置地址信息
+                  this.item.zone_name = addressName[0].zonename;
+                } catch (error) {
+                  console.log(error);
+                }
+              } else {
+                try {
+                  this.zoneList.push({id:addressName.id , name:addressName.zonename , tel: '' , address: addressName.address , company: '' , department:'' , mail: addressName.mail , isDefault: !this.zoneList.length});
+                  this.item.address = this.item.user_zone_name = addressName.address;
+                  this.item.zone_name = addressName.zonename;
+                } catch (error) {
+                  console.log(error);
+                }
+              }
+
+              //遍历去重
+              try {
+                this.zoneList = this.zoneList.filter((item,index) => {
+                  item.isDefault = index == 0 ? true : false;
+                  let findex = this.zoneList.findIndex((subitem,index) => { return subitem.id == item.id });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      // 选中当前地址信息
+      async selectZoneName(value){
+        const id = this.zoneid;
+        const response = this.zoneList.find((item,index) => {return id == item.id});
+        this.item.user_zone_name = this.item.address = response ? response.address : '';
+        this.item.zone_name = response ? response.zonename : '';
       },
       // 设置重置
       async reduction(){
