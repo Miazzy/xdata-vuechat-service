@@ -599,6 +599,10 @@ export default {
             }
           }
 
+          this.item.user_admin_name = userinfo.realname;
+          this.item.userid = userinfo.username;
+          this.queryAdminMan();
+
         } catch (error) {
           console.log(error);
         }
