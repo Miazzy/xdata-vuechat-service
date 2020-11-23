@@ -348,6 +348,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png" >
+                <div class="weui-cell_app_bd">
+                  台账管理
+                </div>
+              </div>
+            </van-col>
           </van-row>
 
         </div>
@@ -736,6 +744,8 @@ export default {
             } else if(name == 'approve'){
               this.$router.push(`/app/lostpropertylist`);
             }
+          } else if(type == 'data') {
+            this.$router.push(`/app/commonmanage?type=${type}`);
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }

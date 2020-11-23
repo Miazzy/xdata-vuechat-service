@@ -883,30 +883,36 @@ export default {
 
         if(tsize >= 1){
           for(let i = 1; i <= tsize ; i++){
+            try {
+              let element = {
+                    id: tools.queryUniqueID(),
+                    create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+                    create_by : userinfo.username,
+                    name : this.item['name' + i],
+                    amount : this.item['amount' + i],
+                    receive_name:this.item.receive_name ,
+                    department : this.item.department,
+                    remark : this.item.remark,
+                    type : this.item.type,
+                    company : this.item.company,
+                    approve_name : this.item.approve_name,
+                    workflow : this.item.workflow,
+                    approve : this.item.approve,
+                    userid : this.item.userid,
+                    user_admin_name : this.item.user_admin_name,
+                    user_group_ids,
+                    user_group_names,
+                    pid: id,
+                    status: '待处理',
+                  };
 
-            let element = {
-                  id: tools.queryUniqueID(),
-                  create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-                  create_by : userinfo.username,
-                  name : this.item['name' + i],
-                  amount : this.item['amount' + i],
-                  receive_name:this.item.receive_name ,
-                  department : this.item.department,
-                  remark : this.item.remark,
-                  type : this.item.type,
-                  company : this.item.company,
-                  approve_name : this.item.approve_name,
-                  workflow : this.item.workflow,
-                  approve : this.item.approve,
-                  userid : this.item.userid,
-                  user_admin_name : this.item.user_admin_name,
-                  user_group_ids,
-                  user_group_names,
-                  pid: id,
-                  status: '待处理',
-                };
-            //向表单提交form对象数据
-            await manageAPI.postTableData(this.tablename , element);
+              if(!tools.isNull(element.name) && !tools.isNull(elemnet.amount)){
+                //向表单提交form对象数据
+                await manageAPI.postTableData(this.tablename , element);
+              }
+            } catch (error) {
+              console.log(error);
+            }
           }
         }
 

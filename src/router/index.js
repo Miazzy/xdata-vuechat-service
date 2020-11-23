@@ -285,6 +285,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/authmanage.vue"], resolve)
         }
     }, {
+        path: '/app/commonmanage',
+        name: "数据管理",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/commonmanage.vue"], resolve)
+        }
+    }, {
         path: '/app/visitorlist',
         name: "访客记录",
         components: {

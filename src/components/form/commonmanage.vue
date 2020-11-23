@@ -9,7 +9,7 @@
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>权限管理</span>
+            <span>数据管理</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
@@ -34,7 +34,7 @@
         <template>
             <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
                 <vue-excel-column field="serialid"      label="序号"         width="60px" />
-                <vue-excel-column field="create_by"     label="创建人"       width="80px" />
+                <vue-excel-column field="create_by"     label="创建人"       width="100px" />
                 <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
                 <vue-excel-column field="type"          label="领用类别"      width="120px" />
                 <vue-excel-column field="name"          label="物品名称"      width="120px" />
@@ -42,10 +42,9 @@
                 <vue-excel-column field="receive_name"  label="预约人员"      width="120px" />
                 <vue-excel-column field="department"    label="预约部门"      width="120px" />
                 <vue-excel-column field="company"       label="预约公司"      width="120px" />
-                <vue-excel-column field="remark"        label="备注信息"      width="120px" />
-                <vue-excel-column field="status"        label="状态"         width="120px" />
-                <vue-excel-column field="remark"        label="备注信息"      width="120px" />
                 <vue-excel-column field="user_admin_name" label="物品管理员"   width="120px" />
+                <vue-excel-column field="remark"        label="备注信息"      width="180px" />
+                <vue-excel-column field="status"        label="状态"         width="120px" />
             </vue-excel-editor>
         </template>
       </div>
@@ -98,7 +97,9 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              { text: '新建', value: 1 , icon: 'add-o' },
+              { text: '领用', value: 10 , icon: 'records' },
+              { text: '借用', value: 20 , icon: 'records' },
+              { text: '招领', value: 30 , icon: 'records' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -273,7 +274,7 @@ export default {
           searchSql = `~and((serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(platename,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(groupname,like,~${this.searchWord}~)~or(zonename,like,~${this.searchWord}~)~or(teamname,like,~${this.searchWord}~)~or(userlist,like,~${this.searchWord}~)~or(enuserlist,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~))`;
         }
         await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
-        const whereSQL = `_where=(status,eq,valid)~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
+        const whereSQL = `_where=~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
         this.initContractList = await manageAPI.queryTableData(this.tableName , whereSQL);
         this.totalpages = await manageAPI.queryTableDataCount(this.tableName , whereSQL);
         this.initContractList.map((item , index) => {
