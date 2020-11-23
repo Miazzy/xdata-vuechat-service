@@ -591,9 +591,12 @@ export default {
 
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已驳回失物招领申请！',
-          });
+          title: '温馨提示',
+          message: '已驳回失物招领申请！',
+        });
+
+        //查询审批日志
+        await this.queryProcessLog();
       },
 
       // 用户提交入职登记表函数
@@ -664,11 +667,15 @@ export default {
         this.readonly = true;
         this.item.status = elem.status;
 
+
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已申请认领失物！',
-          });
+          title: '温馨提示',
+          message: '已申请认领失物！',
+        });
+
+        //查询审批日志
+        await this.queryProcessLog();
 
       },
       // 用户提交入职登记表函数
@@ -770,9 +777,12 @@ export default {
 
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已完成失物招领流程！',
-          });
+          title: '温馨提示',
+          message: '已完成失物招领流程！',
+        });
+
+        //查询审批日志
+        await this.queryProcessLog();
 
       }
     }

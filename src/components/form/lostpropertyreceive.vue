@@ -475,8 +475,8 @@ export default {
             };
       },
       // 获取处理日志
-      async queryProcessLog(){
-        const id = tools.getUrlParam('id');
+      async queryProcessLog(rid){
+        const id = tools.getUrlParam('id') || rid;
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
           this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
@@ -486,9 +486,9 @@ export default {
         }
       },
       // 删除处理日志
-      async deleteProcessLog(){
+      async deleteProcessLog(rid){
 
-        const id = tools.getUrlParam('id');
+        const id = tools.getUrlParam('id') || rid ;
         const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
@@ -721,13 +721,16 @@ export default {
         this.loading = false;
         this.status = elem.status;
         this.readonly = true;
-        thir.role = 'view';
+        this.role = 'view';
 
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
             message: '已经登记失物招领！',
           });
+
+        //查询审批日志
+        await this.queryProcessLog(id);;
 
       }
     }
