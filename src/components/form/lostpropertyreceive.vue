@@ -566,17 +566,16 @@ export default {
           this.iswechat = tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
-          //查询上一页
+          // 查询上一页
           this.back = tools.getUrlParam('back') || '/app/lostpropertylist';
 
-          //获取用户基础信息
+          // 获取用户基础信息
           const userinfo = await storage.getStore('system_userinfo');
 
-          //获取缓存信息
+          // 获取缓存信息
           const item = storage.getStore(`system_${this.tablename}_item@${userinfo.realname}`);
 
-          //自动回显刚才填写的用户基础信息
-          if(item){
+          if(item){ // 自动回显刚才填写的用户基础信息
             this.item = {
               id: item.id || '',
               serialid: item.serialid,
@@ -584,8 +583,8 @@ export default {
               create_by: item.create_by,
 
               lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
-              lost_name: item.lost_name, //失物名称
-              lost_amount: item.lost_amount,//失物数量
+              lost_name: '', //失物名称
+              lost_amount: '',//失物数量
 
               claim_name: item.claim_name, //认领人员
               claim_time: item.claim_time, //认领时间
@@ -599,9 +598,11 @@ export default {
             }
           }
 
-          this.item.user_admin_name = userinfo.realname;
-          this.item.userid = userinfo.username;
-          this.queryAdminMan();
+          if(userinfo){ // 自动带出用户信息
+            this.item.user_admin_name = userinfo.realname;
+            this.item.userid = userinfo.username;
+            this.queryAdminMan();
+          }
 
         } catch (error) {
           console.log(error);
