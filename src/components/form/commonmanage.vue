@@ -64,6 +64,26 @@
                     <vue-excel-column field="status"        label="状态"         width="120px" />
               </vue-excel-editor>
             </div>
+            <div v-show="tableName === 'bs_lost_property'">
+              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+                    <vue-excel-column field="serialid"      label="序号"         width="60px" />
+                    <vue-excel-column field="create_by"     label="创建人"       width="100px" />
+                    <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
+                    <vue-excel-column field="lost_name"     label="失物名称"      width="120px" />
+                    <vue-excel-column field="lost_time"     label="遗失时间"      width="120px" />
+                    <vue-excel-column field="lost_amount"   label="失物数量"      width="120px" />
+                    <vue-excel-column field="claim_name"    label="认领人员"      width="120px" />
+                    <vue-excel-column field="claim_time"    label="认领时间"      width="120px" />
+                    <vue-excel-column field="mobile"        label="联系电话"      width="120px" />
+                    <vue-excel-column field="company"       label="认领单位"      width="120px" />
+                    <vue-excel-column field="department"    label="认领部门"      width="120px" />
+                    <vue-excel-column field="user_admin_name" label="物品管理员"  width="120px" />
+                    <vue-excel-column field="address"       label="登记地址"      width="120px" />
+                    <vue-excel-column field="zone_name"     label="所属区域"      width="120px" />
+                    <vue-excel-column field="description"   label="失物描述"      width="180px" />
+                    <vue-excel-column field="status"        label="状态"         width="120px" />
+              </vue-excel-editor>
+            </div>
         </template>
       </div>
     </section>
