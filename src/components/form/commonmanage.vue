@@ -32,20 +32,38 @@
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
-            <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
-                <vue-excel-column field="serialid"      label="序号"         width="60px" />
-                <vue-excel-column field="create_by"     label="创建人"       width="100px" />
-                <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
-                <vue-excel-column field="type"          label="领用类别"      width="120px" />
-                <vue-excel-column field="name"          label="物品名称"      width="120px" />
-                <vue-excel-column field="amount"        label="预约数量"      width="120px" />
-                <vue-excel-column field="receive_name"  label="预约人员"      width="120px" />
-                <vue-excel-column field="department"    label="预约部门"      width="120px" />
-                <vue-excel-column field="company"       label="预约公司"      width="120px" />
-                <vue-excel-column field="user_admin_name" label="物品管理员"   width="120px" />
-                <vue-excel-column field="remark"        label="备注信息"      width="180px" />
-                <vue-excel-column field="status"        label="状态"         width="120px" />
-            </vue-excel-editor>
+            <div v-show="tableName === 'bs_goods_receive'">
+              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+                    <vue-excel-column field="serialid"      label="序号"         width="60px" />
+                    <vue-excel-column field="create_by"     label="创建人"       width="100px" />
+                    <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
+                    <vue-excel-column field="type"          label="领用类别"      width="120px" />
+                    <vue-excel-column field="name"          label="物品名称"      width="120px" />
+                    <vue-excel-column field="amount"        label="预约数量"      width="120px" />
+                    <vue-excel-column field="receive_name"  label="预约人员"      width="120px" />
+                    <vue-excel-column field="department"    label="预约部门"      width="120px" />
+                    <vue-excel-column field="company"       label="预约公司"      width="120px" />
+                    <vue-excel-column field="user_admin_name" label="物品管理员"   width="120px" />
+                    <vue-excel-column field="remark"        label="备注信息"      width="180px" />
+                    <vue-excel-column field="status"        label="状态"         width="120px" />
+              </vue-excel-editor>
+            </div>
+            <div v-show="tableName === 'bs_goods_borrow'">
+              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+                    <vue-excel-column field="serialid"      label="序号"         width="60px" />
+                    <vue-excel-column field="create_by"     label="创建人"       width="100px" />
+                    <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
+                    <vue-excel-column field="type"          label="借用类别"      width="120px" />
+                    <vue-excel-column field="name"          label="设备名称"      width="120px" />
+                    <vue-excel-column field="amount"        label="借用数量"      width="120px" />
+                    <vue-excel-column field="receive_name"  label="借用人员"      width="120px" />
+                    <vue-excel-column field="department"    label="借用部门"      width="120px" />
+                    <vue-excel-column field="company"       label="借用公司"      width="120px" />
+                    <vue-excel-column field="user_admin_name" label="物品管理员"   width="120px" />
+                    <vue-excel-column field="remark"        label="备注信息"      width="180px" />
+                    <vue-excel-column field="status"        label="状态"         width="120px" />
+              </vue-excel-editor>
+            </div>
         </template>
       </div>
     </section>
@@ -250,6 +268,24 @@ export default {
             this.dropMenuValue = '';
             this.dropMenuOldValue = '';
             this.exportAsExcel();
+            break;
+          case 10: //办公用品预约
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
+            this.tableName = 'bs_goods_receive';
+            this.queryTabList(0,0);
+            break;
+          case 20: //借用
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
+            this.tableName = 'bs_goods_borrow';
+            this.queryTabList(0,0);
+            break;
+          case 30: //失物招领
+            this.dropMenuValue = '';
+            this.dropMenuOldValue = '';
+            this.tableName = 'bs_lost_property';
+            this.queryTabList(0,0);
             break;
           case 1:
             this.dropMenuValue = '';
