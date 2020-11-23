@@ -350,9 +350,9 @@
             </van-col>
             <van-col span="6" style="display:block;" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
               <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_9.png" >
                 <div class="weui-cell_app_bd">
-                  台账管理
+                  数据管理
                 </div>
               </div>
             </van-col>
