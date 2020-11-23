@@ -300,14 +300,6 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('COMMON_RECEIVE_BORROW')">
-              <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_05.png" >
-                <div class="weui-cell_app_bd" >
-                  领用审批
-                </div>
-              </div>
-            </van-col>
             <van-col span="6">
               <div class="weui-cell_app_hd" @click="goodsBorrow('common');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png" >
@@ -316,11 +308,11 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
-              <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_06.png" >
+            <van-col span="6">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','clist');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
                 <div class="weui-cell_app_bd" >
-                  借用审批
+                  失物认领
                 </div>
               </div>
             </van-col>
@@ -332,11 +324,19 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
-              <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','clist');" >
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png" >
+            <van-col span="6" v-if="role.includes('COMMON_RECEIVE_BORROW')">
+              <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi.png" >
                 <div class="weui-cell_app_bd" >
-                  失物认领
+                  领用审批
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_06.png" >
+                <div class="weui-cell_app_bd" >
+                  借用审批
                 </div>
               </div>
             </van-col>
