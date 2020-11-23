@@ -685,16 +685,15 @@ export default {
           return false;
         }
 
+        //表单ID
+        const id = this.item.id;
+        const pid = tools.getUrlParam('pid');
+
         // 返回预览URL
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/lostpropertyview?id=${id}&statustype=office&role=common&step=common`);
 
         //显示加载状态
         this.loading = true;
-
-        const pid = tools.getUrlParam('pid');
-
-        //表单ID
-        const id = this.item.id;
 
         //第一步 保存用户数据到数据库中
         const elem = {
