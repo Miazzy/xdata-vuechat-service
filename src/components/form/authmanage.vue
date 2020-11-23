@@ -149,13 +149,14 @@ export default {
           groupname: '',
           platename: '',
           serialid: temp.length > 0 ? temp[0].serialid + 1 : '1',
-          status: 'init',
+          status: 'valid',
           teamname: '',
           userlist: '',
           zonename: '',
         };
-        await manageAPI.postTableData(this.tablename , item);
-        this.initContractList.sort();
+        await manageAPI.postTableData(this.tableName , item);
+        await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
+        await this.queryTabList(0,0);
       },
       async onDelete(records){
         console.log('delete');
