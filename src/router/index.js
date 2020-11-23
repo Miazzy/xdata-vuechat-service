@@ -278,6 +278,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/goodslist.vue"], resolve)
         }
     }, {
+        path: '/app/authmanage',
+        name: "权限管理",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/authmanage.vue"], resolve)
+        }
+    }, {
         path: '/app/visitorlist',
         name: "访客记录",
         components: {
