@@ -52,50 +52,40 @@
             <van-form >
 
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                <!-- 借用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="遗失时间" v-model="item.lost_time"  placeholder="请填写遗失时间！" @blur="validField('lost_time')" :error-message="message.lost_time"  />
-                <!-- 失物名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="失物名称" v-model="item.lost_name"  placeholder="请填写失物名称！" @blur="validField('lost_name')" :error-message="message.lost_name"  />
-                <!-- 借用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="失物数量" v-model="item.lost_amount"  placeholder="请填写失物数量及单位！" @blur="validField('lost_amount')" :error-message="message.lost_amount"  />
+              </van-cell-group>
 
+               <van-cell-group id="van-zone-list" class="van-zone-list" style="margin-top:10px;">
+                <van-cell value="地址信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :required="false" clearable label="登记地址" v-model="item.address" placeholder="请输入失物招领处的地址信息!" @blur="validField('address');" :error-message="message.address"  />
+                <van-field :required="false" clearable label="登记区域" v-model="item.zone_name" v-show="item.zone_name" placeholder="请输入失物招领处的登记区域!" @blur="validField('zone_name');" :error-message="message.zone_name" />
+              </van-cell-group>
+
+              <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
+                <van-cell value="招领管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :required="false" clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入失物招领处的物品管理员!" @blur="validField('user_admin_name');" :error-message="message.user_admin_name" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-
-                <van-cell value="人员信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 借用人员（HR需要确认/修改） -->
+                <van-cell value="认领人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field :readonly="true" :required="false" clearable label="认领人员" v-model="item.claim_name"  placeholder="请填写您的姓名！" @blur="validField('claim_name')" :error-message="message.claim_name"  />
-                <!-- 单位名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="单位名称" v-model="item.company" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
-                <!-- 部门名称（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="部门名称" v-model="item.department" placeholder="请填写您的部门名称！" @blur="validField('department')" :error-message="message.department" />
-                <!-- 联系电话（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="联系电话" v-model="item.mobile" placeholder="请填写您的联系电话！" @blur="validField('mobile')" :error-message="message.mobile" />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="!!item.remark">
-
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.description"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如失物品相，颜色，遗失地点以及其他情况！" @blur="validField('remark')" :error-message="message.remark"  />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="!!item.status">
-
                 <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 流程状态（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -113,12 +103,8 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show=" role != 'common' && item.status == '已认领' ">
-
-                <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
-                <!-- 备注说明（HR需要确认/修改） -->
-                <van-field :required="false" clearable label="驳回原因" v-model="item.reason"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写驳回原因！"  />
-
+                <van-cell value="审批意见" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :required="false" clearable label="审批意见" v-model="item.reason"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写同意/驳回原因！"  />
               </van-cell-group>
 
             </van-form>
@@ -215,7 +201,9 @@ export default {
               lost_amount:'',//失物数量
 
               claim_name: '', //认领人员
+              clain_id: '',
               claim_time: '', //认领时间
+
               department:'', //部门名称
               company:'', //单位名称
               mobile: '', //联系电话
@@ -460,12 +448,19 @@ export default {
               lost_amount: item.lost_amount,//失物数量
 
               claim_name: item.claim_name || userinfo.realname, //认领人员
+              clain_id: item.clain_id,
               claim_time: dayjs(item.claim_time).format('YYYY-MM-DD') || dayjs().format('YYYY-MM-DD'), //认领时间
               department: item.department || userinfo.department.name, //部门名称
               company: item.company || userinfo.parent_company.name , //单位名称
               mobile: item.mobile || userinfo.mobile, //联系电话
               description: item.description, //备注说明
+
               user_group_ids: item.user_group_ids,
+              user_admin_name: item.user_admin_name,
+              user_zone_name: item.user_zone_name,
+
+              address: item.address,
+              zone_name: item.zone_name,
 
               serialid: item.serialid, //序列编号
               status: item.status,
@@ -532,7 +527,7 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通，驳回原因：${this.item.reason}！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_id}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通，驳回原因：${this.item.reason}！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
@@ -617,7 +612,8 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           status: '已认领',
-          claim_name: userinfo.username, //认领人员
+          claim_name: userinfo.realname, //认领人员
+          clain_id: userinfo.username,
           claim_time: dayjs().format('YYYY-MM-DD'), //认领时间
           mobile: userinfo.mobile,
           department: userinfo.department.name, //部门名称
@@ -725,7 +721,7 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_name}/亲爱的同事，您的失物招领认领申请已被确认，请到失物招领处领取遗失物品！?rurl=${receiveURL}`)
+        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.claim_id}/亲爱的同事，您的失物招领认领申请已被确认，请到失物招领处领取遗失物品！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
