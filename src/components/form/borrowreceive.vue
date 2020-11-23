@@ -876,7 +876,13 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData(this.tablename , elem);
+        try {
+          if(!tools.isNull(elem.name.trim()) && !tools.isNull(elem.amount.trim())){
+            const result = await manageAPI.postTableData(this.tablename , elem);
+          }
+        } catch (error) {
+          console.log(error);
+        }
 
         //计算批量物品
         const tsize = this.size - 1;
