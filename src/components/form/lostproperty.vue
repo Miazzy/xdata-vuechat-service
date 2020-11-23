@@ -201,7 +201,7 @@ export default {
               lost_amount:'',//失物数量
 
               claim_name: '', //认领人员
-              clain_id: '',
+              claim_id: '',
               claim_time: '', //认领时间
 
               department:'', //部门名称
@@ -448,7 +448,7 @@ export default {
               lost_amount: item.lost_amount,//失物数量
 
               claim_name: item.claim_name || userinfo.realname, //认领人员
-              clain_id: item.clain_id,
+              claim_id: item.claim_id,
               claim_time: dayjs(item.claim_time).format('YYYY-MM-DD') || dayjs().format('YYYY-MM-DD'), //认领时间
               department: item.department || userinfo.department.name, //部门名称
               company: item.company || userinfo.parent_company.name , //单位名称
@@ -613,7 +613,7 @@ export default {
         const elem = {
           status: '已认领',
           claim_name: userinfo.realname, //认领人员
-          clain_id: userinfo.username,
+          claim_id: userinfo.username,
           claim_time: dayjs().format('YYYY-MM-DD'), //认领时间
           mobile: userinfo.mobile,
           department: userinfo.department.name, //部门名称
