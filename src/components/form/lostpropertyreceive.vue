@@ -65,14 +65,14 @@
               <van-cell-group id="van-zone-list" class="van-zone-list" style="margin-top:10px;">
                 <van-cell value="地址信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field :required="true" clearable label="登记地址" v-model="item.address" placeholder="请输入失物招领处的地址信息!" @blur="validField('address');queryZoneName();" :error-message="message.address" @click="queryZoneName();" @change="queryZoneName();" />
-                <van-address-list v-show="zoneList.length > 0" v-model="zoneid" :list="zoneList" default-tag-text="默认" edit-disabled @select="selectZoneName()" />
+                <van-address-list v-show="zoneList.length > 0" v-model="zoneid" :list="zoneList" default-tag-text="默认" edit-disabled @select="selectZoneName" @click-item="selectZoneName"/>
                 <van-field :required="false" clearable label="登记区域" v-model="item.zone_name" v-show="item.zone_name" placeholder="请输入失物招领处的登记区域!" @blur="validField('zone_name');" :error-message="message.zone_name" />
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="招领管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="物品管理员" v-model="item.user_admin_name" placeholder="请输入失物招领处的物品管理员!" @blur="validField('user_admin_name');queryAdminMan();" :error-message="message.user_admin_name"  @click="queryAdminMan();" @change="queryAdminMan();"/>
-                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectAdminMan()" />
+                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectAdminMan" @click-item="selectAdminMan"/>
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -383,21 +383,21 @@ export default {
 
       },
       // 选中当前物品管理员
-      async selectAdminMan(value){
-
-        const id = this.userid;
-        const user = this.userList.find((item,index) => {return id == item.id});
+      async selectAdminMan(item, index){
 
         //获取盖印人姓名
-        this.item.user_admin_name = user.name;
-        this.item.userid = id;
+        this.item.user_admin_name = item.name;
+        this.item.userid = item.id;
 
-        //选择物品管理员后，查询此物品管理员对应的区域及地址信息
-        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
-        //获取到印章管理员组信息
-        this.item.address = response && response.length > 0 ? response[0].address : '';
-        this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
+        if(!this.item.address || !this.item.zone_name){
+          //选择物品管理员后，查询此物品管理员对应的区域及地址信息
+          const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+
+          //获取到印章管理员组信息
+          this.item.user_zone_name = this.item.address = response && response.length > 0 ? response[0].address : '';
+          this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
+        }
 
       },
       // 根据输入地址信息获取失物招领处地址信息
@@ -452,11 +452,9 @@ export default {
 
       },
       // 选中当前地址信息
-      async selectZoneName(value){
-        const id = this.zoneid;
-        const response = this.zoneList.find((item,index) => {return id == item.id});
-        this.item.user_zone_name = this.item.address = response ? response.address : '';
-        this.item.zone_name = response ? response.name : '';
+      async selectZoneName(item,index){
+        this.item.user_zone_name = this.item.address = item ? item.address : '';
+        this.item.zone_name = item ? item.name : '';
       },
       // 设置重置
       async reduction(){
