@@ -384,21 +384,16 @@ export default {
       },
       // 选中当前物品管理员
       async selectAdminMan(item, index){
-
-        //获取盖印人姓名
+        //获取物品管理员姓名
         this.item.user_admin_name = item.name;
         this.item.userid = item.id;
-
-
         if(!this.item.address || !this.item.zone_name){
           //选择物品管理员后，查询此物品管理员对应的区域及地址信息
           const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
-
-          //获取到印章管理员组信息
+          //获取到物品管理员组信息
           this.item.user_zone_name = this.item.address = response && response.length > 0 ? response[0].address : '';
           this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
         }
-
       },
       // 根据输入地址信息获取失物招领处地址信息
       async queryZoneName(){
