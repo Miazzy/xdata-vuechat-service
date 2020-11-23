@@ -414,6 +414,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
+              <div class="weui-cell_app_hd" @click="cooperate('auth');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/game_00.png" >
+                <div class="weui-cell_app_bd">
+                  权限配置
+                </div>
+              </div>
+            </van-col>
           </van-row>
         </div>
 
@@ -529,6 +537,10 @@ export default {
           resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.role += ',SEAL_ARCHIVE_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            this.role += ',COMMON_AUTH_ADMIN';
           };
           return this.userinfo;
         },
@@ -796,11 +808,21 @@ export default {
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
         },
         // 执行协同办公类跳转
-        cooperate(name) {
+        async cooperate(name) {
+          //获取当前登录用户信息
+          const userinfo = await storage.getStore('system_userinfo');
+
           if(name == 'share'){
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
           } else if(name == 'property') {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
+          } else if(name == 'auth'){
+            const resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+              return vant.Toast('您没有权限配置的权限！');
+            } else {
+              this.$router.push(`/app/authmanage?back=/app&type=${name}`);
+            }
           }
         },
         // 来访管理
