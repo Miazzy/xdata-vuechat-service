@@ -641,7 +641,7 @@ export default {
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '认领'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批借用申请[已认领]',//text          null comment '操作意见',
+          action_opinion : '审批认领申请[已认领]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
           process_station   : '借用审批[失物招领]',//varchar(100)  null comment '流程岗位',
