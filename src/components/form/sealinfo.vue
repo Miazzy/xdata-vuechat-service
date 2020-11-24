@@ -252,6 +252,7 @@ export default {
               send_mobile:'',
               send_location:'',
               seal:'',     //用印管理员成员组
+              seal_mobile:'',
               front:'',    //用印前台接受组
               front_name:'',
               archive: '', //用印归档组(财务/档案)
@@ -815,13 +816,15 @@ export default {
                     company = company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
-                    this.suserList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    this.suserList.push({id:elem.loginid , name:elem.lastname , mobile: elem.mobile , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
                   //获取盖印人姓名
                   this.item.sealman = user[0].lastname;
                   //当前盖印人编号
                   this.item.seal = this.sealuserid = user[0].loginid;
+                  //设置盖印人电话
+                  this.item.seal_mobile = user[0].mobile;
 
                   //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
                   this.zoneNameValid();
@@ -838,11 +841,13 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   //将用户数据推送至对方数组
-                  this.suserList.push({id:user.loginid , name:user.lastname , tel:'' , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
+                  this.suserList.push({id:user.loginid , name:user.lastname , mobile: user.mobile , tel:'' , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
                   //获取盖印人姓名
                   this.item.sealman = user.lastname;
                   //当前盖印人编号
                   this.item.seal = this.sealuserid = user.loginid;
+                   //设置盖印人电话
+                  this.item.seal_mobile = user.mobile;
 
                   //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
                   this.zoneNameValid();
@@ -1051,6 +1056,8 @@ export default {
         const user = this.suserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
         this.item.sealman = user.name;
+        //设置盖印人电话
+        this.item.seal_mobile = user.mobile;
         this.item.seal = id;
         //当前盖印人编号
         this.sealuserid = id;
@@ -1548,25 +1555,24 @@ export default {
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
 
           try {
-            //推送群消息，告知印章管理员进行用印处理(企业微信群)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
-                        .set('accept', 'json');
-          } catch (error) {
-            console.log(error);
-          }
-
-          try {
             //通知签收人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${receiveURL}`)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/亲爱的同事，您提交的用印申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
           }
 
           try {
-            //通知印章人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.seal}/文件:‘${this.item.filename}’已提交用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${this.noname}：${this.item.contractId}?rurl=${url}`)
-                         .set('accept', 'json');
+            const message = `亲爱的用印管理员，您有一份新的用印申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
+            if(this.item.seal_mobile){
+              //通知印章人领取资料(企业微信发送)
+                await superagent.post(`${window.requestAPIConfig.restapi}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`)
+                             .set('accept', 'json');
+            } else {
+                //通知印章人领取资料(企业微信发送)
+                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`)
+                             .set('accept', 'json');
+            }
           } catch (error) {
             console.log(error);
           }
