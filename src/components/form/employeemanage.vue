@@ -33,16 +33,16 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
             <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
-                <vue-excel-column field="id"         label="序号"             width="100px" />
+                <vue-excel-column field="id"         label="序号"             width="80px" />
                 <vue-excel-column field="userid"     label="企微信号"          width="100px" />
                 <vue-excel-column field="loginid"    label="OA账号"           width="100px" />
-                <vue-excel-column field="name"       label="用户名称"          width="100px" />
+                <vue-excel-column field="name"       label="用户"             width="100px" />
                 <vue-excel-column field="position"   label="岗位名称"          width="100px" />
-                <vue-excel-column field="mobile"     label="手机"             width="120px" />
+                <vue-excel-column field="mobile"     label="手机"             width="100px" />
                 <vue-excel-column field="gender"     label="性别"             width="60px" type="map" :options="genderType" />
                 <vue-excel-column field="seclevel"   label="安全"             width="60px"/>
                 <vue-excel-column field="cert"       label="身份证号"          width="180px" />
-                <vue-excel-column field="departname" label="部门名称"          width="120px"/>
+                <vue-excel-column field="departname" label="部门名称"          width="100px"/>
                 <vue-excel-column field="topname"    label="上级部门"          width="120px"/>
                 <vue-excel-column field="company"    label="公司信息"          width="180px"/>
                 <vue-excel-column field="cname"      label="公司"             width="100px"/>
@@ -115,7 +115,7 @@ export default {
             approveColumns: workconfig.compcolumns.approveColumns,
             sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
             tableName: 'v_hrmresource',
-            genderType:{'1':'女','2':'男','0':'未知'},
+            genderType:{'1':'男','2':'女','0':'未知'},
             statusType:{'COMMON_AUTH_ADMIN':'权限管理员','COMMON_RECEIVE_BORROW':'物品管理员','SEAL_ADMIN':'印章_用印管理员','COMMON_FRONT_ADMIN':'前台管理员','COMMON_REWARD_HR_ADMIN':'薪资管理员','JOB_EXEC_ADMIN':'入职_行政管理员','JOB_FRONT_ADMIN':'入职_前台管理员','JOB_HR_ADMIN':'入职_HR管理员','JOB_MEAL_ADMIN':'入职_食堂管理员','SEAL_ARCHIVE_ADMIN':'印章_归档管理员','SEAL_FINANCE_ADMIN':'印章_财务管理员','SEAL_FRONT_SERVICE':'印章_前台管理员','SEAL_ARCHIVE_EXPORT':'印章_导出管理员'},
         }
     },
@@ -138,28 +138,10 @@ export default {
     },
     methods: {
       exportAsExcel () {
-          this.$refs.grid.exportTable('xlsx', true, '权限配置表单');
+        this.$refs.grid.exportTable('xlsx', true, '员工数据表单');
       },
       async onAdd(){
-        const userinfo = await storage.getStore('system_userinfo'); //获取当前用户信息
-        const temp = this.$refs.grid.$options.propsData.value;
-        const item = {
-          id: tools.queryUniqueID(),
-          create_by: userinfo.username,
-          create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          address: '',
-          enuserlist: '',
-          groupname: '',
-          platename: '',
-          serialid: temp.length > 0 ? temp[0].serialid + 1 : '1',
-          status: 'valid',
-          teamname: '',
-          userlist: '',
-          zonename: '',
-        };
-        await manageAPI.postTableData(this.tableName , item);
-        await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
-        await this.queryTabList(0,0);
+        return this.$toast.fail('管理员您好，数据由OA同步过来，添加数据请到OA用户管理处修改！');
       },
       async onDelete(records){
         console.log('delete');
@@ -168,15 +150,8 @@ export default {
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
           return this.$toast.fail('管理员您好，一次只能更新一条数据！');
-        }
-        for(const record of records){
-          const item = temp.find( item => { return item.$id == record.$id });
-          const elem = new Object() ;
-          elem[record.name] = record.newVal ;
-          if(record.newVal == ''){
-            return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
-          }
-          await manageAPI.patchTableData(this.tableName , item.id , elem);
+        } else {
+          return this.$toast.fail('管理员您好，数据由OA同步过来，修改数据请到OA用户管理处修改！');
         }
       },
       async userStatus(){
