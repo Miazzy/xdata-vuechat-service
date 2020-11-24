@@ -9,7 +9,7 @@
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>权限管理</span>
+            <span>员工管理</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
@@ -33,16 +33,19 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
             <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
-                <vue-excel-column field="serialid"      label="序号"         width="60px" />
-                <vue-excel-column field="create_by"     label="创建人"       width="80px" />
-                <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
-                <vue-excel-column field="platename"     label="板块名称"      width="120px" />
-                <vue-excel-column field="zonename"      label="区域名称"      width="120px" />
-                <vue-excel-column field="teamname"      label="团队名称"      width="180px" />
-                <vue-excel-column field="groupname"     label="权限名称"      width="120px" type="map" :options="statusType" />
-                <vue-excel-column field="userlist"      label="组员列表"      width="180px"/>
-                <vue-excel-column field="enuserlist"    label="组员名称"      width="180px" />
-                <vue-excel-column field="address"       label="地址"          width="320px"/>
+                <vue-excel-column field="id"         label="序号"             width="100px" />
+                <vue-excel-column field="userid"     label="企微信号"          width="100px" />
+                <vue-excel-column field="loginid"    label="OA账号"           width="100px" />
+                <vue-excel-column field="name"       label="用户名称"          width="100px" />
+                <vue-excel-column field="position"   label="岗位名称"          width="100px" />
+                <vue-excel-column field="mobile"     label="手机"             width="120px" />
+                <vue-excel-column field="gender"     label="性别"             width="60px" type="map" :options="genderType" />
+                <vue-excel-column field="seclevel"   label="安全"             width="60px"/>
+                <vue-excel-column field="cert"       label="身份证号"          width="180px" />
+                <vue-excel-column field="departname" label="部门名称"          width="120px"/>
+                <vue-excel-column field="topname"    label="上级部门"          width="120px"/>
+                <vue-excel-column field="company"    label="公司信息"          width="180px"/>
+                <vue-excel-column field="cname"      label="公司"             width="100px"/>
             </vue-excel-editor>
         </template>
       </div>
@@ -68,7 +71,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "权限管理",
+            pageName: "员工管理",
             momentNewMsg: true,
             tabname: '1',
             id:'',
@@ -95,7 +98,6 @@ export default {
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
-              { text: '新建', value: 1 , icon: 'add-o' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -112,7 +114,8 @@ export default {
             sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
             approveColumns: workconfig.compcolumns.approveColumns,
             sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
-            tableName: 'bs_admin_group',
+            tableName: 'v_hrmresource',
+            genderType:{'1':'女','2':'男','0':'未知'},
             statusType:{'COMMON_AUTH_ADMIN':'权限管理员','COMMON_RECEIVE_BORROW':'物品管理员','SEAL_ADMIN':'印章_用印管理员','COMMON_FRONT_ADMIN':'前台管理员','COMMON_REWARD_HR_ADMIN':'薪资管理员','JOB_EXEC_ADMIN':'入职_行政管理员','JOB_FRONT_ADMIN':'入职_前台管理员','JOB_HR_ADMIN':'入职_HR管理员','JOB_MEAL_ADMIN':'入职_食堂管理员','SEAL_ARCHIVE_ADMIN':'印章_归档管理员','SEAL_FINANCE_ADMIN':'印章_财务管理员','SEAL_FRONT_SERVICE':'印章_前台管理员','SEAL_ARCHIVE_EXPORT':'印章_导出管理员'},
         }
     },
@@ -258,23 +261,9 @@ export default {
       },
       //点击Tab栏
       async queryTabList(tabname , page = 0){
-
-        //获取当前用户信息
-        const userinfo = await storage.getStore('system_userinfo');
-
-        // 获取最近6个月对应的日期
-        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
-        let searchSql = '';
-
         // 设置当前页为第一页
         this.currentPage = page + 1;
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(platename,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(groupname,like,~${this.searchWord}~)~or(zonename,like,~${this.searchWord}~)~or(teamname,like,~${this.searchWord}~)~or(userlist,like,~${this.searchWord}~)~or(enuserlist,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~))`;
-        }
-        await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
-        const whereSQL = `_where=(status,eq,valid)~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
+        const whereSQL = `_sort=-id&_p=${page}&_size=10000`;
         this.initContractList = await manageAPI.queryTableData(this.tableName , whereSQL);
         this.totalpages = await manageAPI.queryTableDataCount(this.tableName , whereSQL);
         this.initContractList.map((item , index) => {
