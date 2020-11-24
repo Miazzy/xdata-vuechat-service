@@ -286,7 +286,7 @@ const routes = [{
         }
     }, {
         path: '/app/employeemanage',
-        name: "数据管理",
+        name: "员工管理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/employeemanage.vue"], resolve)
