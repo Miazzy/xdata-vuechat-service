@@ -1345,9 +1345,9 @@ export default {
         // TODO 此处可以加分布式锁，防止高并发合同编号相同
 
         // 可能盖印人没有被选中，此处在选择一次
-        await this.querySealMan();
-
-        debugger;
+        if(!this.item.seal || !this.item.sealman){
+          await this.querySealMan();
+        }
 
         if(!this.item.seal || !this.item.sealman){
           //提示确认用印操作
