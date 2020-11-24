@@ -432,7 +432,7 @@
             </van-col>
             <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
               <div class="weui-cell_app_hd" @click="cooperate('employee');">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_9.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_12.png" >
                 <div class="weui-cell_app_bd">
                   员工管理
                 </div>
