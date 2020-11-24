@@ -430,6 +430,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
+              <div class="weui-cell_app_hd" @click="cooperate('employee');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_9.png" >
+                <div class="weui-cell_app_bd">
+                  员工管理
+                </div>
+              </div>
+            </van-col>
           </van-row>
         </div>
 
@@ -826,12 +834,19 @@ export default {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
           } else if(name == 'property') {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
-          } else if(name == 'auth'){
+          } else if(name == 'auth'){ // 进行权限配置
             const resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               return vant.Toast('您没有权限配置的权限！');
             } else {
               this.$router.push(`/app/authmanage?back=/app&type=${name}`);
+            }
+          } else if(name == 'employee'){ // 进行员工管理
+            const resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+              return vant.Toast('您没有员工管理的权限！');
+            } else {
+              this.$router.push(`/app/employeemanage?back=/app&type=${name}`);
             }
           }
         },
