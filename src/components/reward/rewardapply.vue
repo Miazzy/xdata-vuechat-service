@@ -1088,7 +1088,7 @@ export default {
         let approver = ''; //最终审批人员
 
         //验证数据是否已经填写
-        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
+        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '' })
 
         const invalidKey =  keys.find(key => {
           const flag = this.validField(key);
@@ -1099,6 +1099,15 @@ export default {
           await vant.Dialog.alert({
             title: '温馨提示',
             message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
+          });
+          return false;
+        }
+
+        // 如果奖罚明细数据为空，且不存在上传附件，提示请上传附件
+        if((this.data == null || this.data.length == 0) && !this.item.files ){
+            await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请确认内容是否填写完整，错误：${this.message['files']}！`,
           });
           return false;
         }
@@ -1123,7 +1132,7 @@ export default {
         //是否确认提交此自由流程?
         this.$confirm({
             title: "确认操作",
-            content: "是否确认提交此自由流程?",
+            content: "是否确认提交此奖惩申请流程?",
             onOk: async() => {
 
                   //查询直接所在工作组，注意此处是奖罚人力经理管理员
@@ -1391,22 +1400,22 @@ export default {
 
       // 保存用户数据但是不提交
       async handleSave(){
-        //显示加载状态
+        // 显示加载状态
         this.loading = true;
 
-        //获取用户基础信息
+        // 获取用户基础信息
         const userinfo = await storage.getStore('system_userinfo');
 
-        //表单ID
+        // 表单ID
         const id = tools.queryUniqueID();
         const type = tools.getUrlParam('type');
 
-        //流程审批人员
+        // 流程审批人员
         let wfUsers = '';  //流程审批人员
         let approver = ''; //最终审批人员
 
-        //验证数据是否已经填写
-        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
+        // 验证数据是否已经填写
+        const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: ''})
 
         const invalidKey =  keys.find(key => {
           const flag = this.validField(key);
@@ -1417,6 +1426,15 @@ export default {
           await vant.Dialog.alert({
             title: '温馨提示',
             message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
+          });
+          return false;
+        }
+
+        // 如果奖罚明细数据为空，且不存在上传附件，提示请上传附件
+        if((this.data == null || this.data.length == 0) && !this.item.files ){
+            await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `请确认内容是否填写完整，错误：${this.message['files']}！`,
           });
           return false;
         }
@@ -1441,7 +1459,7 @@ export default {
         //是否确认提交此自由流程?
         this.$confirm({
             title: "确认操作",
-            content: "是否确认提交此自由流程?",
+            content: "是否确认保存此申请单?",
             onOk: async() => {
                   //查询直接所在工作组，注意此处是奖罚人力经理管理员
                   const response = await query.queryRoleGroupList('COMMON_REWARD_HR_ADMIN' , this.item.hr_id);
