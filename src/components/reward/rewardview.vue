@@ -1229,7 +1229,7 @@ export default {
         //发送企业微信通知，知会流程发起人，此奖罚申请流程已经完成！
         try {
             const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${id}&pid=&tname=bs_reward_apply&panename=mytodolist&typename=wflow_done&bpm_status=4&proponents=${this.item.create_by}`);
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/亲爱的同事，您提交的奖罚申请流程已被驳回：${this.item["title"]}，内容：${this.item['content']}，驳回意见：${this.approve_content}，请修改申请内容后重新提交流程?rurl=${receiveURL}`)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/亲爱的同事，您提交的奖罚申请流程已被驳回：${this.item["title"]}，内容：${this.item['content']}，驳回意见：${this.approve_content}，请修改申请内容后重新提交流程?type=reward&rurl=${receiveURL}`)
                 .set('accept', 'json');
         } catch (error) {
             console.log(error);
@@ -1365,7 +1365,7 @@ export default {
            // 此处推送消息至第一个审批处
            try {
               const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/reward/rewardview?id=${curItemID}&pid=${node.id}&tname=bs_reward_apply&panename=mytodolist&typename=wflow_todo&bpm_status=2&proponents=${firstWflowUser}`);
-              await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstWflowUser}/亲爱的同事，${userinfo['name']||userinfo['realname']}(${userinfo["username"]})提交了奖罚申请流程：${data["title"]}，内容：${data['content']}，请您及时进行审批处理！?rurl=${receiveURL}`)
+              await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${firstWflowUser}/亲爱的同事，${userinfo['name']||userinfo['realname']}(${userinfo["username"]})提交了奖罚申请流程：${data["title"]}，内容：${data['content']}，请您及时进行审批处理！?type=reward&rurl=${receiveURL}`)
                           .set('accept', 'json');
            } catch (error) {
              console.log(error);
@@ -1623,7 +1623,7 @@ export default {
       // 通知HR（人力薪资相关专职人员查看数据）
       async handleNotifyHR(user_group_ids , userinfo ,  value , receiveURL){
         try {
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，${userinfo.realname}(${userinfo.username})提交了奖罚申请流程，请您在流程审批完成后及时进行知会确认处理！?rurl=${receiveURL}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/亲爱的同事，${userinfo.realname}(${userinfo.username})提交了奖罚申请流程，请您在流程审批完成后及时进行知会确认处理！?type=reward&rurl=${receiveURL}`)
                           .set('accept', 'json');
         } catch (error) {
           console.log(error);
