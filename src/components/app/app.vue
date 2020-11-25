@@ -156,7 +156,7 @@
         </div>
       </div>
 
-      <div id="weui-cells-flex" class="weui-cells" style="display:block; position:relative;">
+      <div id="weui-cells-flex" v-if="role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') " class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
           <div style="position:absolute; top: 0.6rem; right:25px;">
@@ -170,7 +170,7 @@
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
-            <van-col span="6">
+            <van-col span="6" v-if="role.includes('JOB_HR_ADMIN')" >
               <div class="weui-cell_app_hd" @click="entryjob('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_03.png" >
                 <div class="weui-cell_app_bd">
@@ -178,7 +178,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" v-if="role.includes('JOB_EXEC_ADMIN')" >
               <div class="weui-cell_app_hd" @click="entryjob('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
@@ -186,7 +186,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" v-if="role.includes('JOB_FRONT_ADMIN')" >
               <div class="weui-cell_app_hd" @click="entryjob('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png" >
                 <div class="weui-cell_app_bd" >
@@ -194,7 +194,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6">
+            <van-col span="6" v-if="role.includes('JOB_MEAL_ADMIN')" >
               <div class="weui-cell_app_hd" @click="entryjob('meal');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png" >
                 <div class="weui-cell_app_bd">
@@ -546,26 +546,46 @@ export default {
           let resp = null;
           this.userinfo = await query.queryWeworkUser();
           const userinfo = await storage.getStore('system_userinfo');
-          resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.role += ',COMMON_RECEIVE_BORROW';
-          };
-          resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.role += ',SEAL_ADMIN';
-          };
-          resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.role += ',SEAL_FRONT_SERVICE';
-          };
-          resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.role += ',SEAL_ARCHIVE_ADMIN';
-          };
-          resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.role += ',COMMON_AUTH_ADMIN';
-          };
+          this.role = await storage.getStore('system_role_rights');
+          if(!this.role){
+            resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',COMMON_RECEIVE_BORROW';
+            };
+            resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',SEAL_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',SEAL_FRONT_SERVICE';
+            };
+            resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',SEAL_ARCHIVE_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',COMMON_AUTH_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',JOB_HR_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',JOB_EXEC_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',JOB_FRONT_ADMIN';
+            };
+            resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+              this.role += ',JOB_MEAL_ADMIN';
+            };
+          }
+          storage.setStore('system_role_rights',this.role, 3600 * 24 * 3);
           return this.userinfo;
         },
         async queryInfo(){
