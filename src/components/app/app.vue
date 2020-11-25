@@ -357,6 +357,7 @@ export default {
           this.userinfo = await query.queryWeworkUser();
           const userinfo = await storage.getStore('system_userinfo');
           if(!this.role || this.role == 'view'){
+            this.role = 'view';
             resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
             if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
               this.role += ',COMMON_RECEIVE_BORROW';
