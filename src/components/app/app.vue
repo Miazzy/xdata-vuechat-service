@@ -868,7 +868,7 @@ export default {
         },
         // 电子印章
         sealElectron() {
-           window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank');
+           window.open('http://seal.leading-group.com:18071/#/login','_blank');
         },
         // 修改界面样式
         changeStyle(name) {
@@ -921,16 +921,4 @@ export default {
 <style>
     @import "../../assets/css/explore.css";
     @import "../../assets/css/app.css";
-    #weui-cells-flex .van-row--flex {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: left;
-        align-items: center;
-    }
-    #weui-cells-flex .van-col {
-        float: left;
-        box-sizing: border-box;
-        min-height: 1px;
-        margin-bottom: 20px;
-    }
 </style>
