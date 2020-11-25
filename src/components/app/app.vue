@@ -17,8 +17,6 @@
         </router-link>
       </div>
 
-     
-
       <div id="weui-cells-flex" v-if="role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') " class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
