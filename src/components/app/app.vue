@@ -268,11 +268,19 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" >
+            <van-col span="6" v-if="role.includes('SEAL_ADMIN')">
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
                 <div class="weui-cell_app_bd">
                   台账导出
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" >
+              <div class="weui-cell_app_hd" @click="sealElectron();" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.9/images/seal_7.png" >
+                <div class="weui-cell_app_bd" >
+                  电子印章
                 </div>
               </div>
             </van-col>
@@ -857,6 +865,10 @@ export default {
           } else if(name == 'approve'){
             this.$router.push(`/app/visitorlist?back=/app&type=${name}`);
           }
+        },
+        // 电子印章
+        sealElectron() {
+           window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank');
         },
         // 修改界面样式
         changeStyle(name) {
