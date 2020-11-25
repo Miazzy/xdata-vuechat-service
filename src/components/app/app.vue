@@ -352,12 +352,17 @@ export default {
          * @function 企业微信登录处理函数
          */
         async weworkLogin(){
-          let resp = null;
           this.role = await storage.getStore('system_role_rights');
           this.userinfo = await query.queryWeworkUser();
           const userinfo = await storage.getStore('system_userinfo');
-          if(!this.role || this.role == 'view'){
+
+          // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
+          const etimestamp = await storage.getStore('system_role_rights_expire');
+          const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
+
+          if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
             this.role = 'view';
+            let resp = null;
             resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
             if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
               this.role += ',COMMON_RECEIVE_BORROW';
@@ -394,8 +399,8 @@ export default {
             if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
               this.role += ',JOB_MEAL_ADMIN';
             };
+            storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
           }
-          storage.setStore('system_role_rights',this.role, 3600 * 24 * 3);
           return this.userinfo;
         },
         async queryInfo(){
