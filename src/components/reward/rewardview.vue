@@ -1218,9 +1218,6 @@ export default {
         //新增驳回记录
         await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '驳回' , this.approve_content);
 
-        //查询最新审批记录
-        await this.queryProcessLog();
-
         this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('驳回流程审批成功！');
         this.role = 'view';
@@ -1234,6 +1231,12 @@ export default {
         } catch (error) {
             console.log(error);
         }
+
+        //休息1000ms，在查询日志
+        await tools.sleep(1000);
+
+        //查询最新审批记录
+        await this.queryProcessLog();
 
       },
 
@@ -1416,11 +1419,15 @@ export default {
         //新增知会确认记录
         await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '人力确认' , this.approve_content);
 
+        this.$toast.success('知会确认成功！');
+        this.role = 'view';
+
+        //休息1000ms，在查询日志
+        await tools.sleep(1000);
+
         //查询最新审批记录
         await this.queryProcessLog();
 
-        this.$toast.success('知会确认成功！');
-        this.role = 'view';
 
       },
       async handleStartConfirm(){
@@ -1507,9 +1514,6 @@ export default {
 
                     /************************  工作流程日志(结束)  ************************/
 
-                    //查询最新审批记录
-                    await this.queryProcessLog();
-
                     //设置状态
                     try {
                       this.loading = false;
@@ -1521,6 +1525,13 @@ export default {
                     }
 
                     this.$toast.success('提交奖惩申请流程成功，请等待审批完成！');
+
+                    //休息1000ms，在查询日志
+                    await tools.sleep(1000);
+
+                    //查询最新审批记录
+                    await this.queryProcessLog();
+
                   } catch (error) {
                     console.log(error);
                   }
@@ -1650,16 +1661,15 @@ export default {
         //新增驳回记录
         await this.handleSaveHistoryWFLog(this.tablename , this.item , userinfo , '撤销' , this.approve_content);
 
-        //查询最新审批记录
-        await this.queryProcessLog();
-
         this.workflowLogList = await workflow.queryPRLogByDataID(id);
         this.$toast.fail('撤销流程审批成功！');
 
         this.role = 'view';
-        await tools.sleep(300);
+        await tools.sleep(1000);
         await this.queryInfo();
         this.loading = false;
+        await tools.sleep(2000);
+        await this.queryProcessLog();
       },
 
       // 执行驳回功能
@@ -1669,9 +1679,11 @@ export default {
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
 
         this.role = 'view';
-        await tools.sleep(300);
+        await tools.sleep(1000);
         await this.queryInfo();
         this.loading = false;
+        await tools.sleep(2000);
+        await this.queryProcessLog();
       },
 
       // 执行知会确认功能
@@ -1679,10 +1691,13 @@ export default {
         this.loading = true;
         let result = await wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done' , this.role = 'view') : '';
+
         this.role = 'view';
-        await tools.sleep(300);
+        await tools.sleep(1000);
         await this.queryInfo();
         this.loading = false;
+        await tools.sleep(2000);
+        await this.queryProcessLog();
       },
 
       // 执行审批同意操作
@@ -1690,10 +1705,13 @@ export default {
         this.loading = true;
         let result = await wflowprocess.handleApproveWF();
         result == 'success' ? (this.tasktype = 'done', this.role = 'view') : '';
+
         this.role = 'view';
-        await tools.sleep(300);
+        await tools.sleep(1000);
         await this.queryInfo();
         this.loading = false;
+        await tools.sleep(2000);
+        await this.queryProcessLog();
       },
   },
 };

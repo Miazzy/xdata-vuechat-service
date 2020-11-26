@@ -1289,7 +1289,10 @@ export default {
                     item.create_by = userinfo.username;
                     item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
                     item.pid = id;
+                    delete item.$id;
                     delete item.key;
+                    delete item.v_status;
+                    delete item.v_message;
                     await manageAPI.postTableData('bs_reward_items' , item);
                   }
 
@@ -1624,7 +1627,10 @@ export default {
                     item.create_by = userinfo.username;
                     item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
                     item.pid = id;
+                    delete item.$id;
                     delete item.key;
+                    delete item.v_status;
+                    delete item.v_message;
                     await manageAPI.postTableData('bs_reward_items' , item);
                   }
 

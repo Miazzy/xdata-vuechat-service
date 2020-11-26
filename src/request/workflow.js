@@ -58,7 +58,7 @@ export async function queryPRLogByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 60);
+            storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 0); //此处不能使用缓存，因为如果还存在审批日志，会将流程状态修改为审批中
         }
 
         return res.body;
