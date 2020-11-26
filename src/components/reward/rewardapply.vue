@@ -340,10 +340,20 @@
                    </a-row>
                 </div>
 
-                <div class="reward-apply-content-item reward-apply-content-title" style="">
-                  <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
-                    <a-table :columns="columns" :data-source="data">
-                    </a-table>
+                <div class="reward-apply-content-item reward-apply-content-title" style="width:100%;">
+                  <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;width:100%;height:auto;" >
+                    <vue-excel-editor v-model="data" ref="grid" width="100%" :page="20" :no-num-col="false" :readonly="false" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+                        <vue-excel-column field="type"        label="分配性质"   width="100px" />
+                        <vue-excel-column field="period"      label="发放期间"   width="120px" />
+                        <vue-excel-column field="username"    label="员工姓名"   width="120px" />
+                        <vue-excel-column field="account"     label="员工OA"    width="120px" />
+                        <vue-excel-column field="company"     label="所属单位"   width="100px" />
+                        <vue-excel-column field="department"  label="所属部门"   width="100px" />
+                        <vue-excel-column field="position"    label="员工职务"   width="100px" />
+                        <vue-excel-column field="amount"      label="分配金额"   width="100px" />
+                        <vue-excel-column field="v_message"     label="抄送"    width="150px" />
+                        <vue-excel-column field="v_status"      label="状态"    width="60px" type="map" :options="statusType" />
+                    </vue-excel-editor>
                    </a-row>
                 </div>
 
@@ -433,12 +443,12 @@ import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
-// import readXlsxFile from 'read-excel-file';
-// import { ExcelImport } from 'pikaz-excel-js';
+import VueExcelEditor from 'vue-excel-editor';
 
 try {
   Vue.component("downloadExcel", JsonExcel);
   Vue.component("excelImport", PikazJsExcel.ExcelImport);
+  Vue.use(VueExcelEditor);
 } catch (error) {
   console.log(error);
 }
@@ -545,7 +555,8 @@ export default {
               'position':'XXX专员',
               'amount':'10000.00',
             },],
-      collection: [{ }]
+      collection: [{ }],
+      statusType:{'valid':'有效','invalid':'删除'},
     };
   },
   activated() {
@@ -555,6 +566,51 @@ export default {
     this.queryInfo();
   },
   methods: {
+      onDelete(){
+        console.log('delete');
+        debugger;
+      },
+      async onUpdate(records){
+
+        if(records.length > 1){
+          return this.$toast.fail('管理员您好，一次只能更新一条数据！');
+        }
+        const temp = this.data.filter(elem => { // 过滤被删除的数据
+          return elem.v_status == 'valid';
+        });
+
+        if(this.data.length != temp.length){ // 过滤被删除的数据
+          return vant.Dialog.confirm({
+            title: '温馨提示',
+            message: `您确定删除选中数据嘛？`,
+          }).then(()=>{
+            this.data = temp;
+          }).catch(() => {
+            this.data.map(item => { item.v_status = 'valid'; });
+          })
+        }
+
+        for(const record of records){
+          const item = temp.find( item => { return item.$id == record.$id });
+          const elem = new Object() ;
+          elem[record.name] = record.newVal ;
+          if(record.name == 'v_message'){
+            let list = await manageAPI.queryUserByLoginID(record.newVal);
+            const rlist = record.newVal.split(',');
+            list = list.filter( (item,index) => {
+              const findex = list.findIndex( elem => { return elem.loginid == item.loginid });
+              return index == findex;
+            })
+            debugger;
+            if(list.length != rlist.length){
+              return vant.Dialog.confirm({
+                  title: '温馨提示',
+                  message: `请仔细检查OA账户是否有填写错误（抄送：${rlist.toString()}）!`,
+                })
+            }
+          }
+        }
+      },
       // Excel文件解析成功
       onSuccess(data, file){
         try {
@@ -571,8 +627,11 @@ export default {
               position: item['员工职务'],
               mobile: '',
               amount: item['分配金额'],
+              v_message:'',
+              v_status: 'valid',
             });
           }
+          debugger;
         } catch (error) {
           console.log(error);
         }
@@ -729,7 +788,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
 
             if(!!user){
 
@@ -813,7 +872,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
 
             if(!!user){
 
@@ -922,7 +981,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
 
             if(!!user){
 
@@ -1652,6 +1711,8 @@ export default {
             position: `${this.release_position}`,
             mobile: `${this.release_mobile}`,
             amount: `${parseFloat(this.release_amount).toFixed(2)}`,
+            v_message:'',
+            v_status: 'valid',
           });
         } catch (error) {
           console.log(error);
