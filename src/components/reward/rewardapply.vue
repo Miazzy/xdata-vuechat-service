@@ -240,7 +240,12 @@
                     <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
 
                       <template #right-icon>
+                        <!--
                         <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
+                         -->
+                        <excel-import :on-success="onSuccess">
+                          <div>导入</div>
+                        </excel-import>
                       </template>
 
                     </van-cell>
@@ -422,7 +427,8 @@ import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
-import readXlsxFile from 'read-excel-file';
+// import readXlsxFile from 'read-excel-file';
+import { ExcelImport } from 'pikaz-excel-js'
 
 try {
   Vue.component("downloadExcel", JsonExcel);
@@ -432,6 +438,9 @@ try {
 
 export default {
   mixins: [window.mixin],
+  components: {
+      ExcelImport,
+  },
   data() {
     return {
       pageName: "奖罚管理",
@@ -542,6 +551,29 @@ export default {
     this.queryInfo();
   },
   methods: {
+      onSuccess(data, file){
+        console.log(data)
+        let trows = data[0].data;
+        try {
+          for(let item of trows){
+            this.data.push({
+              key: tools.queryUniqueID(),
+              type: item['分配性质'],
+              period: item['发放期间'],
+              username: item['员工姓名'],
+              account: item['员工OA'],
+              company: item['所属单位'],
+              department: item['所属部门'],
+              position: item['员工职务'],
+              mobile: '',
+              amount: item['分配金额'],
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        debugger;
+      },
       onChange(event) {
         this.file = event.target.files ? event.target.files[0] : null;
       },

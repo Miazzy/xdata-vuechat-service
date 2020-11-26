@@ -2,7 +2,8 @@
     font-size: 14px;
 }
 
-.van-cell-upload .nut-uploader {
+.van-cell-upload .nut-uploader,
+.excel-import {
     background-image: linear-gradient(to right, #f96033, red);
     margin: 5px 10px;
     padding: 1px 20px;
