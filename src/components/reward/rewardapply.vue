@@ -1116,6 +1116,25 @@ export default {
         }
 
       },
+      // 计算奖惩金额
+      async caculateSum(){
+        const sumValue = this.data.reduce(function(n1,n2){ //sum2 前两个数的和
+            let v1 = 0 , v2 = 0;
+            try {
+              v1 = parseFloat(n1.amount || n1 || 0);
+            } catch (error) {
+              console.log(error);
+            }
+            try {
+              v2 = parseFloat(n2.amount || n2 || 0)
+            } catch (error) {
+              console.log(error);
+            }
+            return v1 + v2 ;
+        }, 0.00);
+        const orgValue = this.item.amount;
+        return {sumValue , orgValue};
+      },
 
       // 用户提交入职登记表函数
       async handleApply() {
@@ -1152,9 +1171,21 @@ export default {
 
         // 如果奖罚明细数据为空，且不存在上传附件，提示请上传附件
         if((this.data == null || this.data.length == 0) && !this.item.files ){
-            await vant.Dialog.alert({
+          await vant.Dialog.alert({
             title: '温馨提示',
             message: `请确认内容是否填写完整，错误：${this.message['files']}！`,
+          });
+          return false;
+        }
+
+        // 校验奖惩明细金额总额是否和申请奖金总额一致
+        const sumValue = await caculateSum().sumValue;
+        const orgValue = await caculateSum().orgValue;
+
+        if( orgValue != sumValue){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `奖罚申请金额(${orgValue})和奖罚明细金额合计${sumValue}不一致，请仔细检查后在提交！`,
           });
           return false;
         }
@@ -1482,6 +1513,18 @@ export default {
             await vant.Dialog.alert({
             title: '温馨提示',
             message: `请确认内容是否填写完整，错误：${this.message['files']}！`,
+          });
+          return false;
+        }
+
+        // 校验奖惩明细金额总额是否和申请奖金总额一致
+        const sumValue = await caculateSum().sumValue;
+        const orgValue = await caculateSum().orgValue;
+
+        if( orgValue != sumValue){
+          await vant.Dialog.alert({
+            title: '温馨提示',
+            message: `奖罚申请金额(${orgValue})和奖罚明细金额合计${sumValue}不一致，请仔细检查后在提交！`,
           });
           return false;
         }
