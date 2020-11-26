@@ -215,6 +215,18 @@ export function isWechat() {
 /**
  * @function 检查是否为微信
  */
+export function isWework() {
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.match(/MicroMessenger/i) == "micromessenger") { //这就是微信用的内置浏览器
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @function 检查是否为微信
+ */
 export function isPCWeb() {
     var ua = navigator.userAgent.toLowerCase();
     var sua = window.localStorage.getItem('system_navigator_useragent') || '';

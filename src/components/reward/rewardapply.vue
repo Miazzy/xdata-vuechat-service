@@ -227,7 +227,7 @@
                   <van-cell-group style="margin-left:5rem;width:45%;" >
                     <van-icon name="add-o" style="position:absolute;top:0px;right:0px;z-index:100;" @click="size <= 6 ? size++ : size;"/>
                     <van-icon name="circle" style="position:absolute;top:45px;right:0px;z-index:100;" @click="size > 0 ? size-- : size;"  />
-                    <download-excel id="reward-download-excel-button"
+                    <download-excel id="reward-download-excel-button" v-if="!iswework"
                       :data="datas"
                       :fields="fields"
                       style="position:absolute;top:7px;right: -160px;z-index:100;"
@@ -236,7 +236,7 @@
                     >
                       下载模板
                     </download-excel>
-                    <download-excel id="reward-items-download-excel-button"
+                    <download-excel id="reward-items-download-excel-button" v-if="!iswework"
                       :data="data"
                       :fields="fields"
                       style="position:absolute;top:7px;right: -300px;z-index:100;"
@@ -457,6 +457,8 @@ export default {
   mixins: [window.mixin],
   data() {
     return {
+      iswechat:false,
+      iswework:false,
       pageName: "奖罚管理",
       momentNewMsg: true,
       activeTabKey: 3,
@@ -1081,6 +1083,7 @@ export default {
         try {
 
           this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.iswework = tools.isWework(); //查询是否为企业微信
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
