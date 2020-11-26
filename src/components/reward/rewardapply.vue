@@ -316,6 +316,7 @@
                     </a-col>
                     <a-col :span="8">
                       <a-input v-model="release_amount" placeholder="请输入奖罚明细中的奖罚金额！" style="border: 0px solid #fefefe;  border-bottom: 1px solid #f0f0f0; width: 320px; " />
+                      <span style="color:red;font-size:0.6rem;display:block;margin-top:15px;">奖项金额，正数表示为奖励、激励，负数表示为罚款！</span>
                     </a-col>
                     <div style="position:absolute; right: 5px; top: -2px;">
                       <van-button name="file" @click="rewardRelease();"  >分配</van-button>
@@ -1672,59 +1673,47 @@ export default {
       // 执行奖罚明细分配函数
       async rewardRelease(){
 
-        try {
-          if(this.release_username && !this.release_userid){
-            return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
-          }
-          if(!this.release_username || !this.release_userid){
-            return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
-          }
-          if(!this.release_amount){
-            return this.$toast.fail('请输入奖罚明细的分配金额！');
-          }
-          if(!this.item.reward_release_feature){
-            return this.$toast.fail('请输入奖罚申请的分配性质！');
-          }
-          if(!this.item.reward_release_period){
-            return this.$toast.fail('请输入奖罚申请的发放周期！');
-          }
-          if(!/^[0-9]+.{0,1}[0-9]{0,2}$/g.test(this.release_amount)){
-            return this.$toast.fail('请在分配金额处输入数字！');
-          }
-        } catch (error) {
-          console.log(error);
+        if(!this.release_amount){
+          return this.$toast.fail('请输入奖罚明细的分配金额！');
+        }
+        if(!this.item.reward_release_feature){
+          return this.$toast.fail('请输入奖罚申请的分配性质！');
+        }
+        if(!this.item.reward_release_period){
+          return this.$toast.fail('请输入奖罚申请的发放周期！');
+        }
+        if(!/^[0-9]+.{0,1}[0-9]{0,2}$/g.test(this.release_amount)){
+          return this.$toast.fail('请在分配金额处输入数字！');
         }
 
-        try {
-          //查询用户数据是否已经被分配过
-          const findElem = this.data.find( item => {
-            return item.username == this.release_username;
-          })
-          //用户数据已经被分配过，无法再次分配
-          if(findElem && findElem.username == this.release_username){
-            return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        if(/[,|，]/.test(this.release_username)){ //如果包含逗号，则表示批量添加
 
-        try {
-          this.data.push({
-            key: tools.queryUniqueID(),
-            type: this.item.reward_release_feature,
-            period: this.item.reward_release_period,
-            username: `${this.release_username}`,
-            account: `${this.release_userid}`,
-            company: `${this.release_company}`,
-            department: `${this.release_department}`,
-            position: `${this.release_position}`,
-            mobile: `${this.release_mobile}`,
-            amount: `${parseFloat(this.release_amount).toFixed(2)}`,
-            v_message:'',
-            v_status: 'valid',
-          });
-        } catch (error) {
-          console.log(error);
+          const list = this.release_username.split(/[,|，]/);
+
+          for(const username of list){
+            let user = await manageAPI.queryUserByNameHRM(username.trim(),200);
+            user = user[0];
+            let company = user.textfield1.split('||')[0];
+            company = company.slice(company.lastIndexOf('>')+1);
+            let department = user.textfield1.split('||')[1];
+            department = department.slice(department.lastIndexOf('>')+1);
+            //查询员工职务
+            const temp = await query.queryUserInfoByMobile(user.mobile);
+            this.rewardAddUser(username , user.loginid , company , department , temp.position , this.release_amount);
+          }
+
+        } else {//如果不包含逗号，则使用默认方式
+          try {
+            if(this.release_username && !this.release_userid){
+              return this.$toast.fail('未找到此分配人员，请确认分配人员是否为公司员工！');
+            }
+            if(!this.release_username || !this.release_userid){
+              return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
+            }
+            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , this.release_position , this.release_amount);
+          } catch (error) {
+            console.log(error);
+          }
         }
 
         try {
@@ -1740,6 +1729,40 @@ export default {
           console.log(error);
         }
 
+      },
+
+      async rewardAddUser(username = this.release_username, userid = this.release_userid , company = this.release_company , department = this.release_department , position = this.release_position , amount = this.release_amount){
+        try {
+            //查询用户数据是否已经被分配过
+            const findElem = this.data.find( item => {
+              return item.username == username;
+            })
+            //用户数据已经被分配过，无法再次分配
+            if(findElem && findElem.username == this.release_username){
+              return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
+          try {
+            this.data.push({
+              key: tools.queryUniqueID(),
+              type: this.item.reward_release_feature,
+              period: this.item.reward_release_period,
+              username: username,
+              account: userid,
+              company: company,
+              department: department,
+              position: position,
+              mobile: '',
+              amount: `${parseFloat(amount).toFixed(2)}`,
+              v_message:'',
+              v_status: 'valid',
+            });
+          } catch (error) {
+            console.log(error);
+          }
       },
 
       // 审批人员添加函数
