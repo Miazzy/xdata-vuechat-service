@@ -236,6 +236,15 @@
                     >
                       下载模板
                     </download-excel>
+                    <download-excel id="reward-items-download-excel-button"
+                      :data="data"
+                      :fields="fields"
+                      style="position:absolute;top:7px;right: -300px;z-index:100;"
+                      worksheet="奖罚明细"
+                      name="奖罚明细.xls"
+                    >
+                      下载明细
+                    </download-excel>
 
                     <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
 
@@ -551,15 +560,15 @@ export default {
     this.queryInfo();
   },
   methods: {
+      // Excel文件解析成功
       onSuccess(data, file){
-        console.log(data)
-        let trows = data[0].data;
         try {
+          let trows = data[0].data;
           for(let item of trows){
             this.data.push({
               key: tools.queryUniqueID(),
               type: item['分配性质'],
-              period: item['发放期间'],
+              period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,""),
               username: item['员工姓名'],
               account: item['员工OA'],
               company: item['所属单位'],
@@ -572,7 +581,6 @@ export default {
         } catch (error) {
           console.log(error);
         }
-        debugger;
       },
       onChange(event) {
         this.file = event.target.files ? event.target.files[0] : null;
@@ -590,9 +598,16 @@ export default {
         // 定义待遍历数据
         let trows = [] ;
         // 获取excel文档数据
-        const rows = await readXlsxFile($e.target.files[0]);
-        // trows过滤掉第一组数据
-        [_, ...trows] = rows;
+        let rows = [];
+
+        try {
+          rows = await readXlsxFile($e.target.files[0]);
+          // trows过滤掉第一组数据
+          [_, ...trows] = rows;
+        } catch (error) {
+          console.log(error);
+        }
+
         // 重置数据
         this.data = [];
 
@@ -1697,6 +1712,19 @@ export default {
 
 
 #reward-download-excel-button {
+    background-image: linear-gradient(to right, #f96033, red);
+    margin: 10px 10px 10px 10px;
+    padding: 1px 20px;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+    height: 27px;
+    line-height: 27px;
+}
+
+#reward-items-download-excel-button {
     background-image: linear-gradient(to right, #f96033, red);
     margin: 10px 10px 10px 10px;
     padding: 1px 20px;
