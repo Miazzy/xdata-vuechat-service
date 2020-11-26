@@ -249,9 +249,6 @@
                     <van-cell title="奖罚明细" class="van-cell-upload" :label="item.files.slice(0,30)">
 
                       <template #right-icon>
-                        <!--
-                        <nut-uploader :acceptType="acceptType" name="file" :url="uploadURL" :beforeUpload="beforeUpload" @start="toastUpload('start');" @fail="toastUpload('fail');" @success="uploadSuccess"  typeError="对不起，不支持上传该类型文件！" limitError="对不起，文件大小超过限制！" >上传</nut-uploader>
-                         -->
                         <excel-import :on-success="onSuccess">
                           <div>导入</div>
                         </excel-import>
@@ -590,45 +587,6 @@ export default {
         } else if(flag == 'fail'){
           this.$toast.success('文件上传失败，请稍后重试！');
         }
-      },
-      async beforeUpload($e) {
-
-        // 定义待遍历数据
-        let trows = [] ;
-        // 获取excel文档数据
-        let rows = [];
-
-        try {
-          rows = await readXlsxFile($e.target.files[0]);
-          // trows过滤掉第一组数据
-          [_, ...trows] = rows;
-        } catch (error) {
-          console.log(error);
-        }
-
-        // 重置数据
-        this.data = [];
-
-        try {
-          for(let item of trows){
-            this.data.push({
-              key: tools.queryUniqueID(),
-              type: this.item.reward_release_feature,
-              period: this.item.reward_release_period,
-              username: item[2],
-              account: item[3],
-              company: item[4],
-              department: item[5],
-              position: item[6],
-              mobile: '',
-              amount: item[7],
-            });
-          }
-        } catch (error) {
-          console.log(error);
-        }
-
-        return { event:$e };
       },
       // 上传文件成功后回调函数
       async uploadSuccess(file , res){
@@ -1115,7 +1073,7 @@ export default {
 
       },
       // 计算奖惩金额
-      async caculateSum(){
+      caculateSum(){
         const sumValue = this.data.reduce(function(n1,n2){ //sum2 前两个数的和
             let v1 = 0 , v2 = 0;
             try {
@@ -1177,8 +1135,8 @@ export default {
         }
 
         // 校验奖惩明细金额总额是否和申请奖金总额一致
-        const sumValue = await caculateSum().sumValue;
-        const orgValue = await caculateSum().orgValue;
+        const sumValue = caculateSum().sumValue;
+        const orgValue = caculateSum().orgValue;
 
         if( orgValue != sumValue){
           await vant.Dialog.alert({
@@ -1516,8 +1474,8 @@ export default {
         }
 
         // 校验奖惩明细金额总额是否和申请奖金总额一致
-        const sumValue = await caculateSum().sumValue;
-        const orgValue = await caculateSum().orgValue;
+        const sumValue = caculateSum().sumValue;
+        const orgValue = caculateSum().orgValue;
 
         if( orgValue != sumValue){
           await vant.Dialog.alert({
