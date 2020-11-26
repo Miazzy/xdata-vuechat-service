@@ -45,12 +45,12 @@ export async function queryPRLogByDataID(business_data_id) {
     var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
-    var cache = storage.getStore(`sys_workflow_cache@$now&id${business_data_id}`);
+    // var cache = storage.getStore(`sys_workflow_cache@$now&id${business_data_id}`);
 
-    //返回缓存值
-    if (typeof cache != 'undefined' && cache != null && cache != '') {
-        return cache;
-    }
+    // //返回缓存值
+    // if (typeof cache != 'undefined' && cache != null && cache != '') {
+    //     return cache;
+    // }
 
     try {
         var res = await superagent.get(queryURL).set('accept', 'json');
