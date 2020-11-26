@@ -437,19 +437,17 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 // import readXlsxFile from 'read-excel-file';
-import { ExcelImport } from 'pikaz-excel-js'
+// import { ExcelImport } from 'pikaz-excel-js';
 
 try {
   Vue.component("downloadExcel", JsonExcel);
+  Vue.component("excelImport", PikazJsExcel.ExcelImport);
 } catch (error) {
   console.log(error);
 }
 
 export default {
   mixins: [window.mixin],
-  components: {
-      ExcelImport,
-  },
   data() {
     return {
       pageName: "奖罚管理",
