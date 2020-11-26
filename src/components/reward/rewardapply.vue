@@ -1135,8 +1135,8 @@ export default {
         }
 
         // 校验奖惩明细金额总额是否和申请奖金总额一致
-        const sumValue = caculateSum().sumValue;
-        const orgValue = caculateSum().orgValue;
+        const sumValue = this.caculateSum().sumValue;
+        const orgValue = this.caculateSum().orgValue;
 
         if( orgValue != sumValue){
           await vant.Dialog.alert({
@@ -1474,8 +1474,8 @@ export default {
         }
 
         // 校验奖惩明细金额总额是否和申请奖金总额一致
-        const sumValue = caculateSum().sumValue;
-        const orgValue = caculateSum().orgValue;
+        const sumValue = this.caculateSum().sumValue;
+        const orgValue = this.caculateSum().orgValue;
 
         if( orgValue != sumValue){
           await vant.Dialog.alert({
