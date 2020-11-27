@@ -619,15 +619,13 @@ export default {
       onSuccess(data, file){
         try {
           let trows = data[0].data;
-          let ratio = 0.0;
+          let ratio = 0.00;
           for(let item of trows){
-
             try {
-              ratio = parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
+              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
             } catch (error) {
-              console.log(error);
+              ratio = 0.00;
             }
-
             this.data.push({
               key: tools.queryUniqueID(),
               type: item['分配性质'],
@@ -1696,6 +1694,9 @@ export default {
       // 执行奖罚明细分配函数
       async rewardRelease(){
 
+        if(!this.item.amount){
+          return this.$toast.fail('请先输入申请奖金总额！');
+        }
         if(!this.release_amount){
           return this.$toast.fail('请输入奖罚明细的分配金额！');
         }
@@ -1768,11 +1769,11 @@ export default {
                 message: `用户(${username})已经在奖惩分配列表中，请确认添加奖惩明细！`,
               }).then(()=>{
                 try {
-                  let ratio = 0.0;
+                  let ratio = 0.00;
                   try {
-                    ratio = parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
+                    ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
                   } catch (error) {
-                    console.log(error);
+                    ratio = 0.00;
                   }
                   this.data.push({
                     key: tools.queryUniqueID(),
@@ -1801,14 +1802,12 @@ export default {
           }
 
           try {
-            let ratio = 0.0;
-
+            let ratio = 0.00;
             try {
-              ratio = parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
+              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
             } catch (error) {
-              console.log(error);
+              ratio = 0.00;
             }
-
             this.data.push({
               key: tools.queryUniqueID(),
               type: this.item.reward_release_feature,
