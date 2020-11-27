@@ -344,15 +344,15 @@
                 <div class="reward-apply-content-item reward-apply-content-title" style="width:100%;">
                   <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;width:100%;height:auto;" >
                     <vue-excel-editor v-model="data" ref="grid" width="100%" :page="20" :no-num-col="false" :readonly="false" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
-                        <vue-excel-column field="type"        label="分配性质"   width="60px" />
+                        <vue-excel-column field="type"        label="分配性质"   width="80px" />
                         <vue-excel-column field="period"      label="发放期间"   width="100px" />
-                        <vue-excel-column field="username"    label="员工姓名"   width="120px" />
-                        <vue-excel-column field="account"     label="员工OA"    width="120px" />
+                        <vue-excel-column field="username"    label="员工姓名"   width="80px" />
+                        <vue-excel-column field="account"     label="员工OA"    width="80px" />
                         <vue-excel-column field="company"     label="所属单位"   width="100px" />
                         <vue-excel-column field="department"  label="所属部门"   width="100px" />
                         <vue-excel-column field="position"    label="员工职务"   width="100px" />
                         <vue-excel-column field="amount"      label="分配金额"   width="100px" />
-                        <vue-excel-column field="ratio"      label="分配比率"   width="60px" />
+                        <vue-excel-column field="ratio"      label="分配比率"   width="80px" />
                         <vue-excel-column field="v_message"     label="抄送"    width="150px" />
                         <vue-excel-column field="v_status"      label="状态"    width="60px" type="map" :options="statusType" />
                     </vue-excel-editor>
@@ -623,7 +623,7 @@ export default {
           for(let item of trows){
 
             try {
-              ratio = parseFloat(item['分配金额'] / this.item.amount).toFixed(2);
+              ratio = parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
             } catch (error) {
               console.log(error);
             }
@@ -1770,7 +1770,7 @@ export default {
                 try {
                   let ratio = 0.0;
                   try {
-                    ratio = parseFloat(parseFloat(amount) / this.item.amount).toFixed(2);
+                    ratio = parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
                   } catch (error) {
                     console.log(error);
                   }
@@ -1801,19 +1801,28 @@ export default {
           }
 
           try {
+            let ratio = 0.0;
+
+            try {
+              ratio = parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
+            } catch (error) {
+              console.log(error);
+            }
+
             this.data.push({
-            key: tools.queryUniqueID(),
-            type: this.item.reward_release_feature,
-            period: this.item.reward_release_period,
-            username: username,
-            account: userid,
-            company: company,
-            department: department,
-            position: position,
-            mobile: '',
-            amount: `${parseFloat(amount).toFixed(2)}`,
-            v_message:'',
-            v_status: 'valid',
+              key: tools.queryUniqueID(),
+              type: this.item.reward_release_feature,
+              period: this.item.reward_release_period,
+              username: username,
+              account: userid,
+              company: company,
+              department: department,
+              position: position,
+              mobile: '',
+              amount: `${parseFloat(amount).toFixed(2)}`,
+              ratio: ratio,
+              v_message:'',
+              v_status: 'valid',
             });
           } catch (error) {
             console.log(error);
