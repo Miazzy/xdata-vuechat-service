@@ -327,7 +327,7 @@
                     </a-col>
                     <a-col :span="9">
                       <div style="margin-left: 10px;">
-                        <van-address-list v-show="release_userlist.length > 0" v-model="release_userid" :list="release_userlist" default-tag-text="默认" edit-disabled @select="selectReleaseUser();" />
+                        <van-address-list v-show="release_userlist.length > 0" v-model="release_userid" :list="release_userlist" default-tag-text="默认" edit-disabled @select="selectReleaseUser" />
                       </div>
                     </a-col>
                   </a-row>
@@ -791,7 +791,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
+            let user = await manageAPI.queryUserByNameReward(user_admin_name.trim(),200);
 
             if(!!user){
 
@@ -875,7 +875,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
+            let user = await manageAPI.queryUserByNameReward(user_admin_name.trim(),200);
 
             if(!!user){
 
@@ -955,19 +955,32 @@ export default {
       },
 
       //选中当前知会人员
-      async selectReleaseUser(value){
-        //获取员工基本信息
-        const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id});
-        //设置员工
-        this.release_username = user.name;
-        this.release_company = user.company;
-        this.release_department = user.department;
-        this.release_mobile = user.mobile;
+      async selectReleaseUser(record , value){
 
-        //查询员工职务
-        const temp = await query.queryUserInfoByMobile(user.mobile);
-        //设置员工职务
-        this.release_position = temp.position;
+        if(tools.isNull(record)){
+          //获取员工基本信息
+          const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id});
+          //设置员工
+          this.release_username = user.name;
+          this.release_company = user.company;
+          this.release_department = user.department;
+          this.release_mobile = user.mobile;
+          //查询员工职务
+          const temp = await query.queryUserInfoByMobile(user.mobile);
+          //设置员工职务
+          this.release_position = temp.position;
+        } else {
+          this.release_username = record.name;
+          this.release_userid = record.id;
+          this.release_company = record.company;
+          this.release_department = record.department;
+          this.release_mobile = record.mobile;
+          //查询员工职务
+          const temp = await query.queryUserInfoByMobile(record.mobile);
+          //设置员工职务
+          this.release_position = temp.position;
+          console.log(`record: ${JSON.stringify(record)} , value: ${value}`);
+        }
       },
 
       async queryApproveMan(){
@@ -984,7 +997,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim(),100);
+            let user = await manageAPI.queryUserByNameReward(user_admin_name.trim(),200);
 
             if(!!user){
 
@@ -1691,7 +1704,7 @@ export default {
           const list = this.release_username.split(/[,|，]/);
 
           for(const username of list){
-            let user = await manageAPI.queryUserByNameHRM(username.trim(),200);
+            let user = await manageAPI.queryUserByNameReward(username.trim(),200);
             user = user[0];
             let company = user.textfield1.split('||')[0];
             company = company.slice(company.lastIndexOf('>')+1);
@@ -1732,14 +1745,39 @@ export default {
       },
 
       async rewardAddUser(username = this.release_username, userid = this.release_userid , company = this.release_company , department = this.release_department , position = this.release_position , amount = this.release_amount){
-        try {
+
+          try {
             //查询用户数据是否已经被分配过
             const findElem = this.data.find( item => {
-              return item.username == username;
+              return item.username == username && item.account == userid;
             })
             //用户数据已经被分配过，无法再次分配
-            if(findElem && findElem.username == this.release_username){
-              return this.$toast.fail('您输入的用户已经在分配列表中，请重新填写！');
+            if(findElem && findElem.username == username && findElem.account == userid){
+              return vant.Dialog.confirm({
+                title: '温馨提示',
+                message: `用户(${username})已经在奖惩分配列表中，请确认添加奖惩明细！`,
+              }).then(()=>{
+                try {
+                  this.data.push({
+                    key: tools.queryUniqueID(),
+                    type: this.item.reward_release_feature,
+                    period: this.item.reward_release_period,
+                    username: username,
+                    account: userid,
+                    company: company,
+                    department: department,
+                    position: position,
+                    mobile: '',
+                    amount: `${parseFloat(amount).toFixed(2)}`,
+                    v_message:'',
+                    v_status: 'valid',
+                  });
+                } catch (error) {
+                  console.log(error);
+                }
+              }).catch(() => {
+                return false;
+              })
             }
           } catch (error) {
             console.log(error);
@@ -1747,22 +1785,23 @@ export default {
 
           try {
             this.data.push({
-              key: tools.queryUniqueID(),
-              type: this.item.reward_release_feature,
-              period: this.item.reward_release_period,
-              username: username,
-              account: userid,
-              company: company,
-              department: department,
-              position: position,
-              mobile: '',
-              amount: `${parseFloat(amount).toFixed(2)}`,
-              v_message:'',
-              v_status: 'valid',
+            key: tools.queryUniqueID(),
+            type: this.item.reward_release_feature,
+            period: this.item.reward_release_period,
+            username: username,
+            account: userid,
+            company: company,
+            department: department,
+            position: position,
+            mobile: '',
+            amount: `${parseFloat(amount).toFixed(2)}`,
+            v_message:'',
+            v_status: 'valid',
             });
           } catch (error) {
             console.log(error);
           }
+
       },
 
       // 审批人员添加函数
