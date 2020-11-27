@@ -355,51 +355,11 @@ export default {
           this.role = await storage.getStore('system_role_rights');
           this.userinfo = await query.queryWeworkUser();
           const userinfo = await storage.getStore('system_userinfo');
-
           // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const etimestamp = await storage.getStore('system_role_rights_expire');
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
-
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
-            this.role = 'view';
-            let resp = null;
-            resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',COMMON_RECEIVE_BORROW';
-            };
-            resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',SEAL_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',SEAL_FRONT_SERVICE';
-            };
-            resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',SEAL_ARCHIVE_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',COMMON_AUTH_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',JOB_HR_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',JOB_EXEC_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',JOB_FRONT_ADMIN';
-            };
-            resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
-            if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-              this.role += ',JOB_MEAL_ADMIN';
-            };
-            storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
+            this.queryRoleInfo(userinfo , null , 'view');
           }
           return this.userinfo;
         },
@@ -411,6 +371,47 @@ export default {
           } catch (error) {
             console.log(error);
           }
+        },
+        async queryRoleInfo(userinfo , resp = null , role = ''){
+          resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',COMMON_RECEIVE_BORROW';
+          };
+          resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',SEAL_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',SEAL_FRONT_SERVICE';
+          };
+          resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',SEAL_ARCHIVE_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',COMMON_AUTH_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',JOB_HR_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',JOB_EXEC_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',JOB_FRONT_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',JOB_MEAL_ADMIN';
+          };
+          storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
+          this.role = role;
+          return role;
         },
         async userLogin(){
 
