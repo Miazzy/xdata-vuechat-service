@@ -345,16 +345,17 @@
                   <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;width:100%;height:auto;" >
                     <vue-excel-editor v-model="data" ref="grid" width="100%" :page="20" :no-num-col="false" :readonly="false" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
                         <vue-excel-column field="type"        label="分配性质"   width="80px" />
-                        <vue-excel-column field="period"      label="发放期间"   width="100px" />
+                        <vue-excel-column field="period"      label="发放期间"   width="80px" />
                         <vue-excel-column field="username"    label="员工姓名"   width="80px" />
                         <vue-excel-column field="account"     label="员工OA"    width="80px" />
                         <vue-excel-column field="company"     label="所属单位"   width="100px" />
                         <vue-excel-column field="department"  label="所属部门"   width="100px" />
+                        <vue-excel-column field="zone"        label="所属区域"   width="100px" type="map" :options="zoneType" />
                         <vue-excel-column field="position"    label="员工职务"   width="100px" />
                         <vue-excel-column field="amount"      label="分配金额"   width="100px" />
-                        <vue-excel-column field="ratio"      label="分配比率"   width="80px" />
-                        <vue-excel-column field="v_message"     label="抄送"    width="150px" />
-                        <vue-excel-column field="v_status"      label="状态"    width="60px" type="map" :options="statusType" />
+                        <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
+                        <vue-excel-column field="message"     label="抄送"      width="120px" />
+                        <vue-excel-column field="v_status"    label="状态"      width="60px" type="map" :options="statusType" />
                     </vue-excel-editor>
                    </a-row>
                 </div>
@@ -561,6 +562,7 @@ export default {
             },],
       collection: [{ }],
       statusType:{'valid':'有效','invalid':'删除'},
+      zoneType:{'集团总部':'集团总部','重庆区域':'重庆区域','两湖区域':'两湖区域','川北区域':'川北区域','成都区域':'成都区域','乐眉区域':'乐眉区域','中原区域':'中原区域','攀西区域':'攀西区域','新疆区域':'新疆区域','大湾区域':'大湾区域','北京区域':'北京区域'},
     };
   },
   activated() {
@@ -598,7 +600,7 @@ export default {
           const item = temp.find( item => { return item.$id == record.$id });
           const elem = new Object() ;
           elem[record.name] = record.newVal ;
-          if(record.name == 'v_message'){
+          if(record.name == 'message'){
             let list = await manageAPI.queryUserByLoginID(record.newVal);
             const rlist = record.newVal.split(',');
             list = list.filter( (item,index) => {
@@ -638,7 +640,7 @@ export default {
               mobile: '',
               amount: item['分配金额'],
               ratio: ratio,
-              v_message:'',
+              message:'',
               v_status: 'valid',
             });
           }
@@ -1317,7 +1319,6 @@ export default {
                     delete item.$id;
                     delete item.key;
                     delete item.v_status;
-                    delete item.v_message;
                     await manageAPI.postTableData('bs_reward_items' , item);
                   }
 
@@ -1655,7 +1656,6 @@ export default {
                     delete item.$id;
                     delete item.key;
                     delete item.v_status;
-                    delete item.v_message;
                     await manageAPI.postTableData('bs_reward_items' , item);
                   }
 
@@ -1787,7 +1787,7 @@ export default {
                     mobile: '',
                     amount: `${parseFloat(amount).toFixed(2)}`,
                     ratio: ratio,
-                    v_message:'',
+                    message:'',
                     v_status: 'valid',
                   });
                 } catch (error) {
@@ -1820,7 +1820,7 @@ export default {
               mobile: '',
               amount: `${parseFloat(amount).toFixed(2)}`,
               ratio: ratio,
-              v_message:'',
+              message:'',
               v_status: 'valid',
             });
           } catch (error) {
