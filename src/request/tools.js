@@ -278,7 +278,7 @@ export function queryZoneProjectAll(company, cnamelist = ['领地集团有限公
                 let temp = queryZoneProject(company, `>${name}>`);
                 company = name;
                 zone = temp.zone;
-                project = project ? project : temp.project;
+                project = !temp.project ? project : temp.project;
                 break;
             }
         }
