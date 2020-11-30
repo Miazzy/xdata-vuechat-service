@@ -268,22 +268,23 @@ export function queryZoneProject(company = '', name, zone = '', project = '') {
 }
 
 export function queryZoneProjectAll(company, cnamelist = ['领地集团有限公司', '领悦服务', '宝瑞商管', '医疗健康板块', '金融板块', '邛崃创达公司'], department = '') {
+    debugger;
     try {
         let zone = '';
-        let project = '';
-        department = department.slice(department.lastIndexOf('>') + 1);
+        let project = department ? department.slice(0, department.lastIndexOf('>')) : '';
+        department = department ? department.slice(department.lastIndexOf('>') + 1) : '';
         for (const name of cnamelist) {
             if (company.includes(`>${name}>`)) {
                 let temp = queryZoneProject(company, `>${name}>`);
                 company = name;
                 zone = temp.zone;
-                project = temp.project;
+                project = project ? project : temp.project;
                 break;
             }
         }
-        return { company, zone, project, department }
+        return { company, zone, project, department };
     } catch (error) {
-        return { company, zone: '', project: '', department }
+        return { company, zone: '', project: '', department };
     }
 }
 

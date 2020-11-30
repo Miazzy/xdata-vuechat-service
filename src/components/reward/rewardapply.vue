@@ -351,6 +351,7 @@
                         <vue-excel-column field="company"     label="所属单位"   width="100px" />
                         <vue-excel-column field="department"  label="所属部门"   width="100px" />
                         <vue-excel-column field="zone"        label="所属区域"   width="100px" />
+                        <vue-excel-column field="project"     label="项目/中心"  width="100px" />
                         <vue-excel-column field="position"    label="员工职务"   width="100px" />
                         <vue-excel-column field="amount"      label="分配金额"   width="100px" />
                         <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
@@ -634,7 +635,7 @@ export default {
               let elem = { key: tools.queryUniqueID(), type: item['分配性质'], period: item['发放期间'].replace(regexp,""), username: item['员工姓名'], account: item['员工OA'], company: item['所属单位'], department: item['所属部门'], position: item['员工职务'], mobile: '', amount: item['分配金额'], ratio, zone:'', message:'',  v_status: 'valid', }
               if(list && list.length > 0){
                 const user = list[0];
-                let temp = tools.queryZoneProjectAll(user.company.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+                let temp = tools.queryZoneProjectAll(user.company.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司'], user.company.split('||')[1]);
                 elem.username =  user.name;
                 elem.account = user.loginid;
                 elem.company = temp.company;
@@ -1693,11 +1694,9 @@ export default {
             try {
               let user = await manageAPI.queryUserByNameReward(username.trim(),200);
               user = user[0];
-              let department = user.textfield1.split('||')[1];
-              department = department.slice(department.lastIndexOf('>')+1);
-              const temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+              const temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司'], user.textfield1.split('||')[1]);
               const temp_ = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
-              await this.rewardAddUser(username , user.loginid , temp.company , department , temp.zone , temp.project , temp_.position , this.release_amount);
+              await this.rewardAddUser(username , user.loginid , temp.company , temp.department , temp.zone , temp.project , temp_.position , this.release_amount);
             } catch (error) {
               console.log(error);
             }
