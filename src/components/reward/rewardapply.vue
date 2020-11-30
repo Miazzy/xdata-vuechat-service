@@ -634,7 +634,7 @@ export default {
             const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101); //查询OA账户，获取员工单位，部门，区域
             ratio = tools.divisionPercentage(item['分配金额'] , this.item.amount);
             try {
-              let elem = { key: tools.queryUniqueID(), type: item['分配性质'], period: item['发放期间'].replace(regexp,""), username: item['员工姓名'], account: item['员工OA'], company: item['所属单位'], department: item['所属部门'], position: item['员工职务'], mobile: '', amount: item['分配金额'], ratio, zone:'', message:'',  v_status: 'valid', }
+              let elem = { key: tools.queryUniqueID(), type: item['分配性质'], period: item['发放期间'].replace(regexp,""), username: item['员工姓名'], account: item['员工OA'], company: item['所属单位'], department: item['所属部门'], position: item['员工职务'], mobile: '', amount: item['分配金额'], ratio, zone:'', project: item['所属项目'], message:'',  v_status: 'valid', }
               if(list && list.length > 0){
                 const user = list[0];
                 let temp = tools.queryZoneProjectAll(user.company.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司'], user.company.split('||')[1]);
@@ -645,7 +645,7 @@ export default {
                 elem.position = user.position;
                 elem.mobile = user.mobile;
                 elem.zone = temp.zone;
-                elem.project = temp.project;
+                elem.project = elem.project ? elem.project : temp.project;
               }
               this.data.push(elem);
             } catch (error) {
