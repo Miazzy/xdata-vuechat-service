@@ -289,6 +289,44 @@ export function queryZoneProjectAll(company, cnamelist = ['领地集团有限公
 }
 
 /**
+ * @function 动态加载JS
+ */
+export const loadScript = (function() {
+    let caches = [] //缓存列表
+
+    return url => { //js静态地址
+        if (caches.includes(url)) return Promise.resolve()
+
+        return new Promise((resolve, reject) => {
+            let script = document.createElement('script')
+            script.type = 'text/javascript'
+
+            if (script.readyState) {
+                script.onreadystatechange = function() {
+                    if (script.readyState == 'loaded' || script.readyState == 'complete') {
+                        script.onreadystatechange = null
+                        caches.push(url)
+                        resolve()
+                    }
+                }
+            } else {
+                script.onload = function() {
+                    caches.push(url)
+                    resolve()
+                }
+                script.onerror = function() {
+                    console.log('load js fail:' + url)
+                    reject()
+                }
+            }
+
+            script.src = url
+            document.body.appendChild(script)
+        })
+    }
+})()
+
+/**
  * 随机生成字符串
  * @param length 字符串的长度
  * @param chats 可选字符串区间（只会生成传入的字符串中的字符）

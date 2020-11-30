@@ -353,8 +353,8 @@
                         <vue-excel-column field="project"     label="项目/中心"  width="100px" />
                         <vue-excel-column field="department"  label="所属部门"   width="80px" />
                         <vue-excel-column field="position"    label="员工职务"   width="80px" />
-                        <vue-excel-column field="amount"      label="分配金额"   width="80px" />
-                        <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
+                        <vue-excel-column field="amount"      label="分配金额"   width="80px" summary="sum" />
+                        <vue-excel-column field="ratio"       label="分配比率"   width="80px" summary="sum" />
                         <vue-excel-column field="message"     label="抄送"      width="80px" />
                         <vue-excel-column field="v_status"    label="状态"      width="60px" type="map" :options="statusType" />
                     </vue-excel-editor>

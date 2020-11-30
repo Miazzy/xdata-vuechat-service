@@ -45,8 +45,23 @@
 
                 <div class="reward-apply-content-item reward-apply-content-title" style="">
                   <a-row style="border-top: 1px dash #f0f0f0;margin:0px 5rem;" >
-                    <a-table :columns="columns" :data-source="data">
-                    </a-table>
+                    <!-- <a-table :columns="columns" :data-source="data">
+                    </a-table> -->
+                    <vue-excel-editor v-model="data" ref="grid" width="100%" :page="20" :no-num-col="false" :readonly="false" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+                        <vue-excel-column field="type"        label="分配性质"   width="80px" />
+                        <vue-excel-column field="period"      label="发放期间"   width="80px" />
+                        <vue-excel-column field="username"    label="员工姓名"   width="80px" />
+                        <vue-excel-column field="account"     label="员工OA"    width="80px" />
+                        <vue-excel-column field="company"     label="所属单位"   width="100px" />
+                        <vue-excel-column field="zone"        label="所属区域"   width="100px" />
+                        <vue-excel-column field="project"     label="项目/中心"  width="100px" />
+                        <vue-excel-column field="department"  label="所属部门"   width="80px" />
+                        <vue-excel-column field="position"    label="员工职务"   width="80px" />
+                        <vue-excel-column field="amount"      label="分配金额"   width="80px" />
+                        <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
+                        <vue-excel-column field="message"     label="抄送"      width="80px" />
+                        <vue-excel-column field="v_status"    label="状态"      width="60px" type="map" :options="statusType" />
+                    </vue-excel-editor>
                    </a-row>
                 </div>
 
@@ -159,6 +174,8 @@ export default {
       workflowLogList:[],
       bpm_status:'',
       proponents:'',
+      statusType:{'valid':'有效','invalid':'删除'},
+      zoneType:{'领地集团总部':'领地集团总部','重庆区域':'重庆区域','两湖区域':'两湖区域','川北区域':'川北区域','成都区域':'成都区域','乐眉区域':'乐眉区域','中原区域':'中原区域','攀西区域':'攀西区域','新疆区域':'新疆区域','大湾区域':'大湾区域','北京区域':'北京区域'},
     };
   },
   activated() {
@@ -168,6 +185,12 @@ export default {
     this.queryInfo();
   },
   methods: {
+      async onDelete(){
+
+      },
+      async onUpdate(){
+
+      },
       //上传提示
       async toastUpload(flag){
         if(flag == 'start'){
@@ -214,6 +237,7 @@ export default {
           return this.$toast.fail('请输入报表月份！');
         }
         const list = await query.queryRewardDataByID(this.period);
+        debugger;
         this.data = list;
         this.$toast.success(`查询${this.period}月度报表成功！`);
       },
