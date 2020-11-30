@@ -518,6 +518,8 @@ export default {
       release_amount:'',
       release_mobile:'',
       release_userlist:[],
+      release_zone:'',
+      release_project:'',
       approve_userid:'',
       approve_username:'',
       approve_mobile:'',
@@ -902,7 +904,8 @@ export default {
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
                     let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
-                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    let temp = tools.queryZoneProjectAll(elem.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , zone: temp.zone , project: temp.project , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
                   this.release_username = user[0].lastname; //获取盖印人姓名
                   this.release_userid = this.userid = user[0].loginid; //当前盖印人编号
@@ -919,7 +922,8 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
-                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length }); //将用户数据推送至对方数组
+                  let temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , zone: temp.zone , project: temp.project , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length }); //将用户数据推送至对方数组
                   this.release_username = user.lastname; //获取盖印人姓名
                   this.release_userid = this.userid = user.loginid; //当前盖印人编号
                   this.selectReleaseUser();
@@ -958,7 +962,11 @@ export default {
             this.release_company = user.company;
             this.release_department = user.department;
             this.release_mobile = user.mobile;
+            this.release_zone = user.zone;
+            this.release_project = user.project;
+            debugger
             const temp = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
+            debugger;
             this.release_position = temp ? '' : temp.position; //设置员工职务
           } else {
             this.release_username = record.name;
@@ -966,7 +974,11 @@ export default {
             this.release_company = record.company;
             this.release_department = record.department;
             this.release_mobile = record.mobile;
+            this.release_zone = record.zone;
+            this.release_project = record.project;
+            debugger
             const temp = await query.queryUserInfoByMobile(record.mobile); //查询员工职务
+            debugger;
             this.release_position = temp ? '' : temp.position; //设置员工职务
           }
         } catch (error) {
@@ -1726,7 +1738,7 @@ export default {
             if(!this.release_username || !this.release_userid){
               return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
             }
-            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , zone , project , this.release_position , this.release_amount);
+            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , this.release_zone , this.release_project , this.release_position , this.release_amount);
           } catch (error) {
             console.log(error);
           }

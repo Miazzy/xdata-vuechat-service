@@ -244,12 +244,14 @@ export async function queryUserInfoByMobile(mobile) {
 
         //返回缓存值
         if (typeof cache != 'undefined' && cache != null && cache != '') {
+            console.log(`mobile: ${JSON.stringify(cache)}`);
             return cache;
         }
 
         var res = await superagent.get(queryURL).set('accept', 'json');
 
         if (res.body != null && res.body.length > 0) {
+            console.log(`mobile: ${JSON.stringify(res.body)}`);
             storage.setStore(`sys_user_cache_mobile_userinfo${mobile}`, res.body, 3600 * 24 * 7);
         }
 
