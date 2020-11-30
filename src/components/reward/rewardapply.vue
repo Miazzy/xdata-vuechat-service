@@ -899,12 +899,11 @@ export default {
                 try {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
-                    company = company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
                     department = department.slice(department.lastIndexOf('>')+1);
                     let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
                     let temp = tools.queryZoneProjectAll(elem.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
-                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , zone: temp.zone , project: temp.project , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , zone: temp.zone , project: temp.project , address: company + "||" + elem.textfield1.split('||')[1] , company: temp.company , department:department , mail: elem.email , isDefault: !index });
                   })
                   this.release_username = user[0].lastname; //获取盖印人姓名
                   this.release_userid = this.userid = user[0].loginid; //当前盖印人编号
@@ -917,12 +916,11 @@ export default {
 
                 try {
                   let company = user.textfield1.split('||')[0];
-                  company = company.slice(company.lastIndexOf('>')+1);
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
                   let temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
-                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , zone: temp.zone , project: temp.project , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length }); //将用户数据推送至对方数组
+                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , zone: temp.zone , project: temp.project , address: company + "||" + user.textfield1.split('||')[1] , company: temp.company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length }); //将用户数据推送至对方数组
                   this.release_username = user.lastname; //获取盖印人姓名
                   this.release_userid = this.userid = user.loginid; //当前盖印人编号
                   this.selectReleaseUser();
@@ -1709,26 +1707,30 @@ export default {
           const list = this.release_username.split(/[,|，]/);
 
           for(const username of list){
-            let user = await manageAPI.queryUserByNameReward(username.trim(),200);
-            user = user[0];
-            let company = user.textfield1.split('||')[0];
-            let department = user.textfield1.split('||')[1];
-            let zone = '';
-            let project = '';
-            department = department.slice(department.lastIndexOf('>')+1);
-            debugger;
-            for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
-              if(company.includes(`>${name}>`)){
-                let temp = tools.queryZoneProject(company, `>${name}>`);
-                company = name;
-                zone = temp.zone;
-                project = temp.project;
-                break;
+            try {
+              let user = await manageAPI.queryUserByNameReward(username.trim(),200);
+              user = user[0];
+              let company = user.textfield1.split('||')[0];
+              let department = user.textfield1.split('||')[1];
+              let zone = '';
+              let project = '';
+              department = department.slice(department.lastIndexOf('>')+1);
+              debugger;
+              for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
+                if(company.includes(`>${name}>`)){
+                  let temp = tools.queryZoneProject(company, `>${name}>`);
+                  company = name;
+                  zone = temp.zone;
+                  project = temp.project;
+                  break;
+                }
               }
+              //查询员工职务
+              const temp = await query.queryUserInfoByMobile(user.mobile);
+              this.rewardAddUser(username , user.loginid , company , department , zone , project , temp.position , this.release_amount);
+            } catch (error) {
+              console.log(error);
             }
-            //查询员工职务
-            const temp = await query.queryUserInfoByMobile(user.mobile);
-            this.rewardAddUser(username , user.loginid , company , department , zone , project , temp.position , this.release_amount);
           }
 
         } else {//如果不包含逗号，则使用默认方式
