@@ -642,8 +642,17 @@ export default {
 
 
               // 领悦服务 领地集团有限公司 医疗健康 宝瑞商管
-              if(company.includes('领地集团有限公司')){ //如果为领地集团，则获取区域信息
-                let temp = company.split('领地集团有限公司');
+              if(company.includes('>领地集团有限公司>')){ //如果为领地集团，则获取区域信息
+                let temp = company.split('>领地集团有限公司>');
+                console.log(`${temp.toString()}`);
+                if(temp[1].includes('>')){
+                  zone = temp[1].split('>')[0];
+                  project = temp[1].split('>')[1];
+                } else {
+                  zone = temp[1];
+                }
+              } else if(company.includes('>领悦服务>')){ //如果为领地集团，则获取区域信息
+                let temp = company.split('>领悦服务>');
                 console.log(`${temp.toString()}`);
                 if(temp[1].includes('>')){
                   zone = temp[1].split('>')[0];
@@ -666,8 +675,8 @@ export default {
                 position: user.position ,
                 mobile: user.mobile ,
                 amount: item['分配金额'] ,
-                ratio: ratio ,
-                zone: zone,
+                ratio ,
+                zone,
                 project,
                 message:'' ,
                 v_status: 'valid' ,
@@ -684,7 +693,7 @@ export default {
                 position: item['员工职务'],
                 mobile: '',
                 amount: item['分配金额'],
-                ratio: ratio,
+                ratio,
                 zone:'',
                 message:'',
                 v_status: 'valid',
