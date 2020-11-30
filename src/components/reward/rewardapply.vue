@@ -1710,24 +1710,11 @@ export default {
             try {
               let user = await manageAPI.queryUserByNameReward(username.trim(),200);
               user = user[0];
-              let company = user.textfield1.split('||')[0];
               let department = user.textfield1.split('||')[1];
-              let zone = '';
-              let project = '';
               department = department.slice(department.lastIndexOf('>')+1);
-              debugger;
-              for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
-                if(company.includes(`>${name}>`)){
-                  let temp = tools.queryZoneProject(company, `>${name}>`);
-                  company = name;
-                  zone = temp.zone;
-                  project = temp.project;
-                  break;
-                }
-              }
-              //查询员工职务
-              const temp = await query.queryUserInfoByMobile(user.mobile);
-              this.rewardAddUser(username , user.loginid , company , department , zone , project , temp.position , this.release_amount);
+              const temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+              const temp_ = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
+              this.rewardAddUser(username , user.loginid , temp.company , department , temp.zone , temp.project , temp_.position , this.release_amount);
             } catch (error) {
               console.log(error);
             }
