@@ -401,7 +401,6 @@
                 <div v-show="role != 'view' " class="reward-apply-content-item" style="margin-top:35px;margin-bottom:5px; margin-right:10px;">
                    <a-row style="border-top: 1px dash #f0f0f0;" >
                     <a-col :span="8">
-
                     </a-col>
                     <a-col class="reward-apply-content-title-text" :span="4" style="">
                       <a-button type="primary" style="width: 120px;color:c0c0c0;" @click="handleSave();"  >
@@ -414,23 +413,16 @@
                       </a-button>
                     </a-col>
                     <a-col :span="8">
-
                     </a-col>
                    </a-row>
                 </div>
 
                 <div style="height:100px;">
-
                 </div>
-
-
               </div>
-
             </div>
-
           </a-col>
         </keep-alive>
-
       </a-row>
     </div>
   </div>
@@ -616,6 +608,9 @@ export default {
                   message: `请仔细检查OA账户是否有填写错误（抄送：${rlist.toString()}）!`,
                 })
             }
+          } else if(record.name == 'amount'){
+            const temp = this.data.find( item => { return item.$id === record.$id });
+            temp.ratio = tools.divisionPercentage(record.newVal , this.item.amount);
           }
         }
       },
