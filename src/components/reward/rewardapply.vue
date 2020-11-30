@@ -578,7 +578,6 @@ export default {
   methods: {
       onDelete(){
         console.log('delete');
-        debugger;
       },
       async onUpdate(records){
 
@@ -611,7 +610,6 @@ export default {
               const findex = list.findIndex( elem => { return elem.loginid == item.loginid });
               return index == findex;
             })
-            debugger;
             if(list.length != rlist.length){
               return vant.Dialog.confirm({
                   title: '温馨提示',
@@ -961,10 +959,8 @@ export default {
             this.release_mobile = user.mobile;
             this.release_zone = user.zone;
             this.release_project = user.project;
-            debugger
             const temp = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
             console.log(`temp: ${JSON.stringify(temp)}`);
-            debugger;
             this.release_position = temp ? temp.position : ''; //设置员工职务
           } else {
             this.release_username = record.name;
@@ -974,10 +970,8 @@ export default {
             this.release_mobile = record.mobile;
             this.release_zone = record.zone;
             this.release_project = record.project;
-            debugger
             const temp = await query.queryUserInfoByMobile(record.mobile); //查询员工职务
             console.log(`temp: ${JSON.stringify(temp)}`);
-            debugger;
             this.release_position = temp ? temp.position : ''; //设置员工职务
           }
         } catch (error) {
@@ -1714,7 +1708,7 @@ export default {
               department = department.slice(department.lastIndexOf('>')+1);
               const temp = tools.queryZoneProjectAll(user.textfield1.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
               const temp_ = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
-              this.rewardAddUser(username , user.loginid , temp.company , department , temp.zone , temp.project , temp_.position , this.release_amount);
+              await this.rewardAddUser(username , user.loginid , temp.company , department , temp.zone , temp.project , temp_.position , this.release_amount);
             } catch (error) {
               console.log(error);
             }
@@ -1728,7 +1722,7 @@ export default {
             if(!this.release_username || !this.release_userid){
               return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
             }
-            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , this.release_zone , this.release_project , this.release_position , this.release_amount);
+            await this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , this.release_zone , this.release_project , this.release_position , this.release_amount);
           } catch (error) {
             console.log(error);
           }
@@ -1758,35 +1752,28 @@ export default {
             })
             //用户数据已经被分配过，无法再次分配
             if(findElem && findElem.username == username && findElem.account == userid){
-              return vant.Dialog.confirm({
+              await vant.Dialog.confirm({
                 title: '温馨提示',
                 message: `用户(${username})已经在奖惩分配列表中，请确认添加奖惩明细！`,
-              }).then(()=>{
-                try {
-                  let ratio = tools.divisionPercentage(amount , this.item.amount);
-                  this.data.push({
-                    key: tools.queryUniqueID(),
-                    type: this.item.reward_release_feature,
-                    period: this.item.reward_release_period,
-                    username: username,
-                    account: userid,
-                    company: company,
-                    department: department,
-                    position: position,
-                    mobile: '',
-                    amount: `${parseFloat(amount).toFixed(2)}`,
-                    ratio,
-                    zone,
-                    project,
-                    message:'',
-                    v_status: 'valid',
-                  });
-                } catch (error) {
-                  console.log(error);
-                }
-              }).catch(() => {
-                return false;
-              })
+              });
+              let ratio = tools.divisionPercentage(amount , this.item.amount);
+              return this.data.push({
+                key: tools.queryUniqueID(),
+                type: this.item.reward_release_feature,
+                period: this.item.reward_release_period,
+                username: username,
+                account: userid,
+                company: company,
+                department: department,
+                position: position,
+                mobile: '',
+                amount: `${parseFloat(amount).toFixed(2)}`,
+                ratio,
+                zone,
+                project,
+                message:'',
+                v_status: 'valid',
+              });
             }
           } catch (error) {
             console.log(error);
