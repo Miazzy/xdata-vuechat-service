@@ -639,31 +639,14 @@ export default {
               let company = user.company.split('||')[0];
               let zone = '';
               let project = '';
-              // 领悦服务 领地集团有限公司 医疗健康 宝瑞商管 金融板块 邛崃创达公司
-              if(company.includes('>领地集团有限公司>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '>领地集团有限公司>');
-                zone = temp.zone;
-                project = temp.project;
-              } else if(company.includes('>领悦服务>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '>领悦服务>');
-                zone = temp.zone;
-                project = temp.project;
-              } else if(company.includes('>宝瑞商管>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '>宝瑞商管>');
-                zone = temp.zone;
-                project = temp.project;
-              } else if(company.includes('>医疗健康板块>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '>医疗健康板块>');
-                zone = temp.zone;
-                project = temp.project;
-              } else if(company.includes('>金融板块>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '>金融板块>');
-                zone = temp.zone;
-                project = temp.project;
-              } else if(company.includes('邛崃创达公司>')){ //如果为领地集团，则获取区域信息
-                let temp = tools.queryZoneProject(company, '邛崃创达公司>');
-                zone = temp.zone;
-                project = temp.project;
+
+              for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
+                if(company.includes(`>${name}>`)){
+                  let temp = tools.queryZoneProject(company, `>${name}>`);
+                  zone = temp.zone;
+                  project = temp.project;
+                  break;
+                }
               }
 
               this.data.push({
