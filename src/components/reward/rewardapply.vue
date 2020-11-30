@@ -548,7 +548,7 @@ export default {
               '分配金额':'amount',
             },
       datas:[{
-              'type':'当前分配',
+              'type':'当期分配',
               'period': '‘2020年01月’',
               'username':'员工姓名XXX',
               'account':'account',
