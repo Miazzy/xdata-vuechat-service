@@ -641,11 +641,10 @@ export default {
               let elem = { key: tools.queryUniqueID(), type: item['分配性质'], period: item['发放期间'].replace(regexp,""), username: item['员工姓名'], account: item['员工OA'], company: item['所属单位'], department: item['所属部门'], position: item['员工职务'], mobile: '', amount: item['分配金额'], ratio, zone:'', message:'',  v_status: 'valid', }
               if(list && list.length > 0){
                 const user = list[0];
-                let company = user.company.split('||')[0];
-                let temp = tools.queryZoneProjectAll(company, ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+                let temp = tools.queryZoneProjectAll(user.company.split('||')[0], ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
                 elem.username =  user.name;
                 elem.account = user.loginid;
-                elem.company = company;
+                elem.company = temp.company;
                 elem.department = user.departname;
                 elem.position = user.position;
                 elem.mobile = user.mobile;
@@ -966,8 +965,9 @@ export default {
             this.release_project = user.project;
             debugger
             const temp = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
+            console.log(`temp: ${JSON.stringify(temp)}`);
             debugger;
-            this.release_position = temp ? '' : temp.position; //设置员工职务
+            this.release_position = temp ? temp.position : ''; //设置员工职务
           } else {
             this.release_username = record.name;
             this.release_userid = record.id;
@@ -978,8 +978,9 @@ export default {
             this.release_project = record.project;
             debugger
             const temp = await query.queryUserInfoByMobile(record.mobile); //查询员工职务
+            console.log(`temp: ${JSON.stringify(temp)}`);
             debugger;
-            this.release_position = temp ? '' : temp.position; //设置员工职务
+            this.release_position = temp ? temp.position : ''; //设置员工职务
           }
         } catch (error) {
           console.log(error);
