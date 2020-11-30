@@ -33,7 +33,7 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <template>
             <div v-show="tableName === 'bs_goods_receive'">
-              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+              <vue-excel-editor v-model="initContractList" ref="grid_00" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
                     <vue-excel-column field="serialid"      label="序号"         width="60px" />
                     <vue-excel-column field="create_by"     label="创建人"       width="100px" />
                     <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
@@ -49,7 +49,7 @@
               </vue-excel-editor>
             </div>
             <div v-show="tableName === 'bs_goods_borrow'">
-              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+              <vue-excel-editor v-model="initContractList" ref="grid_01" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
                     <vue-excel-column field="serialid"      label="序号"         width="60px" />
                     <vue-excel-column field="create_by"     label="创建人"       width="100px" />
                     <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
@@ -65,7 +65,7 @@
               </vue-excel-editor>
             </div>
             <div v-show="tableName === 'bs_lost_property'">
-              <vue-excel-editor v-model="initContractList" ref="grid" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
+              <vue-excel-editor v-model="initContractList" ref="grid_02" width="100%" filter-row autocomplete @delete="onDelete" @update="onUpdate" >
                     <vue-excel-column field="serialid"      label="序号"         width="60px" />
                     <vue-excel-column field="create_by"     label="创建人"       width="100px" />
                     <vue-excel-column field="create_time"   label="创建日期"      width="100px" />
@@ -177,7 +177,13 @@ export default {
     },
     methods: {
       exportAsExcel () {
-          this.$refs.grid.exportTable('xlsx', true, '权限配置表单');
+        if(this.tableName == 'bs_goods_receive'){
+          this.$refs.grid_00.exportTable('xlsx', true, '领用台账数据');
+        } else if(this.tableName == 'bs_goods_borrow'){
+          this.$refs.grid_01.exportTable('xlsx', true, '借用台账数据');
+        } else if(this.tableName == 'bs_lost_property'){
+          this.$refs.grid_02.exportTable('xlsx', true, '失物招领台账');
+        }
       },
       async onAdd(){
         const userinfo = await storage.getStore('system_userinfo'); //获取当前用户信息
