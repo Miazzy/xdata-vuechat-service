@@ -620,7 +620,7 @@ export default {
         }
       },
       // Excel文件解析成功
-      async onSuccess(data, file, ratio = 0.00, zone = '', project = ''){
+      async onSuccess(data, file, ratio = 0.00, zone = '', project = '' , regexp = /[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g){
         if(!this.item.amount){
           return this.$toast.fail('请先输入申请奖金总额！');
         }
@@ -636,58 +636,25 @@ export default {
             const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101); //查询OA账户，获取员工单位，部门，区域
             ratio = tools.divisionPercentage(item['分配金额'] , this.item.amount);
             try {
+              let elem = { key: tools.queryUniqueID(), type: item['分配性质'], period: item['发放期间'].replace(regexp,""), username: item['员工姓名'], account: item['员工OA'], company: item['所属单位'], department: item['所属部门'], position: item['员工职务'], mobile: '', amount: item['分配金额'], ratio, zone:'', message:'',  v_status: 'valid', }
               if(list && list.length > 0){
                 const user = list[0];
                 let company = user.company.split('||')[0];
-                for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
-                  if(company.includes(`>${name}>`)){
-                    let temp = tools.queryZoneProject(company, `>${name}>`);
-                    zone = temp.zone;
-                    project = temp.project;
-                    break;
-                  }
-                }
-                this.data.push({
-                  key: tools.queryUniqueID(),
-                  type: item['分配性质'] ,
-                  period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"") ,
-                  username: user.name ,
-                  account: user.loginid ,
-                  company: company ,
-                  department: user.departname ,
-                  position: user.position ,
-                  mobile: user.mobile ,
-                  amount: item['分配金额'] ,
-                  ratio ,
-                  zone,
-                  project,
-                  message:'' ,
-                  v_status: 'valid' ,
-                });
-              } else {
-                this.data.push({
-                  key: tools.queryUniqueID(),
-                  type: item['分配性质'],
-                  period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,""),
-                  username: item['员工姓名'],
-                  account: item['员工OA'],
-                  company: item['所属单位'],
-                  department: item['所属部门'],
-                  position: item['员工职务'],
-                  mobile: '',
-                  amount: item['分配金额'],
-                  ratio,
-                  zone:'',
-                  message:'',
-                  v_status: 'valid',
-                });
+                let temp = tools.queryZoneProjectAll(company, ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']);
+                elem.username =  user.name;
+                elem.account = user.loginid;
+                elem.company = company;
+                elem.department = user.departname;
+                elem.position = user.position;
+                elem.mobile = user.mobile;
+                elem.zone = temp.zone;
+                elem.project = temp.project;
               }
+              this.data.push(elem);
             } catch (error) {
               console.log(error);
             }
-
           }
-
         } catch (error) {
           console.log(error);
         }
