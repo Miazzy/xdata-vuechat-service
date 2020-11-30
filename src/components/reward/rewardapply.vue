@@ -624,65 +624,71 @@ export default {
         try {
           let trows = data[0].data;
           let ratio = 0.00;
+
           for(let item of trows){
-            try {
-              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
-            } catch (error) {
-              ratio = 0.00;
-            }
 
             //查询OA账户，获取员工单位，部门，区域
             const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101);
 
-            if(list && list.length > 0){
-              const user = list[0];
-              let company = user.company.split('||')[0];
-              let zone = '';
-              let project = '';
+            try {
+              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
+            } catch (error) {
+              ratio = (0.00).toFixed(2);
+            }
 
-              for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
-                if(company.includes(`>${name}>`)){
-                  let temp = tools.queryZoneProject(company, `>${name}>`);
-                  zone = temp.zone;
-                  project = temp.project;
-                  break;
+            try {
+              if(list && list.length > 0){
+                const user = list[0];
+                let company = user.company.split('||')[0];
+                let zone = '';
+                let project = '';
+
+                for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
+                  if(company.includes(`>${name}>`)){
+                    let temp = tools.queryZoneProject(company, `>${name}>`);
+                    zone = temp.zone;
+                    project = temp.project;
+                    break;
+                  }
                 }
-              }
 
-              this.data.push({
-                key: tools.queryUniqueID(),
-                type: item['分配性质'] ,
-                period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"") ,
-                username: user.name ,
-                account: user.loginid ,
-                company: company ,
-                department: user.departname ,
-                position: user.position ,
-                mobile: user.mobile ,
-                amount: item['分配金额'] ,
-                ratio ,
-                zone,
-                project,
-                message:'' ,
-                v_status: 'valid' ,
-              });
-            } else {
-              this.data.push({
-                key: tools.queryUniqueID(),
-                type: item['分配性质'],
-                period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,""),
-                username: item['员工姓名'],
-                account: item['员工OA'],
-                company: item['所属单位'],
-                department: item['所属部门'],
-                position: item['员工职务'],
-                mobile: '',
-                amount: item['分配金额'],
-                ratio,
-                zone:'',
-                message:'',
-                v_status: 'valid',
-              });
+                this.data.push({
+                  key: tools.queryUniqueID(),
+                  type: item['分配性质'] ,
+                  period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"") ,
+                  username: user.name ,
+                  account: user.loginid ,
+                  company: company ,
+                  department: user.departname ,
+                  position: user.position ,
+                  mobile: user.mobile ,
+                  amount: item['分配金额'] ,
+                  ratio ,
+                  zone,
+                  project,
+                  message:'' ,
+                  v_status: 'valid' ,
+                });
+              } else {
+                this.data.push({
+                  key: tools.queryUniqueID(),
+                  type: item['分配性质'],
+                  period: item['发放期间'].replace(/[\ |‘|’|\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,""),
+                  username: item['员工姓名'],
+                  account: item['员工OA'],
+                  company: item['所属单位'],
+                  department: item['所属部门'],
+                  position: item['员工职务'],
+                  mobile: '',
+                  amount: item['分配金额'],
+                  ratio,
+                  zone:'',
+                  message:'',
+                  v_status: 'valid',
+                });
+              }
+            } catch (error) {
+              console.log(error);
             }
 
           }
