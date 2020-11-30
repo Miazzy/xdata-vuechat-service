@@ -237,8 +237,8 @@ export function isPCWeb() {
     }
 }
 
-export function queryZoneProject(company = '', zone = '', project = '') {
-    let temp = company.split('邛崃创达公司>');
+export function queryZoneProject(company = '', name, zone = '', project = '') {
+    let temp = company.split(name);
     console.log(`${temp.toString()}`);
     if (temp[1].includes('>')) {
         temp[1] = temp[1].replace('项目组>', '');
