@@ -237,6 +237,19 @@ export function isPCWeb() {
     }
 }
 
+export function queryZoneProject(company = '', zone = '', project = '') {
+    let temp = company.split('邛崃创达公司>');
+    console.log(`${temp.toString()}`);
+    if (temp[1].includes('>')) {
+        temp[1] = temp[1].replace('项目组>', '');
+        zone = temp[1].split('>')[0];
+        project = temp[1].split('>')[1];
+    } else {
+        zone = temp[1];
+    }
+    return { company, zone, project };
+}
+
 /**
  * 随机生成字符串
  * @param length 字符串的长度

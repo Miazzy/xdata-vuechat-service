@@ -350,7 +350,7 @@
                         <vue-excel-column field="account"     label="员工OA"    width="80px" />
                         <vue-excel-column field="company"     label="所属单位"   width="100px" />
                         <vue-excel-column field="department"  label="所属部门"   width="100px" />
-                        <vue-excel-column field="zone"        label="所属区域"   width="100px" type="map" :options="zoneType" />
+                        <vue-excel-column field="zone"        label="所属区域"   width="100px" />
                         <vue-excel-column field="position"    label="员工职务"   width="100px" />
                         <vue-excel-column field="amount"      label="分配金额"   width="100px" />
                         <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
@@ -639,30 +639,32 @@ export default {
               let company = user.company.split('||')[0];
               let zone = '';
               let project = '';
-
-
-              // 领悦服务 领地集团有限公司 医疗健康 宝瑞商管
+              // 领悦服务 领地集团有限公司 医疗健康 宝瑞商管 金融板块 邛崃创达公司
               if(company.includes('>领地集团有限公司>')){ //如果为领地集团，则获取区域信息
-                let temp = company.split('>领地集团有限公司>');
-                console.log(`${temp.toString()}`);
-                if(temp[1].includes('>')){
-                  zone = temp[1].split('>')[0];
-                  project = temp[1].split('>')[1];
-                } else {
-                  zone = temp[1];
-                }
+                let temp = tools.queryZoneProject('>领地集团有限公司>');
+                zone = temp.zone;
+                project = temp.project;
               } else if(company.includes('>领悦服务>')){ //如果为领地集团，则获取区域信息
-                let temp = company.split('>领悦服务>');
-                console.log(`${temp.toString()}`);
-                if(temp[1].includes('>')){
-                  zone = temp[1].split('>')[0];
-                  project = temp[1].split('>')[1];
-                } else {
-                  zone = temp[1];
-                }
+                let temp = tools.queryZoneProject('>领悦服务>');
+                zone = temp.zone;
+                project = temp.project;
+              } else if(company.includes('>宝瑞商管>')){ //如果为领地集团，则获取区域信息
+                let temp = tools.queryZoneProject('>宝瑞商管>');
+                zone = temp.zone;
+                project = temp.project;
+              } else if(company.includes('>医疗健康板块>')){ //如果为领地集团，则获取区域信息
+                let temp = tools.queryZoneProject('>医疗健康板块>');
+                zone = temp.zone;
+                project = temp.project;
+              } else if(company.includes('>金融板块>')){ //如果为领地集团，则获取区域信息
+                let temp = tools.queryZoneProject('>金融板块>');
+                zone = temp.zone;
+                project = temp.project;
+              } else if(company.includes('邛崃创达公司>')){ //如果为领地集团，则获取区域信息
+                let temp = tools.queryZoneProject('邛崃创达公司>');
+                zone = temp.zone;
+                project = temp.project;
               }
-
-              debugger;
 
               this.data.push({
                 key: tools.queryUniqueID(),
