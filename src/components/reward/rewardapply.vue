@@ -620,7 +620,7 @@ export default {
         }
       },
       // Excel文件解析成功
-      async onSuccess(data, file, ratio = 0.00){
+      async onSuccess(data, file, ratio = 0.00, zone = '', project = ''){
         if(!this.item.amount){
           return this.$toast.fail('请先输入申请奖金总额！');
         }
@@ -632,19 +632,13 @@ export default {
         }
         try {
           let trows = data[0].data;
-
           for(let item of trows){
-
             const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101); //查询OA账户，获取员工单位，部门，区域
             ratio = tools.divisionPercentage(item['分配金额'] , this.item.amount);
-
             try {
               if(list && list.length > 0){
                 const user = list[0];
                 let company = user.company.split('||')[0];
-                let zone = '';
-                let project = '';
-
                 for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
                   if(company.includes(`>${name}>`)){
                     let temp = tools.queryZoneProject(company, `>${name}>`);
@@ -653,7 +647,6 @@ export default {
                     break;
                   }
                 }
-
                 this.data.push({
                   key: tools.queryUniqueID(),
                   type: item['分配性质'] ,
@@ -812,20 +805,13 @@ export default {
       },
 
       validField(fieldName){
-        //获取用户基础信息
-        const userinfo = storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
-
+        const userinfo = storage.getStore('system_userinfo'); // 获取用户基础信息
+        const regMail = workconfig.system.config.regexp.mail; // 邮箱验证正则表达式
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-
         storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
         return tools.isNull(this.message[fieldName]);
       },
 
@@ -997,6 +983,7 @@ export default {
 
       //选中当前知会人员
       async selectReleaseUser(record , value){
+
         try {
           if(tools.isNull(record)){
             const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id}); //获取员工基本信息
