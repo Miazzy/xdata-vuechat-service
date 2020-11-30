@@ -349,13 +349,13 @@
                         <vue-excel-column field="username"    label="员工姓名"   width="80px" />
                         <vue-excel-column field="account"     label="员工OA"    width="80px" />
                         <vue-excel-column field="company"     label="所属单位"   width="100px" />
-                        <vue-excel-column field="department"  label="所属部门"   width="100px" />
                         <vue-excel-column field="zone"        label="所属区域"   width="100px" />
                         <vue-excel-column field="project"     label="项目/中心"  width="100px" />
-                        <vue-excel-column field="position"    label="员工职务"   width="100px" />
-                        <vue-excel-column field="amount"      label="分配金额"   width="100px" />
+                        <vue-excel-column field="department"  label="所属部门"   width="80px" />
+                        <vue-excel-column field="position"    label="员工职务"   width="80px" />
+                        <vue-excel-column field="amount"      label="分配金额"   width="80px" />
                         <vue-excel-column field="ratio"       label="分配比率"   width="80px" />
-                        <vue-excel-column field="message"     label="抄送"      width="120px" />
+                        <vue-excel-column field="message"     label="抄送"      width="80px" />
                         <vue-excel-column field="v_status"    label="状态"      width="60px" type="map" :options="statusType" />
                     </vue-excel-editor>
                    </a-row>
@@ -543,6 +543,7 @@ export default {
               '所属单位':'company',
               '所属部门':'department',
               '所属区域':'zone',
+              '所属项目':'project',
               '员工职务':'position',
               '分配金额':'amount',
             },
@@ -554,6 +555,7 @@ export default {
               'company':'领地集团总部',
               'department':'XX部',
               'zone':'XX区域',
+              'project':'XXX项目',
               'position':'XXX专员',
               'amount':'10000.00',
             },],
