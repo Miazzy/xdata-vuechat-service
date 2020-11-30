@@ -157,11 +157,13 @@ export async function sleep(time = 1000) {
  * @param {*} total
  * @param {*} ratio
  */
-export async function divisionPercentage(value = 0.0, total = 100.00, ratio = (0.00).toFixed(2)) {
+export function divisionPercentage(value = 0.0, total = 100.00, ratio = (0.00).toFixed(2)) {
+    value = typeof value == 'string' ? parseFloat(value) : value;
+    total = typeof total == 'string' ? parseFloat(total) : total;
     try {
-        ratio = tools.isNull(total) ? (0.00).toFixed(2) : parseFloat(value / total * 100).toFixed(2);
+        ratio = isNull(total) ? (0.00).toFixed(2) : parseFloat(value / total * 100).toFixed(2);
     } catch (error) {
-        ratio = (0.00).toFixed(2);
+        console.log(error);
     }
     return ratio;
 }

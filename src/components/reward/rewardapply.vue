@@ -621,6 +621,15 @@ export default {
       },
       // Excel文件解析成功
       async onSuccess(data, file, ratio = 0.00){
+        if(!this.item.amount){
+          return this.$toast.fail('请先输入申请奖金总额！');
+        }
+        if(!this.item.reward_release_feature){
+          return this.$toast.fail('请输入奖罚申请的分配性质！');
+        }
+        if(!this.item.reward_release_period){
+          return this.$toast.fail('请输入奖罚申请的发放周期！');
+        }
         try {
           let trows = data[0].data;
 
