@@ -646,6 +646,7 @@ export default {
                 elem.mobile = user.mobile;
                 elem.zone = temp.zone;
                 elem.project = elem.project ? elem.project : temp.project;
+                console.log(`project: ${elem.project} or temp.project:${temp.project}`);
               }
               this.data.push(elem);
             } catch (error) {
