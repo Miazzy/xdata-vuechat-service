@@ -620,21 +620,14 @@ export default {
         }
       },
       // Excel文件解析成功
-      async onSuccess(data, file){
+      async onSuccess(data, file, ratio = 0.00){
         try {
           let trows = data[0].data;
-          let ratio = 0.00;
 
           for(let item of trows){
 
-            //查询OA账户，获取员工单位，部门，区域
-            const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101);
-
-            try {
-              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(item['分配金额'] / this.item.amount * 100).toFixed(2);
-            } catch (error) {
-              ratio = (0.00).toFixed(2);
-            }
+            const list = await manageAPI.queryUserByID(item['员工OA'],'融量',101); //查询OA账户，获取员工单位，部门，区域
+            ratio = tools.divisionPercentage(item['分配金额'] , this.item.amount);
 
             try {
               if(list && list.length > 0){
@@ -949,18 +942,9 @@ export default {
                     let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
                     this.release_userlist.push({id:elem.loginid , name:elem.lastname , mobile:elem.mobile, tel: mobile , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
-
-                  //获取盖印人姓名
-                  this.release_username = user[0].lastname;
-                  //当前盖印人编号
-                  this.release_userid = this.userid = user[0].loginid;
-
-                  try {
-                    this.selectReleaseUser();
-                  } catch (error) {
-                    console.log(error);
-                  }
-
+                  this.release_username = user[0].lastname; //获取盖印人姓名
+                  this.release_userid = this.userid = user[0].loginid; //当前盖印人编号
+                  this.selectReleaseUser();
                 } catch (error) {
                   console.log(error);
                 }
@@ -973,20 +957,10 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   let mobile = elem.mobile ? `${elem.mobile.slice(0,3)}****${elem.mobile.slice(-4)}` : '';
-                  //将用户数据推送至对方数组
-                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length });
-
-                  //获取盖印人姓名
-                  this.release_username = user.lastname;
-                  //当前盖印人编号
-                  this.release_userid = this.userid = user.loginid;
-
-                  try {
-                    this.selectReleaseUser();
-                  } catch (error) {
-                    console.log(error);
-                  }
-
+                  this.release_userlist.push({id:user.loginid , name:user.lastname , mobile:elem.mobile, tel:mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.release_userlist.length }); //将用户数据推送至对方数组
+                  this.release_username = user.lastname; //获取盖印人姓名
+                  this.release_userid = this.userid = user.loginid; //当前盖印人编号
+                  this.selectReleaseUser();
                 } catch (error) {
                   console.log(error);
                 }
@@ -1014,30 +988,26 @@ export default {
 
       //选中当前知会人员
       async selectReleaseUser(record , value){
-
-        if(tools.isNull(record)){
-          //获取员工基本信息
-          const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id});
-          //设置员工
-          this.release_username = user.name;
-          this.release_company = user.company;
-          this.release_department = user.department;
-          this.release_mobile = user.mobile;
-          //查询员工职务
-          const temp = await query.queryUserInfoByMobile(user.mobile);
-          //设置员工职务
-          this.release_position = temp.position;
-        } else {
-          this.release_username = record.name;
-          this.release_userid = record.id;
-          this.release_company = record.company;
-          this.release_department = record.department;
-          this.release_mobile = record.mobile;
-          //查询员工职务
-          const temp = await query.queryUserInfoByMobile(record.mobile);
-          //设置员工职务
-          this.release_position = temp.position;
-          console.log(`record: ${JSON.stringify(record)} , value: ${value}`);
+        try {
+          if(tools.isNull(record)){
+            const user = this.release_userlist.find((item,index) => {return this.release_userid == item.id}); //获取员工基本信息
+            this.release_username = user.name;  //设置员工
+            this.release_company = user.company;
+            this.release_department = user.department;
+            this.release_mobile = user.mobile;
+            const temp = await query.queryUserInfoByMobile(user.mobile); //查询员工职务
+            this.release_position = temp ? '' : temp.position; //设置员工职务
+          } else {
+            this.release_username = record.name;
+            this.release_userid = record.id;
+            this.release_company = record.company;
+            this.release_department = record.department;
+            this.release_mobile = record.mobile;
+            const temp = await query.queryUserInfoByMobile(record.mobile); //查询员工职务
+            this.release_position = temp ? '' : temp.position; //设置员工职务
+          }
+        } catch (error) {
+          console.log(error);
         }
       },
 
@@ -1766,12 +1736,23 @@ export default {
             let user = await manageAPI.queryUserByNameReward(username.trim(),200);
             user = user[0];
             let company = user.textfield1.split('||')[0];
-            company = company.slice(company.lastIndexOf('>')+1);
             let department = user.textfield1.split('||')[1];
+            let zone = '';
+            let project = '';
             department = department.slice(department.lastIndexOf('>')+1);
+            debugger;
+            for(const name of ['领地集团有限公司','领悦服务','宝瑞商管','医疗健康板块', '金融板块' ,'邛崃创达公司']){
+              if(company.includes(`>${name}>`)){
+                let temp = tools.queryZoneProject(company, `>${name}>`);
+                company = name;
+                zone = temp.zone;
+                project = temp.project;
+                break;
+              }
+            }
             //查询员工职务
             const temp = await query.queryUserInfoByMobile(user.mobile);
-            this.rewardAddUser(username , user.loginid , company , department , temp.position , this.release_amount);
+            this.rewardAddUser(username , user.loginid , company , department , zone , project , temp.position , this.release_amount);
           }
 
         } else {//如果不包含逗号，则使用默认方式
@@ -1782,7 +1763,7 @@ export default {
             if(!this.release_username || !this.release_userid){
               return this.$toast.fail('请输入奖罚明细的分配人员，并选择下拉列表中人员！');
             }
-            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , this.release_position , this.release_amount);
+            this.rewardAddUser(this.release_username , this.release_userid , this.release_company , this.release_department , zone , project , this.release_position , this.release_amount);
           } catch (error) {
             console.log(error);
           }
@@ -1803,7 +1784,7 @@ export default {
 
       },
 
-      async rewardAddUser(username = this.release_username, userid = this.release_userid , company = this.release_company , department = this.release_department , position = this.release_position , amount = this.release_amount){
+      async rewardAddUser(username = this.release_username, userid = this.release_userid , company = this.release_company , department = this.release_department , zone , project , position = this.release_position , amount = this.release_amount){
 
           try {
             //查询用户数据是否已经被分配过
@@ -1817,12 +1798,7 @@ export default {
                 message: `用户(${username})已经在奖惩分配列表中，请确认添加奖惩明细！`,
               }).then(()=>{
                 try {
-                  let ratio = 0.00;
-                  try {
-                    ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
-                  } catch (error) {
-                    ratio = 0.00;
-                  }
+                  let ratio = tools.divisionPercentage(amount , this.item.amount);
                   this.data.push({
                     key: tools.queryUniqueID(),
                     type: this.item.reward_release_feature,
@@ -1834,7 +1810,9 @@ export default {
                     position: position,
                     mobile: '',
                     amount: `${parseFloat(amount).toFixed(2)}`,
-                    ratio: ratio,
+                    ratio,
+                    zone,
+                    project,
                     message:'',
                     v_status: 'valid',
                   });
@@ -1850,12 +1828,7 @@ export default {
           }
 
           try {
-            let ratio = 0.00;
-            try {
-              ratio = tools.isNull(this.item.amount) ? (0.00).toFixed(2) : parseFloat(parseFloat(amount) / this.item.amount * 100).toFixed(2);
-            } catch (error) {
-              ratio = 0.00;
-            }
+            let ratio = tools.divisionPercentage(amount , this.item.amount);
             this.data.push({
               key: tools.queryUniqueID(),
               type: this.item.reward_release_feature,
@@ -1867,7 +1840,9 @@ export default {
               position: position,
               mobile: '',
               amount: `${parseFloat(amount).toFixed(2)}`,
-              ratio: ratio,
+              ratio,
+              zone,
+              project,
               message:'',
               v_status: 'valid',
             });

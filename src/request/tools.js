@@ -151,6 +151,21 @@ export async function sleep(time = 1000) {
     return new Promise(function(resolve) { return setTimeout(resolve, time) });
 }
 
+/**
+ * @function 获取百分率占比(除法)
+ * @param {*} value
+ * @param {*} total
+ * @param {*} ratio
+ */
+export async function divisionPercentage(value = 0.0, total = 100.00, ratio = (0.00).toFixed(2)) {
+    try {
+        ratio = tools.isNull(total) ? (0.00).toFixed(2) : parseFloat(value / total * 100).toFixed(2);
+    } catch (error) {
+        ratio = (0.00).toFixed(2);
+    }
+    return ratio;
+}
+
 
 /**
  * 深度克隆对象、数组
