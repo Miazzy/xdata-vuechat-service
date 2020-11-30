@@ -920,7 +920,6 @@ export default {
                 } catch (error) {
                   console.log(error);
                 }
-
               }
 
               //遍历去重
