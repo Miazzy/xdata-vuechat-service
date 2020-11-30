@@ -272,7 +272,7 @@ export function queryZoneProjectAll(company, cnamelist = ['领地集团有限公
         project = '';
     for (const name of cnamelist) {
         if (company.includes(`>${name}>`)) {
-            let temp = tools.queryZoneProject(company, `>${name}>`);
+            let temp = queryZoneProject(company, `>${name}>`);
             zone = temp.zone;
             project = temp.project;
             break;
