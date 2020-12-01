@@ -1,17 +1,17 @@
 //import Vue from 'vue';
 //import axios from 'axios';
 import VueAxios from 'vue-axios';
-import vuex from 'vue';
+//import vuex from 'vue';
 import App from './App';
 import router from './router';
 import store from './vuex/store';
 import FastClick from 'fastclick'; //使用 fastclick 解决移动端 300ms 点击延迟
 import filters from './filters'; //将全部过滤器放在 filters/index.js 中便于管理
-import VueExcelEditor from 'vue-excel-editor';
+import VueExcelEditor from 'vue-excel-editor'; //引入VueExcel编辑组件
 import '@/reservice'; //注册service worker服务
 
 //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
-Vue.use(VueAxios, axios, vuex);
+Vue.use(VueAxios, axios, Vuex);
 
 //设置VueExcel编辑组件
 Vue.use(VueExcelEditor);
