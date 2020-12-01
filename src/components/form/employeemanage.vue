@@ -63,9 +63,6 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as workconfig from '@/request/workconfig';
-import VueExcelEditor from 'vue-excel-editor';
-
-Vue.use(VueExcelEditor);
 
 export default {
     mixins: [window.mixin],
