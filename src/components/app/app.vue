@@ -289,6 +289,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="cooperate('visitor');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
+                <div class="weui-cell_app_bd">
+                  访客管理
+                </div>
+              </div>
+            </van-col>
             <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
               <div class="weui-cell_app_hd" @click="cooperate('auth');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/game_00.png" >
@@ -691,6 +699,13 @@ export default {
               return vant.Toast('您没有员工管理的权限！');
             } else {
               this.$router.push(`/app/employeemanage?back=/app&type=${name}`);
+            }
+          } else if(name == 'visitor'){ // 来访登记
+            if (userinfo) {
+              const oaUserId = userinfo.systemuserinfo.id;
+              const wxUserId = userinfo.userid;
+              const url = 'http://office-test.leading-group.com:30001/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
+              window.open(url,'_blank')
             }
           }
         },
