@@ -261,7 +261,7 @@
         </div>
       </div>
 
-      <div class="weui-cells" style="display: block;position:relative;">
+      <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">协同办公</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -705,7 +705,7 @@ export default {
             if (userinfo) {
               const oaUserId = userinfo.systemuserinfo.id;
               const wxUserId = userinfo.userid;
-              const url = 'http://office-test.leading-group.com:30001/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
+              const url = 'http://offiice.leading-group.com:30001/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
               window.open(url,'_blank')
             }
           }
