@@ -261,7 +261,7 @@
         </div>
       </div>
 
-      <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
+      <div class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">协同办公</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -289,7 +289,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;">
+            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
               <div class="weui-cell_app_hd" @click="cooperate('visitor');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png" >
                 <div class="weui-cell_app_bd">
@@ -701,10 +701,11 @@ export default {
               this.$router.push(`/app/employeemanage?back=/app&type=${name}`);
             }
           } else if(name == 'visitor'){ // 来访登记
+            const userinfo = await storage.getStore('system_userinfo');
             if (userinfo) {
               const oaUserId = userinfo.systemuserinfo.id;
               const wxUserId = userinfo.userid;
-              const url = 'http://offiice.leading-group.com:30002/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
+              const url = 'http://office-test.leading-group.com:30001/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
               window.open(url,'_blank')
             }
           }
