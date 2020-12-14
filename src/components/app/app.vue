@@ -705,7 +705,7 @@ export default {
             if (userinfo) {
               const oaUserId = userinfo.systemuserinfo.id;
               const wxUserId = userinfo.userid;
-              const url = 'http://offiice.leading-group.com:30001/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
+              const url = 'http://offiice.leading-group.com:30002/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
               window.open(url,'_blank')
             }
           }
