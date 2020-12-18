@@ -49,6 +49,7 @@
                 <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
                 <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
                 <vue-excel-column field="status"        label="状态"      width="80px" type="select" :options="sealStatusColumns" />
+                <vue-excel-column field="other_status"        label="附加状态"   width="80px" />
 
             </vue-excel-editor>
         </template>
@@ -135,6 +136,7 @@ export default {
             approveColumns: workconfig.compcolumns.approveColumns,
             sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
             statusType:{'待用印':'待用印','已用印':'已用印','已领取':'已用印','移交前台':'已用印','财务归档':'已用印','档案归档':'已用印','已完成':'已用印','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
+            statusType_w:{'待用印':'待用印','已用印':'已用印','已领取':'已领取','移交前台':'移交前台','财务归档':'财务归档','档案归档':'档案归档','已完成':'已完成','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
         }
     },
     activated() {
@@ -374,6 +376,7 @@ export default {
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
             console.log(JSON.stringify(this.statusType));
+            item.status_w = this.statusType_w[item.status];
             item.status = this.statusType[item.status];
           });
           this.json_data.sort();
@@ -388,6 +391,7 @@ export default {
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
             item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
             console.log(JSON.stringify(this.statusType));
+            item.status_w = this.statusType_w[item.status];
             item.status = this.statusType[item.status];
           });
           this.json_data.sort();
