@@ -14,7 +14,7 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="移交台账" icon="balance-list-o"  >
+                <van-cell id="van-cell-export" class="van-cell-export" title="归档台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
                       <download-excel
@@ -331,9 +331,10 @@ export default {
           // 获取最近6个月对应的日期
           month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
           sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(status,in,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(record,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          const whereSQL = `_where=(status,in,,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(record,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           this.json_data = await manageAPI.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
+          debugger;
         }
       },
       async queryInfo(){
