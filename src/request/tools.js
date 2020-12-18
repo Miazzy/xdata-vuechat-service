@@ -268,7 +268,6 @@ export function queryZoneProject(company = '', name, zone = '', project = '') {
 }
 
 export function queryZoneProjectAll(company, cnamelist = ['领地集团有限公司', '领悦服务', '宝瑞商管', '医疗健康板块', '金融板块', '邛崃创达公司'], department = '') {
-    debugger;
     try {
         let zone = '';
         let project = department ? department.slice(0, department.lastIndexOf('>')) : '';

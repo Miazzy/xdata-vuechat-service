@@ -853,8 +853,6 @@ export default {
 
           const item = tlist[0];
 
-          debugger;
-
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
 
