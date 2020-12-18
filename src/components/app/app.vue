@@ -704,8 +704,9 @@ export default {
             const userinfo = await storage.getStore('system_userinfo');
             if (userinfo) {
               const oaUserId = userinfo.systemuserinfo.id;
+              const oaUserName = userinfo.systemuserinfo.username;
               const wxUserId = userinfo.userid;
-              const url = 'http://offiice.leading-group.com:30002/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId;
+              const url = 'http://offiice.leading-group.com:30002/visitor/#/?userId='+oaUserId+'&wxUserId='+wxUserId+'&oaUserName='+oaUserName;
               window.open(url,'_blank')
             }
           }
