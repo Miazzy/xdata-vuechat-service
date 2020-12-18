@@ -49,7 +49,7 @@
                 <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
                 <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
                 <vue-excel-column field="status"        label="状态"      width="80px" type="select" :options="sealStatusColumns" />
-                <vue-excel-column field="other_status"        label="附加状态"   width="80px" />
+                <vue-excel-column field="status_w"        label="附加状态"   width="80px" />
 
             </vue-excel-editor>
         </template>
