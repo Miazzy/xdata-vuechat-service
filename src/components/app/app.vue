@@ -369,6 +369,10 @@ export default {
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
             this.queryRoleInfo(userinfo , null , 'view');
           }
+          const resp = await query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
+          };
           return this.userinfo;
         },
         async queryInfo(){
@@ -416,6 +420,12 @@ export default {
           resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',JOB_MEAL_ADMIN';
+          };
+          resp = await query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+            role += ',COMMON_DEBUG_ADMIN';
+            debugger;
+            window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
           };
           storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
           this.role = role;
