@@ -77,6 +77,7 @@
                 <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" />
+                <van-field required :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
               </van-cell-group>
 
@@ -262,6 +263,7 @@ export default {
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
               company:'',
+              partner:'',
               status: '',
             },
             backPath:'/app',
@@ -1363,7 +1365,7 @@ export default {
 
         // 先验证是否合法
         const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
-          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
+          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'' , partner: '',}) :
           Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
 
         const invalidKey =  keys.find(key => {

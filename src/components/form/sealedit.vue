@@ -72,6 +72,7 @@
                 <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                 <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" />
+                <van-field required :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
               </van-cell-group>
 
@@ -865,6 +866,7 @@ export default {
               message: value.message,
               prefix: value.prefix,
               company: value.company,
+              partner: value.partner,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
@@ -1032,7 +1034,7 @@ export default {
         this.cacheUserInfo();
 
         //先验证是否合法
-        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'',})
+        const keys = Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', })
         const invalidKey = keys.find(key => {
           return !this.validField(key);
         });
@@ -1058,20 +1060,12 @@ export default {
         var noname = '合同编号';
 
         //根据用户选择的印章实体公司来设置印章编码
-
-        //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
-        if(this.item.sealtype === '合同类') {
-          // maxno = (maxinfo.maxno + 100001).toString().slice(-3);
-          // this.item.contractId = `${workconfig.group[this.groupid].prefix}[${dayjs().format('YYYY')}]${maxno}`;
+        if(this.item.sealtype === '合同类') { //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
           noname = '合同编号';
         } else {
-          // maxno = (maxinfo.caxno + 100001).toString().slice(-3);
-          // this.item.contractId = `NM[${dayjs().format('YYYY')}]${maxno}`;
           noname = '流水编号';
-          //设置非合同类前缀编号
-          this.item.prefix = 'PTID';
-          //加载最近的同类型合同编号
-          await this.queryHContract();
+          this.item.prefix = 'PTID'; //设置非合同类前缀编号
+          await this.queryHContract(); //加载最近的同类型合同编号
         }
 
         //公司工作组
@@ -1094,7 +1088,6 @@ export default {
         const approve_type = item.approveType;
         const seal_time = item.sealtime;
         const seal_man = item.sealman;
-        //const contract_id = item.contractId;
         const sign_man = item.signman;
         const workno = item.workno;
         const mobile = item.mobile;
@@ -1107,10 +1100,11 @@ export default {
         const send_mobile = item.send_mobile;
         const prefix = item.prefix;
         const company = item.company;
+        const partner = item.partner;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , message : item.message }; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , partner , message : item.message }; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;

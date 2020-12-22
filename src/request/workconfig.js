@@ -583,6 +583,7 @@ export const compValidation = {
             company: '',
             finance: '',
             record: '',
+            partner: '',
         },
         valid: {
             filename: '请输入文件名称！',
@@ -607,6 +608,7 @@ export const compValidation = {
             company: '请输入用印公司名称！',
             finance: '请输入财务归档人员！',
             record: '请输入档案归档人员！',
+            partner: '请输入合作方名称！',
         },
     },
     entryjob: {

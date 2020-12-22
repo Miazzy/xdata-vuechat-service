@@ -66,6 +66,7 @@
                 <van-field :readonly="readonly" clearable label="合同编号" v-model="item.contractId" placeholder="请输入合同编号" v-show="item.sealtype == '合同类' " />
                 <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
                 <van-field :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司"  />
+                <van-field :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " />
                 <van-field :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
                 <van-field clearable label="盖印人" v-model="item.sealman" placeholder="--" readonly/>
             </van-cell-group>
@@ -223,6 +224,7 @@ export default {
               username:'',
               send_location:'',
               send_mobile:'',
+              partner:'',
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
@@ -332,6 +334,7 @@ export default {
               send_mobile: value.send_mobile,
               send_location: value.send_location,
               company: value.company,
+              partner: value.partner,
               confirmStatus: '',//财务确认/档案确认
               status: value.status,
               type: that.item.type
