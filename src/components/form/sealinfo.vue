@@ -62,7 +62,7 @@
               <van-cell-group style="margin-top:10px;">
                 <van-cell value="经办信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required :readonly="readonly" clickable clearable label="经办人" v-model="item.dealManager" placeholder="请输入经办人" @blur="validField('dealManager');queryManager();" :error-message="message.dealManager" @click="queryManager();" />
-                <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCreateUser()" />
+                <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCreateUser" />
                 <van-field required :readonly="readonly" clearable label="经办部门" v-model="item.dealDepart" placeholder="请输入经办部门" @blur="validField('dealDepart')" :error-message="message.dealDepart" />
                 <van-field required :readonly="readonly" clearable label="经办账户" v-model="item.username" placeholder="请输入经办人的OA账号" @blur="validField('username')" :error-message="message.username" />
                 <van-field required :readonly="readonly" clearable label="经办电话" v-model="item.mobile" placeholder="请输入经办人联系电话" @blur="validField('mobile')" :error-message="message.mobile" />
@@ -972,26 +972,19 @@ export default {
         }
       },
       //选中当前填报人
-      async selectCreateUser(value){
-        await tools.sleep(0);
-
-        const id = this.cuserid;
-        const user = this.cuserList.find((item,index) => {return id == item.id});
-
+      async selectCreateUser(user , id){
         try {
           this.item.dealManager = user.name;
-          this.item.mobile = user.tel;
-          this.item.username = user.id;
+          this.item.mobile = user.mobile;
+          this.item.username = user.username;
           this.item.signman = user.name;
           this.item.dealDepart = user.department;
-          this.item.dealMail = user.mail;
+          this.item.dealMail = user.mail ? user.mail : (await query.querySealManMail(user.name)).deal_mail;
         } catch (error) {
           console.log(error);
         }
-
         //缓存特定属性
         this.cacheUserInfo();
-
       },
       //选中当前合同编号
       async selectHContract(value){
@@ -1097,8 +1090,9 @@ export default {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
                     company = company.slice(company.lastIndexOf('>')+1);
-
-                    this.cuserList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
+                    let department = elem.textfield1.split('||')[1];
+                    department = department.slice(department.lastIndexOf('>')+1);
+                    this.cuserList.push({id:elem.loginid , username: elem.loginid , email: elem.email , mail: elem.email , realname : elem.name , company , department , mobile: elem.mobile , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , isDefault: !index });
                   })
                 } catch (error) {
                   console.log(error);
@@ -1138,7 +1132,7 @@ export default {
                   let department = user.textfield1.split('||')[1];
                   department = department.slice(department.lastIndexOf('>')+1);
                   this.item.dealDepart = department;
-                  this.cuserList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.cuserList.length });
+                  this.cuserList.push({id:user.loginid , username: elem.loginid , email: elem.email , realname : elem.name , company , department , mobile: elem.mobile , name:user.lastname , tel: '' , address: company + "||" + user.textfield1.split('||')[1] ,  mail: this.item.dealMail, isDefault: !this.cuserList.length });
                 } catch (error) {
                   console.log(error);
                 }

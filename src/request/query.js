@@ -295,6 +295,36 @@ export async function queryMessages(wxid, wxid_, maxId = 0) {
 }
 
 /**
+ * @function 查询用印申请人员邮箱号码
+ * @param {*} username 
+ */
+export async function querySealManMail(username) {
+
+    var queryURL = `${window.requestAPIConfig.restapi}/api/bs_seal_regist?_where=(sign_man,eq,${username})&_fields=deal_mail,create_by&_p=0&_size=1`;
+
+    try {
+        //获取缓存中的数据
+        var cache = storage.getStore(`sys_seal_man_mail_cache#v1@${username}`);
+
+        //返回缓存值
+        if (typeof cache != 'undefined' && cache != null && cache != '') {
+            return cache.length > 0 ? cache[0] : '';
+        }
+
+        var res = await superagent.get(queryURL).set('accept', 'json');
+
+        if (res.body != null && res.body.length > 0) {
+            storage.setStore(`sys_seal_man_mail_cache#v1@${username}`, res.body, 1);
+        }
+
+        return res.body.length ? res.body[0] : '';
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+/**
  * 查询数据
  * @param {*} tableName
  * @param {*} id
