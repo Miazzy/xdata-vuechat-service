@@ -29,6 +29,8 @@ try {
     Vue.use(vant.Lazyload);
     Vue.use(vant.Icon);
     Vue.use(vant.Dialog);
+
+    Vue.component("downloadExcel", JsonExcel || null);
 } catch (error) {
     console.log(error);
 }

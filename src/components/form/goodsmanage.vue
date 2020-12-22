@@ -123,7 +123,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 
-Vue.component("downloadExcel", JsonExcel || null);
+// Vue.component("downloadExcel", JsonExcel || null);
 
 export default {
     mixins: [window.mixin],
