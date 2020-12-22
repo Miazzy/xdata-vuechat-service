@@ -1430,7 +1430,7 @@ export default {
         const id = tools.queryUniqueID();
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        const filename = item.filename;
+        const filename = item.filename ? item.filename.trim() : item.filename ;
         const count = item.count;
         const seal_type = item.sealtype;
         const order_type = item.ordertype;
