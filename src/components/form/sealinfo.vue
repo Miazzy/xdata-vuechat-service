@@ -1430,21 +1430,21 @@ export default {
         const id = tools.queryUniqueID();
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        const filename = item.filename ? item.filename.trim() : item.filename ;
-        const count = item.count;
-        const seal_type = item.sealtype;
-        const order_type = item.ordertype;
-        const deal_depart = item.dealDepart;
-        const deal_manager = item.dealManager;
-        const deal_mail = item.dealMail;
-        const username = item.username;
-        const approve_type = item.approveType;
-        const seal_time = item.sealtime;
+        const filename = item && item.filename ? item.filename.trim() : item.filename ;
+        const count = item && item.count ? item.count.trim() : 0 ;
+        const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
+        const order_type = item && item.ordertype ? item.ordertype.trim() : '';
+        const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart ;
+        const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
+        const deal_mail = item && item.dealMail ? item.dealMail.trim() : item.dealMail ;
+        const username = item && item.username ? item.username.trim() : '';
+        const approve_type = item && item.approveType ? item.approveType.trim() : '';
+        const seal_time = item && item.sealtime ? item.sealtime.trim() : '' ;
         const contract_id = item && item.contractId ? item.contractId.trim() : '';
-        const prefix = item.prefix;
-        const sign_man = item.signman;
-        const workno = item.workno;
-        const mobile = item.mobile;
+        const prefix = item && item.prefix ? item.prefix.trim() : '';
+        const sign_man = item && item.signman ? item.signman.trim() : '' ;
+        const workno = item && item.workno ? item.workno.trim() : '';
+        const mobile = item && item.mobile ? item.mobile.trim() : '';
 
         //用印注意，此处需要找到用印人的同组用户，写入数据库
         const seal = item.seal;
@@ -1457,9 +1457,9 @@ export default {
         const record_name = item.record_name;
         const archive = item.archive;
         const archive_name = item.archive_name;
-        const send_location = item.send_location;
-        const send_mobile = item.send_mobile;
-        const company = item.company;
+        const send_location = item && item.send_location ? item.send_location.trim() : item.send_location ;
+        const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile ;
+        const company = item && item.company ? item.company.trim() : item.company ;
         const seal_wflow = tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
 
