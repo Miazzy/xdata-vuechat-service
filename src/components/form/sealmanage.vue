@@ -69,7 +69,6 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as workconfig from '@/request/workconfig';
 
-
 export default {
     mixins: [window.mixin],
     data() {

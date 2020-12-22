@@ -398,7 +398,6 @@ export default {
         });
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
           id: tools.queryUniqueID(),
           table_name: 'bs_seal_regist',

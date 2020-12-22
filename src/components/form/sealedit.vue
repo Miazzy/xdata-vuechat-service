@@ -197,9 +197,6 @@ import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
-import { AddressList } from 'vant';
-Vue.use(AddressList);
-
 export default {
     mixins: [window.mixin],
     data() {
