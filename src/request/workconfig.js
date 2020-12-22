@@ -1,4 +1,9 @@
 /**
+ * @description 合同编码长度
+ */
+export const CON_SEAL_CODE_LENGTH = -4;
+
+/**
  * @description 邮件配置
  */
 export const mailconfig = {

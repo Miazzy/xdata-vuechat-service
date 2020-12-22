@@ -198,7 +198,6 @@ import * as wflowprocess from '@/request/wflow.process';
 import * as workconfig from '@/request/workconfig';
 
 import { AddressList } from 'vant';
-
 Vue.use(AddressList);
 
 export default {
@@ -374,7 +373,7 @@ export default {
 
                 const id = this.hContractList[0].id;
                 let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                no = `00000${no}`.slice(-3);
+                no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
                 this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
 
               } catch (error) {
@@ -387,7 +386,7 @@ export default {
 
               const id = this.hContractList[0].id;
               let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-              no = `00000${no}`.slice(-3);
+              no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
               this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
 
             }

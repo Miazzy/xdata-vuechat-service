@@ -89,11 +89,7 @@ import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
 import * as query from '@/request/query';
 
-try {
-  Vue.component("downloadExcel", JsonExcel);
-} catch (error) {
-  console.log(error);
-}
+Vue.component("downloadExcel", JsonExcel || null);
 
 export default {
     mixins: [window.mixin],
