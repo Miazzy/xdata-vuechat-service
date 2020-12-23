@@ -5,7 +5,6 @@
 export async function queryUrlValid(url) {
     //提交URL
     var queryURL = `${window._CONFIG['validURL']}${url}`;
-
     try {
         var res = await window.superagent.get(queryURL);
         console.log(' url :' + url + ' result :' + JSON.stringify(res));
@@ -40,7 +39,7 @@ export async function handlePreview(item) {
 export async function handleDownLoad(item, that) {
     //执行下载操作
     try {
-        that.$message.warning('开始下载中，请稍等...');
+        vant.Toast.success('开始下载中，请稍等...');
         window.saveAs(item.msrc, item.name);
     } catch (error) {
         window.open(item.msrc);

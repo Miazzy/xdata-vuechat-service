@@ -7,22 +7,14 @@ export const CON_SEAL_CODE_LENGTH = -4;
  * @description 邮件配置
  */
 export const mailconfig = {
-    '杨高春': 'yanggc@leading-group.cn',
-    '陈乐丽': 'chenll@leading-group.cn',
-    '周贤磊': 'zhou_32@qq.com',
-    '陈雅兰': 'chenyl0929@leading-group.cn',
-    '周雪丽': 'zhouxueli@leading-group.cn',
+
 };
 
 /**
  * @description 账户配置
  */
 export const config = {
-    '杨高春': 'yanggc',
-    '陈乐丽': 'chenll',
-    '周贤磊': 'zhouxl0121',
-    '陈雅兰': 'chenyl0929',
-    '周雪丽': 'zhouxl0627',
+
 }
 
 /**
@@ -42,18 +34,18 @@ export const system = {
  */
 export const group = {
     Group_LD: {
-        seal: 'yanggc,chenll,zhouxl0121,zhaozy1028',
-        front: 'zhouxl0627,zhaozy1028',
-        archive: 'chenyl0929,zhaozy1028',
+        seal: '',
+        front: '',
+        archive: '',
         prefix: 'LD',
         name: 'Group_LD',
     },
     ENTRY_JOB: {
         GROUP0: {
-            JOB_HR_ADMIN: 'zhaozy1028,guojy0508,tangjw1227,zhengm1105',
-            JOB_EXEC_ADMIN: 'yanggc,chenll',
-            JOB_MEAL_ADMIN: 'longjing',
-            JOB_FRONT_ADMIN: 'shur0411,zhouxl0627,wuzy0518,haoqw0515,chenal0625,zhaozy1028',
+            JOB_HR_ADMIN: '',
+            JOB_EXEC_ADMIN: '',
+            JOB_MEAL_ADMIN: '',
+            JOB_FRONT_ADMIN: '',
         }
     },
 }

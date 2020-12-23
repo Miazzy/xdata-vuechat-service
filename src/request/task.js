@@ -26,7 +26,7 @@ export async function queryProcessLogDone(
         result = res.body;
 
         //遍历并格式化日期
-        result = window.__.filter(result, function(item) {
+        result = result.filter(item => {
             //格式化日期
             var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
             var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');

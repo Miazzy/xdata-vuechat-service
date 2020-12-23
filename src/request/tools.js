@@ -82,7 +82,6 @@ export function formatDate(value, fmt) {
         } catch (error) {
             console.log('formate date error : ' + error);
         }
-
         return fmt;
     }
 }

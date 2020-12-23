@@ -20,7 +20,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
             var result = res.body;
 
             //遍历并格式化日期
-            window.__.each(result, function(item) {
+            result.map(item => {
                 var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
                 var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -62,7 +62,7 @@ export async function queryHeadList(page = 0, size = 50) {
             var result = res.body;
 
             //遍历并格式化日期
-            window.__.each(result, function(item) {
+            result.map(item => {
                 var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
                 var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -104,7 +104,7 @@ export async function queryNewsList(page = 0, size = 50) {
             var result = res.body;
 
             //遍历并格式化日期
-            window.__.each(result, function(item) {
+            result.map(function(item) {
                 var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
                 var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
@@ -146,7 +146,7 @@ export async function queryNoticeList(page = 0, size = 50) {
             var result = res.body;
 
             //遍历并格式化日期
-            window.__.each(result, function(item) {
+            result.map(function(item) {
                 var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
                 var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
