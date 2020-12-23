@@ -637,6 +637,26 @@ export function queryUniqueID(length = 32) {
 }
 
 /**
+ * @function 电话号码隐藏中间4位
+ * @param {*} mobile 
+ */
+export function mobileHide(mobile) {
+    mobile = mobile.slice(0, 11);
+    var re = /(\d{3})(\d{4})(\d{4})/;
+    return mobile.replace(re, "$1****$3");
+}
+
+/**
+ * @function 电话号码隐藏中间4位
+ * @param {*} mobile 
+ */
+export function mobileEnsconce(mobile) {
+    mobile = mobile.slice(0, 11);
+    var re = /(\d{3})(\d{4})(\d{4})/;
+    return mobile.replace(re, "$1****$3");
+}
+
+/**
  * @function 检测字符串是否包含字符函数
  * @param {*} origin
  * @param {*} arg
