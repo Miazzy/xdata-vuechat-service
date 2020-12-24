@@ -140,7 +140,7 @@
 import * as announce from '@/request/announce';
 
 import * as query from '@/request/query';
-import * as workflow from '@/request/workflow';
+
 
 import * as wflowprocess from '@/request/wflow.process';
 
@@ -335,7 +335,7 @@ export default {
       async queryProcessLog(){
         const id = Betools.tools.getUrlParam('id');
         try {
-          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
           this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
           this.processLogList.sort();
         } catch (error) {
@@ -365,7 +365,7 @@ export default {
 
         if(tlist.length > 0){
           //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          await Betools.workflow.deleteViewProcessLog(tlist);
         }
 
       },
@@ -545,7 +545,7 @@ export default {
         });
 
         //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
+        await Betools.workflow.deleteViewProcessLog(tlist);
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
@@ -571,7 +571,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         /************************  工作流程日志(结束)  ************************/
 
@@ -650,7 +650,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         /************************  工作流程日志(结束)  ************************/
 
@@ -732,7 +732,7 @@ export default {
         });
 
         //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
+        await Betools.workflow.deleteViewProcessLog(tlist);
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
@@ -758,7 +758,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         /************************  工作流程日志(结束)  ************************/
 

@@ -1,4 +1,3 @@
-import * as workflow from '@/request/workflow';
 import * as query from '@/request/query';
 
 /**
@@ -451,7 +450,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             };
 
             //执行审批业务
-            await workflow.postWorkflowApprove(
+            await Betools.workflow.postWorkflowApprove(
                 tableName,
                 curRow,
                 operationData,
@@ -615,7 +614,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 };
 
                 //执行审批业务
-                await workflow.postWorkflowApprove(
+                await Betools.workflow.postWorkflowApprove(
                     tableName,
                     curRow,
                     operationData,
@@ -794,7 +793,7 @@ export async function handleRejectWF() {
             });
 
             //执行审批驳回业务
-            await workflow.postWorkflowApprove(
+            await Betools.workflow.postWorkflowApprove(
                 tableName,
                 curRow,
                 null,

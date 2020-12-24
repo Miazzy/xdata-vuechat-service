@@ -176,7 +176,7 @@
 import * as announce from '@/request/announce';
 
 import * as query from '@/request/query';
-import * as workflow from '@/request/workflow';
+
 
 import * as wflowprocess from '@/request/wflow.process';
 
@@ -1598,7 +1598,7 @@ export default {
             origin_data       : '',
           }
 
-          await workflow.approveViewProcessLog(prLogHisNode);
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
           //同时推送一条待办记录给印章管理员
 
@@ -1626,7 +1626,7 @@ export default {
             origin_data       : '',
           }
 
-          await workflow.taskViewProcessLog(prLogNode);
+          await Betools.workflow.taskViewProcessLog(prLogNode);
 
         } else {
           message = '提交用印登记信息失败，请稍后再试！';

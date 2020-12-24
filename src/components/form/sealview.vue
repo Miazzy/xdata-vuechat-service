@@ -207,7 +207,7 @@
 import * as announce from '@/request/announce';
 
 import * as query from '@/request/query';
-import * as workflow from '@/request/workflow';
+
 
 import * as wflowprocess from '@/request/wflow.process';
 
@@ -1104,7 +1104,7 @@ export default {
         const pid = Betools.tools.getUrlParam('pid');
 
         try {
-          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
 
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
@@ -1149,7 +1149,7 @@ export default {
 
         if(tlist.length > 0){
           //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          await Betools.workflow.deleteViewProcessLog(tlist);
         }
 
       },
@@ -1342,7 +1342,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         //同时推送一条待办记录给前台用户
         const prLogNode = {
@@ -1368,7 +1368,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.taskViewProcessLog(prLogNode);
+        await Betools.workflow.taskViewProcessLog(prLogNode);
 
         try {
           //查询当前所有待办记录
@@ -1380,7 +1380,7 @@ export default {
           });
 
           //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          await Betools.workflow.deleteViewProcessLog(tlist);
 
         } catch (error) {
           console.log(error);
@@ -1524,7 +1524,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         try {
           //查询当前所有待办记录
@@ -1536,7 +1536,7 @@ export default {
           });
 
           //同时删除本条待办记录当前(印章管理员)
-          await workflow.deleteViewProcessLog(tlist);
+          await Betools.workflow.deleteViewProcessLog(tlist);
 
         } catch (error) {
           console.log(error);
@@ -1622,7 +1622,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
       },
       /**
@@ -1745,7 +1745,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         //查询当前所有待办记录
         let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -1756,7 +1756,7 @@ export default {
         });
 
         //同时删除本条待办记录当前(印章管理员)
-        await workflow.deleteViewProcessLog(tlist);
+        await Betools.workflow.deleteViewProcessLog(tlist);
 
       },
       /**
@@ -1874,7 +1874,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
       },
       /**
@@ -1962,7 +1962,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
       },
 

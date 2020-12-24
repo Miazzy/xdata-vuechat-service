@@ -130,10 +130,7 @@
 
 
 import * as announce from '@/request/announce';
-
 import * as query from '@/request/query';
-
-import * as workflow from '@/request/workflow';
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -290,16 +287,16 @@ export default {
       },
       async queryWorkflow(){
         let id = window.decodeURIComponent(this.getUrlParam('id'));
-        let hlist = await workflow.queryPRLogHistoryByDataID(id);
-        let clist = await workflow.queryPRLogByDataID(id);
-        let ilist = await workflow.queryPRLogInformedByDataID(id);
+        let hlist = await Betools.workflow.queryPRLogHistoryByDataID(id);
+        let clist = await Betools.workflow.queryPRLogByDataID(id);
+        let ilist = await Betools.workflow.queryPRLogInformedByDataID(id);
         let list = [...hlist , ...clist , ...ilist];
         this.workflowlist = list;
         this.informList = ilist;
 
         this.workflowlist.map(async (item)=>{
           item.operate_time = Betools.tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
-          item.approve_user = await workflow.queryUserByName(item.approve_user);
+          item.approve_user = await Betools.workflow.queryUserByName(item.approve_user);
         });
       },
       async renderCSS(){

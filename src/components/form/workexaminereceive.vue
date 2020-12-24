@@ -292,7 +292,7 @@
 import * as announce from '@/request/announce';
 
 import * as query from '@/request/query';
-import * as workflow from '@/request/workflow';
+
 
 import * as wflowprocess from '@/request/wflow.process';
 
@@ -614,7 +614,7 @@ export default {
         const pid = Betools.tools.getUrlParam('pid');
 
         try {
-          this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
+          this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
 
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
@@ -661,7 +661,7 @@ export default {
 
           if(tlist.length > 0){
             //同时删除本条待办记录当前(印章管理员)
-            await workflow.deleteViewProcessLog(tlist);
+            await Betools.workflow.deleteViewProcessLog(tlist);
           }
         }
 
@@ -930,7 +930,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.approveViewProcessLog(prLogHisNode);
+        await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
         //同时推送一条待办记录给印章管理员
 
@@ -958,7 +958,7 @@ export default {
           origin_data       : '',
         }
 
-        await workflow.taskViewProcessLog(prLogNode);
+        await Betools.workflow.taskViewProcessLog(prLogNode);
 
         /************************  工作流程日志(结束)  ************************/
 
