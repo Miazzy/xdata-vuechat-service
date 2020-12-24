@@ -127,10 +127,8 @@
   </keep-alive>
 </template>
 <script>
-
 import * as announce from '@/request/announce';
 import * as query from '@/request/query';
-import * as wflowprocess from '@/request/wflow.process';
 
 export default {
     mixins: [window.mixin],
@@ -344,7 +342,7 @@ export default {
       },
       async handleAgree(){
         this.loading = true;
-        let result = await wflowprocess.handleApproveWF();
+        let result = await Betools.wflowprocess.handleApproveWF();
         result == 'success' ? (this.tasktype = 'done') : '';
         setTimeout(async () => {
           await this.queryInfo();
@@ -353,7 +351,7 @@ export default {
       },
       async handleDisagree(){
         this.loading = true;
-        let result = await wflowprocess.handleRejectWF();
+        let result = await Betools.wflowprocess.handleRejectWF();
         result == 'success' ? (this.tasktype = 'done') : '';
         setTimeout(async () => {
           await this.queryInfo();
@@ -362,7 +360,7 @@ export default {
       },
       async handleConfirm(){
         this.loading = true;
-        let result = await wflowprocess.handleConfirmWF();
+        let result = await Betools.wflowprocess.handleConfirmWF();
         result == 'success' ? (this.tasktype = 'done') : '';
         setTimeout(async () => {
           await this.queryInfo();

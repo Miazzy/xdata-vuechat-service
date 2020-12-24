@@ -78,8 +78,6 @@
 <script>
 import * as announce from '@/request/announce';
 
-
-
 export default {
     mixins: [window.mixin],
     data() {

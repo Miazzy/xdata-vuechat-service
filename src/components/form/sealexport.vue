@@ -75,14 +75,8 @@
   </div>
 </template>
 <script>
-
 import * as announce from '@/request/announce';
 import * as query from '@/request/query';
-
-
-import * as wflowprocess from '@/request/wflow.process';
-
-Vue.component('downloadExcel', JsonExcel)
 
 export default {
     mixins: [window.mixin],
