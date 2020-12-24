@@ -242,7 +242,7 @@ const routes = [{
         name: "用印管理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/sealBetools.manage.vue"], resolve)
+            "subPage": resolve => require(["../components/form/sealmanage.vue"], resolve)
         }
     }, {
         path: '/app/sealmylist',
@@ -284,21 +284,21 @@ const routes = [{
         name: "权限管理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/authBetools.manage.vue"], resolve)
+            "subPage": resolve => require(["../components/form/authmanage.vue"], resolve)
         }
     }, {
         path: '/app/employeemanage',
         name: "员工管理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/employeeBetools.manage.vue"], resolve)
+            "subPage": resolve => require(["../components/form/employeemanage.vue"], resolve)
         }
     }, {
         path: '/app/commonmanage',
         name: "数据管理",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/commonBetools.manage.vue"], resolve)
+            "subPage": resolve => require(["../components/form/commonmanage.vue"], resolve)
         }
     }, {
         path: '/app/visitorlist',
