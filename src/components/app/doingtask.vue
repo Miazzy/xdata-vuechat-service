@@ -75,7 +75,7 @@
 
 
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 import news from "../explore/news";
 
 export default {
@@ -176,7 +176,7 @@ export default {
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
+          tlist = await Betools.task.queryProcessLogDone(username , realname , 0 , 30);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 30);
         } else {
           tlist = result;
@@ -194,9 +194,9 @@ export default {
         let result = Betools.storage.getStore(`system_app_task_doing_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          let one = (await task.queryProcessLogWait(username , realname , 0 , 99))||[];
-          let two = (await task.queryProcessLogWait(username , realname , 1 , 99))||[];
-          let three = (await task.queryProcessLogWait(username , realname , 2 , 99))||[];
+          let one = (await Betools.task.queryProcessLogWait(username , realname , 0 , 99))||[];
+          let two = (await Betools.task.queryProcessLogWait(username , realname , 1 , 99))||[];
+          let three = (await Betools.task.queryProcessLogWait(username , realname , 2 , 99))||[];
           tlist = [...one , ...two , ...three];
           Betools.storage.setStore(`system_app_task_doing_by_user@${username}` , tlist , 30);
         } else {
@@ -205,12 +205,12 @@ export default {
 
         //过滤，去掉计时待办业务
         this.ndoingtasks = tlist.filter((item)=>{
-          return !task.TIME_TASK_NAME.includes(item.name);
+          return !Betools.task.TIME_TASK_NAME.includes(item.name);
         });
 
         //过滤，去掉非计时待办业务
         this.tdoingtasks = tlist.filter((item)=>{
-          return task.TIME_TASK_NAME.includes(item.name);
+          return Betools.task.TIME_TASK_NAME.includes(item.name);
         });
 
         //获取所有的计时待办任务

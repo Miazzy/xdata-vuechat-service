@@ -75,7 +75,7 @@
 
 
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 import news from "../explore/news";
 
 export default {
@@ -176,9 +176,9 @@ export default {
         let result = Betools.storage.getStore(`system_app_task_done_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          let one = (await task.queryProcessLogDone(username , realname , 0 , 99))||[];
-          let two = (await task.queryProcessLogDone(username , realname , 1 , 99))||[];
-          let three = (await task.queryProcessLogDone(username , realname , 2 , 99))||[];
+          let one = (await Betools.task.queryProcessLogDone(username , realname , 0 , 99))||[];
+          let two = (await Betools.task.queryProcessLogDone(username , realname , 1 , 99))||[];
+          let three = (await Betools.task.queryProcessLogDone(username , realname , 2 , 99))||[];
           tlist= [...one , ...two , ...three];
           Betools.storage.setStore(`system_app_task_done_by_user@${username}` , tlist , 3600);
         } else {
@@ -190,12 +190,12 @@ export default {
 
         //过滤，去掉计时已办业务
         this.ndonetasks = tlist.filter((item) => {
-          return !task.TIME_TASK_NAME.includes(item.name);
+          return !Betools.task.TIME_TASK_NAME.includes(item.name);
         });
 
         //过滤，去掉非计时已办业务
         this.tdonetasks = tlist.filter((item) => {
-          return task.TIME_TASK_NAME.includes(item.name);
+          return Betools.task.TIME_TASK_NAME.includes(item.name);
         });
 
       },

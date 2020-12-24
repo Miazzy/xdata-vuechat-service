@@ -84,7 +84,7 @@
 <script>
 
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 
 import * as query from '@/request/query';
 

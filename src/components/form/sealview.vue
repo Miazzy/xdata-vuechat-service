@@ -205,7 +205,7 @@
 <script>
 
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 
@@ -1140,7 +1140,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
@@ -1372,7 +1372,7 @@ export default {
 
         try {
           //查询当前所有待办记录
-          let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+          let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
           //过滤出只关联当前流程的待办数据
           tlist = tlist.filter(item => {
@@ -1528,7 +1528,7 @@ export default {
 
         try {
           //查询当前所有待办记录
-          let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+          let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
           //过滤出只关联当前流程的待办数据
           tlist = tlist.filter(item => {
@@ -1748,7 +1748,7 @@ export default {
         await workflow.approveViewProcessLog(prLogHisNode);
 
         //查询当前所有待办记录
-        let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
+        let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {

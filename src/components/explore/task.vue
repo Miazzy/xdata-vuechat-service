@@ -245,7 +245,7 @@
 
 
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 
 export default {
     mixins: [window.mixin],
@@ -328,7 +328,7 @@ export default {
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
+          tlist = await Betools.task.queryProcessLogDone(username , realname , 0 , 30);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
@@ -346,7 +346,7 @@ export default {
         let result = Betools.storage.getStore(`system_task_doing_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          tlist = await Betools.task.queryProcessLogWait(username , realname , 0 , 99);
           Betools.storage.setStore(`system_task_doing_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
@@ -355,7 +355,7 @@ export default {
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
           item['sponsor'] = Betools.tools.isNull(item['sponsor']) ? realname : item['sponsor'];
-          return !task.TIME_TASK_NAME.includes(item.name);
+          return !Betools.task.TIME_TASK_NAME.includes(item.name);
         })
 
         tlist = tlist.slice(0,30);
@@ -373,7 +373,7 @@ export default {
         let result = Betools.storage.getStore(`system_task_time_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
+          tlist = await Betools.task.queryProcessLogWait(username , realname , 0 , 99);
           Betools.storage.setStore(`system_task_time_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
@@ -381,7 +381,7 @@ export default {
 
         //过滤，去掉非计时待办业务
         tlist = tlist.filter((item)=>{
-          return task.TIME_TASK_NAME.includes(item.name);
+          return Betools.task.TIME_TASK_NAME.includes(item.name);
         })
 
         tlist = tlist.slice(0,30);
@@ -398,7 +398,7 @@ export default {
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
-          tlist = await task.queryProcessLogDone(username , realname , 0 , 90);
+          tlist = await Betools.task.queryProcessLogDone(username , realname , 0 , 90);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;

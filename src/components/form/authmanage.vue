@@ -55,7 +55,7 @@
 
 <script>
 import * as announce from '@/request/announce';
-import * as task from '@/request/task';
+
 
 
 export default {
