@@ -1,4 +1,3 @@
-import * as tools from '@/request/tools';
 import * as contact from '@/vuex/contacts';
 import * as constant from '@/request/constant';
 
@@ -485,8 +484,8 @@ export async function queryWeworkUser() {
 
     try {
         //获取用户CODE
-        let code = tools.queryUrlString('code', 'search');
-        let system_type = tools.queryUrlString('system_type', 'history');
+        let code = Betools.tools.queryUrlString('code', 'search');
+        let system_type = Betools.tools.queryUrlString('system_type', 'history');
 
         //获取用户信息
         if (code) {

@@ -128,7 +128,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -263,7 +263,7 @@ export default {
           } catch (error) {
             console.log(error);
           }
-          this.previewurl = await tools.queryFileViewURL(this.files);
+          this.previewurl = await Betools.tools.queryFileViewURL(this.files);
           let previewFlag = (ntime - ctime) > 20000;
           if(this.previewurl&&previewFlag&&this.previewurl.endsWith('pdf')){
             this.purl = constant.PDF_PREVIEW_URL + this.previewurl;

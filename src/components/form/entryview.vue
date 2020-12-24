@@ -316,7 +316,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -863,8 +863,8 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户编号
-          this.item.id = tools.getUrlParam('id');
-          this.role = tools.getUrlParam('role');
+          this.item.id = Betools.tools.getUrlParam('id');
+          this.role = Betools.tools.getUrlParam('role');
 
           //根据编号查询用户登记数据
           const value = await query.queryTableData(`bs_entry_job` , this.item.id);
@@ -968,7 +968,7 @@ export default {
           await this.queryMealMan();
 
           //获取返回页面
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = Betools.tools.getUrlParam('back') || '/app';
 
         } catch (error) {
           console.log(error);
@@ -995,7 +995,7 @@ export default {
       async handleDisagree() {
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //设置前台确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , status: '已驳回' });
@@ -1017,7 +1017,7 @@ export default {
         this.loading = true;
 
         // 系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         // 获取相应对接人员信息
         const front_name = this.item.front_name;
@@ -1111,7 +1111,7 @@ export default {
       async handleFrontConfirm(){
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //设置前台确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , front_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
@@ -1135,7 +1135,7 @@ export default {
       async handleAdminConfirm(){
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //设置行政确认时间
         await manageAPI.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
@@ -1159,7 +1159,7 @@ export default {
       async handleMealConfirm(){
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //获取食堂账户
         const meal_account = this.item.meal_account;
 
@@ -1196,7 +1196,7 @@ export default {
         await Betools.tools.sleep(100);
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //查询归档状态
         const value = await query.queryTableData(`bs_entry_job` , id);

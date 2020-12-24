@@ -204,7 +204,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -916,13 +916,13 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;
-          that.item.id = tools.getUrlParam('id');
-          that.item.status = this.statusType[tools.getUrlParam('statustype')];
-          that.item.type = tools.getUrlParam('type');
+          that.item.id = Betools.tools.getUrlParam('id');
+          that.item.status = this.statusType[Betools.tools.getUrlParam('statustype')];
+          that.item.type = Betools.tools.getUrlParam('type');
 
           //获取view状态
-          this.view = tools.getUrlParam('view');
-          this.back = tools.getUrlParam('back') || '/app';
+          this.view = Betools.tools.getUrlParam('view');
+          this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //查询用印数据
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
@@ -1103,8 +1103,8 @@ export default {
        */
       async queryProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
@@ -1131,8 +1131,8 @@ export default {
       },
       async deleteProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
@@ -1167,7 +1167,7 @@ export default {
 
         //获取用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-        const pid = tools.getUrlParam('pid');
+        const pid = Betools.tools.getUrlParam('pid');
 
         if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1254,10 +1254,10 @@ export default {
         })
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //领取人OA账户
@@ -1323,7 +1323,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1349,7 +1349,7 @@ export default {
 
         //同时推送一条待办记录给前台用户
         const prLogNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: this.item.front,
@@ -1407,7 +1407,7 @@ export default {
 
         //获取用户信息
         let userinfo = await Betools.storage.getStore('system_userinfo');
-        const pid = tools.getUrlParam('pid');
+        const pid = Betools.tools.getUrlParam('pid');
 
         if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1452,10 +1452,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //领取人OA账户
@@ -1505,7 +1505,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1574,10 +1574,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -1603,7 +1603,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1637,7 +1637,7 @@ export default {
 
         //获取用户信息
         let userinfo = await Betools.storage.getStore('system_userinfo');
-        const pid = tools.getUrlParam('pid');
+        const pid = Betools.tools.getUrlParam('pid');
 
         if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1659,10 +1659,10 @@ export default {
         }
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -1726,7 +1726,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1792,10 +1792,10 @@ export default {
         })
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
         const email = this.item.dealMail;
         //提示信息
@@ -1855,7 +1855,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1901,7 +1901,7 @@ export default {
         });
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //领取人OA账户
         const username = this.item.username;
@@ -1943,7 +1943,7 @@ export default {
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: 'bs_seal_regist',
           main_value: id,
           proponents: username,
@@ -1977,10 +1977,10 @@ export default {
         var noname = '合同编号';
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //系统编号
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
 
         //领取人OA账户
         const username = this.item.username;

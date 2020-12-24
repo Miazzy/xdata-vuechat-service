@@ -55,7 +55,7 @@
 
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
@@ -138,7 +138,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
         const item = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           create_by: userinfo.username,
           create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           address: '',

@@ -206,7 +206,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -571,7 +571,7 @@ export default {
       },
       // 获取处理日志
       async queryProcessLog(){
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
           this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
@@ -582,8 +582,8 @@ export default {
       },
       async deleteProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
@@ -645,9 +645,9 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = Betools.tools.getUrlParam('back') || '/app';
           //查询type
-          const type = tools.getUrlParam('type') || '0';
+          const type = Betools.tools.getUrlParam('type') || '0';
 
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -703,8 +703,8 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //表单ID
-        const id = tools.queryUniqueID();
-        const type = tools.getUrlParam('type');
+        const id = Betools.tools.queryUniqueID();
+        const type = Betools.tools.getUrlParam('type');
 
         //验证数据是否已经填写
         const keys = Object.keys({ title: '', company: '', department: '', content: '', amount: '', reward_type: '', reward_name: '', reward_period: '', hr_name: '', apply_realname: '', files:''})
@@ -800,7 +800,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: userinfo.username,
@@ -828,7 +828,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: front,

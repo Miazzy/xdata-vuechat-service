@@ -327,7 +327,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -744,8 +744,8 @@ export default {
       // 获取处理日志
       async queryProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
@@ -773,8 +773,8 @@ export default {
       // 删除流程日志
       async deleteProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
@@ -837,9 +837,9 @@ export default {
           const userinfo = await Betools.storage.getStore('system_userinfo');
 
           //查询编号
-          const id = tools.getUrlParam('id');
-          this.role = tools.getUrlParam('role');
-          this.back = tools.getUrlParam('back') || '/app';
+          const id = Betools.tools.getUrlParam('id');
+          this.role = Betools.tools.getUrlParam('role');
+          this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //查询领用数据
           let tlist = await query.queryTableDataByPid(this.tablename , id);
@@ -854,7 +854,7 @@ export default {
           const item = tlist[0];
 
           //根据URL参数查询物资类型
-          this.item.type = this.goodstype[tools.getUrlParam('type')];
+          this.item.type = this.goodstype[Betools.tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){
@@ -908,8 +908,8 @@ export default {
 
         //表单ID
         const id = this.item.id;
-        const type = tools.getUrlParam('statustype');
-        const pid = tools.getUrlParam('pid');
+        const type = Betools.tools.getUrlParam('statustype');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //检查用户是否具有权限进行审批
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
@@ -988,7 +988,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: userinfo.username,
@@ -1040,8 +1040,8 @@ export default {
 
         //表单ID
         const id = this.item.id;
-        const type = tools.getUrlParam('statustype');
-        const pid = tools.getUrlParam('pid');
+        const type = Betools.tools.getUrlParam('statustype');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //检查用户是否具有权限进行审批
         const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
@@ -1113,7 +1113,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: userinfo.username,
@@ -1141,7 +1141,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: this.item.create_by,
@@ -1189,7 +1189,7 @@ export default {
 
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-        const pid = tools.getUrlParam('pid');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //表单ID
         const id = this.item.id;
@@ -1218,7 +1218,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: userinfo.username,

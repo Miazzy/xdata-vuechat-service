@@ -33,7 +33,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as contact from '@/vuex/contacts';
 
 const loginURL = `${window.requestAPIConfig.domain}/jeecg-boot/sys/login`;

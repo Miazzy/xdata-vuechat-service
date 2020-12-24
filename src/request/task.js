@@ -1,5 +1,3 @@
-import * as tools from '@/request/tools';
-
 import * as query from '@/request/query';
 
 //计时待办任务常量数组

@@ -76,7 +76,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as query from '@/request/query';
 import * as constant from '@/request/constant';

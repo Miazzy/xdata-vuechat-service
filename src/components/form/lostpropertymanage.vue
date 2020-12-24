@@ -83,7 +83,7 @@
 
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
@@ -242,7 +242,7 @@ export default {
         this.queryTabList('认领' , 0);
 
         //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
+        this.back = Betools.tools.getUrlParam('back') || '/app';
 
       },
       async queryTabList(tabname = 1 , page){

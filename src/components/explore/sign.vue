@@ -63,7 +63,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 
@@ -218,7 +218,7 @@ export default {
         }
 
         //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
+        this.back = Betools.tools.getUrlParam('back') || '/app';
 
       },
       getIPs(callback){

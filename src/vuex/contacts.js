@@ -1,5 +1,3 @@
-import * as tools from '@/request/tools';
-
 /**
  * wxid-微信id
  * initial-姓名首字母
@@ -29,7 +27,7 @@ export const queryDepartUserList = async() => {
 
     //获取当前登录用户信息
     const userinfo = await Betools.storage.getStore('system_userinfo');
-    const system_type = tools.queryUrlString('system_type', 'history');
+    const system_type = Betools.tools.queryUrlString('system_type', 'history');
 
     //如果没有获取到用户数据，则无法获取部门信息
     if (Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.main_department)) {

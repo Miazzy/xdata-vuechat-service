@@ -1,6 +1,3 @@
-import * as tools from '@/request/tools';
-
-
 /**
  * 获取行政公告数据
  */

@@ -43,7 +43,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as constant from '@/request/constant';
@@ -96,7 +96,7 @@ export default {
         this.files = window.decodeURIComponent(this.getUrlParam('files'));
         this.from = window.decodeURIComponent(this.getUrlParam('from'));
         this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
-        this.previewurl = await tools.queryFileViewURL(this.files);
+        this.previewurl = await Betools.tools.queryFileViewURL(this.files);
         if(this.previewurl&&this.previewurl.endsWith('pdf')){
           this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
         } else if(this.previewurl){

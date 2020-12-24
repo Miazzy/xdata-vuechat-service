@@ -673,7 +673,7 @@ try {
             console.log('set curRow sub_data error :' + error);
         }
         try {
-            main.pageType = window.tools.queryUrlString('type');
+            main.pageType = window.Betools.tools.queryUrlString('type');
         } catch (error) {
             console.log('set curRow pageType error :' + error);
         }
@@ -731,7 +731,7 @@ try {
             console.log('set curRow slides error :' + error);
         }
         try {
-            main.tableName = window.tools.queryUrlString('table_name');
+            main.tableName = window.Betools.tools.queryUrlString('table_name');
         } catch (error) {
             console.log('set curRow tableName error :' + error);
         }
@@ -771,22 +771,22 @@ try {
      */
     var queryCurNodePageType = async(pageType, tools = window.tools, queryProcessLogByID = window.queryProcessLogByID, queryProcessLogInfByID = window.queryProcessLogInfByID) => {
         //获取页面类型
-        var type = window.tools.queryUrlString('type');
+        var type = window.Betools.tools.queryUrlString('type');
 
         try {
             //如果审批详情或者知会详情页面，则设置pageType
             if (type == 'workflow' || type == 'notify') {
                 //获取当前节点审批流程数据）
                 var flag = await queryProcessLogByID(
-                    window.tools.queryUrlString('table_name'),
-                    window.tools.queryUrlString('processLogID')
+                    window.Betools.tools.queryUrlString('table_name'),
+                    window.Betools.tools.queryUrlString('processLogID')
                 );
 
                 //获取当前节点知会流程数据
                 if (Betools.Betools.tools.deNull(flag) == '') {
                     flag = await queryProcessLogInfByID(
-                        window.tools.queryUrlString('table_name'),
-                        window.tools.queryUrlString('processLogID')
+                        window.Betools.tools.queryUrlString('table_name'),
+                        window.Betools.tools.queryUrlString('processLogID')
                     );
                 }
 
@@ -2034,11 +2034,11 @@ try {
         //获取部门信息
         var department = '';
         //获取对应表单信息
-        var tableName = window.tools.queryUrlString('table_name');
+        var tableName = window.Betools.tools.queryUrlString('table_name');
         //查询主键ID
-        var id = window.tools.queryUrlString('id');
+        var id = window.Betools.tools.queryUrlString('id');
         //获取用户名称
-        var username = window.tools.queryUrlString('user');
+        var username = window.Betools.tools.queryUrlString('user');
 
         //如果不是表单详情页面，则直接返回
         if (!(path.includes('/workflow/view') || path.includes('/basewflow/view'))) {
@@ -3031,7 +3031,7 @@ try {
 
         try {
             //使用新算法，获取唯一字符串
-            res = window.tools.queryUniqueID(length);
+            res = window.Betools.tools.queryUniqueID(length);
         } catch (error) {
             console.log('获取n位随机数异常：' + error);
         }

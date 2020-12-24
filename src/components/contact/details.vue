@@ -64,7 +64,7 @@
 </template>
 <script>
 import * as contact from '@/vuex/contacts';
-import * as tools from '@/request/tools';
+
 
 export default {
     data() {

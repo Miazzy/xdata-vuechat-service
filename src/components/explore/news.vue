@@ -279,7 +279,7 @@
 
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 
@@ -339,7 +339,7 @@ export default {
         let username = info.username;
         let temp = null;
 
-        this.tabname = (await tools.getUrlParam('tabname')) || '1';
+        this.tabname = (await Betools.tools.getUrlParam('tabname')) || '1';
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_announce_by_user@${username}`);
@@ -364,7 +364,7 @@ export default {
         this.announces = temp.slice(0,30);
 
         //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
+        this.back = Betools.tools.getUrlParam('back') || '/app';
       },
       async queryEach(){
         this.alist = await announce.queryAnnounceList(0,30);

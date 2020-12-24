@@ -1,5 +1,3 @@
-import * as tools from '@/request/tools';
-
 import * as manage from '@/request/manage';
 import * as workflow from '@/request/workflow';
 import * as query from '@/request/query';
@@ -16,10 +14,10 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     var wflowNotifyUsers = ''; //会签用户，暂时设置为空
 
     //查询业务编号
-    var bussinessCodeID = tools.queryUrlString("id");
+    var bussinessCodeID = Betools.tools.queryUrlString("id");
 
     //获取表单名称
-    var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
+    var tableName = window.decodeURIComponent(Betools.tools.queryUrlString('tname'));
 
     //会签、加签用户
     var wflowSpecUser = wflowAddUsers + "," + wflowNotifyUsers;
@@ -57,7 +55,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     console.log("会签/加签用户 : " + wflowSpecUser);
 
     //加签会签选中的用户，不能是流程中已经存在的用户
-    var readyUser = tools.contain(
+    var readyUser = Betools.tools.contain(
         wfreeNode.audit_node + "," + wfreeNode.approve_node,
         wflowSpecUser
     );
@@ -94,7 +92,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //审批意见
     var message = message || curRow.idea_content || "同意";
     //流程日志编号
-    var processLogID = tools.queryUrlString("pid");
+    var processLogID = Betools.tools.queryUrlString("pid");
     //审批节点信息
     var approveNode = null;
     //定义当前审批日志信息
@@ -674,7 +672,7 @@ async function handleNotifyHR(user_group_ids, userinfo, value, receiveURL) {
 async function handleTaskItem(data, curRow, result = "") {
 
     //打印表单名称
-    var tableName = tools.queryUrlString("table_name");
+    var tableName = Betools.tools.queryUrlString("table_name");
 
     //获取当前时间戳
     var timestamp = new Date().getTime();
@@ -719,10 +717,10 @@ export async function handleRejectWF() {
         .then(async() => {
 
             //查询业务编号
-            var bussinessCodeID = tools.queryUrlString("id");
+            var bussinessCodeID = Betools.tools.queryUrlString("id");
 
             //获取表单名称
-            var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
+            var tableName = window.decodeURIComponent(Betools.tools.queryUrlString('tname'));
 
             //查询当前数据
             var curRow = await query.queryTableData(tableName, bussinessCodeID);
@@ -749,7 +747,7 @@ export async function handleRejectWF() {
             var message = message || curRow.idea_content || "驳回";
 
             //流程日志编号
-            var processLogID = tools.queryUrlString("pid");
+            var processLogID = Betools.tools.queryUrlString("pid");
 
             //流程状态
             var bpmStatus = { bpm_status: "1" };
@@ -843,10 +841,10 @@ export async function handleConfirmWF() {
         .then(async() => {
 
             //查询业务编号
-            var bussinessCodeID = tools.queryUrlString("id");
+            var bussinessCodeID = Betools.tools.queryUrlString("id");
 
             //获取表单名称
-            var tableName = window.decodeURIComponent(tools.queryUrlString('tname'));
+            var tableName = window.decodeURIComponent(Betools.tools.queryUrlString('tname'));
 
             //查询当前数据
             var curRow = await query.queryTableData(tableName, bussinessCodeID);
@@ -870,7 +868,7 @@ export async function handleConfirmWF() {
             var message = message || curRow.idea_content || "知会确认";
 
             //流程日志编号
-            var processLogID = tools.queryUrlString("pid");
+            var processLogID = Betools.tools.queryUrlString("pid");
 
             //定义流程状态
             var bpmStatus = { bpm_status: "5" };

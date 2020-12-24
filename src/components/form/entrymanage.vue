@@ -103,7 +103,7 @@
 
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
@@ -281,8 +281,8 @@ export default {
         this.$forceUpdate();
 
         //获取返回页面
-        this.back = tools.getUrlParam('back') || '/app';
-        this.role = tools.getUrlParam('role') || 'front';
+        this.back = Betools.tools.getUrlParam('back') || '/app';
+        this.role = Betools.tools.getUrlParam('role') || 'front';
 
         //获取tabname
         this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1';
@@ -381,7 +381,7 @@ export default {
         const item = list.find((item,index) => {return id == item.id});
 
         //获取角色ROLE
-        const role = tools.getUrlParam('role') || 'admin';
+        const role = Betools.tools.getUrlParam('role') || 'admin';
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){

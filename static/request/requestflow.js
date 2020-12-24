@@ -37,7 +37,7 @@ window.initWflowPage = initWflowPage;
  */
 async function handleMount(that, tools = window.tools, storage = window.storage, manageAPI = window.manageAPI) {
     //业务编码
-    var bussinessCodeID = tools.queryUrlString("id");
+    var bussinessCodeID = Betools.tools.queryUrlString("id");
     //查询当前节点信息
     var wthat = await manageAPI.watchFormLeave(that);
     //获取返回结果
@@ -49,7 +49,7 @@ async function handleMount(that, tools = window.tools, storage = window.storage,
     //自由流程节点
     var wfreeNode = await manageAPI.queryCurFreeWorkflow(bussinessCodeID);
     //打印标识
-    that.printflag = tools.queryUrlString("printflag") || "false";
+    that.printflag = Betools.tools.queryUrlString("printflag") || "false";
     //查询评论信息
     that.replaylist = await manageAPI.queryCurReplayList(bussinessCodeID);
     //获取文件编号
@@ -83,7 +83,7 @@ window.handleMount = handleMount;
  */
 async function loadData(that, tools, manageAPI) {
     //业务编码
-    var bussinessCodeID = tools.queryUrlString("id");
+    var bussinessCodeID = Betools.tools.queryUrlString("id");
     //查询当前节点信息
     var wthat = await manageAPI.watchFormLeave(that);
     //获取返回结果
@@ -124,7 +124,7 @@ async function loadWorkflowNode(that, tools, storage, manageAPI) {
             Object.keys(node).length == 0
         ) {
             //获取表单名称
-            var tableName = tools.queryUrlString("table_name");
+            var tableName = Betools.tools.queryUrlString("table_name");
             //获取当前用户
             var userInfo = Betools.storage.getStore("cur_user");
 
@@ -487,7 +487,7 @@ window.handleUserInfo = handleUserInfo;
  */
 async function handleApproveWF(that, tools = window.tools, storage = window.storage, manageAPI = window.manageAPI, workflowAPI = window.workflowAPI) {
     //查询业务编号
-    var bussinessCodeID = tools.queryUrlString("id");
+    var bussinessCodeID = Betools.tools.queryUrlString("id");
 
     //会签、加签用户
     var wflowSpecUser = that.wflowAddUsers + "," + that.wflowNotifyUsers;
@@ -519,7 +519,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
     console.log("会签/加签用户 : " + wflowSpecUser);
 
     //加签会签选中的用户，不能是流程中已经存在的用户
-    var readyUser = tools.contain(
+    var readyUser = Betools.tools.contain(
         wfreeNode.audit_node + "," + wfreeNode.approve_node,
         wflowSpecUser
     );
@@ -562,9 +562,9 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
             //当前被选中记录数据
             var curRow = that.curRow;
             //流程日志编号
-            var processLogID = tools.queryUrlString("processLogID");
+            var processLogID = Betools.tools.queryUrlString("processLogID");
             //打印表单名称
-            var tableName = tools.queryUrlString("table_name");
+            var tableName = Betools.tools.queryUrlString("table_name");
             //审批节点信息
             var approveNode = null;
             //定义当前审批日志信息
@@ -1118,7 +1118,7 @@ window.handleApproveWF = handleApproveWF;
 async function handleTaskItem(result = "", that, tools = window.tools, manageAPI = window.manageAPI) {
 
     //打印表单名称
-    var tableName = tools.queryUrlString("table_name");
+    var tableName = Betools.tools.queryUrlString("table_name");
 
     //获取当前时间戳
     var timestamp = new Date().getTime();
@@ -1185,11 +1185,11 @@ async function handleRejectWF(that, storage = window.storage, tools = window.too
             var curRow = that.curRow;
 
             //流程日志编号
-            var processLogID = tools.queryUrlString("processLogID");
+            var processLogID = Betools.tools.queryUrlString("processLogID");
 
             //打印表单名称
             var tableName =
-                curRow["table_name"] || tools.queryUrlString("table_name");
+                curRow["table_name"] || Betools.tools.queryUrlString("table_name");
 
             //流程状态
             var bpmStatus = { bpm_status: "1" };
@@ -1301,10 +1301,10 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
             var curRow = that.curRow;
 
             //流程日志编号
-            var processLogID = tools.queryUrlString("processLogID");
+            var processLogID = Betools.tools.queryUrlString("processLogID");
 
             //打印表单名称
-            var tableName = tools.queryUrlString("table_name");
+            var tableName = Betools.tools.queryUrlString("table_name");
 
             //定义流程状态
             var bpmStatus = { bpm_status: "5" };
@@ -1462,10 +1462,10 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
     );
 
     //获取当前表单表名
-    var curTableName = tools.queryUrlString("table_name");
+    var curTableName = Betools.tools.queryUrlString("table_name");
 
     //获取当前表单编号
-    var curItemID = tools.queryUrlString("id");
+    var curItemID = Betools.tools.queryUrlString("id");
 
     //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
     let vflag = await manageAPI.queryApprovalExist(curTableName, curItemID);
@@ -1605,7 +1605,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
             var ctime = Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
 
             //获取此表单，关联的流程业务模块
-            var tableName = tools.queryUrlString("table_name");
+            var tableName = Betools.tools.queryUrlString("table_name");
 
             //自由流程节点
             var node = {
@@ -1613,7 +1613,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 create_by: userInfo["username"],
                 create_time: ctime,
                 table_name: tableName,
-                main_key: tools.queryUrlString("id"),
+                main_key: Betools.tools.queryUrlString("id"),
                 audit_node: Betools.tools.deNull(wfUsers),
                 approve_node: Betools.tools.deNull(approver),
                 notify_node: Betools.tools.deNull(nfUsers)
@@ -1630,8 +1630,8 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 node = {
                     id: manageAPI.queryRandomStr(32), //获取随机数
                     table_name: tableName, //业务表名
-                    main_value: tools.queryUrlString("id"), //表主键值
-                    business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+                    main_value: Betools.tools.queryUrlString("id"), //表主键值
+                    business_data_id: Betools.tools.queryUrlString("id"), //业务具体数据主键值
                     business_code: "000000000", //业务编号
                     process_name: "自由流程审批", //流程名称
                     employee: userInfo["username"],
@@ -1667,8 +1667,8 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 node = {
                     id: manageAPI.queryRandomStr(32), //获取随机数
                     table_name: tableName, //业务表名
-                    main_value: tools.queryUrlString("id"), //表主键值
-                    business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+                    main_value: Betools.tools.queryUrlString("id"), //表主键值
+                    business_data_id: Betools.tools.queryUrlString("id"), //业务具体数据主键值
                     business_code: "000000000", //业务编号
                     process_name: "自由流程审批", //流程名称
                     employee: firstWflowUser,
@@ -1758,18 +1758,18 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 //获取当前表单信息
                 let curRow = await manageAPI.queryTableData(
                     tableName,
-                    tools.queryUrlString("id")
+                    Betools.tools.queryUrlString("id")
                 );
 
                 //检查此业务ID对应最近一个小时的知会信息，一个业务ID最多知会3次
                 let loginfo = await manageAPI.queryPRLogInfTotal(
-                    tools.queryUrlString("id")
+                    Betools.tools.queryUrlString("id")
                 );
 
                 let countinfo = await manageAPI.queryTableDataByField(
                     "v_handling_events",
                     "id",
-                    tools.queryUrlString("id")
+                    Betools.tools.queryUrlString("id")
                 );
 
                 //如果当前流程状态没有审批通过，则无法发送知会信息
@@ -1812,8 +1812,8 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 var pnode = {
                     id: manageAPI.queryRandomStr(32), //获取随机数
                     table_name: tableName, //业务表名
-                    main_value: tools.queryUrlString("id"), //表主键值
-                    business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
+                    main_value: Betools.tools.queryUrlString("id"), //表主键值
+                    business_data_id: Betools.tools.queryUrlString("id"), //业务具体数据主键值
                     business_code: "000000001", //业务编号
                     process_name: "自由流程知会", //流程名称
                     employee: Betools.tools.deNull(nfUsers),
@@ -1870,13 +1870,13 @@ window.handleSubmitWF = handleSubmitWF;
 async function handleWriteComment(that, tools = window.tools, storage = window.storage, manageAPI = window.manageAPI) {
     //获取数据编号
     var id = Betools.tools.isNull(that.curRow.id) ?
-        tools.queryUrlString("id") :
+        Betools.tools.queryUrlString("id") :
         that.curRow.id;
 
     if (Betools.tools.isNull(that.replayid)) {
         //定义评论对象
         let node = {
-            id: tools.queryUniqueID(),
+            id: Betools.tools.queryUniqueID(),
             create_by: that.userInfo.username,
             create_time: Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
             content: `${that.replayvalue} `,
@@ -1908,7 +1908,7 @@ async function handleWriteComment(that, tools = window.tools, storage = window.s
 
         //将回复评论加入数组
         replay.push({
-            id: tools.queryUniqueID(),
+            id: Betools.tools.queryUniqueID(),
             create_by: that.userInfo.username,
             create_time: Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
             content: `${that.replayvalue} `,

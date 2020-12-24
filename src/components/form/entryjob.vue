@@ -345,7 +345,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -1008,14 +1008,14 @@ export default {
 
         try {
           this.iswechat = Betools.tools.isWechat();
-          this.item.sealman = tools.getUrlParam('sealman');
+          this.item.sealman = Betools.tools.getUrlParam('sealman');
 
           const item = Betools.storage.getStore('system_entry_job_item');
 
-          this.item.hr = tools.getUrlParam('hr');        //用印管理员成员组
-          this.item.admin = tools.getUrlParam('admin');  //用印前台接受组
-          this.item.front = tools.getUrlParam('front');  //用印归档组(财务/档案)
-          this.item.meal = tools.getUrlParam('meal');  //用印
+          this.item.hr = Betools.tools.getUrlParam('hr');        //用印管理员成员组
+          this.item.admin = Betools.tools.getUrlParam('admin');  //用印前台接受组
+          this.item.front = Betools.tools.getUrlParam('front');  //用印归档组(财务/档案)
+          this.item.meal = Betools.tools.getUrlParam('meal');  //用印
 
           //自动回显刚才填写的用户基础信息
           if(item){
@@ -1124,7 +1124,7 @@ export default {
         this.loading = true;
 
         //表单ID
-        const id = tools.queryUniqueID();
+        const id = Betools.tools.queryUniqueID();
 
         // 用户对接HR姓名
         const hr_name = this.item.hr_name;

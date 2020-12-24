@@ -1,6 +1,3 @@
-import * as tools from '@/request/tools';
-
-
 /**
  * @function 查询当前自由流程业务
  * @param {*} id
@@ -269,7 +266,7 @@ export function queryRandomStr(length = 32) {
 
     try {
         //使用新算法，获取唯一字符串
-        res = tools.queryUniqueID(length);
+        res = Betools.tools.queryUniqueID(length);
     } catch (error) {
         console.log('获取n位随机数异常：' + error);
     }
@@ -676,22 +673,22 @@ export async function queryUserBySealData(name) {
  */
 export async function queryCurNodePageType(pageType) {
     //获取页面类型
-    var type = tools.queryUrlString('type');
+    var type = Betools.tools.queryUrlString('type');
 
     try {
         //如果审批详情或者知会详情页面，则设置pageType
         if (type == 'workflow' || type == 'notify') {
             //获取当前节点审批流程数据）
             var flag = await queryProcessLogByID(
-                tools.queryUrlString('table_name'),
-                tools.queryUrlString('processLogID')
+                Betools.tools.queryUrlString('table_name'),
+                Betools.tools.queryUrlString('processLogID')
             );
 
             //获取当前节点知会流程数据
             if (Betools.tools.deNull(flag) == '') {
                 flag = await queryProcessLogInfByID(
-                    tools.queryUrlString('table_name'),
-                    tools.queryUrlString('processLogID')
+                    Betools.tools.queryUrlString('table_name'),
+                    Betools.tools.queryUrlString('processLogID')
                 );
             }
 

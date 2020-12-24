@@ -294,7 +294,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -609,8 +609,8 @@ export default {
        */
       async queryProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
@@ -637,8 +637,8 @@ export default {
       },
       async deleteProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
@@ -732,7 +732,7 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -741,7 +741,7 @@ export default {
           const item = Betools.storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
 
           //根据URL参数查询物资类型
-          this.item.type = this.goodsborrowtype[tools.getUrlParam('type')];
+          this.item.type = this.goodsborrowtype[Betools.tools.getUrlParam('type')];
 
           //自动回显刚才填写的用户基础信息
           if(item){
@@ -779,8 +779,8 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //表单ID
-        const id = tools.queryUniqueID();
-        const type = tools.getUrlParam('type');
+        const id = Betools.tools.queryUniqueID();
+        const type = Betools.tools.getUrlParam('type');
 
         //验证数据是否已经填写
         const keys = Object.keys({
@@ -891,7 +891,7 @@ export default {
           for(let i = 1; i <= tsize ; i++){
             try {
               let element = {
-                    id: tools.queryUniqueID(),
+                    id: Betools.tools.queryUniqueID(),
                     create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                     create_by : userinfo.username,
                     name : this.item['name' + i],
@@ -944,7 +944,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: userinfo.username,
@@ -972,7 +972,7 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogNode = {
-          id: tools.queryUniqueID(),
+          id: Betools.tools.queryUniqueID(),
           table_name: this.tablename,
           main_value: id,
           proponents: front,

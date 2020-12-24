@@ -58,7 +58,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as contact from '@/vuex/contacts';
 
 const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V9';

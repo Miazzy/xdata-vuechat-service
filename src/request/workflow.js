@@ -1,5 +1,3 @@
-import * as tools from '@/request/tools';
-
 import * as constant from '@/request/constant';
 import * as manage from '@/request/manage';
 import * as query from '@/request/query';
@@ -457,7 +455,7 @@ export async function postWorkflowFree(userInfo, tableName, curRow, freeWFNode, 
         var timestamp = new Date().getTime();
 
         //定义动态编码
-        var id = tools.queryUniqueID();
+        var id = Betools.tools.queryUniqueID();
 
         //表单数据库数据
         var mainData = await query.queryTableData(tableName, curRow.id);

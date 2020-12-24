@@ -194,7 +194,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -578,7 +578,7 @@ export default {
       },
       // 获取处理日志
       async queryProcessLog(){
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
           this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
@@ -589,8 +589,8 @@ export default {
       },
       async deleteProcessLog(){
 
-        const id = tools.getUrlParam('id');
-        const pid = tools.getUrlParam('pid');
+        const id = Betools.tools.getUrlParam('id');
+        const pid = Betools.tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
@@ -624,11 +624,11 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
-          this.back = tools.getUrlParam('back') || '/app';
+          this.back = Betools.tools.getUrlParam('back') || '/app';
           //查询type
-          const type = tools.getUrlParam('type') || '0';
+          const type = Betools.tools.getUrlParam('type') || '0';
           //查询ID
-          const id = tools.getUrlParam('id');
+          const id = Betools.tools.getUrlParam('id');
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //查询数据

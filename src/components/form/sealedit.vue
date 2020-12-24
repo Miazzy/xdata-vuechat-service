@@ -188,7 +188,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -821,15 +821,15 @@ export default {
         try {
           const that = this;
           this.iswechat = Betools.tools.isWechat();
-          this.groupid = tools.getUrlParam('groupid') || 'Group_LD';
+          this.groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取view状态
-          this.view = tools.getUrlParam('view');
-          this.back = tools.getUrlParam('back') || '/app';
+          this.view = Betools.tools.getUrlParam('view');
+          this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //获取ID，然后获取到相应的原用印登记信息
-          const value = await query.queryTableData(`bs_seal_regist` , tools.getUrlParam('id'));
+          const value = await query.queryTableData(`bs_seal_regist` , Betools.tools.getUrlParam('id'));
 
           this.item = {
               id: value.id,
@@ -973,7 +973,7 @@ export default {
        * @function 获取处理日志
        */
       async queryProcessLog(){
-        const id = tools.getUrlParam('id');
+        const id = Betools.tools.getUrlParam('id');
         try {
           this.processLogList = await workflow.queryPRLogHistoryByDataID(id);
           this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
@@ -1069,7 +1069,7 @@ export default {
         }
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //第一步，构造form对象
         const item = this.item;
@@ -1101,8 +1101,8 @@ export default {
         const prefix = item.prefix;
         const company = item.company;
         const partner = item.partner;
-        const seal_wflow = tools.getUrlParam('statustype') || 'none';
-        const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
+        const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
+        const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
 
         const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , sign_man , workno , seal_wflow , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , prefix , company , partner , message : item.message }; // 待提交元素
 

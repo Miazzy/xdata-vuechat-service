@@ -87,7 +87,7 @@
 import * as manageAPI from '@/request/manage';
 
 import * as contact from '@/vuex/contacts';
-import * as tools from '@/request/tools';
+
 import * as query from '@/request/query';
 
 export default {
@@ -275,7 +275,7 @@ export default {
 
           const message = this.message;
           const wxid = this.$route.query.wxid;
-          const id = tools.queryUniqueID();
+          const id = Betools.tools.queryUniqueID();
 
           let userids = [ myuserinfo.userid , wxid ];
           userids = userids.sort();

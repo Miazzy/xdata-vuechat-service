@@ -26,7 +26,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 
 export default {
     mixins: [window.mixin],

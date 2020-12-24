@@ -173,7 +173,7 @@
 </template>
 <script>
 
-import * as tools from '@/request/tools';
+
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
@@ -1192,14 +1192,14 @@ export default {
 
           var that = this;
 
-          that.item.sealman = tools.getUrlParam('sealman');
-          that.item.status = this.statusType[tools.getUrlParam('statustype')];
-          that.sealuserid = tools.getUrlParam('sealuserid');
-          that.groupid = tools.getUrlParam('groupid') || 'Group_LD';
+          that.item.sealman = Betools.tools.getUrlParam('sealman');
+          that.item.status = this.statusType[Betools.tools.getUrlParam('statustype')];
+          that.sealuserid = Betools.tools.getUrlParam('sealuserid');
+          that.groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
-          that.item.seal = tools.getUrlParam('seal'); //用印管理员成员组
-          that.item.front = tools.getUrlParam('front');  //用印前台接受组
-          that.item.archive = tools.getUrlParam('archive'); //用印归档组(财务/档案)
+          that.item.seal = Betools.tools.getUrlParam('seal'); //用印管理员成员组
+          that.item.front = Betools.tools.getUrlParam('front');  //用印前台接受组
+          that.item.archive = Betools.tools.getUrlParam('archive'); //用印归档组(财务/档案)
 
           //如果盖印人填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
@@ -1422,12 +1422,12 @@ export default {
         }
 
         //公司工作组
-        const groupid = tools.getUrlParam('groupid') || 'Group_LD';
+        const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
         //第一步，构造form对象
         const item = this.item;
         const no = maxinfo.maxno + 1;
-        const id = tools.queryUniqueID();
+        const id = Betools.tools.queryUniqueID();
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const filename = item && item.filename ? item.filename.trim() : item.filename ;
@@ -1460,8 +1460,8 @@ export default {
         const send_location = item && item.send_location ? item.send_location.trim() : item.send_location ;
         const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile ;
         const company = item && item.company ? item.company.trim() : item.company ;
-        const seal_wflow = tools.getUrlParam('statustype') || 'none';
-        const status = this.statusType[tools.getUrlParam('statustype')] || '待用印';
+        const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
+        const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
 
         //验证合同编号是否含有特殊字符串
         if(contract_id.includes('【') || contract_id.includes('】') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')){
@@ -1580,7 +1580,7 @@ export default {
 
           //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
           const prLogHisNode = {
-            id: tools.queryUniqueID(),
+            id: Betools.tools.queryUniqueID(),
             table_name: 'bs_seal_regist',
             main_value: id,
             proponents: username,
@@ -1608,7 +1608,7 @@ export default {
 
           //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
           const prLogNode = {
-            id: tools.queryUniqueID(),
+            id: Betools.tools.queryUniqueID(),
             table_name: 'bs_seal_regist',
             main_value: id,
             proponents: seal,
