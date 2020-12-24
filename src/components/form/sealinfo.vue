@@ -1436,6 +1436,7 @@ export default {
         const sign_man = item && item.signman ? item.signman.trim() : '' ;
         const workno = item && item.workno ? item.workno.trim() : '';
         const mobile = item && item.mobile ? item.mobile.trim() : '';
+        const partner = item && item.partner ? item.partner.trim() : '';
 
         //用印注意，此处需要找到用印人的同组用户，写入数据库
         const seal = item.seal;

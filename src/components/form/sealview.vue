@@ -334,11 +334,8 @@ export default {
       validField(fieldName){
         //邮箱验证正则表达式
         const regMail = Betools.workconfig.system.config.regexp.mail;
-
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
-
         return Betools.tools.isNull(this.message[fieldName]);
       },
       validFieldConfirm(fieldName){
@@ -1267,7 +1264,7 @@ export default {
 
         try {
           //修改状态为已用印，保存当前合同编号
-          await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
+          await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company , partner : this.item.partner });
         } catch (error) {
           console.log(error);
         }
