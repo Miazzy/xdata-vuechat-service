@@ -298,7 +298,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -344,8 +344,8 @@ export default {
             typeColumns:['办公用品','药品','防疫物资'],
             showTypePicker:false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.goodsreceive.message,
-            valid: workconfig.compValidation.goodsreceive.valid,
+            message: Betools.workconfig.compValidation.goodsreceive.message,
+            valid: Betools.workconfig.compValidation.goodsreceive.valid,
             item:{
               id: '',
               serialid:'',
@@ -423,18 +423,18 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             currentKey:'',
             tablename:'bs_goods_receive',
             readonly: false,
-            goodstype: workconfig.goodstype,
-            diplomaType: workconfig.compcolumns.diplomaTypeColumns,
-            acceptType: workconfig.compcolumns.acceptType,
-            commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            goodstype: Betools.workconfig.goodstype,
+            diplomaType: Betools.workconfig.compcolumns.diplomaTypeColumns,
+            acceptType: Betools.workconfig.compcolumns.acceptType,
+            commonTypeColumns: Betools.workconfig.compcolumns.commonTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
         }
     },
     async activated() {
@@ -652,7 +652,7 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
         if(userinfo){
           //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
@@ -684,10 +684,10 @@ export default {
       // 字段必填有效验证
       validField(fieldName){
         //获取用户基础信息
-        let userinfo = Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        let userinfo = Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
         // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         if(fieldName.toLocaleLowerCase().includes('amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName])) {
           this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写借用数量及借用单位，注意单位！' : '';
@@ -716,7 +716,7 @@ export default {
           this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //获取用户基础信息
-          const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+          const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
           //获取缓存信息
           const item = Betools.storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
@@ -757,7 +757,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
         //表单ID
         const id = Betools.tools.queryUniqueID();
@@ -892,7 +892,7 @@ export default {
         }
 
         //发送自动设置排序号请求
-        const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+        const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
          //查询数据
         const value = await query.queryTableData(this.tablename , id);

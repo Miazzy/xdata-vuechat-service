@@ -99,7 +99,7 @@
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -146,11 +146,11 @@ export default {
             isLoading:false,
             loading:false,
             currentPage: 1,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
-            sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
+            sealStatusColumns: Betools.workconfig.compcolumns.sealStatusColumns,
             tableName: 'bs_goods_receive',
             statusType:{'COMMON_AUTH_ADMIN':'权限管理员','COMMON_RECEIVE_BORROW':'物品管理员','SEAL_ADMIN':'印章_用印管理员','COMMON_FRONT_ADMIN':'前台管理员','COMMON_REWARD_HR_ADMIN':'薪资管理员','JOB_EXEC_ADMIN':'入职_行政管理员','JOB_FRONT_ADMIN':'入职_前台管理员','JOB_HR_ADMIN':'入职_HR管理员','JOB_MEAL_ADMIN':'入职_食堂管理员','SEAL_ARCHIVE_ADMIN':'印章_归档管理员','SEAL_FINANCE_ADMIN':'印章_财务管理员','SEAL_FRONT_SERVICE':'印章_前台管理员','SEAL_ARCHIVE_EXPORT':'印章_导出管理员'},
         }
@@ -200,7 +200,7 @@ export default {
           zonename: '',
         };
         await manageAPI.postTableData(this.tableName , item);
-        await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
+        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
         await this.queryTabList(0,0);
       },
       async onDelete(records){
@@ -332,7 +332,7 @@ export default {
         if(this.searchWord) {
           searchSql = `~and((serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(platename,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(groupname,like,~${this.searchWord}~)~or(zonename,like,~${this.searchWord}~)~or(teamname,like,~${this.searchWord}~)~or(userlist,like,~${this.searchWord}~)~or(enuserlist,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~))`;
         }
-        await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
+        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
         const whereSQL = `_where=~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
         this.initContractList = await manageAPI.queryTableData(this.tableName , whereSQL);
         this.totalpages = await manageAPI.queryTableDataCount(this.tableName , whereSQL);

@@ -67,7 +67,7 @@
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as manageAPI from '@/request/manage';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -129,11 +129,11 @@ export default {
             isLoading:false,
             loading:false,
             currentPage: 1,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
-            sealStatusColumns: workconfig.compcolumns.sealStatusColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
+            sealStatusColumns: Betools.workconfig.compcolumns.sealStatusColumns,
             statusType:{'待用印':'待用印','已用印':'已用印','已领取':'已用印','移交前台':'已用印','财务归档':'已用印','档案归档':'已用印','已完成':'已用印','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
             statusType_w:{'待用印':'待用印','已用印':'已用印','已领取':'已领取','移交前台':'移交前台','财务归档':'财务归档','档案归档':'档案归档','已完成':'已完成','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
         }

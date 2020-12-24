@@ -326,7 +326,6 @@
 </template>
 <script>
 
-import * as workconfig from '@/request/workconfig';
 import * as query from '@/request/query';
 
 export default {

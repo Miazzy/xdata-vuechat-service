@@ -212,7 +212,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -240,8 +240,8 @@ export default {
             fields:[],
             sealuserid:'',
             iswechat:false,
-            message: workconfig.compValidation.seal.message,
-            valid: workconfig.compValidation.seal.valid,
+            message: Betools.workconfig.compValidation.seal.message,
+            valid: Betools.workconfig.compValidation.seal.valid,
             cuserid:'',
             cuserList:[],
             suserid:'',
@@ -298,10 +298,10 @@ export default {
               partner:'',
               message: '同意' , //用印说明
             },
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             backPath:'/app',
             workflowlist:[],
             announces:[],
@@ -317,10 +317,10 @@ export default {
             },
             view:'',
             readonly: true,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
             zonename:'',
         }
     },
@@ -341,7 +341,7 @@ export default {
       },
       validField(fieldName){
         //邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
@@ -352,7 +352,7 @@ export default {
       validFieldConfirm(fieldName){
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         if(fieldName == 'dealMail'){
-          this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+          this.message[fieldName] = Betools.workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
         return Betools.tools.isNull(this.message[fieldName]);
       },
@@ -1309,7 +1309,7 @@ export default {
 
           try {
             //通知前台准备接受资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
+            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${Betools.workconfig.group[groupid].front},${this.item.front}/文件:‘${this.item.filename}’已用印，请等待资料送至前台。日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}?rurl=${url}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1709,7 +1709,7 @@ export default {
 
         try {
           //通知归档负责人到前台收取资料进行归档(企业微信发送)
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${workconfig.group[groupid].archive},${this.item.archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
+          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${Betools.workconfig.group[groupid].archive},${this.item.archive}/文件:‘${this.item.filename}’已移交前台，${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}?rurl=${url}`)
                          .set('accept', 'json');
         } catch (error) {
           console.log(error);

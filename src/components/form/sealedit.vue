@@ -196,7 +196,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -225,8 +225,8 @@ export default {
             groupid:'group00',
             sealuserid:'',
             iswechat:false,
-            message: workconfig.compValidation.seal.message,
-            valid: workconfig.compValidation.seal.valid,
+            message: Betools.workconfig.compValidation.seal.message,
+            valid: Betools.workconfig.compValidation.seal.valid,
             cuserid:'',
             cuserList:[],
             suserid:'',
@@ -282,17 +282,17 @@ export default {
               showPickerSealType:false,
               showPickerOrderType:false,
             },
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             fileList: [],
             readonly: false,
             active:0,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
         }
     },
     async activated() {
@@ -371,7 +371,7 @@ export default {
 
                 const id = this.hContractList[0].id;
                 let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+                no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                 this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
 
               } catch (error) {
@@ -384,7 +384,7 @@ export default {
 
               const id = this.hContractList[0].id;
               let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-              no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+              no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
               this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
 
             }
@@ -584,7 +584,7 @@ export default {
       },
       validField(fieldName){
         //邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 

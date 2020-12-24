@@ -291,7 +291,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -334,8 +334,8 @@ export default {
             role:'front',
             size:15,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.entryjob.message,
-            valid: workconfig.compValidation.entryjob.valid,
+            message: Betools.workconfig.compValidation.entryjob.message,
+            valid: Betools.workconfig.compValidation.entryjob.valid,
             item:{
               id: '',
               serialid:'',
@@ -379,18 +379,18 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             currentKey:'',
             tablename:'bs_goods_receive',
             readonly: false,
-            goodstype: workconfig.goodstype,
-            diplomaType: workconfig.compcolumns.diplomaTypeColumns,
-            acceptType: workconfig.compcolumns.acceptType,
-            commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            goodstype: Betools.workconfig.goodstype,
+            diplomaType: Betools.workconfig.compcolumns.diplomaTypeColumns,
+            acceptType: Betools.workconfig.compcolumns.acceptType,
+            commonTypeColumns: Betools.workconfig.compcolumns.commonTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
         }
     },
     async activated() {
@@ -552,7 +552,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 

@@ -181,7 +181,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 
 export default {
@@ -211,8 +211,8 @@ export default {
             groupid:'group00',
             sealuserid:'',
             iswechat:false,
-            message: workconfig.compValidation.seal.message,
-            valid: workconfig.compValidation.seal.valid,
+            message: Betools.workconfig.compValidation.seal.message,
+            valid: Betools.workconfig.compValidation.seal.valid,
             cuserid:'',
             cuserList:[],
             suserid:'',
@@ -277,10 +277,10 @@ export default {
               showPickerSealType:false,
               showPickerOrderType:false,
             },
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             fileList: [],
             readonly: false,
             active:0,
@@ -293,10 +293,10 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
             //非集团总部成员，合同盖印也不显示前台和归档字段
             isGroupHeader:false,
             zonename:'',
@@ -480,11 +480,11 @@ export default {
                   console.log('买卖合同等');
                 } else if(id.includes('[') && id.includes(']')){
                   let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                  no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+                  no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                   this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
                 } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
                   let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
-                  no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+                  no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                   this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
                 }
 
@@ -501,11 +501,11 @@ export default {
                 console.log('买卖合同等');
               } else if(id.includes('[') && id.includes(']')){
                 let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-                no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+                no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                 this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
               } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
                 let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
-                no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+                no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                 this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
               }
 
@@ -880,7 +880,7 @@ export default {
         await Betools.tools.sleep(0);
 
         //邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
@@ -891,7 +891,7 @@ export default {
         //修改合同列表时，切换编号名称
         if(fieldName == 'sealtype'){
           //设置编号名称
-          this.noname = workconfig.sealTypeNoName[this.item[fieldName]];
+          this.noname = Betools.workconfig.sealTypeNoName[this.item[fieldName]];
           if(this.item[fieldName] == '非合同类'){
             //设置流水编号前缀为PTID
             this.item.prefix = 'PTID';
@@ -912,7 +912,7 @@ export default {
       validFieldConfirm(fieldName){
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         if(fieldName == 'dealMail'){
-          this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
+          this.message[fieldName] = Betools.workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
         return Betools.tools.isNull(this.message[fieldName]);
       },
@@ -997,11 +997,11 @@ export default {
           console.log('买卖合同等');
         } else if(id.includes('[') && id.includes(']')){
           let no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
-          no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+          no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
           this.item.contractId = `${this.item.prefix}[${dayjs().format('YYYY')}]${no}`;
         } else if(id.includes('-') && id.includes(`-${dayjs().format('YYYY')}-`)){
           let no = parseInt(id.split(`-${dayjs().format('YYYY')}-`)[1]) + 1;
-          no = `00000${no}`.slice(workconfig.CON_SEAL_CODE_LENGTH);
+          no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
           this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
         }
       },
@@ -1525,7 +1525,7 @@ export default {
         await Betools.tools.sleep(0);
 
         //发送自动设置排序号请求
-        const patchResp = await superagent.get(workconfig.queryAPI.autoSerialAPI).set('accept', 'json');
+        const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI).set('accept', 'json');
 
         //第三步，回显当前用印登记信息，并向印章管理员推送消息
         this.loading = false;

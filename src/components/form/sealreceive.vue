@@ -169,7 +169,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -197,8 +197,8 @@ export default {
             fields:[],
             sealuserid:'',
             iswechat:false,
-            message: workconfig.compValidation.seal.message,
-            valid: workconfig.compValidation.seal.valid,
+            message: Betools.workconfig.compValidation.seal.message,
+            valid: Betools.workconfig.compValidation.seal.valid,
             item:{
               createtime: dayjs().format('YYYY-MM-DD'),
               serialid:'',
@@ -228,10 +228,10 @@ export default {
               confirmStatus: '',//财务确认/档案确认
               status: '',
             },
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             backPath:'/app',
             back:'/app',
             workflowlist:[],
@@ -246,10 +246,10 @@ export default {
               showPickerSealType:false,
             },
             readonly: true,
-            archiveTypeColumns: workconfig.compcolumns.archiveTypeColumns,
-            orderTypeColumns: workconfig.compcolumns.orderTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
-            approveColumns: workconfig.compcolumns.approveColumns,
+            archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
+            orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            approveColumns: Betools.workconfig.compcolumns.approveColumns,
         }
     },
     activated() {

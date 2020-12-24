@@ -202,7 +202,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -240,8 +240,8 @@ export default {
             dockFlag: false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
             downloadURL:'https://upload.yunwisdom.club:30443/',
-            message: workconfig.compValidation.rewardapply.message,
-            valid: workconfig.compValidation.rewardapply.valid,
+            message: Betools.workconfig.compValidation.rewardapply.message,
+            valid: Betools.workconfig.compValidation.rewardapply.valid,
             item:{
               id: '',
               serialid:'',
@@ -298,19 +298,19 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             currentKey:'',
             tablename:'bs_reward_apply',
             readonly: false,
-            goodstype: workconfig.goodstype,
-            goodsborrowtype: workconfig.goodsborrowtype,
-            diplomaType: workconfig.compcolumns.diplomaTypeColumns,
-            acceptType: workconfig.compcolumns.acceptType,
-            commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            goodstype: Betools.workconfig.goodstype,
+            goodsborrowtype: Betools.workconfig.goodsborrowtype,
+            diplomaType: Betools.workconfig.compcolumns.diplomaTypeColumns,
+            acceptType: Betools.workconfig.compcolumns.acceptType,
+            commonTypeColumns: Betools.workconfig.compcolumns.commonTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
         }
     },
     async activated() {

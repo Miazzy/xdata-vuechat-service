@@ -302,7 +302,7 @@ import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-import * as workconfig from '@/request/workconfig';
+
 
 export default {
     mixins: [window.mixin],
@@ -348,8 +348,8 @@ export default {
             typeColumns:['信息设备','传屏设备'],
             showTypePicker:false,
             uploadURL:'https://upload.yunwisdom.club:30443/sys/common/upload',
-            message: workconfig.compValidation.borrowreceive.message,
-            valid: workconfig.compValidation.borrowreceive.valid,
+            message: Betools.workconfig.compValidation.borrowreceive.message,
+            valid: Betools.workconfig.compValidation.borrowreceive.valid,
             item:{
               id: '',
               serialid:'',
@@ -426,19 +426,19 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            statusType: workconfig.statusType,
-            mailconfig: workconfig.mailconfig,
-            config: workconfig.config,
-            group: workconfig.group,
+            statusType: Betools.workconfig.statusType,
+            mailconfig: Betools.workconfig.mailconfig,
+            config: Betools.workconfig.config,
+            group: Betools.workconfig.group,
             currentKey:'',
             tablename:'bs_goods_borrow',
             readonly: false,
-            goodstype: workconfig.goodstype,
-            goodsborrowtype: workconfig.goodsborrowtype,
-            diplomaType: workconfig.compcolumns.diplomaTypeColumns,
-            acceptType: workconfig.compcolumns.acceptType,
-            commonTypeColumns: workconfig.compcolumns.commonTypeColumns,
-            sealTypeColumns: workconfig.compcolumns.sealTypeColumns,
+            goodstype: Betools.workconfig.goodstype,
+            goodsborrowtype: Betools.workconfig.goodsborrowtype,
+            diplomaType: Betools.workconfig.compcolumns.diplomaTypeColumns,
+            acceptType: Betools.workconfig.compcolumns.acceptType,
+            commonTypeColumns: Betools.workconfig.compcolumns.commonTypeColumns,
+            sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
         }
     },
     async activated() {
@@ -677,7 +677,7 @@ export default {
         const userinfo = Betools.storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
-        const regMail = workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;
 
         if(fieldName.toLocaleLowerCase().includes('amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ) {
           this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写借用数量及借用单位，注意单位！' : '';
@@ -923,7 +923,7 @@ export default {
         }
 
         //发送自动设置排序号请求
-        const patchResp = await superagent.get(workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+        const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
          //查询数据
         const value = await query.queryTableData(this.tablename , id);
