@@ -222,7 +222,7 @@ export default {
         this.tabname = Betools.storage.getStore('system_lost_property_list_tabname') || '1';
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
         this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';

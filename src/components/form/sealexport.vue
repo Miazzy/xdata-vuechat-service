@@ -160,7 +160,7 @@ export default {
         if (!(this.status == '已归档')) {
           sqlWhere += '~and(seal_group_ids,like,~'+ userinfo.username + '~)'
         }
-        const value = await query.queryTableDataByWhereSQL(`bs_seal_regist`, sqlWhere);
+        const value = await Betools.query.queryTableDataByWhereSQL(`bs_seal_regist`, sqlWhere);
         if(value.length > 0) {
           value.map((item , index) => {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');

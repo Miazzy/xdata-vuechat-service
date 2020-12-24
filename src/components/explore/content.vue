@@ -219,10 +219,10 @@ export default {
           this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
           this.tname = window.decodeURIComponent(this.getUrlParam('tname'));
           this.bname = window.decodeURIComponent(this.getUrlParam('bname'));
-          this.tableInfo = await query.queryTableFieldInfoJSON(this.tname);
-          this.orderInfo = await query.queryTableFieldOrderJSON(this.tname);
+          this.tableInfo = await Betools.query.queryTableFieldInfoJSON(this.tname);
+          this.orderInfo = await Betools.query.queryTableFieldOrderJSON(this.tname);
           this.fields = Object.keys(that.tableInfo).sort((a,b)=>{ return that.orderInfo[a] - that.orderInfo[b]});
-          this.item = await query.queryTableData(this.tname , this.id);
+          this.item = await Betools.query.queryTableData(this.tname , this.id);
           try {
             delete this.item.depart_name;
             delete this.item.sys_org_code;

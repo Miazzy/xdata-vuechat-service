@@ -254,7 +254,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -296,7 +296,7 @@ export default {
           this.view = Betools.tools.getUrlParam('view');
           this.back = Betools.tools.getUrlParam('back') || '/app';
 
-          const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
+          const value = await Betools.query.queryTableData(`bs_seal_regist` , that.item.id);
 
           this.item = {
               id: that.item.id,

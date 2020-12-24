@@ -96,7 +96,7 @@ export default {
 
             try {
               //获取此用户的消息消息
-              this.messages = await query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
+              this.messages = await Betools.query.queryVMessages(this.myuserinfo.userid , this.myuserinfo.username);
 
               //将此用户的消息数据转为特定格式的数据
               this.messages.sort((n1,n2) => {

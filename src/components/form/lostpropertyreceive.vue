@@ -236,7 +236,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -318,7 +318,7 @@ export default {
 
                   if(!this.item.address || !this.item.zone_name){
                     //选择物品管理员后，查询此物品管理员对应的区域及地址信息
-                    const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+                    const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
                     //获取到印章管理员组信息
                     this.item.address = response && response.length > 0 ? response[0].address : '';
                     this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
@@ -344,7 +344,7 @@ export default {
 
                   if(!this.item.address || !this.item.zone_name){
                     //选择物品管理员后，查询此物品管理员对应的区域及地址信息
-                    const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+                    const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
                     //获取到印章管理员组信息
                     this.item.address = response && response.length > 0 ? response[0].address : '';
                     this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
@@ -381,7 +381,7 @@ export default {
         this.item.userid = item.id;
         if(!this.item.address || !this.item.zone_name){
           //选择物品管理员后，查询此物品管理员对应的区域及地址信息
-          const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+          const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
           //获取到物品管理员组信息
           this.item.user_zone_name = this.item.address = response && response.length > 0 ? response[0].address : '';
           this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
@@ -634,7 +634,7 @@ export default {
         }
 
         //查询直接所在工作组
-        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
+        const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
         //获取到印章管理员组信息
         let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
@@ -675,7 +675,7 @@ export default {
         const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
 
          //查询数据
-        const value = await query.queryTableData(this.tablename , id);
+        const value = await Betools.query.queryTableData(this.tablename , id);
 
         //显示序列号
         this.item.serialid = value.serialid;

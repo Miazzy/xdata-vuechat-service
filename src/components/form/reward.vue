@@ -315,7 +315,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -624,7 +624,7 @@ export default {
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //查询数据
-          const item = await query.queryTableData(this.tablename , id);
+          const item = await Betools.query.queryTableData(this.tablename , id);
 
           try {
             //自动回显刚才填写的用户基础信息

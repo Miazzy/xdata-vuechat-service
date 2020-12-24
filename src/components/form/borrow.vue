@@ -402,7 +402,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -570,7 +570,7 @@ export default {
           this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //查询借用数据
-          let tlist = await query.queryTableDataByPid(this.tablename , id);
+          let tlist = await Betools.query.queryTableDataByPid(this.tablename , id);
           this.size = tlist.length;
           this.tlist = tlist;
 
@@ -652,7 +652,7 @@ export default {
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        const resp = await Betools.query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
 
         //获取后端配置前端管理员组
         const front = resp[0].userlist;
@@ -725,7 +725,7 @@ export default {
         const pid = Betools.tools.getUrlParam('pid');
 
         //检查用户是否具有权限进行审批
-        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取到印章管理员组信息
         const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
@@ -774,7 +774,7 @@ export default {
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        //const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , '');
+        //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , '');
 
         //获取后端配置前端管理员组
         const front = user_group_ids;
@@ -872,7 +872,7 @@ export default {
         const pid = Betools.tools.getUrlParam('pid');
 
         //检查用户是否具有权限进行审批
-        const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取到印章管理员组信息
         const user_group_ids = response && response.length > 0 ? response[0].userlist : '';

@@ -359,7 +359,7 @@ export default {
          */
         async weworkLogin(){
           this.role = await Betools.storage.getStore('system_role_rights');
-          this.userinfo = await query.queryWeworkUser();
+          this.userinfo = await Betools.query.queryWeworkUser();
           const userinfo = await Betools.storage.getStore('system_userinfo');
           // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const etimestamp = await Betools.storage.getStore('system_role_rights_expire');
@@ -367,7 +367,7 @@ export default {
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
             this.queryRoleInfo(userinfo , null , 'view');
           }
-          const resp = await query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
           };
@@ -383,43 +383,43 @@ export default {
           }
         },
         async queryRoleInfo(userinfo , resp = null , role = ''){
-          resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',COMMON_RECEIVE_BORROW';
           };
-          resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',SEAL_ADMIN';
           };
-          resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',SEAL_FRONT_SERVICE';
           };
-          resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',SEAL_ARCHIVE_ADMIN';
           };
-          resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',COMMON_AUTH_ADMIN';
           };
-          resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',JOB_HR_ADMIN';
           };
-          resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',JOB_EXEC_ADMIN';
           };
-          resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',JOB_FRONT_ADMIN';
           };
-          resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',JOB_MEAL_ADMIN';
           };
-          resp = await query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
+          resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             role += ',COMMON_DEBUG_ADMIN';
             window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
@@ -511,7 +511,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/seallist`);
@@ -524,7 +524,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealmanage`);
@@ -537,7 +537,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealfrontlist`);
@@ -550,7 +550,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealarchivelist`);
@@ -566,7 +566,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
-          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
           if(resp && resp.length > 0 && resp[0].userlist && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealexport`);
@@ -580,7 +580,7 @@ export default {
 
           if(type == 'approve'){
             //验证是否为办公用品管理员，如果不是，则没有权限进入
-            const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有物品管理-物品领用角色的权限！');
@@ -597,7 +597,7 @@ export default {
           const userinfo = await Betools.storage.getStore('system_userinfo');
           if(type == 'approve'){
             //验证是否为办公用品管理员，如果不是，则没有权限进入
-            const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有物品管理-物品借用角色的权限！');
               return false;
@@ -642,7 +642,7 @@ export default {
           //先验证用户是否具备相应权限
           if(role == 'hr'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
 
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-人力角色的权限！');
@@ -651,7 +651,7 @@ export default {
 
           } else if(role == 'admin'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
 
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-行政角色的权限！');
@@ -660,7 +660,7 @@ export default {
 
           } else if(role == 'front'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
 
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-前台角色的权限！');
@@ -669,7 +669,7 @@ export default {
 
           } else if(role == 'meal'){
             //角色
-            const resp = await query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
 
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               vant.Toast('您没有入职管理-食堂角色的权限！');
@@ -694,14 +694,14 @@ export default {
           } else if(name == 'property') {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
           } else if(name == 'auth'){ // 进行权限配置
-            const resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               return vant.Toast('您没有权限配置的权限！');
             } else {
               this.$router.push(`/app/authmanage?back=/app&type=${name}`);
             }
           } else if(name == 'employee'){ // 进行员工管理
-            const resp = await query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
+            const resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
             if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
               return vant.Toast('您没有员工管理的权限！');
             } else {
@@ -765,7 +765,7 @@ export default {
           try {
 
             whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
-            this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
+            this.images = await Betools.query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
             this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
 
             Betools.storage.setStore('system_app_image',JSON.stringify(this.images), 3600 * 24 * 3);

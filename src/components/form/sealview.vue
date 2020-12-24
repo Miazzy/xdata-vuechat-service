@@ -326,7 +326,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -914,7 +914,7 @@ export default {
           this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //查询用印数据
-          const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
+          const value = await Betools.query.queryTableData(`bs_seal_regist` , that.item.id);
 
           //如果没有查询到数据，或者数据状态有误
           if(Betools.tools.isNull(value) || value.status == '已测试' || value.status == '已退回' || value.status == '已作废' || value.status == '已完成' || value.status == '已用印'){
@@ -1024,7 +1024,7 @@ export default {
           }
 
           //查询直接所在工作组
-          const resp = await query.queryRoleGroupList('SEAL_ADMIN' , value.seal);
+          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , value.seal);
 
           if(resp && resp.length > 0 && resp[0].zonename){
             this.zonename = resp[0].zonename;
@@ -1226,7 +1226,7 @@ export default {
         }
 
         // 用印前，检查合同编号是否已经存在
-        const cresponse = await query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
+        const cresponse = await Betools.query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
 
         if(this.item.sealtype == '合同类' && cresponse && cresponse.length > 0){
           //提示确认用印操作
@@ -1811,7 +1811,7 @@ export default {
         await Betools.tools.sleep(300);
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , id);
+        const value = await Betools.query.queryTableData(`bs_seal_regist` , id);
 
         //设置归档时间
         value.finance_time = value.finance_time || node.finance_time;
@@ -1907,7 +1907,7 @@ export default {
 
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , id);
+        const value = await Betools.query.queryTableData(`bs_seal_regist` , id);
 
         //设置时间格式
         Object.keys(value).map( key => {
@@ -1975,7 +1975,7 @@ export default {
         const username = this.item.username;
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_seal_regist` , id);
+        const value = await Betools.query.queryTableData(`bs_seal_regist` , id);
 
         //回调地址
         const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);

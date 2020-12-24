@@ -454,7 +454,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -857,7 +857,7 @@ export default {
           this.role = Betools.tools.getUrlParam('role');
 
           //根据编号查询用户登记数据
-          const value = await query.queryTableData(`bs_entry_job` , this.item.id);
+          const value = await Betools.query.queryTableData(`bs_entry_job` , this.item.id);
 
           //设置表单状态
           this.status = value.status;
@@ -1045,7 +1045,7 @@ export default {
 
           try {
             // 根据前台用户，获取同前台用户组的所有成员，并向他们推送消息，（目前，只填写了一个前台用户，但是每个前台用户都应当获取到消息） COMMON_RECEIVE_BORROW 是定义物品管理员的常量字符串，目前暂且使用 TODO
-            const response = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.loginid); // 查询直接所在工作组
+            const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , front.loginid); // 查询直接所在工作组
             // 获取到印章管理员组信息
             user_group_ids = response && response.length > 0 ? response[0].userlist : '';
           } catch (error) {
@@ -1189,7 +1189,7 @@ export default {
         const id = Betools.tools.getUrlParam('id');
 
         //查询归档状态
-        const value = await query.queryTableData(`bs_entry_job` , id);
+        const value = await Betools.query.queryTableData(`bs_entry_job` , id);
 
         value.front_time = value.front_time || this.item.front_time;
         value.admin_time = value.admin_time || this.item.admin_time;

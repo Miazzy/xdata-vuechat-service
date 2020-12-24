@@ -304,7 +304,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -821,7 +821,7 @@ export default {
           this.back = Betools.tools.getUrlParam('back') || '/app';
 
           //获取ID，然后获取到相应的原用印登记信息
-          const value = await query.queryTableData(`bs_seal_regist` , Betools.tools.getUrlParam('id'));
+          const value = await Betools.query.queryTableData(`bs_seal_regist` , Betools.tools.getUrlParam('id'));
 
           this.item = {
               id: value.id,

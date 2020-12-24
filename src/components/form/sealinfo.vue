@@ -310,7 +310,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -920,7 +920,7 @@ export default {
       // 校验是否为集团总部
       async zoneNameValid(){
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal);
+        const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal);
         //如果查询到管理组数据，则设置区域名称
         if(resp && resp.length > 0 && resp[0].zonename){
           this.zonename = resp[0].zonename;
@@ -972,7 +972,7 @@ export default {
           this.item.username = user.username;
           this.item.signman = user.name;
           this.item.dealDepart = user.department;
-          this.item.dealMail = user.mail ? user.mail : (await query.querySealManMail(user.name)).deal_mail;
+          this.item.dealMail = user.mail ? user.mail : (await Betools.query.querySealManMail(user.name)).deal_mail;
         } catch (error) {
           console.log(error);
         }
@@ -1281,7 +1281,7 @@ export default {
 
           //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
           if(Betools.tools.isNull(this.item.dealMail) || Betools.tools.isNull(this.item.company)){
-            const tmp = await query.queryMailBySealData(this.item.signman);
+            const tmp = await Betools.query.queryMailBySealData(this.item.signman);
             this.item.dealMail = tmp.deal_mail;
             this.item.company = tmp.company;
             this.item.dealDepart = tmp.deal_depart;
@@ -1291,7 +1291,7 @@ export default {
 
           //如果前台不存在，则添加
           if(Betools.tools.isNull(this.item.front)){
-            const tmp = await query.queryFrontBySealData(this.item.signman);
+            const tmp = await Betools.query.queryFrontBySealData(this.item.signman);
             this.item.front = tmp.front;
             this.item.front_name = tmp.front_name;
             this.item.archive = tmp.archive;
@@ -1472,7 +1472,7 @@ export default {
         }
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('SEAL_ADMIN' , seal);
+        const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , seal);
 
         //获取到印章管理员组信息
         let seal_group_ids = resp && resp.length > 0 ? resp[0].userlist : '';
@@ -1563,7 +1563,7 @@ export default {
           }
 
           //查询数据
-          const value = await query.queryTableData(`bs_seal_regist` , id);
+          const value = await Betools.query.queryTableData(`bs_seal_regist` , id);
 
           //显示序列号
           this.item.serialid = value.serialid;

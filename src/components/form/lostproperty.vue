@@ -252,7 +252,7 @@ export default {
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
-          return await query.queryWeworkUser();
+          return await Betools.query.queryWeworkUser();
         } catch (error) {
           console.log(error);
         }
@@ -419,7 +419,7 @@ export default {
           this.back = Betools.tools.getUrlParam('back') || '/app/lostpropertylist';
 
           //查询借用数据
-          let tlist = await query.queryTableDataByPid(this.tablename , id);
+          let tlist = await Betools.query.queryTableDataByPid(this.tablename , id);
           this.size = tlist.length;
           this.tlist = tlist;
 
@@ -471,7 +471,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //验证是否为办公用品管理员，如果不是，则没有权限进入
-        const resp_ = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const resp_ = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         if(resp_.length == 0 || !resp_[0].userlist.includes(userinfo.username)){
           this.$toast.fail('您没有物品管理-失物招领角色的权限！');
@@ -523,7 +523,7 @@ export default {
         /************************  工作流程日志(开始)  ************************/
 
         //查询直接所在工作组
-        const resp = await query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
+        const resp = await Betools.query.queryRoleGroupList('COMMON_FRONT_ADMIN' , '');
 
         //获取后端配置前端管理员组
         const front = resp[0].userlist;
@@ -671,7 +671,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //验证是否为办公用品管理员，如果不是，则没有权限进入
-        const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
           vant.Toast('您没有物品管理-失物招领角色的权限！');
