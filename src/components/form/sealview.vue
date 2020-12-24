@@ -208,7 +208,7 @@
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-import * as constant from '@/request/constant';
+
 import * as workflow from '@/request/workflow';
 import * as manageAPI from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';

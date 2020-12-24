@@ -1,4 +1,3 @@
-import * as constant from '@/request/constant';
 import * as manage from '@/request/manage';
 import * as query from '@/request/query';
 

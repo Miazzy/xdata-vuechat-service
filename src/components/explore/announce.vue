@@ -43,10 +43,8 @@
 </template>
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as constant from '@/request/constant';
 
 export default {
     mixins: [window.mixin],
@@ -70,7 +68,6 @@ export default {
         }
     },
     activated() {
-
         this.queryAnnounce();
         this.queryEach();
         this.queryInfo();

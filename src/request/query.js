@@ -1,5 +1,5 @@
 import * as contact from '@/vuex/contacts';
-import * as constant from '@/request/constant';
+
 
 export async function queryUserInfoByView(username) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key http://api.shengtai.club/api/v_admin?_where=(username,eq,zhaoziyun)
