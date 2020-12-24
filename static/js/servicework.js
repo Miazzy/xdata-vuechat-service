@@ -43,7 +43,7 @@ self.addEventListener('install', function(event) {
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/common/FileSaver.min.js",
                 "https://cdn.jsdelivr.net/gh/YunWisdom/vConsole@v3.3.6/dist/vconsole.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/vue-excel-editor@r1.0.3/dist/xeditor.min.js",
-                "https://cdn.jsdelivr.net/gh/Miazzy/xdata-utils-btools@v1.0.5/dist/betools.min.js",
+                "https://cdn.jsdelivr.net/gh/Miazzy/xdata-utils-btools@v1.0.6/dist/betools.min.js",
             ]);
         })
     );
