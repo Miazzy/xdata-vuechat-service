@@ -521,7 +521,7 @@ const routes = [{
         name: "公告",
         components: {
             "default": resolve => require(["../components/explore/explore.vue"], resolve),
-            "subPage": resolve => require(["../components/explore/Betools.announce.vue"], resolve)
+            "subPage": resolve => require(["../components/explore/announce.vue"], resolve)
         }
     }, {
         path: '/self',
