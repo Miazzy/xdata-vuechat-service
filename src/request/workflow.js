@@ -13,7 +13,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
     var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
-    var cache = storage.getStore(`sys_workflow_cache@$history&id${business_data_id}`);
+    var cache = Betools.storage.getStore(`sys_workflow_cache@$history&id${business_data_id}`);
 
     //返回缓存值
     if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -27,7 +27,7 @@ export async function queryPRLogHistoryByDataID(business_data_id) {
 
         if (res.body != null && res.body.length > 0) {
 
-            storage.setStore(`sys_workflow_cache@$history&id${business_data_id}`, res.body, 2);
+            Betools.storage.setStore(`sys_workflow_cache@$history&id${business_data_id}`, res.body, 2);
         }
 
         return res.body;
@@ -45,7 +45,7 @@ export async function queryPRLogByDataID(business_data_id) {
     var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
-    // var cache = storage.getStore(`sys_workflow_cache@$now&id${business_data_id}`);
+    // var cache = Betools.storage.getStore(`sys_workflow_cache@$now&id${business_data_id}`);
 
     // //返回缓存值
     // if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -58,7 +58,7 @@ export async function queryPRLogByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 0); //此处不能使用缓存，因为如果还存在审批日志，会将流程状态修改为审批中
+            Betools.storage.setStore(`sys_workflow_cache@$now&id${business_data_id}`, res.body, 0); //此处不能使用缓存，因为如果还存在审批日志，会将流程状态修改为审批中
         }
 
         return res.body;
@@ -75,7 +75,7 @@ export async function queryPRLogInformedByDataID(business_data_id) {
     var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_informed?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
-    var cache = storage.getStore(`sys_workflow_cache@$informed&id${business_data_id}`);
+    var cache = Betools.storage.getStore(`sys_workflow_cache@$informed&id${business_data_id}`);
 
     //返回缓存值
     if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -88,7 +88,7 @@ export async function queryPRLogInformedByDataID(business_data_id) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_cache@$informed&id${business_data_id}`, res.body, 60);
+            Betools.storage.setStore(`sys_workflow_cache@$informed&id${business_data_id}`, res.body, 60);
         }
 
         return res.body;
@@ -105,7 +105,7 @@ export async function queryPRLogUserByPage(page, size) {
     var queryURL = `${window.requestAPIConfig.restapi}/api/v_uname?_p=${page}&_size=${size}&_sort=username`;
 
     //获取缓存中的数据
-    var cache = storage.getStore(`sys_workflow_username@$all&p=${page}&size=${size}`);
+    var cache = Betools.storage.getStore(`sys_workflow_username@$all&p=${page}&size=${size}`);
 
     //返回缓存值
     if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -118,7 +118,7 @@ export async function queryPRLogUserByPage(page, size) {
         console.log(res);
 
         if (res.body != null && res.body.length > 0) {
-            storage.setStore(`sys_workflow_username@$all&p=${page}&size=${size}`, res.body, 3600);
+            Betools.storage.setStore(`sys_workflow_username@$all&p=${page}&size=${size}`, res.body, 3600);
         }
 
         return res.body;
@@ -132,7 +132,7 @@ export async function queryUserAll() {
     let all = [];
 
     //获取缓存中的数据
-    var cache = storage.getStore(`sys_workflow_user_all@$all`);
+    var cache = Betools.storage.getStore(`sys_workflow_user_all@$all`);
 
     //返回缓存值
     if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -150,7 +150,7 @@ export async function queryUserAll() {
     }
 
     if (all != null && all.length > 0) {
-        storage.setStore(`sys_workflow_user_all@$all`, all, 3600 * 24);
+        Betools.storage.setStore(`sys_workflow_user_all@$all`, all, 3600 * 24);
     }
 
     return all;

@@ -137,11 +137,11 @@ export default {
                 let token = response.body.result.token;
                 let department = response.body.result.departs;
                 userinfo.password = password;
-                storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
-                storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
-                storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
-                storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
-                storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+                Betools.storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
+                Betools.storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
+                Betools.storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
+                Betools.storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
+                Betools.storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
                 vant.Toast('登录成功！');
                 this.$router.push(`/explore`);
                 this.loading = false;
@@ -159,17 +159,17 @@ export default {
 
         try {
 
-          let userinfo = await storage.getStore('system_linfo');
+          let userinfo = await Betools.storage.getStore('system_linfo');
 
           if(userinfo && userinfo.username && userinfo.password){
             this.username = userinfo.username;
             this.password = userinfo.password;
           }
 
-          storage.clearStore('system_userinfo');
-          storage.clearStore('system_token');
-          storage.clearStore('system_department');
-          storage.clearStore('system_login_time');
+          Betools.storage.clearStore('system_userinfo');
+          Betools.storage.clearStore('system_token');
+          Betools.storage.clearStore('system_department');
+          Betools.storage.clearStore('system_login_time');
 
         } catch (error) {
           console.log(error);

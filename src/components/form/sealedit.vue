@@ -319,7 +319,7 @@ export default {
       },
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -592,7 +592,7 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -812,7 +812,7 @@ export default {
         //获取特定属性
         const temp = (({dealManager, mobile, username , dealMail , signman , dealDepart}) => ({dealManager, mobile, username , dealMail , signman , dealDepart}))(this.item)
         //将用户名存放入缓存中，下次打开页面直接填入
-        storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
+        Betools.storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
       },
 
 
@@ -934,7 +934,7 @@ export default {
           }
 
           //获取缓存的用户数据
-          const temp = storage.getStore('system_user_sealinfo');
+          const temp = Betools.storage.getStore('system_user_sealinfo');
 
           if(!!temp){
             this.item.dealManager = temp.dealManager;
@@ -946,7 +946,7 @@ export default {
           }
 
           //是否有最近缓存数据
-          const tempitem = storage.getStore('system_seal_item');
+          const tempitem = Betools.storage.getStore('system_seal_item');
 
           if(!!tempitem){
             this.item.filename = tempitem.filename;

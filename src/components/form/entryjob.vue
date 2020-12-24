@@ -959,7 +959,7 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -1010,7 +1010,7 @@ export default {
           this.iswechat = tools.isWechat();
           this.item.sealman = tools.getUrlParam('sealman');
 
-          const item = storage.getStore('system_entry_job_item');
+          const item = Betools.storage.getStore('system_entry_job_item');
 
           this.item.hr = tools.getUrlParam('hr');        //用印管理员成员组
           this.item.admin = tools.getUrlParam('admin');  //用印前台接受组

@@ -10,7 +10,7 @@ async function initWflowPage(that, tools = window.tools, storage = window.storag
     await manageAPI.queryUserNameByDB();
 
     //获取用户信息
-    that.userInfo = storage.getStore("cur_user");
+    that.userInfo = Betools.storage.getStore("cur_user");
 
     //设置员工岗位信息/部门信息
     try {
@@ -126,7 +126,7 @@ async function loadWorkflowNode(that, tools, storage, manageAPI) {
             //获取表单名称
             var tableName = tools.queryUrlString("table_name");
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = Betools.storage.getStore("cur_user");
 
             //获取历史自由流程节点
             node = await manageAPI.queryWorkflowNodeByUser(
@@ -351,12 +351,12 @@ async function handleShort(that, storage, tools, manageAPI) {
     //加密后的URL
     var encode = window.btoa(url);
 
-    var originNode = storage.getStore(encode);
+    var originNode = Betools.storage.getStore(encode);
 
     //如果获取的短链随机码有误，则清空缓存
     if (!tools.isNull(originNode) && originNode.code.includes("undefined")) {
         originNode = "";
-        storage.clearStore(encode);
+        Betools.storage.clearStore(encode);
     }
 
     if (tools.deNull(originNode) != "") {
@@ -410,7 +410,7 @@ async function handleShort(that, storage, tools, manageAPI) {
     };
 
     //保存到缓存中
-    storage.setStore(encode, JSON.stringify(node));
+    Betools.storage.setStore(encode, JSON.stringify(node));
 
     //将短随机码和真实链接对应关系写入数据库中，有效时间30+-2天
     manageAPI.postTableData("bs_short_link", node);
@@ -469,7 +469,7 @@ async function handleUserInfo(userInfo, that, storage) {
             content: "用户登录信息过期，请重新登录！",
             onOk: async() => {
                 //清空缓存信息
-                storage.clearAll();
+                Betools.storage.clearAll();
                 //跳转到登录页面
                 that.$router.push(`/user/login`);
             }
@@ -545,7 +545,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
             var result;
 
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = Betools.storage.getStore("cur_user");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await that.handleUserInfo(userInfo);
@@ -1164,7 +1164,7 @@ async function handleRejectWF(that, storage = window.storage, tools = window.too
             var result;
 
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = Betools.storage.getStore("cur_user");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await that.handleUserInfo(userInfo);
@@ -1280,7 +1280,7 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
             var result;
 
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = Betools.storage.getStore("cur_user");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await that.handleUserInfo(userInfo);
@@ -1486,7 +1486,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
         return true;
     }
 
-    vflag = storage.getStore(
+    vflag = Betools.storage.getStore(
         `start_free_process_@table_name#${curTableName}@id#${curItemID}`
     );
 
@@ -1587,7 +1587,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
         content: "是否确认提交此自由流程?",
         onOk: async() => {
             //获取当前用户
-            var userInfo = storage.getStore("cur_user");
+            var userInfo = Betools.storage.getStore("cur_user");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await that.handleUserInfo(userInfo);
@@ -1734,7 +1734,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                     });
 
                     //记录当前流程已经提交，短时间内无法再次提交
-                    storage.setStore(
+                    Betools.storage.setStore(
                         `start_free_process_@table_name#${curTableName}@id#${curItemID}`,
                         "true",
                         60

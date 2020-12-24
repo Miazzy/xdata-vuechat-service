@@ -210,7 +210,7 @@ export default {
         },
         async queryInfo(){
           //获取用户信息
-          this.myuserinfo = await storage.getStore('system_userinfo');
+          this.myuserinfo = await Betools.storage.getStore('system_userinfo');
 
           //获取聊天对象信息
           this.userinfo = await contact.getUserInfo(this.wxid);
@@ -271,7 +271,7 @@ export default {
         async sendMessage(){
 
           //获取用户信息
-          const myuserinfo = await storage.getStore('system_userinfo');
+          const myuserinfo = await Betools.storage.getStore('system_userinfo');
 
           const message = this.message;
           const wxid = this.$route.query.wxid;

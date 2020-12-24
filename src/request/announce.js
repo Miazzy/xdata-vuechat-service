@@ -11,7 +11,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
 
     try {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_administration`);
+        let resultInfo = Betools.storage.getStore(`system_announce_administration`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -34,7 +34,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_administration`, result, 3600 * 2);
+            Betools.storage.setStore(`system_announce_administration`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -53,7 +53,7 @@ export async function queryHeadList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_redhead`);
+        let resultInfo = Betools.storage.getStore(`system_announce_redhead`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -76,7 +76,7 @@ export async function queryHeadList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_redhead`, result, 3600 * 2);
+            Betools.storage.setStore(`system_announce_redhead`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -95,7 +95,7 @@ export async function queryNewsList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_news`);
+        let resultInfo = Betools.storage.getStore(`system_announce_news`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -118,7 +118,7 @@ export async function queryNewsList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_news`, result, 3600 * 2);
+            Betools.storage.setStore(`system_announce_news`, result, 3600 * 2);
         }
 
         return resultInfo;
@@ -138,7 +138,7 @@ export async function queryNoticeList(page = 0, size = 50) {
     try {
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let resultInfo = storage.getStore(`system_announce_notice`);
+        let resultInfo = Betools.storage.getStore(`system_announce_notice`);
 
         if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
@@ -160,7 +160,7 @@ export async function queryNoticeList(page = 0, size = 50) {
 
             resultInfo = result;
 
-            storage.setStore(`system_announce_notice`, result, 3600 * 2);
+            Betools.storage.setStore(`system_announce_notice`, result, 3600 * 2);
         }
 
         return resultInfo;

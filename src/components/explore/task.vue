@@ -319,17 +319,17 @@ export default {
         this.tabname = window.decodeURIComponent(this.getUrlParam('tabname') || 1 ) ;
       },
       async queryTaskDone(){
-        let info = await storage.getStore('system_userinfo');
+        let info = await Betools.storage.getStore('system_userinfo');
         let username = info.username;
         let realname = info.realname;
         let tlist = null;
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let result = storage.getStore(`system_task_done_by_user@${username}`);
+        let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
-          storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
+          Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
@@ -337,17 +337,17 @@ export default {
         this.donetasks = tlist;
       },
       async queryTaskDoing(){
-        let info = await storage.getStore('system_userinfo');
+        let info = await Betools.storage.getStore('system_userinfo');
         let username = info.username;
         let realname = info.realname;
         let tlist = null;
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let result = storage.getStore(`system_task_doing_by_user@${username}`);
+        let result = Betools.storage.getStore(`system_task_doing_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
-          storage.setStore(`system_task_doing_by_user@${username}` , tlist , 60);
+          Betools.storage.setStore(`system_task_doing_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
@@ -364,17 +364,17 @@ export default {
       },
       async queryTaskTiming(){
 
-        let info = await storage.getStore('system_userinfo');
+        let info = await Betools.storage.getStore('system_userinfo');
         let username = info.username;
         let realname = info.realname;
         let tlist = null;
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let result = storage.getStore(`system_task_time_by_user@${username}`);
+        let result = Betools.storage.getStore(`system_task_time_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
-          storage.setStore(`system_task_time_by_user@${username}` , tlist , 60);
+          Betools.storage.setStore(`system_task_time_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }
@@ -389,17 +389,17 @@ export default {
         this.timetasks = tlist;
       },
       async queryTaskSelf(){
-        let info = await storage.getStore('system_userinfo');
+        let info = await Betools.storage.getStore('system_userinfo');
         let username = info.username;
         let realname = info.realname;
         let tlist = null;
 
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-        let result = storage.getStore(`system_task_done_by_user@${username}`);
+        let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
         if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 90);
-          storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
+          Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
           tlist = result;
         }

@@ -222,10 +222,10 @@ export default {
         this.$forceUpdate();
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取tabname
-        this.tabname = storage.getStore('system_lost_property_list_tabname') || '1';
+        this.tabname = Betools.storage.getStore('system_lost_property_list_tabname') || '1';
 
         //查询直接所在工作组
         const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
@@ -248,7 +248,7 @@ export default {
       async queryTabList(tabname = 1 , page){
 
         //获取当前用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -321,7 +321,7 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-        storage.setStore('system_lost_property_list_tabname' , this.tabname);
+        Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){

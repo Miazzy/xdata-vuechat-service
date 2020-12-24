@@ -148,7 +148,7 @@ export default {
     methods: {
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -226,7 +226,7 @@ export default {
       async queryTabList(tabname){
 
         //获取用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -322,10 +322,10 @@ export default {
         this.$forceUpdate();
 
         //获取用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取tabname
-        this.tabname = storage.getStore('system_seal_mylist_tabname') || '1';
+        this.tabname = Betools.storage.getStore('system_seal_mylist_tabname') || '1';
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -413,31 +413,31 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=finish&view=view&back=sealmylist`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&view=view&back=sealmylist`);
         } else if(this.tabname == '2' || this.tabname == '3'){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=finish&view=view&back=sealmylist`);
         } else if(this.tabname == '4' ){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=finish&view=view&back=sealmylist`);
         } else if(this.tabname == '5' ){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=finish&view=view&back=sealmylist`);
         } else if(this.tabname == '6' ){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealedit?id=${id}&statustype=none&type=done&res=edit&view=edit&back=sealmylist`);
         } else if(this.tabname == '7' ){
-          storage.setStore('system_seal_mylist_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_mylist_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=finish&view=view&back=sealmylist`);
         }

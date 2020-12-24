@@ -117,15 +117,15 @@ export default {
         async clearLoginInfo(){
 
           try {
-            let info = await storage.getStore('system_linfo');
+            let info = await Betools.storage.getStore('system_linfo');
 
             this.username = info.username;
             this.password = info.password;
 
-            storage.clearStore('system_userinfo');
-            storage.clearStore('system_token');
-            storage.clearStore('system_department');
-            storage.clearStore('system_login_time');
+            Betools.storage.clearStore('system_userinfo');
+            Betools.storage.clearStore('system_token');
+            Betools.storage.clearStore('system_department');
+            Betools.storage.clearStore('system_login_time');
           } catch (error) {
             console.log(error);
           }
@@ -133,7 +133,7 @@ export default {
         },
         async userStatus(){
           try {
-            let userinfo = await storage.getStore('system_userinfo');
+            let userinfo = await Betools.storage.getStore('system_userinfo');
 
             //如果用户未登录，则直接调整到登录界面
             if( tools.isNull(userinfo) ){

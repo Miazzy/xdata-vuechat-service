@@ -518,7 +518,7 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -548,7 +548,7 @@ export default {
       // 验证字段有效性
       async validField(fieldName){
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -559,7 +559,7 @@ export default {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -572,7 +572,7 @@ export default {
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户基础信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
 
           //查询编号
           const id = tools.getUrlParam('id');
@@ -623,7 +623,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //表单ID
         const id = this.item.id;
@@ -727,7 +727,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //表单ID
         const id = this.item.id;
@@ -878,7 +878,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
         //检查用户是否具有权限进行审批

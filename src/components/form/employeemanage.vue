@@ -153,7 +153,7 @@ export default {
       },
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }

@@ -63,15 +63,15 @@ export default {
         },
         async clearLoginInfo(){
           try {
-            let info = await storage.getStore('system_linfo');
+            let info = await Betools.storage.getStore('system_linfo');
 
             this.username = info.username;
             this.password = info.password;
 
-            storage.clearStore('system_userinfo');
-            storage.clearStore('system_token');
-            storage.clearStore('system_department');
-            storage.clearStore('system_login_time');
+            Betools.storage.clearStore('system_userinfo');
+            Betools.storage.clearStore('system_token');
+            Betools.storage.clearStore('system_department');
+            Betools.storage.clearStore('system_login_time');
           } catch (error) {
             console.log(error);
           }
@@ -81,7 +81,7 @@ export default {
           const item = this.$store.state.msgList.baseMsg;
 
           //获取用户信息
-          this.myuserinfo = await storage.getStore('system_userinfo');
+          this.myuserinfo = await Betools.storage.getStore('system_userinfo');
 
           await this.queryMessages();
 
@@ -125,7 +125,7 @@ export default {
         },
         async userStatus(){
           try {
-            let info = await storage.getStore('system_userinfo');
+            let info = await Betools.storage.getStore('system_userinfo');
             if( tools.isNull(info) ){
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();

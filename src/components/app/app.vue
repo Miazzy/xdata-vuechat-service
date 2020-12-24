@@ -344,7 +344,7 @@ export default {
               },
             },
             imageTableName: 'bs_home_pictures',
-            images: storage.getStore('system_app_image'),
+            images: Betools.storage.getStore('system_app_image'),
             showNotice:false,
             role:'view',
         }
@@ -360,11 +360,11 @@ export default {
          * @function 企业微信登录处理函数
          */
         async weworkLogin(){
-          this.role = await storage.getStore('system_role_rights');
+          this.role = await Betools.storage.getStore('system_role_rights');
           this.userinfo = await query.queryWeworkUser();
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
-          const etimestamp = await storage.getStore('system_role_rights_expire');
+          const etimestamp = await Betools.storage.getStore('system_role_rights_expire');
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
             this.queryRoleInfo(userinfo , null , 'view');
@@ -426,7 +426,7 @@ export default {
             role += ',COMMON_DEBUG_ADMIN';
             window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
           };
-          storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
+          Betools.storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
           this.role = role;
           return role;
         },
@@ -459,11 +459,11 @@ export default {
                   let token = response.body.result.token;
                   let department = response.body.result.departs;
                   userinfo.password = password;
-                  storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
-                  storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
-                  storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
-                  storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
-                  storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
+                  Betools.storage.setStore('system_linfo' , JSON.stringify({username:username,password:password}) , 3600 * 24 * 30);
+                  Betools.storage.setStore('system_userinfo' , JSON.stringify(userinfo) , 3600 * 24 * 30);
+                  Betools.storage.setStore('system_token' , JSON.stringify(token) , 3600 * 24 * 30);
+                  Betools.storage.setStore('system_department' , JSON.stringify(department) , 3600 * 24 * 30);
+                  Betools.storage.setStore('system_login_time' , dayjs().format('YYYY-MM-DD HH:mm:ss') , 3600 * 24 * 30);
                   vant.Toast('登录成功！');
                   this.$router.push(`/explore`);
                   this.loading = false;
@@ -479,15 +479,15 @@ export default {
         async clearLoginInfo(){
 
           try {
-            let info = await storage.getStore('system_linfo');
+            let info = await Betools.storage.getStore('system_linfo');
 
             this.username = info.username;
             this.password = info.password;
 
-            storage.clearStore('system_userinfo');
-            storage.clearStore('system_token');
-            storage.clearStore('system_department');
-            storage.clearStore('system_login_time');
+            Betools.storage.clearStore('system_userinfo');
+            Betools.storage.clearStore('system_token');
+            Betools.storage.clearStore('system_department');
+            Betools.storage.clearStore('system_login_time');
           } catch (error) {
             console.log(error);
           }
@@ -495,7 +495,7 @@ export default {
         },
         async userStatus(){
           try {
-            let info = await storage.getStore('system_userinfo');
+            let info = await Betools.storage.getStore('system_userinfo');
             if( tools.isNull(info) ){
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
@@ -511,7 +511,7 @@ export default {
         async sealApprove(){
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
@@ -524,7 +524,7 @@ export default {
         },
         async sealManage(){
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
@@ -537,7 +537,7 @@ export default {
         async sealFront(){
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
 
@@ -550,7 +550,7 @@ export default {
         async sealArchive(){
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
 
@@ -566,7 +566,7 @@ export default {
         async sealExport(){
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
 
@@ -578,7 +578,7 @@ export default {
         },
         async goodsReceive(type){
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
 
           if(type == 'approve'){
             //验证是否为办公用品管理员，如果不是，则没有权限进入
@@ -596,7 +596,7 @@ export default {
         },
         async goodsBorrow(type , name){
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           if(type == 'approve'){
             //验证是否为办公用品管理员，如果不是，则没有权限进入
             const resp = await query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
@@ -639,7 +639,7 @@ export default {
         async entryjob(role){
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
 
           //先验证用户是否具备相应权限
           if(role == 'hr'){
@@ -689,7 +689,7 @@ export default {
         // 执行协同办公类跳转
         async cooperate(name) {
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
 
           if(name == 'share'){
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
@@ -710,7 +710,7 @@ export default {
               this.$router.push(`/app/employeemanage?back=/app&type=${name}`);
             }
           } else if(name == 'visitor'){ // 来访登记
-            const userinfo = await storage.getStore('system_userinfo');
+            const userinfo = await Betools.storage.getStore('system_userinfo');
             if (userinfo) {
               const oaUserId = userinfo.systemuserinfo.id;
               const oaUserName = userinfo.systemuserinfo.username;
@@ -752,7 +752,7 @@ export default {
         async queryImagesUrl(){
 
           // 获取缓存中的图片
-          const image = await storage.getStore('system_app_image');
+          const image = await Betools.storage.getStore('system_app_image');
 
           // 如果存在图片数据，则直接使用图片数据
           if(image){
@@ -760,7 +760,7 @@ export default {
           }
 
           //获取当前登录用户信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //查询SQL
           let whereSQL = null;
 
@@ -770,7 +770,7 @@ export default {
             this.images = await query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
             this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
 
-            storage.setStore('system_app_image',JSON.stringify(this.images), 3600 * 24 * 3);
+            Betools.storage.setStore('system_app_image',JSON.stringify(this.images), 3600 * 24 * 3);
 
           } catch (error) {
             console.log(error);

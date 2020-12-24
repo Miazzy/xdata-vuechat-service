@@ -135,7 +135,7 @@ export default {
           this.$refs.grid.exportTable('xlsx', true, '权限配置表单');
       },
       async onAdd(){
-        const userinfo = await storage.getStore('system_userinfo'); //获取当前用户信息
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
         const item = {
           id: tools.queryUniqueID(),
@@ -175,7 +175,7 @@ export default {
       },
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -257,7 +257,7 @@ export default {
       async queryTabList(tabname , page = 0){
 
         //获取当前用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');

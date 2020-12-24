@@ -4,7 +4,7 @@ const queryBlogArticleInfo = async(
     key,
     storage
 ) => {
-    var result = storage.getStore(`system_blog_article_${key}_${page}_${size}`);
+    var result = Betools.storage.getStore(`system_blog_article_${key}_${page}_${size}`);
 
     //如果缓存中存在文章数据，则返回直接返回数据
     if (result != null && typeof result != 'undefined' && result != '') {
@@ -54,7 +54,7 @@ const queryBlogArticleInfo = async(
         result = window.__.uniq(result, false, 'id');
 
         //查询出结果，存入缓存中
-        storage.setStore(`system_blog_article_${key}_${page}_${size}`, JSON.stringify(result), 3600 * 24);
+        Betools.storage.setStore(`system_blog_article_${key}_${page}_${size}`, JSON.stringify(result), 3600 * 24);
 
         //返回结果
         return result;
@@ -67,7 +67,7 @@ const articleLoadData = async(that, storage, manageAPI) => {
     //将that挂载到blogArticle上面
     window.blogArticle = that;
     //获取当前key信息
-    var key = storage.getStore(`system_title_key`);
+    var key = Betools.storage.getStore(`system_title_key`);
     //显示加载图标
     that.loading = true;
     //清空列表
@@ -95,7 +95,7 @@ const articleLoadMore = async(that, storage, manageAPI) => {
     //将that挂载到blogArticle上面
     window.blogArticle = that;
     //获取当前key信息
-    var key = storage.getStore(`system_title_key`);
+    var key = Betools.storage.getStore(`system_title_key`);
     //显示加载图标
     that.loadingMore = true;
     //获取返回数据结果

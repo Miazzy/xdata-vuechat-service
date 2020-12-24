@@ -95,9 +95,9 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
 
-            const userinfo = await storage.getStore('system_userinfo');
+            const userinfo = await Betools.storage.getStore('system_userinfo');
 
-            var initialList = await storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
+            var initialList = await Betools.storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
 
             if(tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
@@ -108,7 +108,7 @@ export default {
                   }
               }
               initialList = initialList.sort();
-              storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department , initialList , 3600 * 24);
+              Betools.storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department , initialList , 3600 * 24);
             }
 
             return initialList;
@@ -117,10 +117,10 @@ export default {
         // 将联系人根据首字母进行分类
         async queryContactsList() {
 
-            const userinfo = await storage.getStore('system_userinfo');
+            const userinfo = await Betools.storage.getStore('system_userinfo');
 
             var initialList = [];
-            var contactsList = await storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
+            var contactsList = await Betools.storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
 
             if(tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};
@@ -138,7 +138,7 @@ export default {
                   }
               }
               let cache = JSON.stringify(contactsList);
-              storage.setStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department , cache , 3600 * 24);
+              Betools.storage.setStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department , cache , 3600 * 24);
             }
 
             return contactsList;
@@ -148,22 +148,22 @@ export default {
         },
         async clearLoginInfo(){
           try {
-            const userinfo = await storage.getStore('system_linfo');
+            const userinfo = await Betools.storage.getStore('system_linfo');
 
             this.username = userinfo.username;
             this.password = userinfo.password;
 
-            storage.clearStore('system_userinfo');
-            storage.clearStore('system_token');
-            storage.clearStore('system_department');
-            storage.clearStore('system_login_time');
+            Betools.storage.clearStore('system_userinfo');
+            Betools.storage.clearStore('system_token');
+            Betools.storage.clearStore('system_department');
+            Betools.storage.clearStore('system_login_time');
           } catch (error) {
             console.log(error);
           }
         },
         async userStatus(){
           try {
-            const userinfo = await storage.getStore('system_userinfo');
+            const userinfo = await Betools.storage.getStore('system_userinfo');
             this.departid = userinfo.main_department;
           } catch (error) {
             console.log(error);

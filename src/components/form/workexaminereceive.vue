@@ -652,7 +652,7 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
         if(userinfo){
           //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
@@ -684,7 +684,7 @@ export default {
       // 字段必填有效验证
       validField(fieldName){
         //获取用户基础信息
-        let userinfo = storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        let userinfo = Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
@@ -700,7 +700,7 @@ export default {
         }
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-        storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -716,10 +716,10 @@ export default {
           this.back = tools.getUrlParam('back') || '/app';
 
           //获取用户基础信息
-          const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+          const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
           //获取缓存信息
-          const item = storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
+          const item = Betools.storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
 
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[tools.getUrlParam('type')];
@@ -757,7 +757,7 @@ export default {
         this.loading = true;
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo') || workconfig.commonUserInfo;
+        const userinfo = await Betools.storage.getStore('system_userinfo') || workconfig.commonUserInfo;
 
         //表单ID
         const id = tools.queryUniqueID();

@@ -193,7 +193,7 @@ export default {
         this.$forceUpdate();
 
         //获取tabname
-        this.tabname = storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
+        this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
 
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
@@ -205,7 +205,7 @@ export default {
       async queryTabList(tabname , page){
 
         //获取当前用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -274,7 +274,7 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-        storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
+        Betools.storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){

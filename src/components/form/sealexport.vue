@@ -150,7 +150,7 @@ export default {
         }
         //按钮置灰
         this.disabled = true;
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
         let sqlWhere = '_where=(create_time,gt,'+ this.startDate + ')~and(create_time,lt,'+ dayjs(this.endDate).add(1, 'day').format('YYYY-MM-DD') + ')';
         switch (this.status) {
           case '全部':

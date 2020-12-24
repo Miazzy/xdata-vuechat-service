@@ -285,7 +285,7 @@ export default {
         this.role = tools.getUrlParam('role') || 'front';
 
         //获取tabname
-        this.tabname = storage.getStore('system_entryjob_list_tabname') || '1';
+        this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1';
 
         //如果角色不是HR，且tabname为1，则修改为2
         if(this.role != 'hr' && (this.tabname == '1' || this.tabname == '4')){
@@ -385,19 +385,19 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         } else if(this.tabname == '2'){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         } else if(this.tabname == '3' ){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
          } else if(this.tabname == '4' ){
-          storage.setStore('system_entryjob_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
           //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         }

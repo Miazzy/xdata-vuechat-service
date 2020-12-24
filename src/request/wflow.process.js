@@ -82,7 +82,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     var result;
 
     //获取当前用户
-    var userInfo = storage.getStore("system_userinfo");
+    var userInfo = Betools.storage.getStore("system_userinfo");
 
     //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
     await manage.handleUserInfo(userInfo);
@@ -731,7 +731,7 @@ export async function handleRejectWF() {
             const bussinessNode = JSON.parse(JSON.stringify(curRow));
 
             //获取当前用户
-            var userInfo = storage.getStore("system_userinfo");
+            var userInfo = Betools.storage.getStore("system_userinfo");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await manage.handleUserInfo(userInfo);
@@ -852,7 +852,7 @@ export async function handleConfirmWF() {
             var curRow = await query.queryTableData(tableName, bussinessCodeID);
 
             //获取当前用户
-            var userInfo = storage.getStore("system_userinfo");
+            var userInfo = Betools.storage.getStore("system_userinfo");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
             await manage.handleUserInfo(userInfo);

@@ -92,7 +92,7 @@ window.announce_columns = [{
  */
 async function getData(that, key, storage = window.storage, manageAPI = window.manageAPI) {
     //获取用户信息
-    var userInfo = storage.getStore("cur_user");
+    var userInfo = Betools.storage.getStore("cur_user");
     let username = userInfo["username"];
     let realname = userInfo["realname"];
 
@@ -213,7 +213,7 @@ window.transUsername = transUsername;
  */
 async function reloadData(that, tools = window.tools, storage = window.storage, manageAPI = window.manageAPI) {
     that.spinning = true;
-    var userInfo = storage.getStore("cur_user");
+    var userInfo = Betools.storage.getStore("cur_user");
     let username = userInfo["username"];
     let realname = userInfo["realname"];
     if (that.activeKey == 1) {
@@ -271,7 +271,7 @@ async function handleDetailWF(that, record, storage = window.storage) {
     var curRow = JSON.parse(JSON.stringify(record));
 
     //获取当前用户
-    var userInfo = storage.getStore("cur_user");
+    var userInfo = Betools.storage.getStore("cur_user");
 
     //获取选中记录的所属表单名称
     var tableName = curRow["tname"];
@@ -296,7 +296,7 @@ async function handleAnnounceInfo(that, record, tableName, storage = window.stor
     var curRow = JSON.parse(JSON.stringify(record));
 
     //获取当前用户
-    var userInfo = storage.getStore("cur_user");
+    var userInfo = Betools.storage.getStore("cur_user");
 
     //设置跳转URL
     var detailURL = `/workflow/view?table_name=${tableName}&id=${curRow.id}&user=${userInfo.username}&type=notify`;
@@ -315,7 +315,7 @@ async function initLogInfo(that, getLoginfo, getVisitInfo, manageAPI) {
     let loginfo = {};
 
     //获取缓存
-    let temp = window.storage.getStore(`log_info_statistic`);
+    let temp = Betools.storage.getStore(`log_info_statistic`);
 
     //如果获取到缓存，则使用缓存
     if (typeof temp === 'string' && !Object.is(temp, null)) {
@@ -363,7 +363,7 @@ async function initLogInfo(that, getLoginfo, getVisitInfo, manageAPI) {
         loginfo.vBussinessTotal = await manageAPI.queryBusinessTotal();
 
         //设置缓存
-        window.storage.setStore(`log_info_statistic`, JSON.stringify(loginfo), 36000);
+        Betools.Betools.storage.setStore(`log_info_statistic`, JSON.stringify(loginfo), 36000);
     }
 
     //设置属性合并

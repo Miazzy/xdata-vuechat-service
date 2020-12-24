@@ -199,7 +199,7 @@ export default {
         //强制渲染
         this.$forceUpdate();
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
         //获取后端配置前端管理员组
         this.role = 'common';
         //获取tabname
@@ -214,7 +214,7 @@ export default {
       async queryTabList(tabname = 1 , page){
 
         //获取当前用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
@@ -287,7 +287,7 @@ export default {
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-        storage.setStore('system_lost_property_list_tabname' , this.tabname);
+        Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){

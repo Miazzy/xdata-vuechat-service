@@ -326,7 +326,7 @@ export default {
       },
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -905,7 +905,7 @@ export default {
           }
         }
 
-        storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -938,7 +938,7 @@ export default {
         }
       },
       sealTypeConfirm(value) {
-        const userInfo = storage.getStore('system_userinfo');
+        const userInfo = Betools.storage.getStore('system_userinfo');
         //非总部的人不需要展示前台、档案、财务人员
         if (userInfo && userInfo.systemuserinfo && userInfo.systemuserinfo.textfield1 && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
           this.isGroupHeader = true;
@@ -1182,7 +1182,7 @@ export default {
         //获取特定属性
         const temp = (({dealManager, mobile, username , dealMail , signman , dealDepart}) => ({dealManager, mobile, username , dealMail , signman , dealDepart}))(this.item)
         //将用户名存放入缓存中，下次打开页面直接填入
-        storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
+        Betools.storage.setStore('system_user_sealinfo' , temp , 3600 * 24 * 30);
       },
       async queryInfo(){
 
@@ -1263,7 +1263,7 @@ export default {
           }
 
           //获取缓存的用户数据
-          const temp = storage.getStore('system_user_sealinfo');
+          const temp = Betools.storage.getStore('system_user_sealinfo');
 
           if(!!temp){
             this.item.dealManager = temp.dealManager;
@@ -1275,7 +1275,7 @@ export default {
           }
 
           //获取用户信息
-          let userinfo = await storage.getStore('system_userinfo');
+          let userinfo = await Betools.storage.getStore('system_userinfo');
 
           if( !tools.isNull(userinfo) ){
             this.item.dealManager = userinfo.systemuserinfo.realname;
@@ -1312,7 +1312,7 @@ export default {
           }
 
           //是否有最近缓存数据
-          const tempitem = storage.getStore('system_seal_item');
+          const tempitem = Betools.storage.getStore('system_seal_item');
 
           if(!!tempitem){
             this.item.filename = tempitem.filename;
@@ -1358,7 +1358,7 @@ export default {
         }
 
         // 获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 缓存填报人信息
         this.cacheUserInfo();

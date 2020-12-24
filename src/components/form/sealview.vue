@@ -345,7 +345,7 @@ export default {
 
         this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
-        storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
+        Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
         return tools.isNull(this.message[fieldName]);
       },
@@ -1088,7 +1088,7 @@ export default {
        */
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
           if( tools.isNull(info) ){
             vant.Toast('尚未登录！');
             await this.clearLoginInfo();
@@ -1140,7 +1140,7 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -1166,7 +1166,7 @@ export default {
         var noname = '合同编号';
 
         //获取用户信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
@@ -1406,7 +1406,7 @@ export default {
         var noname = '合同编号';
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
@@ -1552,7 +1552,7 @@ export default {
         var noname = '合同编号';
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1636,7 +1636,7 @@ export default {
         var noname = '合同编号';
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
         if( tools.isNull(userinfo) ){
@@ -1777,7 +1777,7 @@ export default {
         }
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
@@ -1886,7 +1886,7 @@ export default {
       async handleFinaly(){
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
 
         if( tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');

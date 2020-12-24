@@ -269,7 +269,7 @@ export default {
       },
       async userStatus(){
         try {
-          let info = await storage.getStore('system_userinfo');
+          let info = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -369,7 +369,7 @@ export default {
       async handleConfirm(){
 
         //获取用户信息
-        let userinfo = await storage.getStore('system_userinfo');
+        let userinfo = await Betools.storage.getStore('system_userinfo');
 
         //提示确认用印操作
         await vant.Dialog.confirm({

@@ -2346,7 +2346,7 @@ try {
 
         //从浏览器缓存中获取审批日志数据
         try {
-            workflows = window.storage.getStore(`workflows_by_data_id@${business_data_id}`);
+            workflows = Betools.storage.getStore(`workflows_by_data_id@${business_data_id}`);
         } catch (error) {
             console.log('query store info of workflows error :' + error);
         }
@@ -2461,7 +2461,7 @@ try {
                 });
 
                 //获取正在审批的最后一条数据
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `workflows_audit_node_by_data_id@${business_data_id}`,
                     JSON.stringify(auditnode),
                     60
@@ -2504,7 +2504,7 @@ try {
                 });
 
                 //获取知会的最后一条数据
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `workflows_notify_node_by_data_id@${business_data_id}`,
                     JSON.stringify(notifynode),
                     60
@@ -2514,7 +2514,7 @@ try {
             }
 
             try {
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `workflows_by_data_id@${business_data_id}`,
                     JSON.stringify(workflows),
                     10
@@ -2548,7 +2548,7 @@ try {
         var queryURL = `${window.requestAPIConfig.restapi}/api/bs_comments?_where=(main_key,eq,${id})&_sort=create_time`;
 
         //根据业务编号，查询业务数据
-        var wflow = await storage.getStoreDB(`cache_bs_comments_id:${id}`);
+        var wflow = await Betools.storage.getStoreDB(`cache_bs_comments_id:${id}`);
 
         //从缓存中获取到评论信息，则直接返回
         if (wflow !== null && typeof wflow !== 'undefined' && Object.prototype.toString.call(wflow) === '[object Array]') {
@@ -2583,7 +2583,7 @@ try {
             }
 
             //设置缓存信息
-            storage.setStoreDB(`cache_bs_comments_id:${id}`, JSON.stringify(wflow), 3600 * 2);
+            Betools.storage.setStoreDB(`cache_bs_comments_id:${id}`, JSON.stringify(wflow), 3600 * 2);
 
         } catch (err) {
             console.log(err);
@@ -3382,7 +3382,7 @@ try {
      */
     var queryToken = async(storage = window.storage) => {
         try {
-            var token = window.storage.getStore('pro__Access-Token');
+            var token = Betools.storage.getStore('pro__Access-Token');
 
             var queryURL = `${window.requestAPIConfig.token}/${token.value}`;
 
@@ -3749,7 +3749,7 @@ try {
 
         try {
             //获取缓存中的数据
-            var cache = window.storage.getStore(`sys_user_cache@${tableName}&id${id}`);
+            var cache = Betools.storage.getStore(`sys_user_cache@${tableName}&id${id}`);
 
             //返回缓存值
             if (typeof cache != 'undefined' && cache != null && cache != '') {
@@ -3759,7 +3759,7 @@ try {
             var res = await superagent.get(queryURL).set('accept', 'json');
 
             if (res.body != null && res.body.length > 0) {
-                window.storage.setStore(`sys_user_cache@${tableName}&id${id}`, res.body[0], 2);
+                Betools.Betools.storage.setStore(`sys_user_cache@${tableName}&id${id}`, res.body[0], 2);
             }
 
             return res.body[0];
@@ -3861,7 +3861,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore('system_table_data_info_all');
+            result = Betools.storage.getStore('system_table_data_info_all');
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -3884,7 +3884,7 @@ try {
                 });
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore('system_table_data_info_all', result, 5);
+                Betools.Betools.storage.setStore('system_table_data_info_all', result, 5);
             }
         } catch (err) {
             console.log(err);
@@ -3912,7 +3912,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore(`system_depart_name_by_id@${id}`);
+            result = Betools.storage.getStore(`system_depart_name_by_id@${id}`);
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -3922,7 +3922,7 @@ try {
                 result = res.body[0];
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore(`system_depart_name_by_id@${id}`, result, 3600 * 2);
+                Betools.Betools.storage.setStore(`system_depart_name_by_id@${id}`, result, 3600 * 2);
             }
         } catch (err) {
             console.log(err);
@@ -3950,7 +3950,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore('system_dynamic_info_all');
+            result = Betools.storage.getStore('system_dynamic_info_all');
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -3973,7 +3973,7 @@ try {
                 });
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore('system_dynamic_info_all', result, 3600 * 2);
+                Betools.Betools.storage.setStore('system_dynamic_info_all', result, 3600 * 2);
             }
         } catch (err) {
             console.log(err);
@@ -3999,7 +3999,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore(`system_dynamic_info_by_user@${username}`);
+            result = Betools.storage.getStore(`system_dynamic_info_by_user@${username}`);
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -4022,7 +4022,7 @@ try {
                 });
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `system_dynamic_info_by_user@${username}`,
                     result,
                     3600 * 2
@@ -4082,7 +4082,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore(`system_v_admin_info@username$${username}`);
+            result = Betools.storage.getStore(`system_v_admin_info@username$${username}`);
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -4091,7 +4091,7 @@ try {
                 result = res.body;
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `system_v_admin_info@username$${username}`,
                     result,
                     3600 * 2
@@ -4120,7 +4120,7 @@ try {
 
         try {
             //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
-            result = window.storage.getStore(`system_v_user_info@username$${username}`);
+            result = Betools.storage.getStore(`system_v_user_info@username$${username}`);
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
@@ -4129,7 +4129,7 @@ try {
                 result = res.body;
 
                 //设置缓存数据，缓存时间，暂定为5秒钟
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `system_v_user_info@username$${username}`,
                     result,
                     3600 * 2
@@ -4515,7 +4515,7 @@ try {
 
         try {
             //从缓存中获取用户数据
-            var userlist = window.storage.getStore('cache_all_user_name_db');
+            var userlist = Betools.storage.getStore('cache_all_user_name_db');
 
             if (
                 typeof userlist == 'undefined' ||
@@ -4535,7 +4535,7 @@ try {
                 }
 
                 //将用户数据设置到缓存中
-                window.storage.setStore('cache_all_user_name_db', result, 300);
+                Betools.Betools.storage.setStore('cache_all_user_name_db', result, 300);
             } else {
                 result = userlist;
             }
@@ -4565,7 +4565,7 @@ try {
 
         try {
             //从缓存中获取用户数据
-            var userlist = window.storage.getStore('cache_all_user_name');
+            var userlist = Betools.storage.getStore('cache_all_user_name');
 
             if (
                 typeof userlist == 'undefined' ||
@@ -4585,7 +4585,7 @@ try {
                 }
 
                 //将用户数据设置到缓存中
-                window.storage.setStore('cache_all_user_name', result, 3600 * 2);
+                Betools.Betools.storage.setStore('cache_all_user_name', result, 3600 * 2);
             } else {
                 result = userlist;
             }
@@ -4613,7 +4613,7 @@ try {
 
         try {
             //从缓存中获取用户数据
-            var userlist = window.storage.getStore('cache_all_user_name');
+            var userlist = Betools.storage.getStore('cache_all_user_name');
 
             if (
                 typeof userlist == 'undefined' ||
@@ -4691,7 +4691,7 @@ try {
                 result = res.body[0];
 
                 if (result.notify == null || result.notify == '') {
-                    let notifynode = window.storage.getStore(
+                    let notifynode = Betools.storage.getStore(
                         `workflows_notify_node_by_data_id@${id}`
                     );
                     result.notify = notifynode.employee + ',' + notifynode.appruser;
@@ -4699,7 +4699,7 @@ try {
                 }
 
                 //获取当前正在审批用户
-                let auditnode = window.storage.getStore(`workflows_audit_node_by_data_id@${id}`);
+                let auditnode = Betools.storage.getStore(`workflows_audit_node_by_data_id@${id}`);
                 result.operate = auditnode.employee;
             }
         } catch (err) {
@@ -5143,7 +5143,7 @@ try {
         var i = 0;
 
         try {
-            result = window.storage.getStore(`system_process_log_done_all_user@${username}`);
+            result = Betools.storage.getStore(`system_process_log_done_all_user@${username}`);
 
             if (window.tools.isNull(result) || result.length == 0) {
                 result = [];
@@ -5174,7 +5174,7 @@ try {
                 result = window.__.uniq(result, false, 'id');
 
                 //将数据缓存到localwindow.storage中
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `system_process_log_done_all_user@${username}`,
                     JSON.stringify(result),
                     3600 * 2
@@ -5232,7 +5232,7 @@ try {
                 });
 
                 //将数据缓存到localwindow.storage中
-                window.storage.setStore(
+                Betools.Betools.storage.setStore(
                     `system_process_log_done_all_user@${username}`,
                     JSON.stringify(result),
                     3600 * 2

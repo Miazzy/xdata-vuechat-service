@@ -598,7 +598,7 @@ export default {
         }
 
         //获取用户基础信息
-        const userinfo = await storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
@@ -630,7 +630,7 @@ export default {
           //查询ID
           const id = tools.getUrlParam('id');
           //获取用户基础信息
-          const userinfo = await storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
           //查询数据
           const item = await query.queryTableData(this.tablename , id);
 
