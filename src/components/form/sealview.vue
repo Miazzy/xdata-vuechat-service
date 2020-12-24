@@ -69,7 +69,7 @@
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类' && item.status =='待用印' " v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
               <van-field required clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" />
-              <van-field required :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
+              <van-field required clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
               <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
 
