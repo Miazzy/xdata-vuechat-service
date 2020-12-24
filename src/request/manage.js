@@ -88,7 +88,7 @@ export async function patchEnameCname(origin) {
     var chinese = '';
 
     //原始英文名称列表
-    var originlist = tools.deNull(origin).split(',');
+    var originlist = Betools.tools.deNull(origin).split(',');
 
     //查询用户信息
     var userlist = await queryUserName();
@@ -101,7 +101,7 @@ export async function patchEnameCname(origin) {
         });
 
         //如果找到用户信息，则设置用户信息
-        if (!tools.isNull(user)) {
+        if (!Betools.tools.isNull(user)) {
             chinese = `${chinese},${user.realname}`;
         } else {
             chinese = `${chinese},${ename}`;
@@ -392,7 +392,7 @@ export async function queryUserByNameHRM(name, seclevel = 50) {
 
     let result = [];
 
-    if (tools.isNull(name)) {
+    if (Betools.tools.isNull(name)) {
         return [];
     }
 
@@ -405,7 +405,7 @@ export async function queryUserByNameHRM(name, seclevel = 50) {
 
         //剔除掉，没有loginid的用户信息
         result = result.filter(item => {
-            return !tools.isNull(item.loginid);
+            return !Betools.tools.isNull(item.loginid);
         })
 
         //返回用户信息
@@ -424,7 +424,7 @@ export async function queryUserByNameReward(name, seclevel = 101) {
 
     let result = [];
 
-    if (tools.isNull(name)) {
+    if (Betools.tools.isNull(name)) {
         return [];
     }
 
@@ -437,7 +437,7 @@ export async function queryUserByNameReward(name, seclevel = 101) {
 
         //剔除掉，没有loginid的用户信息
         result = result.filter(item => {
-            return !tools.isNull(item.loginid);
+            return !Betools.tools.isNull(item.loginid);
         })
 
         //返回用户信息
@@ -456,7 +456,7 @@ export async function queryUserByLoginID(name, seclevel = 101) {
 
     let result = [];
 
-    if (tools.isNull(name)) {
+    if (Betools.tools.isNull(name)) {
         return [];
     }
 
@@ -469,7 +469,7 @@ export async function queryUserByLoginID(name, seclevel = 101) {
 
         //剔除掉，没有loginid的用户信息
         result = result.filter(item => {
-            return !tools.isNull(item.loginid);
+            return !Betools.tools.isNull(item.loginid);
         })
 
         //返回用户信息
@@ -488,7 +488,7 @@ export async function queryUserByID(name, cname = '融量', seclevel = 101) {
 
     let result = [];
 
-    if (tools.isNull(name)) {
+    if (Betools.tools.isNull(name)) {
         return [];
     }
 
@@ -501,7 +501,7 @@ export async function queryUserByID(name, cname = '融量', seclevel = 101) {
 
         //剔除掉，没有loginid的用户信息
         result = result.filter(item => {
-            return !tools.isNull(item.loginid);
+            return !Betools.tools.isNull(item.loginid);
         })
 
         //返回用户信息
@@ -519,7 +519,7 @@ export async function queryUserByID(name, cname = '融量', seclevel = 101) {
 export async function queryAddressByName(name) {
 
     let result = [];
-    if (tools.isNull(name)) {
+    if (Betools.tools.isNull(name)) {
         return [];
     }
     try {
@@ -537,7 +537,7 @@ export async function queryAddressByName(name) {
  */
 export async function queryUserByNameFindOne(realname, username) {
 
-    if (tools.isNull(realname) || tools.isNull(username)) {
+    if (Betools.tools.isNull(realname) || Betools.tools.isNull(username)) {
         return [];
     }
 
@@ -549,7 +549,7 @@ export async function queryUserByNameFindOne(realname, username) {
 
         //剔除掉，没有loginid的用户信息
         maxinfo.body = maxinfo.body.filter(item => {
-            return !tools.isNull(item.loginid);
+            return !Betools.tools.isNull(item.loginid);
         });
 
         //返回用户信息
@@ -688,7 +688,7 @@ export async function queryCurNodePageType(pageType) {
             );
 
             //获取当前节点知会流程数据
-            if (tools.deNull(flag) == '') {
+            if (Betools.tools.deNull(flag) == '') {
                 flag = await queryProcessLogInfByID(
                     tools.queryUrlString('table_name'),
                     tools.queryUrlString('processLogID')
@@ -696,7 +696,7 @@ export async function queryCurNodePageType(pageType) {
             }
 
             //获取页面类型
-            pageType = tools.deNull(flag) == '' ? 'view' : pageType;
+            pageType = Betools.tools.deNull(flag) == '' ? 'view' : pageType;
         } else if (type == 'workflowing') {
             //
             console.log('TODO 暂时不做');

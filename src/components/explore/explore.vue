@@ -394,7 +394,7 @@ export default {
       async userStatus(){
         try {
           let info = await Betools.storage.getStore('system_userinfo');
-          if( tools.isNull(info) ){
+          if( Betools.tools.isNull(info) ){
             vant.Toast('尚未登录！');
             await this.clearLoginInfo();
             this.$router.push(`/login`);
@@ -412,7 +412,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_announce_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
 
           let alist = await announce.queryAnnounceList(0,10);
           let hlist = await announce.queryHeadList(0,10);
@@ -447,7 +447,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 1000);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
@@ -457,7 +457,7 @@ export default {
         try {
           //遍历数据，并放入缓存中
           tlist.map((item)=>{
-            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            item['sponsor'] = Betools.tools.isNull(item['sponsor']) ? realname : item['sponsor'];
             Betools.storage.setStore(`system_task_done_item_by_id@${item.id}` , item , 60);
           });
 
@@ -475,7 +475,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_doing_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 1000);
           Betools.storage.setStore(`system_task_doing_by_user@${username}` , tlist , 10);
         } else {
@@ -485,7 +485,7 @@ export default {
         try {
           //遍历数据，并放入缓存中
           tlist.map((item)=>{
-            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            item['sponsor'] = Betools.tools.isNull(item['sponsor']) ? realname : item['sponsor'];
             Betools.storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
           });
 
@@ -512,7 +512,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_time_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 1000);
           Betools.storage.setStore(`system_task_time_by_user@${username}` , tlist , 10);
         } else {
@@ -522,7 +522,7 @@ export default {
         try {
           //遍历数据，并放入缓存中
           tlist.map((item)=>{
-            item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+            item['sponsor'] = Betools.tools.isNull(item['sponsor']) ? realname : item['sponsor'];
             Betools.storage.setStore(`system_task_doing_item_by_id@${item.id}` , item , 10);
           });
 

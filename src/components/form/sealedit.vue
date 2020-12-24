@@ -586,7 +586,7 @@ export default {
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName == 'dealMail'){
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
@@ -594,7 +594,7 @@ export default {
 
         Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
 
@@ -640,7 +640,7 @@ export default {
       },
       // 选中当前填报人
       async selectCreateUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         const id = this.cuserid;
         const user = this.cuserList.find((item,index) => {return id == item.id});
@@ -662,7 +662,7 @@ export default {
       },
       //选中当前合同编号
       async selectHContract(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
         const no = parseInt(id.split(`[${dayjs().format('YYYY')}]`)[1]) + 1;
@@ -670,7 +670,7 @@ export default {
       },
       //选中当前前台人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.fuserid;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -680,7 +680,7 @@ export default {
       },
       //选中当前盖印人
       async selectSealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.suserid;
         const user = this.suserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -691,7 +691,7 @@ export default {
       },
       //选中当前归档人员
       async selectArchiveUser(values){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         let ids = [];
         let names = [];
         this.$refs.checkboxGroup.$data.checkboxValues.map((value,index) => {
@@ -820,7 +820,7 @@ export default {
 
         try {
           const that = this;
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.groupid = tools.getUrlParam('groupid') || 'Group_LD';
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 

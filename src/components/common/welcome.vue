@@ -16,12 +16,12 @@ export default {
         }
     },
     async mounted() {
-        const timestamp = tools.isPCWeb() ? 300 : 300;
-        await tools.sleep(timestamp);
+        const timestamp = Betools.tools.isPCWeb() ? 300 : 300;
+        await Betools.tools.sleep(timestamp);
         this.hide = true;
     },
     created(){
-      this.src = tools.isPCWeb() ? this.src : this.src;
+      this.src = Betools.tools.isPCWeb() ? this.src : this.src;
     },
 }
 </script>

@@ -199,7 +199,7 @@ async function transUsername(list, tools = window.tools, storage = window.storag
                 item["proponents"]
             );
 
-            item["username"] = tools.deNull(item["username"]).split(",");
+            item["username"] = Betools.tools.deNull(item["username"]).split(",");
         } catch (error) {
             console.log(error);
         }

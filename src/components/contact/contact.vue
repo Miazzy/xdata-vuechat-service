@@ -99,7 +99,7 @@ export default {
 
             var initialList = await Betools.storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
 
-            if(tools.isNull(initialList) || initialList.length <= 0){
+            if(Betools.tools.isNull(initialList) || initialList.length <= 0){
               var allContacts = await contact.queryContacts();
               var max = allContacts.length;
               for (var i = 0; i < max; i++) {
@@ -122,7 +122,7 @@ export default {
             var initialList = [];
             var contactsList = await Betools.storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
 
-            if(tools.isNull(contactsList) || contactsList.length <= 0){
+            if(Betools.tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};
               var allContacts = await contact.queryContacts();
               var contactsInitialList = await this.queryContactsInitialList();

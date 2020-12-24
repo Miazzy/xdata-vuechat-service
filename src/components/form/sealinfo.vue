@@ -343,7 +343,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -877,12 +877,12 @@ export default {
       },
       async validField(fieldName){
 
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName == 'dealMail'){
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
@@ -907,14 +907,14 @@ export default {
 
         Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       validFieldConfirm(fieldName){
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         if(fieldName == 'dealMail'){
           this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
 
@@ -990,7 +990,7 @@ export default {
       },
       //选中当前合同编号
       async selectHContract(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
         if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('商品房购房合同') ){
@@ -1007,7 +1007,7 @@ export default {
       },
       //选中当前前台人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.fuserid;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -1017,7 +1017,7 @@ export default {
       },
       //选中当前前台人
       async selectFinanceUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.financeUserid;
         const user = this.financeuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -1030,7 +1030,7 @@ export default {
       },
       //选中当前档案人
       async selectRecordUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.recordUserid;
         const user = this.recorduserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -1043,7 +1043,7 @@ export default {
       },
       //选中当前盖印人
       async selectSealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.suserid;
         const user = this.suserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -1060,7 +1060,7 @@ export default {
       },
       //选中当前归档人员
       async selectArchiveUser(values){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         let ids = [];
         let names = [];
         this.$refs.checkboxGroup.$data.checkboxValues.map((value,index) => {
@@ -1187,7 +1187,7 @@ export default {
       async queryInfo(){
 
         try {
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;
@@ -1277,7 +1277,7 @@ export default {
           //获取用户信息
           let userinfo = await Betools.storage.getStore('system_userinfo');
 
-          if( !tools.isNull(userinfo) ){
+          if( !Betools.tools.isNull(userinfo) ){
             this.item.dealManager = userinfo.systemuserinfo.realname;
             this.item.mobile = userinfo.systemuserinfo.mobile;
             this.item.username = userinfo.systemuserinfo.username;
@@ -1289,7 +1289,7 @@ export default {
           }
 
           //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
-          if(tools.isNull(this.item.dealMail) || tools.isNull(this.item.company)){
+          if(Betools.tools.isNull(this.item.dealMail) || Betools.tools.isNull(this.item.company)){
             const tmp = await query.queryMailBySealData(this.item.signman);
             this.item.dealMail = tmp.deal_mail;
             this.item.company = tmp.company;
@@ -1299,7 +1299,7 @@ export default {
           }
 
           //如果前台不存在，则添加
-          if(tools.isNull(this.item.front)){
+          if(Betools.tools.isNull(this.item.front)){
             const tmp = await query.queryFrontBySealData(this.item.signman);
             this.item.front = tmp.front;
             this.item.front_name = tmp.front_name;
@@ -1487,7 +1487,7 @@ export default {
         let seal_group_names = resp && resp.length > 0 ? resp[0].enuserlist : '';
 
         //如果未获取用户名称，则直接设置用印人为分组成员
-        if(tools.isNull(seal_group_ids)){
+        if(Betools.tools.isNull(seal_group_ids)){
           seal_group_ids = seal;
           seal_group_names = seal_man;
         }
@@ -1522,7 +1522,7 @@ export default {
         const result = await manageAPI.postTableData('bs_seal_regist' , elem);
 
         //sleep一下
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         //发送自动设置排序号请求
         const patchResp = await superagent.get(workconfig.queryAPI.autoSerialAPI).set('accept', 'json');

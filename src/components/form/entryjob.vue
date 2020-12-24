@@ -504,73 +504,73 @@ export default {
       async uploadSuccessGP(file , res){
         vant.Toast.clear();
         this.item.files_gp = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessXS(file , res){
         vant.Toast.clear();
         this.item.files_xs = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessJS(file , res){
         vant.Toast.clear();
         this.item.files_js = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessID(file , res){
         vant.Toast.clear();
         this.item.files_id = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBY(file , res){
         vant.Toast.clear();
         this.item.files_by = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessGXZM(file , res){
         vant.Toast.clear();
         this.item.files_gxzm = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBK(file , res){
         vant.Toast.clear();
         this.item.files_bk = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessXW(file , res){
         vant.Toast.clear();
         this.item.files_xw = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessSSBY(file , res){
         vant.Toast.clear();
         this.item.files_ssby = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessSSXW(file , res){
         vant.Toast.clear();
         this.item.files_ssxw = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBSBY(file , res){
         vant.Toast.clear();
         this.item.files_bsby = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       async uploadSuccessBSXW(file , res){
         vant.Toast.clear();
         this.item.files_bsxw = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       //处理验证确认
@@ -911,7 +911,7 @@ export default {
 
       //选中当前盖印人
       async selectHRUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.hr_id;
         const user = this.huserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -921,7 +921,7 @@ export default {
 
       //选中当前盖印人
       async selectAdminUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.admin_id;
         const user = this.auserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -931,7 +931,7 @@ export default {
 
       //选中当前盖印人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -941,7 +941,7 @@ export default {
 
       //选中当前盖印人
       async selectMealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.meal_id;
         const user = this.muserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -953,7 +953,7 @@ export default {
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
@@ -961,7 +961,7 @@ export default {
 
         Betools.storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
 
       afterRead(file) {
@@ -984,7 +984,7 @@ export default {
       async joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
         this.validField('join_time');
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
         this.tag.showPickerJoinTime = false;
       },
 
@@ -992,14 +992,14 @@ export default {
       async commonTypeConfirm(value){
         this.item[this.currentKey] = value;
         this.validField(value);
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
         this.tag.showPickerCommon = false;
       },
 
       // 选择学历
       async diplomaTypeConfirm(value){
         this.item.greatdiploma = value;
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
         this.tag.showPickerDiploma = false;
       },
 
@@ -1007,7 +1007,7 @@ export default {
       async queryInfo() {
 
         try {
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.item.sealman = tools.getUrlParam('sealman');
 
           const item = Betools.storage.getStore('system_entry_job_item');
@@ -1154,7 +1154,7 @@ export default {
         }
 
         //验证电子证件照
-        if(tools.isNull(this.item.files_gp)){
+        if(Betools.tools.isNull(this.item.files_gp)){
           //弹出确认提示
           return await vant.Dialog.alert({
             title: '温馨提示',
@@ -1163,10 +1163,10 @@ export default {
         }
 
         //如果填写了车牌号，则验证驾驶证，行驶证的证件照片
-        if(!tools.isNull(this.item.carno)){
+        if(!Betools.tools.isNull(this.item.carno)){
 
           //验证身份证照
-          if(tools.isNull(this.item.files_xs)){
+          if(Betools.tools.isNull(this.item.files_xs)){
             //弹出确认提示
             return await vant.Dialog.alert({
               title: '温馨提示',
@@ -1175,7 +1175,7 @@ export default {
           }
 
           //验证身份证照
-          if(tools.isNull(this.item.files_js)){
+          if(Betools.tools.isNull(this.item.files_js)){
             //弹出确认提示
             return await vant.Dialog.alert({
               title: '温馨提示',
@@ -1185,7 +1185,7 @@ export default {
         }
 
         //验证身份证照
-        if(tools.isNull(this.item.files_id)){
+        if(Betools.tools.isNull(this.item.files_id)){
           //弹出确认提示
           return await vant.Dialog.alert({
             title: '温馨提示',
@@ -1194,10 +1194,10 @@ export default {
         }
 
         //如果填写了银行卡号，则验证银行卡证件照是否上传
-        if(!tools.isNull(this.item.bank_card)){
+        if(!Betools.tools.isNull(this.item.bank_card)){
 
           //验证银行卡证件照
-          if(tools.isNull(this.item.files_bk)){
+          if(Betools.tools.isNull(this.item.files_bk)){
             //弹出确认提示
             return await vant.Dialog.alert({
               title: '温馨提示',

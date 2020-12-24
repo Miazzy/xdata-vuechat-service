@@ -472,7 +472,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -574,7 +574,7 @@ export default {
       },
       //选中当前盖印人
       async selectSealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         const id = this.userid;
         this.item.userid = id;
@@ -641,7 +641,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
-        if(tools.isNull(id) || tools.isNull(pid)){
+        if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
 
@@ -664,7 +664,7 @@ export default {
       },
       //选中当前盖印人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -681,19 +681,19 @@ export default {
 
         if(fieldName.toLocaleLowerCase().includes('amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ) {
           this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写借用数量及借用单位，注意单位！' : '';
-          return tools.isNull(this.message[fieldName]);
+          return Betools.tools.isNull(this.message[fieldName]);
         }
 
         if(fieldName.toLocaleLowerCase().includes('mail') && !regMail.test(this.item[fieldName])) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
-          return tools.isNull(this.message[fieldName]);
+          return Betools.tools.isNull(this.message[fieldName]);
         }
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
 
       afterRead(file) {
@@ -711,7 +711,7 @@ export default {
       async joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
         this.validField('join_time');
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
         this.tag.showPickerJoinTime = false;
       },
 
@@ -719,7 +719,7 @@ export default {
       async commonTypeConfirm(value){
         this.item[this.currentKey] = value;
         this.validField(value);
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
         this.tag.showPickerCommon = false;
       },
 
@@ -728,7 +728,7 @@ export default {
 
         try {
 
-          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
@@ -817,7 +817,7 @@ export default {
         }
 
         //未获取到选择的物品领用接待人员
-        if(tools.isNull(this.item.name) || tools.isNull(this.item.amount)){
+        if(Betools.tools.isNull(this.item.name) || Betools.tools.isNull(this.item.amount)){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
@@ -827,7 +827,7 @@ export default {
         }
 
         //未获取到选择的物品借用接待人员
-        if(tools.isNull(this.item.userid)){
+        if(Betools.tools.isNull(this.item.userid)){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
@@ -844,7 +844,7 @@ export default {
         let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
 
         //如果未获取用户名称，则直接设置用印人为分组成员
-        if(tools.isNull(user_group_ids)){
+        if(Betools.tools.isNull(user_group_ids)){
           user_group_ids = this.item.userid;
           user_group_names = this.item.user_admin_name;
         }
@@ -877,7 +877,7 @@ export default {
 
         //第二步，向表单提交form对象数据
         try {
-          if(!tools.isNull(elem.name.trim()) && !tools.isNull(elem.amount.trim())){
+          if(!Betools.tools.isNull(elem.name.trim()) && !Betools.tools.isNull(elem.amount.trim())){
             const result = await manageAPI.postTableData(this.tablename , elem);
           }
         } catch (error) {
@@ -912,7 +912,7 @@ export default {
                     status: '待处理',
                   };
 
-              if(!tools.isNull(element.name) && !tools.isNull(elemnet.amount)){
+              if(!Betools.tools.isNull(element.name) && !Betools.tools.isNull(elemnet.amount)){
                 //向表单提交form对象数据
                 await manageAPI.postTableData(this.tablename , element);
               }

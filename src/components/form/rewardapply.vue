@@ -372,7 +372,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -411,49 +411,49 @@ export default {
       async uploadSuccess(file , res){
         vant.Toast.clear();
         this.item.files = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_00(file , res){
         vant.Toast.clear();
         this.item.files_00 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_01(file , res){
         vant.Toast.clear();
         this.item.files_01 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_02(file , res){
         vant.Toast.clear();
         this.item.files_02 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_03(file , res){
         vant.Toast.clear();
         this.item.files_03 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_04(file , res){
         vant.Toast.clear();
         this.item.files_04 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 上传文件成功后回调函数
       async uploadSuccess_05(file , res){
         vant.Toast.clear();
         this.item.files_05 = JSON.parse(res).message;
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         this.$toast.success('上传成功');
       },
       // 用户选择盖印人
@@ -535,7 +535,7 @@ export default {
       },
       //选中当前盖印人
       async selectHRUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.hr_id;
         const user = this.userList.find((item,index) => {return id == item.id});
         this.item.hr_name = user.name;
@@ -586,7 +586,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
-        if(tools.isNull(id) || tools.isNull(pid)){
+        if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
 
@@ -614,7 +614,7 @@ export default {
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
@@ -622,7 +622,7 @@ export default {
 
         Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
 
       afterRead(file) {
@@ -641,7 +641,7 @@ export default {
 
         try {
 
-          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //查询上一页
@@ -730,7 +730,7 @@ export default {
         let user_group_names = response && response.length > 0 ? response[0].enuserlist : '';
 
         //如果未获取用户名称，则直接设置用印人为分组成员
-        if(tools.isNull(user_group_ids)){
+        if(Betools.tools.isNull(user_group_ids)){
           user_group_ids = this.item.hr_id;
           user_group_names = this.item.hr_name;
         }

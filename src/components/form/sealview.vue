@@ -343,22 +343,22 @@ export default {
         //邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       validFieldConfirm(fieldName){
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         if(fieldName == 'dealMail'){
           this.message[fieldName] = workconfig.system.config.regexp.mail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
        //选中当前合同编号
       async selectHContract(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.hContractID;
         const item = this.hContractList.find((item,index) => {return id == item.id});
         if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('商品房购房合同') ){
@@ -833,7 +833,7 @@ export default {
 
       //选中当前前台人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.fuserid;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -843,7 +843,7 @@ export default {
       },
       //选中当前前台人
       async selectFinanceUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.financeUserid;
         const user = this.financeuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -856,7 +856,7 @@ export default {
       },
       //选中当前档案人
       async selectRecordUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.recordUserid;
         const user = this.recorduserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -869,7 +869,7 @@ export default {
       },
       //选中当前盖印人
       async selectSealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.suserid;
         const user = this.suserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -881,7 +881,7 @@ export default {
 
       //选中当前归档人员
       async selectArchiveUser(values){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         let ids = [];
         let names = [];
         this.$refs.checkboxGroup.$data.checkboxValues.map((value,index) => {
@@ -912,7 +912,7 @@ export default {
       async queryInfo(){
 
         try {
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;
@@ -928,7 +928,7 @@ export default {
           const value = await query.queryTableData(`bs_seal_regist` , that.item.id);
 
           //如果没有查询到数据，或者数据状态有误
-          if(tools.isNull(value) || value.status == '已测试' || value.status == '已退回' || value.status == '已作废' || value.status == '已完成' || value.status == '已用印'){
+          if(Betools.tools.isNull(value) || value.status == '已测试' || value.status == '已退回' || value.status == '已作废' || value.status == '已完成' || value.status == '已用印'){
             await this.deleteProcessLog();
           }
 
@@ -1044,14 +1044,14 @@ export default {
           }
 
           //如果分组用户不存在，则将分组角色填入
-          if(tools.isNull(value.seal_group_ids)){
+          if(Betools.tools.isNull(value.seal_group_ids)){
 
             //获取到印章管理员组信息
             let seal_group_ids = resp[0].userlist;
             let seal_group_names = resp[0].enuserlist;
 
             //如果未获取用户名称，则直接设置用印人为分组成员
-            if(tools.isNull(seal_group_ids)){
+            if(Betools.tools.isNull(seal_group_ids)){
               seal_group_ids = seal;
               seal_group_names = seal_man;
             }
@@ -1089,7 +1089,7 @@ export default {
       async userStatus(){
         try {
           let info = await Betools.storage.getStore('system_userinfo');
-          if( tools.isNull(info) ){
+          if( Betools.tools.isNull(info) ){
             vant.Toast('尚未登录！');
             await this.clearLoginInfo();
             this.$router.push(`/login`);
@@ -1135,7 +1135,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
-        if(tools.isNull(id) || tools.isNull(pid)){
+        if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
 
@@ -1169,7 +1169,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1409,7 +1409,7 @@ export default {
         let userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1554,7 +1554,7 @@ export default {
         //获取用户信息
         let userinfo = await Betools.storage.getStore('system_userinfo');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1639,7 +1639,7 @@ export default {
         let userinfo = await Betools.storage.getStore('system_userinfo');
         const pid = tools.getUrlParam('pid');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1779,7 +1779,7 @@ export default {
         //获取用户信息
         let userinfo = await Betools.storage.getStore('system_userinfo');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -1819,7 +1819,7 @@ export default {
         await manageAPI.patchTableData(`bs_seal_regist` , id , node);
 
         //延时处理
-        await tools.sleep(300);
+        await Betools.tools.sleep(300);
 
         //查询归档状态
         const value = await query.queryTableData(`bs_seal_regist` , id);
@@ -1829,11 +1829,11 @@ export default {
         value.doc_time = value.doc_time || node.doc_time;
 
         //处理完成标识
-        const archiveFlag = !tools.isNull(value.finance_time) && !tools.isNull(value.doc_time);
+        const archiveFlag = !Betools.tools.isNull(value.finance_time) && !Betools.tools.isNull(value.doc_time);
 
         if(archiveFlag){
           //延时处理
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
           //推送消息
           await this.handleMessage(email , url);
         } else {
@@ -1845,7 +1845,7 @@ export default {
             message: `${this.item.archiveType}完成！`,
           });
           //延时处理
-          await tools.sleep(1500);
+          await Betools.tools.sleep(1500);
           //延时推送
           await this.handleMessage(email , url);
 
@@ -1888,7 +1888,7 @@ export default {
         //获取用户信息
         let userinfo = await Betools.storage.getStore('system_userinfo');
 
-        if( tools.isNull(userinfo) ){
+        if( Betools.tools.isNull(userinfo) ){
           vant.Toast('尚未登录！');
           await this.clearLoginInfo();
           this.$router.push(`/login`);
@@ -2002,7 +2002,7 @@ export default {
         value.finance_time = value.finance_time || node.finance_time;
         value.doc_time = value.doc_time || value.doc_time;
 
-        if(!tools.isNull(value.finance_time) && !tools.isNull(value.doc_time)){
+        if(!Betools.tools.isNull(value.finance_time) && !Betools.tools.isNull(value.doc_time)){
 
           try {
             //通知经办人已归档资料(email通知)

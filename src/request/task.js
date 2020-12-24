@@ -13,7 +13,7 @@ export async function queryProcessLogDone(
 ) {
 
     // 查询用户数据信息
-    if (tools.isNull(username) || tools.isNull(realname)) {
+    if (Betools.tools.isNull(username) || Betools.tools.isNull(realname)) {
         return [];
     }
 
@@ -36,9 +36,9 @@ export async function queryProcessLogDone(
             item['operate_time'] = optime;
             item['create_time'] = ctime;
             item['timestamp'] = time;
-            item['username'] = tools.deNull(item['username']).split(',');
-            item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
-            item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
+            item['username'] = Betools.tools.deNull(item['username']).split(',');
+            item['content'] = Betools.tools.abbreviation(Betools.tools.delHtmlTag(item['content']));
+            item['topic'] = Betools.tools.abbreviation(Betools.tools.delHtmlTag(item['topic']));
 
             //查询是否存在此用户名
             var flag =
@@ -52,7 +52,7 @@ export async function queryProcessLogDone(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
+                    if (Betools.tools.isNull(item['sponsor']) && !Betools.tools.isNull(item.proponents)) {
                         const temp = await query.queryUserInfoByAccount(item.proponents);
                         item['sponsor'] = temp.realname || temp.lastname;
                     }
@@ -81,7 +81,7 @@ export async function queryProcessLogWait(
 ) {
 
     // 查询用户数据信息
-    if (tools.isNull(username) || tools.isNull(realname)) {
+    if (Betools.tools.isNull(username) || Betools.tools.isNull(realname)) {
         return [];
     }
 
@@ -104,9 +104,9 @@ export async function queryProcessLogWait(
                 item['timestamp'] = time;
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
-                item['username'] = tools.deNull(item['username']).split(',');
-                item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
-                item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.abbreviation(tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.abbreviation(tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名，且已处理用户中，不含登录用户
                 if (item.tname === 'bs_seal_regist') {
@@ -130,7 +130,7 @@ export async function queryProcessLogWait(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
+                    if (Betools.tools.isNull(item['sponsor']) && !Betools.tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
                             item['sponsor'] = temp.realname || temp.lastname;
@@ -158,7 +158,7 @@ export async function queryProcessLogWaitSeal(
 ) {
 
     // 查询用户数据信息
-    if (tools.isNull(username) || tools.isNull(realname)) {
+    if (Betools.tools.isNull(username) || Betools.tools.isNull(realname)) {
         return [];
     }
 
@@ -181,9 +181,9 @@ export async function queryProcessLogWaitSeal(
                 item['timestamp'] = time;
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
-                item['username'] = tools.deNull(item['username']).split(',');
-                item['content'] = tools.abbreviation(tools.delHtmlTag(item['content']));
-                item['topic'] = tools.abbreviation(tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.abbreviation(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.abbreviation(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名，且已处理用户中，不含登录用户
                 if (item.tname === 'bs_seal_regist') {
@@ -202,7 +202,7 @@ export async function queryProcessLogWaitSeal(
         try {
             for (let item of result) {
                 try {
-                    if (tools.isNull(item['sponsor']) && !tools.isNull(item.proponents)) {
+                    if (Betools.tools.isNull(item['sponsor']) && !Betools.tools.isNull(item.proponents)) {
                         if (!item.proponents.includes(',')) {
                             const temp = await query.queryUserInfoByAccount(item.proponents);
                             item['sponsor'] = temp.realname || temp.lastname;

@@ -136,7 +136,7 @@ export default {
             let userinfo = await Betools.storage.getStore('system_userinfo');
 
             //如果用户未登录，则直接调整到登录界面
-            if( tools.isNull(userinfo) ){
+            if( Betools.tools.isNull(userinfo) ){
 
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();

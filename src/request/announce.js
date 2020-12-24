@@ -13,7 +13,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let resultInfo = Betools.storage.getStore(`system_announce_administration`);
 
-        if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
+        if (Betools.tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
             var res = await superagent.get(queryURL).set('accept', 'json');
 
@@ -27,7 +27,7 @@ export async function queryAnnounceList(page = 0, size = 50) {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = tools.deNull(item['username']).split(',');
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_announce';
                 item['content'] = item['content'] || item['title'];
             });
@@ -55,7 +55,7 @@ export async function queryHeadList(page = 0, size = 50) {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let resultInfo = Betools.storage.getStore(`system_announce_redhead`);
 
-        if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
+        if (Betools.tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
             var res = await superagent.get(queryURL).set('accept', 'json');
 
@@ -69,7 +69,7 @@ export async function queryHeadList(page = 0, size = 50) {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = tools.deNull(item['username']).split(',');
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_redhead';
                 item['content'] = item['content'] || item['title'];
             });
@@ -97,7 +97,7 @@ export async function queryNewsList(page = 0, size = 50) {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let resultInfo = Betools.storage.getStore(`system_announce_news`);
 
-        if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
+        if (Betools.tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
             var res = await superagent.get(queryURL).set('accept', 'json');
 
@@ -111,7 +111,7 @@ export async function queryNewsList(page = 0, size = 50) {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = tools.deNull(item['username']).split(',');
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_news';
                 item['content'] = item['content'] || item['title'];
             });
@@ -140,7 +140,7 @@ export async function queryNoticeList(page = 0, size = 50) {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let resultInfo = Betools.storage.getStore(`system_announce_notice`);
 
-        if (tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
+        if (Betools.tools.isNull(resultInfo) || resultInfo.length <= 0 || resultInfo == 'undefined') {
 
             var res = await superagent.get(queryURL).set('accept', 'json');
             var result = res.body;
@@ -153,7 +153,7 @@ export async function queryNoticeList(page = 0, size = 50) {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = tools.deNull(item['username']).split(',');
+                item['username'] = Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_notice';
                 item['content'] = item['content'] || item['title'];
             });

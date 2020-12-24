@@ -385,7 +385,7 @@ try {
         var chinese = '';
 
         //原始英文名称列表
-        var originlist = window.tools.deNull(origin).split(',');
+        var originlist = Betools.Betools.tools.deNull(origin).split(',');
 
         //查询用户信息
         var userlist = await queryUserName();
@@ -399,7 +399,7 @@ try {
             });
 
             //如果找到用户信息，则设置用户信息
-            if (!window.tools.isNull(user)) {
+            if (!Betools.tools.isNull(user)) {
                 chinese = `${chinese},${user.username}`;
             } else {
                 chinese = `${chinese},${ename}`;
@@ -440,7 +440,7 @@ try {
         var chinese = '';
 
         //原始英文名称列表
-        var originlist = window.tools.deNull(origin).split(',');
+        var originlist = Betools.Betools.tools.deNull(origin).split(',');
 
         //查询用户信息
         var userlist = await queryUserName();
@@ -453,7 +453,7 @@ try {
             });
 
             //如果找到用户信息，则设置用户信息
-            if (!window.tools.isNull(user)) {
+            if (!Betools.tools.isNull(user)) {
                 chinese = `${chinese},${user.realname}`;
             } else {
                 chinese = `${chinese},${ename}`;
@@ -568,15 +568,15 @@ try {
         var curRow = await queryTableData(tableName, id);
 
         //根据流程状态，设置流程图渲染状态
-        if (window.tools.deNull(curRow) != '' && curRow.bpm_status == 1) {
+        if (Betools.Betools.tools.deNull(curRow) != '' && curRow.bpm_status == 1) {
             node = node_0;
-        } else if (window.tools.deNull(curRow) != '' && curRow.bpm_status == 2) {
+        } else if (Betools.Betools.tools.deNull(curRow) != '' && curRow.bpm_status == 2) {
             node = node_1;
-        } else if (window.tools.deNull(curRow) != '' && curRow.bpm_status == 3) {
+        } else if (Betools.Betools.tools.deNull(curRow) != '' && curRow.bpm_status == 3) {
             node = node_2;
-        } else if (window.tools.deNull(curRow) != '' && curRow.bpm_status == 4) {
+        } else if (Betools.Betools.tools.deNull(curRow) != '' && curRow.bpm_status == 4) {
             node = node_3;
-        } else if (window.tools.deNull(curRow) != '' && curRow.bpm_status == 5) {
+        } else if (Betools.Betools.tools.deNull(curRow) != '' && curRow.bpm_status == 5) {
             node = node_4;
         } else {
             node = node_0;
@@ -614,15 +614,15 @@ try {
                 tableName
             );
             //如果信息不为空，则解析表单信息
-            if (window.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
+            if (Betools.Betools.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
                 try {
-                    tableInfo = window.tools.deNull(tableInfo[0]['value']);
+                    tableInfo = Betools.Betools.tools.deNull(tableInfo[0]['value']);
                 } catch (error) {
                     console.log('tabale info :' + tableInfo);
                 }
             }
             //如果信息不为空，则进行解析数据
-            if (window.tools.deNull(tableInfo) != '') {
+            if (Betools.Betools.tools.deNull(tableInfo) != '') {
                 try {
                     tableInfo = JSON.parse(tableInfo);
                 } catch (error) {
@@ -678,12 +678,12 @@ try {
             console.log('set curRow pageType error :' + error);
         }
         try {
-            main.curRow.fileStatus = window.tools.deNull(main.curRow.files) == '' ? 1 : 0;
+            main.curRow.fileStatus = Betools.Betools.tools.deNull(main.curRow.files) == '' ? 1 : 0;
         } catch (error) {
             console.log('set curRow fileStatus error :' + error);
         }
         try {
-            main.curRow.bpm_status = window.tools.deNull(main.curRow.bpm_status) == '' ? 1 : main.curRow.bpm_status;
+            main.curRow.bpm_status = Betools.Betools.tools.deNull(main.curRow.bpm_status) == '' ? 1 : main.curRow.bpm_status;
         } catch (error) {
             console.log('set curRow bpm_status error :' + error);
         }
@@ -694,15 +694,15 @@ try {
         }
         try {
 
-            if (!window.tools.isNull(main.curRow.interview_paper)) {
+            if (!Betools.tools.isNull(main.curRow.interview_paper)) {
                 main.curRow.files = `${main.curRow.files},${main.curRow.interview_paper}`
             }
 
-            if (!window.tools.isNull(main.curRow.resume)) {
+            if (!Betools.tools.isNull(main.curRow.resume)) {
                 main.curRow.files = `${main.curRow.files},${main.curRow.resume}`
             }
 
-            if (!window.tools.isNull(main.curRow.contract)) {
+            if (!Betools.tools.isNull(main.curRow.contract)) {
                 main.curRow.files = `${main.curRow.files},${main.curRow.contract}`
             }
 
@@ -783,7 +783,7 @@ try {
                 );
 
                 //获取当前节点知会流程数据
-                if (window.tools.deNull(flag) == '') {
+                if (Betools.Betools.tools.deNull(flag) == '') {
                     flag = await queryProcessLogInfByID(
                         window.tools.queryUrlString('table_name'),
                         window.tools.queryUrlString('processLogID')
@@ -791,7 +791,7 @@ try {
                 }
 
                 //获取页面类型
-                pageType = window.tools.deNull(flag) == '' ? 'view' : pageType;
+                pageType = Betools.Betools.tools.deNull(flag) == '' ? 'view' : pageType;
             } else if (type == 'workflowing') {
                 //
                 console.log('TODO 暂时不做');
@@ -906,11 +906,11 @@ try {
 
         try {
             //如果text为空，则返回空数组
-            if (window.tools.deNull(text) == '') {
+            if (Betools.Betools.tools.deNull(text) == '') {
                 return [];
             }
             //如果含有多个地址，则split后获取数组
-            if (window.tools.deNull(text).indexOf(',') > 0) {
+            if (Betools.Betools.tools.deNull(text).indexOf(',') > 0) {
                 fileList = text.split(',');
             } else {
                 fileList.push(text);
@@ -923,7 +923,7 @@ try {
             //遍历并筛选出里面的图片信息
             fileList = window.__.filter(fileList, function(text) {
                 //获取小写后的路径
-                var ptext = window.tools.deNull(text).toLowerCase();
+                var ptext = Betools.Betools.tools.deNull(text).toLowerCase();
                 //定义下载地址
                 var download = window._CONFIG['ossURL'] + '/';
                 //文档预览URL
@@ -964,16 +964,16 @@ try {
                     .toLowerCase();
 
                 //如果word文档，则使用微软API打开
-                text = window.tools.deNull(suffix).includes('xls') ? xurl + '.html' : download;
+                text = Betools.Betools.tools.deNull(suffix).includes('xls') ? xurl + '.html' : download;
 
                 //如果word文档，则使用微软API打开
-                text = window.tools.deNull(suffix).includes('svg') ? download : download;
+                text = Betools.Betools.tools.deNull(suffix).includes('svg') ? download : download;
 
                 //如果word文档，则使用微软API打开
                 text =
-                    window.tools.deNull(suffix).includes('doc') ||
-                    window.tools.deNull(suffix).includes('ppt') ||
-                    window.tools.deNull(suffix).includes('pdf') ?
+                    Betools.Betools.tools.deNull(suffix).includes('doc') ||
+                    Betools.Betools.tools.deNull(suffix).includes('ppt') ||
+                    Betools.Betools.tools.deNull(suffix).includes('pdf') ?
                     xurl + '.pdf' :
                     download;
 
@@ -985,9 +985,9 @@ try {
 
                 //如果word文档，则使用微软API打开
                 text =
-                    window.tools.deNull(suffix).includes('doc') ||
-                    window.tools.deNull(suffix).includes('ppt') ||
-                    window.tools.deNull(suffix).includes('pdf') ?
+                    Betools.Betools.tools.deNull(suffix).includes('doc') ||
+                    Betools.Betools.tools.deNull(suffix).includes('ppt') ||
+                    Betools.Betools.tools.deNull(suffix).includes('pdf') ?
                     previewURL + xurl + '.pdf' :
                     text;
 
@@ -1037,7 +1037,7 @@ try {
 
         try {
             //根据条件构造参数
-            if (window.tools.deNull(params.name) != '') {
+            if (Betools.Betools.tools.deNull(params.name) != '') {
                 whereSQL = whereSQL + `~and(name,eq,${params.name})`;
             }
         } catch (error) {
@@ -1046,7 +1046,7 @@ try {
 
         try {
             //检查查询条件中是否含有时间
-            if (window.tools.deNull(params.time) != '') {
+            if (Betools.Betools.tools.deNull(params.time) != '') {
                 var starttime = '';
                 var endtime = '';
 
@@ -1246,7 +1246,7 @@ try {
 
         try {
             //根据条件构造参数
-            if (window.tools.deNull(params.name) != '') {
+            if (Betools.Betools.tools.deNull(params.name) != '') {
                 whereSQL = whereSQL + `~and(name,eq,${params.name})`;
             }
         } catch (error) {
@@ -1255,7 +1255,7 @@ try {
 
         try {
             //检查查询条件中是否含有时间
-            if (window.tools.deNull(params.time) != '') {
+            if (Betools.Betools.tools.deNull(params.time) != '') {
                 var starttime = '';
                 var endtime = '';
 
@@ -1353,7 +1353,7 @@ try {
 
         try {
             //根据条件构造参数
-            if (window.tools.deNull(params.name) != '') {
+            if (Betools.Betools.tools.deNull(params.name) != '') {
                 whereSQL = whereSQL + `~and(name,eq,${params.name})`;
             }
         } catch (error) {
@@ -1362,7 +1362,7 @@ try {
 
         try {
             //检查查询条件中是否含有时间
-            if (window.tools.deNull(params.time) != '') {
+            if (Betools.Betools.tools.deNull(params.time) != '') {
                 var starttime = '';
                 var endtime = '';
 
@@ -1485,11 +1485,11 @@ try {
 
         try {
             //如果text为空，则返回空数组
-            if (window.tools.deNull(text) == '') {
+            if (Betools.Betools.tools.deNull(text) == '') {
                 return [];
             }
             //如果含有多个地址，则split后获取数组
-            if (window.tools.deNull(text).indexOf(',') > 0) {
+            if (Betools.Betools.tools.deNull(text).indexOf(',') > 0) {
                 fileList = text.split(',');
             } else {
                 fileList.push(text);
@@ -1502,7 +1502,7 @@ try {
             //遍历并筛选出里面的图片信息
             fileList = window.__.filter(fileList, function(text) {
                 //获取小写后的路径
-                var ptext = window.tools.deNull(text).toLowerCase();
+                var ptext = Betools.Betools.tools.deNull(text).toLowerCase();
 
                 //获取图片标识
                 var flag =
@@ -1562,11 +1562,11 @@ try {
 
         try {
             //如果text为空，则返回空数组
-            if (window.tools.deNull(text) == '') {
+            if (Betools.Betools.tools.deNull(text) == '') {
                 return [];
             }
             //如果含有多个地址，则split后获取数组
-            if (window.tools.deNull(text).indexOf(',') > 0) {
+            if (Betools.Betools.tools.deNull(text).indexOf(',') > 0) {
                 fileList = text.split(',');
             } else {
                 fileList.push(text);
@@ -1579,7 +1579,7 @@ try {
             //遍历并筛选出里面的图片信息
             fileList = window.__.filter(fileList, function(text, index) {
                 //获取小写后的路径
-                var ptext = window.tools.deNull(text).toLowerCase();
+                var ptext = Betools.Betools.tools.deNull(text).toLowerCase();
 
                 //获取图片标识
                 var flag =
@@ -1617,7 +1617,7 @@ try {
         if (images.length > 0) {
             setTimeout(() => {
                 $('.aplayer-pause').css('border', '0px solid #fefefe');
-                $('.aplayer-dtime').html(window.tools.deNull($('.aplayer-dtime').html()).replace(`Infinity:NaN:NaN`, ``));
+                $('.aplayer-dtime').html(Betools.Betools.tools.deNull($('.aplayer-dtime').html()).replace(`Infinity:NaN:NaN`, ``));
             }, 300);
         }
 
@@ -1646,11 +1646,11 @@ try {
 
         try {
             //如果text为空，则返回空数组
-            if (window.tools.deNull(text) == '') {
+            if (Betools.Betools.tools.deNull(text) == '') {
                 return [];
             }
             //如果含有多个地址，则split后获取数组
-            if (window.tools.deNull(text).indexOf(',') > 0) {
+            if (Betools.Betools.tools.deNull(text).indexOf(',') > 0) {
                 fileList = text.split(',');
             } else {
                 fileList.push(text);
@@ -1663,7 +1663,7 @@ try {
             //遍历并筛选出里面的图片信息
             fileList = window.__.filter(fileList, function(text) {
                 //获取小写后的路径
-                var ptext = window.tools.deNull(text).toLowerCase();
+                var ptext = Betools.Betools.tools.deNull(text).toLowerCase();
 
                 //获取图片标识
                 var flag =
@@ -1757,7 +1757,7 @@ try {
 
         try {
             //获取文件后缀
-            suffix = window.tools.deNull(text).toLowerCase();
+            suffix = Betools.Betools.tools.deNull(text).toLowerCase();
         } catch (error) {
             suffix = `${text}`;
         }
@@ -1815,7 +1815,7 @@ try {
         //查询文档对应预览地址
         try {
             //获取小写文档下载地址
-            var textURL = window.tools.deNull(text).toLowerCase();
+            var textURL = Betools.Betools.tools.deNull(text).toLowerCase();
             //如果不含有office文档
             if (!(
                     textURL.includes('doc') ||
@@ -1838,7 +1838,7 @@ try {
             //获取第一个office文档
             url = window.__.find(fileList, function(text) {
                 //获取小写字符串
-                text = window.tools.deNull(text).toLowerCase();
+                text = Betools.Betools.tools.deNull(text).toLowerCase();
                 return (
                     text.includes('doc') ||
                     text.includes('ppt') ||
@@ -1867,12 +1867,12 @@ try {
                 .toLowerCase();
 
             //如果word文档，则使用微软API打开
-            url = window.tools.deNull(suffix).includes('xls') ? xurl + '.html' : url;
+            url = Betools.Betools.tools.deNull(suffix).includes('xls') ? xurl + '.html' : url;
             //如果word文档，则使用微软API打开
             url =
-                window.tools.deNull(suffix).includes('doc') ||
-                window.tools.deNull(suffix).includes('ppt') ||
-                window.tools.deNull(suffix).includes('pdf') ?
+                Betools.Betools.tools.deNull(suffix).includes('doc') ||
+                Betools.Betools.tools.deNull(suffix).includes('ppt') ||
+                Betools.Betools.tools.deNull(suffix).includes('pdf') ?
                 xurl + '.pdf' :
                 url;
 
@@ -1887,9 +1887,9 @@ try {
 
             //如果word文档，则使用微软API打开
             url =
-                window.tools.deNull(suffix).includes('doc') ||
-                window.tools.deNull(suffix).includes('ppt') ||
-                window.tools.deNull(suffix).includes('pdf') ?
+                Betools.Betools.tools.deNull(suffix).includes('doc') ||
+                Betools.Betools.tools.deNull(suffix).includes('ppt') ||
+                Betools.Betools.tools.deNull(suffix).includes('pdf') ?
                 previewURL + xurl + '.pdf' :
                 url;
 
@@ -2000,11 +2000,11 @@ try {
             //对应表单没有数据，故此知会/流程通知转移到历史记录中，获取关于此表单的所有当前知会日志信息
             var messageNode = await queryProcessLogInformed(tableName, id);
             //如果审批日志信息不为空，则将审批日志信息转化为历史数据
-            if (window.tools.deNull(wfnode) != '') {
+            if (Betools.Betools.tools.deNull(wfnode) != '') {
                 result = await transWflowHistoring(tableName, wfnode);
             }
             //如果知会日志信息不为空，则将知会日志信息转化为历史数据
-            if (window.tools.deNull(messageNode) != '') {
+            if (Betools.Betools.tools.deNull(messageNode) != '') {
                 result = await transWflowHistoring(tableName, messageNode);
             }
         } catch (error) {
@@ -2384,13 +2384,13 @@ try {
                         'yyyy-MM-dd hh:mm:ss'
                     );
 
-                    var content = `节点：${window.tools.deNull(
+                    var content = `节点：${Betools.Betools.tools.deNull(
               item.process_station
-            )} , 处理人： ${window.tools.deNull(
+            )} , 处理人： ${Betools.Betools.tools.deNull(
               queryUserRealName(item.approve_user)
-            )} , 审批：${window.tools.deNull(item.action)} , 审批意见：${window.tools.deNull(
+            )} , 审批：${Betools.Betools.tools.deNull(item.action)} , 审批意见：${Betools.Betools.tools.deNull(
               item.action_opinion
-            )}  时间：${window.tools.deNull(optime)} `;
+            )}  时间：${Betools.Betools.tools.deNull(optime)} `;
 
                     var color =
                         item.action == '同意' ?
@@ -2447,9 +2447,9 @@ try {
                         id: item.id,
                         employee: item.employee,
                         color: 'pink',
-                        content: `节点：${window.tools.deNull(
+                        content: `节点：${Betools.Betools.tools.deNull(
                 item.process_station
-              )} , 待处理人： ${window.tools.deNull(
+              )} , 待处理人： ${Betools.Betools.tools.deNull(
                 queryUserRealName(item.employee)
               )} , 审批：待处理 , 时间：-- `,
                         status: 'wait',
@@ -2482,19 +2482,19 @@ try {
                         new Date(item.operate_time),
                         'yyyy-MM-dd hh:mm:ss'
                     );
-                    var appruser = window.tools.deNull(item.approve_user);
+                    var appruser = Betools.Betools.tools.deNull(item.approve_user);
                     var node = {
                         id: item.id,
                         employee: item.employee,
                         appruser: appruser,
                         color: 'orange',
-                        content: `节点：${window.tools.deNull(
+                        content: `节点：${Betools.Betools.tools.deNull(
                 item.process_station
-              )} , 待处理人： ${window.tools.deNull(
+              )} , 待处理人： ${Betools.Betools.tools.deNull(
                 queryUserRealName(item.employee)
-              )} ,  已处理人： ${window.tools.deNull(
+              )} ,  已处理人： ${Betools.Betools.tools.deNull(
                 queryUserRealName(appruser)
-              )} , 审批：知会 , 时间：${window.tools.deNull(optime)} `,
+              )} , 审批：知会 , 时间：${Betools.Betools.tools.deNull(optime)} `,
                         status: 'sound',
                         index: index,
                     };
@@ -3097,7 +3097,7 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_notice';
                 item['content'] = item['content'] || item['title'];
             });
@@ -3134,7 +3134,7 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_market_info';
                 item['content'] = item['content'] || item['title'];
             });
@@ -3178,8 +3178,8 @@ try {
         var length = 0;
 
         //格式化起始时间
-        starttime = window.tools.isNull(starttime) ? '' : starttime.format('YYYY-MM-DD');
-        endtime = window.tools.isNull(endtime) ? '' : endtime.format('YYYY-MM-DD');
+        starttime = Betools.tools.isNull(starttime) ? '' : starttime.format('YYYY-MM-DD');
+        endtime = Betools.tools.isNull(endtime) ? '' : endtime.format('YYYY-MM-DD');
 
         //遍历查询所有公告信息
         for (var i = 0; i <= 1000; i++) {
@@ -3231,18 +3231,18 @@ try {
             var flag = true;
 
             //判断查询内容是否为空，不为空，则进行内容筛选
-            if (!window.tools.isNull(content)) {
+            if (!Betools.tools.isNull(content)) {
                 flag =
-                    (flag && window.tools.deNull(item['title'].includes(content))) ||
-                    window.tools.deNull(item['content'].includes(content));
+                    (flag && Betools.Betools.tools.deNull(item['title'].includes(content))) ||
+                    Betools.Betools.tools.deNull(item['content'].includes(content));
             }
 
             //判断查询时间
-            if (!window.tools.isNull(starttime) && !window.tools.isNull(endtime)) {
+            if (!Betools.tools.isNull(starttime) && !Betools.tools.isNull(endtime)) {
                 flag =
                     flag &&
-                    window.tools.deNull(item['create_time']) >= starttime &&
-                    window.tools.deNull(item['create_time']) <= endtime;
+                    Betools.Betools.tools.deNull(item['create_time']) >= starttime &&
+                    Betools.Betools.tools.deNull(item['create_time']) <= endtime;
             }
 
             return flag;
@@ -4314,7 +4314,7 @@ try {
 
         //用户名称
         var whereFlag =
-            window.tools.deNull(params.username) == '' ?
+            Betools.Betools.tools.deNull(params.username) == '' ?
             '' :
             `_where=(username,like,~${params.username}~)~or(realname,like,~${params.username}~)&`;
 
@@ -4477,9 +4477,9 @@ try {
                 item['timestamp'] = time;
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
-                item['username'] = window.tools.deNull(item['username']).split(',');
-                item['content'] = window.tools.abbreviation(window.tools.delHtmlTag(item['content']));
-                item['topic'] = window.tools.abbreviation(window.tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名，且已处理用户中，不含登录用户
                 var flag =
@@ -4763,19 +4763,19 @@ try {
         var whereSQL = '';
 
         //根据条件构造参数
-        if (window.tools.deNull(param.type) != '') {
+        if (Betools.Betools.tools.deNull(param.type) != '') {
             whereSQL = whereSQL + `~and(type,eq,${param.type})`;
         }
-        if (window.tools.deNull(param.name) != '') {
+        if (Betools.Betools.tools.deNull(param.name) != '') {
             whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
         }
-        if (window.tools.deNull(param.topic) != '') {
+        if (Betools.Betools.tools.deNull(param.topic) != '') {
             whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
         }
-        if (window.tools.deNull(param.startman) != '') {
+        if (Betools.Betools.tools.deNull(param.startman) != '') {
             whereSQL = whereSQL + `~and(sponsor,like,~${param.startman}~)`;
         }
-        if (window.tools.deNull(param.time) != '') {
+        if (Betools.Betools.tools.deNull(param.time) != '') {
             var starttime = '';
             var endtime = '';
 
@@ -4819,9 +4819,9 @@ try {
                 item['timestamp'] = time;
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
-                item['username'] = window.tools.deNull(item['username']).split(',');
-                item['content'] = window.tools.abbreviation(window.tools.delHtmlTag(item['content']));
-                item['topic'] = window.tools.abbreviation(window.tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名
                 var flag = window.__.contains(item['username'], username);
@@ -4875,9 +4875,9 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
-                item['content'] = window.tools.abbreviation(window.tools.delHtmlTag(item['content']));
-                item['topic'] = window.tools.abbreviation(window.tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名
                 var flag =
@@ -4928,12 +4928,12 @@ try {
                 );
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['description'] = window.tools.abbreviation(
-                    window.tools.delHtmlTag(item['content']),
+                item['description'] = Betools.tools.delHtmlTag(
+                    Betools.tools.delHtmlTag(item['content']),
                     300
                 );
-                item['title'] = item['name'] = window.tools.abbreviation(
-                    window.tools.delHtmlTag(item['blog_title']),
+                item['title'] = item['name'] = Betools.tools.delHtmlTag(
+                    Betools.tools.delHtmlTag(item['blog_title']),
                     100
                 );
                 item['avatar'] = "//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/icon-blog-hot.svg";
@@ -4983,12 +4983,12 @@ try {
                 );
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['description'] = window.tools.abbreviation(
-                    window.tools.delHtmlTag(item['content']),
+                item['description'] = Betools.tools.delHtmlTag(
+                    Betools.tools.delHtmlTag(item['content']),
                     300
                 );
-                item['title'] = window.tools.abbreviation(
-                    window.tools.delHtmlTag(item['blog_title']),
+                item['title'] = Betools.tools.delHtmlTag(
+                    Betools.tools.delHtmlTag(item['blog_title']),
                     100
                 );
 
@@ -5043,11 +5043,11 @@ try {
                 );
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['description'] = window.tools.abbreviation(
-                    window.tools.delHtmlTag(item['content']),
+                item['description'] = Betools.tools.delHtmlTag(
+                    Betools.tools.delHtmlTag(item['content']),
                     300
                 );
-                item['title'] = window.tools.abbreviation(
+                item['title'] = Betools.tools.delHtmlTag(
                     tools.delHtmlTag(item['blog_title']),
                     100
                 );
@@ -5104,9 +5104,9 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
-                item['content'] = window.tools.abbreviation(window.tools.delHtmlTag(item['content']));
-                item['topic'] = window.tools.abbreviation(window.tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名
                 var flag =
@@ -5145,7 +5145,7 @@ try {
         try {
             result = Betools.storage.getStore(`system_process_log_done_all_user@${username}`);
 
-            if (window.tools.isNull(result) || result.length == 0) {
+            if (Betools.tools.isNull(result) || result.length == 0) {
                 result = [];
 
                 for (i = 0; i < 1000000; i++) {
@@ -5164,7 +5164,7 @@ try {
                         item['username'] = await patchEnameCname(item['username'].toString());
                         item['proponents'] = await patchEnameCname(item['proponents']);
 
-                        item['username'] = window.tools.deNull(item['username']).split(',');
+                        item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                     } catch (error) {
                         console.log(error);
                     }
@@ -5182,12 +5182,12 @@ try {
             } else {
                 //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
                 var first = window.__.max(result, function(item) {
-                    let time = window.tools.isNull(item.timestamp) ?
+                    let time = Betools.tools.isNull(item.timestamp) ?
                         Betools.Betools.tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
                         item.timestamp;
                     return time;
                 });
-                var curtime = window.tools.isNull(first.createtime) ?
+                var curtime = Betools.tools.isNull(first.createtime) ?
                     Betools.Betools.tools.formatDate(first['create_time'], 'yyyy-MM-dd hh:mm:ss') :
                     first.createtime;
                 var nlist = [];
@@ -5214,7 +5214,7 @@ try {
                         item['username'] = await patchEnameCname(item['username'].toString());
                         item['proponents'] = await patchEnameCname(item['proponents']);
 
-                        item['username'] = window.tools.deNull(item['username']).split(',');
+                        item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                     } catch (error) {
                         console.log(error);
                     }
@@ -5277,7 +5277,7 @@ try {
                     item['username'] = await patchEnameCname(item['username'].toString());
                     item['proponents'] = await patchEnameCname(item['proponents']);
 
-                    item['username'] = window.tools.deNull(item['username']).split(',');
+                    item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 } catch (error) {
                     console.log(error);
                 }
@@ -5322,7 +5322,7 @@ try {
                     item['username'] = await patchEnameCname(item['username'].toString());
                     item['proponents'] = await patchEnameCname(item['proponents']);
 
-                    item['username'] = window.tools.deNull(item['username']).split(',');
+                    item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 } catch (error) {
                     console.log(error);
                 }
@@ -5374,7 +5374,7 @@ try {
                     item['username'] = await patchEnameCname(item['username'].toString());
                     item['proponents'] = await patchEnameCname(item['proponents']);
 
-                    item['username'] = window.tools.deNull(item['username']).split(',');
+                    item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 } catch (error) {
                     console.log(error);
                 }
@@ -5407,19 +5407,19 @@ try {
         var whereSQL = '';
 
         //根据条件构造参数
-        if (window.tools.deNull(param.type) != '') {
+        if (Betools.Betools.tools.deNull(param.type) != '') {
             whereSQL = whereSQL + `~and(type,eq,${param.type})`;
         }
-        if (window.tools.deNull(param.name) != '') {
+        if (Betools.Betools.tools.deNull(param.name) != '') {
             whereSQL = whereSQL + `~and(tname,eq,${param.name})`;
         }
-        if (window.tools.deNull(param.topic) != '') {
+        if (Betools.Betools.tools.deNull(param.topic) != '') {
             whereSQL = whereSQL + `~and(topic,like,~${param.topic}~)`;
         }
-        if (window.tools.deNull(param.startman) != '') {
+        if (Betools.Betools.tools.deNull(param.startman) != '') {
             whereSQL = whereSQL + `~and(sponsor,like,~${param.startman}~)`;
         }
-        if (window.tools.deNull(param.time) != '') {
+        if (Betools.Betools.tools.deNull(param.time) != '') {
             var starttime = '';
             var endtime = '';
 
@@ -5472,9 +5472,9 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
-                item['content'] = window.tools.abbreviation(window.tools.delHtmlTag(item['content']));
-                item['topic'] = window.tools.abbreviation(window.tools.delHtmlTag(item['topic']));
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
+                item['content'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['content']));
+                item['topic'] = Betools.tools.delHtmlTag(Betools.tools.delHtmlTag(item['topic']));
 
                 //查询是否存在此用户名
                 var flag = window.__.contains(item['username'], username);
@@ -6034,7 +6034,7 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_announce';
                 item['content'] = item['content'] || item['title'];
             });
@@ -6073,7 +6073,7 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_redhead';
                 item['content'] = item['content'] || item['title'];
             });
@@ -6112,7 +6112,7 @@ try {
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
-                item['username'] = window.tools.deNull(item['username']).split(',');
+                item['username'] = Betools.Betools.tools.deNull(item['username']).split(',');
                 item['table_name'] = 'bs_news';
                 item['content'] = item['content'] || item['title'];
             });

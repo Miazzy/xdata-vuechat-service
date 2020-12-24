@@ -35,8 +35,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
     //如果加签、会签同时选择，则无法提交
     if (
-        tools.deNull(wflowAddUsers) != "" &&
-        tools.deNull(wflowNotifyUsers) != ""
+        Betools.tools.deNull(wflowAddUsers) != "" &&
+        Betools.tools.deNull(wflowNotifyUsers) != ""
     ) {
         vant.Dialog.alert({
             message: "无法同时进行加签及会签操作，请单独选择加签用户或会签用户！"
@@ -63,7 +63,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     );
 
     //如果用户流程中已经存在，则提示无法选择
-    if (!tools.isNull(readyUser)) {
+    if (!Betools.tools.isNull(readyUser)) {
         //将英文名转化为中文名
         readyUser = await manage.patchEnameCname(readyUser);
         //提示错误信息
@@ -118,7 +118,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     }
 
     //未获取当前审批流程
-    if (tools.deNull(curRow) == "") {
+    if (Betools.tools.deNull(curRow) == "") {
         vant.Dialog.alert({
             message: "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
         });
@@ -132,8 +132,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
     //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
     if (!(
-            tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-            tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+            Betools.tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+            Betools.tools.deNull(curRow["employee"]).includes(userInfo["realname"])
         )) {
         vant.Dialog.alert({
             message: "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
@@ -194,7 +194,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
         var curAuditor = processAudit;
         //知会节点数组
         var notifyArray =
-            tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
+            Betools.tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
 
         //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
         if (curRow.business_code != "000000000") {
@@ -247,7 +247,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 );
 
                 //如果从数据库中查询出，自由流程数据，则替换数据
-                if (tools.deNull(freeNodeBack) != "") {
+                if (Betools.tools.deNull(freeNodeBack) != "") {
                     freeNode = freeNodeBack;
                 }
 
@@ -267,7 +267,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 }
 
                 //添加加签用户数据
-                if (tools.deNull(wflowAddUsers) != "") {
+                if (Betools.tools.deNull(wflowAddUsers) != "") {
                     freeNode.audit_node = freeNode.audit_node.replace(
                         `,${curAuditor},`,
                         `,${curAuditor},${wflowAddUsers},`
@@ -275,7 +275,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 }
 
                 //添加会签用户数据
-                if (tools.deNull(wflowNotifyUsers) != "") {
+                if (Betools.tools.deNull(wflowNotifyUsers) != "") {
                     freeNode.audit_node = freeNode.audit_node.replace(
                         `,${curAuditor},`,
                         `,${curAuditor},${wflowNotifyUsers},${curAuditor},`
@@ -298,14 +298,14 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 //根据自由流程配置，获取所有待审核人员列表
                 allAudit =
                     "," +
-                    tools.deNull(freeNode.audit_node) +
+                    Betools.tools.deNull(freeNode.audit_node) +
                     "," +
-                    tools.deNull(freeNode.approve_node) +
+                    Betools.tools.deNull(freeNode.approve_node) +
                     ",";
 
                 //根据自由流程配置，获取所有待知会人员列表
                 notifyArray =
-                    tools.deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
+                    Betools.tools.deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
 
                 //设置审批节点
                 approveNode = freeNode.approve_node;
@@ -320,8 +320,8 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
         //当不存在加签、会签操作时，则进行重复用户消除操作
         if (!(
-                tools.deNull(wflowAddUsers) != "" ||
-                tools.deNull(wflowNotifyUsers) != ""
+                Betools.tools.deNull(wflowAddUsers) != "" ||
+                Betools.tools.deNull(wflowNotifyUsers) != ""
             )) {
             //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
             if (
@@ -759,8 +759,8 @@ export async function handleRejectWF() {
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
-                    tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-                    tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["realname"])
                 )) {
                 vant.Dialog.alert({
                     message: "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
@@ -886,8 +886,8 @@ export async function handleConfirmWF() {
 
             //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
             if (
-                tools.deNull(curRow["approve_user"]).length >=
-                tools.deNull(curRow["employee"]).length
+                Betools.tools.deNull(curRow["approve_user"]).length >=
+                Betools.tools.deNull(curRow["employee"]).length
             ) {
                 //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
                 try {
@@ -914,8 +914,8 @@ export async function handleConfirmWF() {
                 return result;
             }
 
-            var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
-            var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
+            var employeeList = "," + Betools.tools.deNull(curRow["employee"]) + ",";
+            var appoveUserList = "," + Betools.tools.deNull(curRow["approve_user"]) + ",";
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
@@ -953,8 +953,8 @@ export async function handleConfirmWF() {
 
             //设置知会确认人员
             curRow["approve_user"] =
-                tools.deNull(curRow["approve_user"]) +
-                (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
+                Betools.tools.deNull(curRow["approve_user"]) +
+                (Betools.tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
                 userInfo["username"];
 
             //设置操作内容
@@ -965,8 +965,8 @@ export async function handleConfirmWF() {
 
             //设置操作意见
             curRow["action_opinion"] =
-                tools.deNull(curRow["action_opinion"]) +
-                (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+                Betools.tools.deNull(curRow["action_opinion"]) +
+                (Betools.tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
                 `${userInfo["username"]}:${message}`;
 
             //保存当前数据到数据库中

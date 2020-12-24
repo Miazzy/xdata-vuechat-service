@@ -32,7 +32,7 @@ export const queryDepartUserList = async() => {
     const system_type = tools.queryUrlString('system_type', 'history');
 
     //如果没有获取到用户数据，则无法获取部门信息
-    if (tools.isNull(userinfo) || tools.isNull(userinfo.main_department)) {
+    if (Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.main_department)) {
         return { records: [], total: 0 };
     }
 
@@ -41,7 +41,7 @@ export const queryDepartUserList = async() => {
 
     const cache = await Betools.storage.getStoreDB(ALL_USER_CACHE_DEPART_KEY + '#depart_id#' + departID);
 
-    if (!tools.isNull(cache)) {
+    if (!Betools.tools.isNull(cache)) {
         return cache;
     }
 
@@ -78,7 +78,7 @@ export const queryDepartUserList = async() => {
                 console.log(error);
             }
             try {
-                if (tools.isNull(item.avatar)) {
+                if (Betools.tools.isNull(item.avatar)) {
                     item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
                 } else {
                     item['headerUrl'] = window._CONFIG['uploaxURL'] + '/' + item.avatar;
@@ -147,7 +147,7 @@ export const queryWorkUserList = async() => {
 
     const cache = await Betools.storage.getStoreDB(ALL_USER_CACHE_WORK_KEY);
 
-    if (!tools.isNull(cache)) {
+    if (!Betools.tools.isNull(cache)) {
         return cache;
     }
 
@@ -168,7 +168,7 @@ export const queryWorkUserList = async() => {
                 console.log(error);
             }
             try {
-                if (tools.isNull(item.avatar)) {
+                if (Betools.tools.isNull(item.avatar)) {
                     item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
                 } else {
                     item['headerUrl'] = window._CONFIG['uploaxURL'] + '/' + item.avatar;
@@ -236,7 +236,7 @@ export const queryUserList = async(params) => {
 
     //用户名称
     var whereFlag =
-        tools.deNull(params.username) == '' ?
+        Betools.tools.deNull(params.username) == '' ?
         '' :
         `_where=(username,like,~${params.username}~)~or(realname,like,~${params.username}~)&`;
 
@@ -267,7 +267,7 @@ export const queryUserList = async(params) => {
                 console.log(error);
             }
             try {
-                if (tools.isNull(item.avatar)) {
+                if (Betools.tools.isNull(item.avatar)) {
                     item["headerUrl"] = "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/images/icon-manage-16.png";
                 } else {
                     item['headerUrl'] = window._CONFIG['uploaxURL'] + '/' + item.avatar;
@@ -334,11 +334,11 @@ export const queryContacts = async() => {
     var count = 0;
     var cache = await Betools.storage.getStoreDB(ALL_USER_CACHE_KEY + '#depart#' + userinfo.main_department);
 
-    if (tools.isNull(cache) || cache.length <= 0) {
+    if (Betools.tools.isNull(cache) || cache.length <= 0) {
         let userlist = await queryDepartUserList();
         userlist = userlist.records;
         count = userlist.total;
-        if (!(tools.isNull(userlist) || userlist.length <= 0)) {
+        if (!(Betools.tools.isNull(userlist) || userlist.length <= 0)) {
             all = [...all, ...userlist];
         }
         Betools.storage.setStoreDB(ALL_USER_CACHE_KEY + '#depart#' + userinfo.main_department, all, 3600 * 24);
@@ -383,7 +383,7 @@ export async function getUserInfoByWxid(wxid) {
 
     const key = `contacts_cache_wxid${wxid}`;
 
-    if (tools.isNull(wxid) || wxid.startsWith('wxid')) {
+    if (Betools.tools.isNull(wxid) || wxid.startsWith('wxid')) {
         return {};
     }
 

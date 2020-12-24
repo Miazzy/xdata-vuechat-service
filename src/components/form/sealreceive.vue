@@ -292,7 +292,7 @@ export default {
       async queryInfo(){
 
         try {
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           var that = this;

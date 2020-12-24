@@ -233,7 +233,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -373,7 +373,7 @@ export default {
       async selectHContract(){
 
         //等待N毫秒
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         //查询当前用印信息
         const id = this.hContractID;

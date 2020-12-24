@@ -258,7 +258,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         freeNode.audit_node = `,${freeNode.audit_node},`;
 
         //如果加签用户数据不为空，则向自由流程数据表中，添加加签数据
-        if (tools.deNull(wflowAddUser) && !freeNode.audit_node.includes(wflowAddUser)) {
+        if (Betools.tools.deNull(wflowAddUser) && !freeNode.audit_node.includes(wflowAddUser)) {
 
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
@@ -267,7 +267,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         }
 
         //如果会签用户数据不为空，则向自由流程数据表中，添加会签数据
-        if (tools.deNull(wflowNotifyUser) && !freeNode.audit_node.includes(wflowNotifyUser)) {
+        if (Betools.tools.deNull(wflowNotifyUser) && !freeNode.audit_node.includes(wflowNotifyUser)) {
 
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
@@ -276,7 +276,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         }
 
         //如果当前用户，进行了会签操作，则不应在audit_node记录多次，删除第一次记录
-        if (tools.deNull(wflowNotifyUser) && freeNode.audit_node.indexOf(curAuditor) != freeNode.audit_node.lastIndexOf(curAuditor)) {
+        if (Betools.tools.deNull(wflowNotifyUser) && freeNode.audit_node.indexOf(curAuditor) != freeNode.audit_node.lastIndexOf(curAuditor)) {
             freeNode.audit_node = freeNode.audit_node.replace(
                 `,${curAuditor},`,
                 `,`
@@ -383,17 +383,17 @@ export function checkSubmitInfo(wfUsers, nfUsers, approver, pageType = 'workflow
 
     try {
         //审批用户不能为空
-        if (tools.deNull(approver) == "" && pageType == "workflowing") {
+        if (Betools.tools.deNull(approver) == "" && pageType == "workflowing") {
             vant.Toast.fail("请选择审批用户!");
             return false;
         }
         //如果审批用户含有多个，则不能提交
-        if (tools.deNull(approver).includes(",") && pageType == "workflowing") {
+        if (Betools.tools.deNull(approver).includes(",") && pageType == "workflowing") {
             vant.Toast.fail("审批用户只能选择一个!");
             return false;
         }
         //知会用户不能为空
-        if (tools.deNull(nfUsers) == "" && pageType == "notifying") {
+        if (Betools.tools.deNull(nfUsers) == "" && pageType == "notifying") {
             vant.Toast.fail("请选择知会用户!");
             return false;
         }

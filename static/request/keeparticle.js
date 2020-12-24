@@ -37,12 +37,12 @@ const queryBlogArticleInfo = async(
             );
             item['create_time'] = ctime;
             item['timestamp'] = time;
-            item['description'] = window.tools.abbreviation(
-                window.tools.delHtmlTag(item['content']),
+            item['description'] = Betools.tools.delHtmlTag(
+                Betools.tools.delHtmlTag(item['content']),
                 300
             );
-            item['title'] = window.tools.abbreviation(
-                window.tools.delHtmlTag(item['blog_title']),
+            item['title'] = Betools.tools.delHtmlTag(
+                Betools.tools.delHtmlTag(item['blog_title']),
                 100
             );
 

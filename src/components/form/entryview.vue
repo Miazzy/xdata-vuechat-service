@@ -787,7 +787,7 @@ export default {
       },
       //选中当前盖印人
       async selectHRUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.hr_id;
         const user = this.huserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -796,7 +796,7 @@ export default {
       },
       //选中当前盖印人
       async selectAdminUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.admin_id;
         const user = this.auserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -805,7 +805,7 @@ export default {
       },
       //选中当前盖印人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -814,7 +814,7 @@ export default {
       },
       //选中当前盖印人
       async selectMealUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.meal_id;
         const user = this.muserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -825,13 +825,13 @@ export default {
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
 
@@ -859,7 +859,7 @@ export default {
       async queryInfo() {
 
         try {
-          this.iswechat = tools.isWechat();
+          this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户编号
@@ -1193,7 +1193,7 @@ export default {
       },
       async handleFinaly(){
 
-        await tools.sleep(100);
+        await Betools.tools.sleep(100);
 
         //系统编号
         const id = tools.getUrlParam('id');
@@ -1206,7 +1206,7 @@ export default {
         value.meal_time = value.meal_time || this.item.meal_time;
 
         //如果三方确认时间无误，则向HR推送最后知会通知，告知流程完毕
-        if(!tools.isNull(value.front_time) && !tools.isNull(value.admin_time) && !tools.isNull(value.meal_time)){
+        if(!Betools.tools.isNull(value.front_time) && !Betools.tools.isNull(value.admin_time) && !Betools.tools.isNull(value.meal_time)){
 
            // 返回预览URL
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=done`);

@@ -327,7 +327,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 30);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {
@@ -345,7 +345,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_doing_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
           Betools.storage.setStore(`system_task_doing_by_user@${username}` , tlist , 60);
         } else {
@@ -354,7 +354,7 @@ export default {
 
         //过滤，去掉计时待办业务
         tlist = tlist.filter((item)=>{
-          item['sponsor'] = tools.isNull(item['sponsor']) ? realname : item['sponsor'];
+          item['sponsor'] = Betools.tools.isNull(item['sponsor']) ? realname : item['sponsor'];
           return !task.TIME_TASK_NAME.includes(item.name);
         })
 
@@ -372,7 +372,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_time_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogWait(username , realname , 0 , 99);
           Betools.storage.setStore(`system_task_time_by_user@${username}` , tlist , 60);
         } else {
@@ -397,7 +397,7 @@ export default {
         //先检测缓存中，是否有数据，如果没有数据，则从数据库中查询
         let result = Betools.storage.getStore(`system_task_done_by_user@${username}`);
 
-        if( tools.isNull(result) || result.length <= 0 || result == 'undefined') {
+        if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
           tlist = await task.queryProcessLogDone(username , realname , 0 , 90);
           Betools.storage.setStore(`system_task_done_by_user@${username}` , tlist , 60);
         } else {

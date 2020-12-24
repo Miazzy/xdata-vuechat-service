@@ -117,11 +117,11 @@ export default {
         this.loading = true;
 
         try {
-          if(tools.isNull(this.username)){
+          if(Betools.tools.isNull(this.username)){
             vant.Toast('请输入账号/手机/邮箱登录！');
-          } else if(tools.isNull(this.password)){
+          } else if(Betools.tools.isNull(this.password)){
             vant.Toast('请输入密码！');
-          } else if(tools.isNull(vuser)){
+          } else if(Betools.tools.isNull(vuser)){
             vant.Toast('此账户不存在！');
           } else {
             let username = this.username;
@@ -131,7 +131,7 @@ export default {
                   .send({"remember_me":true,"auto_login":false,"username":username,"password":password})
                   .set('accept', 'application/json');
 
-            if(!tools.isNull(response) && !tools.isNull(response.body)
+            if(!Betools.tools.isNull(response) && !Betools.tools.isNull(response.body)
               && response.body.code == 200 && response.body.message == "登录成功"){
                 let userinfo = response.body.result.userInfo;
                 let token = response.body.result.token;

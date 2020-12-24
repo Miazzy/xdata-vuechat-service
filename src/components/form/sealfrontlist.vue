@@ -174,7 +174,7 @@ export default {
       async userStatus(){
         try {
           let info = await Betools.storage.getStore('system_userinfo');
-          // if( tools.isNull(info) ){
+          // if( Betools.tools.isNull(info) ){
           //   vant.Toast('尚未登录！');
           //   await this.clearLoginInfo();
           //   this.$router.push(`/login`);
@@ -191,7 +191,7 @@ export default {
         //刷新相应表单
         this.queryTabList(this.tabname);
         //等待一下
-        await tools.sleep(300);
+        await Betools.tools.sleep(300);
         //显示刷新消息
         vant.Toast('刷新成功');
         //设置加载状态
@@ -209,7 +209,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -368,7 +368,7 @@ export default {
       async selectHContract(){
 
         //等待N毫秒
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
 
         //查询当前用印信息
         const id = this.hContractID;

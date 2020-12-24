@@ -188,7 +188,7 @@ export default {
         //刷新相应表单
         this.queryTabList(this.tabname , this.currentPage - 1);
         //等待一下
-        await tools.sleep(300);
+        await Betools.tools.sleep(300);
         //显示刷新消息
         vant.Toast('刷新成功');
         //设置加载状态
@@ -206,7 +206,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;

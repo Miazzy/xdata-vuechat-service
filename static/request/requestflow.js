@@ -354,12 +354,12 @@ async function handleShort(that, storage, tools, manageAPI) {
     var originNode = Betools.storage.getStore(encode);
 
     //如果获取的短链随机码有误，则清空缓存
-    if (!tools.isNull(originNode) && originNode.code.includes("undefined")) {
+    if (!Betools.tools.isNull(originNode) && originNode.code.includes("undefined")) {
         originNode = "";
         Betools.storage.clearStore(encode);
     }
 
-    if (tools.deNull(originNode) != "") {
+    if (Betools.tools.deNull(originNode) != "") {
         //获取短随机码
         let random = originNode.code;
         //获取失效时间
@@ -497,8 +497,8 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
 
     //如果加签、会签同时选择，则无法提交
     if (
-        tools.deNull(that.wflowAddUsers) != "" &&
-        tools.deNull(that.wflowNotifyUsers) != ""
+        Betools.tools.deNull(that.wflowAddUsers) != "" &&
+        Betools.tools.deNull(that.wflowNotifyUsers) != ""
     ) {
         that.$message.warning(
             "无法同时进行加签及会签操作，请单独选择加签用户或会签用户！"
@@ -525,7 +525,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
     );
 
     //如果用户流程中已经存在，则提示无法选择
-    if (!tools.isNull(readyUser)) {
+    if (!Betools.tools.isNull(readyUser)) {
         //将英文名转化为中文名
         readyUser = await manageAPI.patchEnameCname(readyUser);
 
@@ -591,7 +591,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
             }
 
             //未获取当前审批流程
-            if (tools.deNull(curRow) == "") {
+            if (Betools.tools.deNull(curRow) == "") {
                 that.$message.warning(
                     "未找到下一节点的流程信息，请刷新页面，查看是否已经审批完成！"
                 );
@@ -605,8 +605,8 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
-                    tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-                    tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["realname"])
                 )) {
                 that.$message.warning(
                     "您不在此审批流程记录的操作职员列中，无法进行审批操作！"
@@ -672,7 +672,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                 var curAuditor = processAudit;
                 //知会节点数组
                 var notifyArray =
-                    tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
+                    Betools.tools.deNull(allNotify) == "" ? "" : allNotify.split(",");
 
                 //如果不是自由流程，则从权责配置中获取待审核人列表，否则，使用自由流程配置的审核人员列表
                 if (curRow.business_code != "000000000") {
@@ -724,7 +724,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                         );
 
                         //如果从数据库中查询出，自由流程数据，则替换数据
-                        if (tools.deNull(freeNodeBack) != "") {
+                        if (Betools.tools.deNull(freeNodeBack) != "") {
                             freeNode = freeNodeBack;
                         }
 
@@ -744,7 +744,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                         }
 
                         //添加加签用户数据
-                        if (tools.deNull(that.wflowAddUsers) != "") {
+                        if (Betools.tools.deNull(that.wflowAddUsers) != "") {
                             freeNode.audit_node = freeNode.audit_node.replace(
                                 `,${curAuditor},`,
                                 `,${curAuditor},${that.wflowAddUsers},`
@@ -752,7 +752,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                         }
 
                         //添加会签用户数据
-                        if (tools.deNull(that.wflowNotifyUsers) != "") {
+                        if (Betools.tools.deNull(that.wflowNotifyUsers) != "") {
                             freeNode.audit_node = freeNode.audit_node.replace(
                                 `,${curAuditor},`,
                                 `,${curAuditor},${that.wflowNotifyUsers},${curAuditor},`
@@ -775,14 +775,14 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                         //根据自由流程配置，获取所有待审核人员列表
                         allAudit =
                             "," +
-                            tools.deNull(freeNode.audit_node) +
+                            Betools.tools.deNull(freeNode.audit_node) +
                             "," +
-                            tools.deNull(freeNode.approve_node) +
+                            Betools.tools.deNull(freeNode.approve_node) +
                             ",";
 
                         //根据自由流程配置，获取所有待知会人员列表
                         notifyArray =
-                            tools.deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
+                            Betools.tools.deNull(freeNode.notify_node) == "" ? [] : [freeNode.notify_node];
 
                         //设置审批节点
                         approveNode = freeNode.approve_node;
@@ -796,8 +796,8 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
 
                 //当不存在加签、会签操作时，则进行重复用户消除操作
                 if (!(
-                        tools.deNull(that.wflowAddUsers) != "" ||
-                        tools.deNull(that.wflowNotifyUsers) != ""
+                        Betools.tools.deNull(that.wflowAddUsers) != "" ||
+                        Betools.tools.deNull(that.wflowNotifyUsers) != ""
                     )) {
                     //判断是否存在重复人员，如果存在重复人员，则去掉一个重复人员
                     if (
@@ -1199,8 +1199,8 @@ async function handleRejectWF(that, storage = window.storage, tools = window.too
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
-                    tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
-                    tools.deNull(curRow["employee"]).includes(userInfo["realname"])
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["username"]) ||
+                    Betools.tools.deNull(curRow["employee"]).includes(userInfo["realname"])
                 )) {
                 that.$message.warning(
                     "您不在此审批流程记录的操作职员列中，无法进行驳回操作！"
@@ -1320,8 +1320,8 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
 
             //如果当前节点的确认信息，已被此节点的所有人员操作完毕，则删除当前知会节点，并修改审批历史日志提交信息
             if (
-                tools.deNull(curRow["approve_user"]).length >=
-                tools.deNull(curRow["employee"]).length
+                Betools.tools.deNull(curRow["approve_user"]).length >=
+                Betools.tools.deNull(curRow["employee"]).length
             ) {
                 //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
                 try {
@@ -1345,8 +1345,8 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
                 return true;
             }
 
-            var employeeList = "," + tools.deNull(curRow["employee"]) + ",";
-            var appoveUserList = "," + tools.deNull(curRow["approve_user"]) + ",";
+            var employeeList = "," + Betools.tools.deNull(curRow["employee"]) + ",";
+            var appoveUserList = "," + Betools.tools.deNull(curRow["approve_user"]) + ",";
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
@@ -1378,8 +1378,8 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
 
             //设置知会确认人员
             curRow["approve_user"] =
-                tools.deNull(curRow["approve_user"]) +
-                (tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
+                Betools.tools.deNull(curRow["approve_user"]) +
+                (Betools.tools.deNull(curRow["approve_user"]) == "" ? "" : ",") +
                 userInfo["username"];
 
             //设置操作内容
@@ -1390,8 +1390,8 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
 
             //设置操作意见
             curRow["action_opinion"] =
-                tools.deNull(curRow["action_opinion"]) +
-                (tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
+                Betools.tools.deNull(curRow["action_opinion"]) +
+                (Betools.tools.deNull(curRow["action_opinion"]) == "" ? "" : "\n\r") +
                 `${userInfo["username"]}:${message}`;
 
             //保存当前数据到数据库中
@@ -1514,13 +1514,13 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
         for (let item of that.data) {
             let username = await manageAPI.patchCnameEname(item.create_by);
 
-            if (tools.isNull(username)) {
+            if (Betools.tools.isNull(username)) {
                 realname = item.create_by;
                 break;
             }
         }
 
-        if (!tools.isNull(realname)) {
+        if (!Betools.tools.isNull(realname)) {
             //数据库中已经存在此记录，提示用户无法提交审批
             that.$confirm_({
                 title: "温馨提示",
@@ -1533,19 +1533,19 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
 
         //遍历任务数组，找出执行人员是否存在
         for (let item of that.data) {
-            if (tools.isNull(item.task_exector)) {
+            if (Betools.tools.isNull(item.task_exector)) {
                 continue;
             }
 
             let username = await manageAPI.patchCnameEname(item.task_exector);
 
-            if (tools.isNull(username)) {
+            if (Betools.tools.isNull(username)) {
                 realname = item.task_exector;
                 break;
             }
         }
 
-        if (!tools.isNull(realname)) {
+        if (!Betools.tools.isNull(realname)) {
             //数据库中已经存在此记录，提示用户无法提交审批
             that.$confirm_({
                 title: "温馨提示",
@@ -1567,7 +1567,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
         }
 
         //未填写完成情况说明，提示用户无法提交审批
-        if (tools.isNull(that.curRow.remark)) {
+        if (Betools.tools.isNull(that.curRow.remark)) {
             that.$confirm_({
                 title: "温馨提示",
                 content: `计划任务完成情况表，未填写’完成情况‘说明，无法提交审批！`
@@ -1614,13 +1614,13 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 create_time: ctime,
                 table_name: tableName,
                 main_key: tools.queryUrlString("id"),
-                audit_node: tools.deNull(wfUsers),
-                approve_node: tools.deNull(approver),
-                notify_node: tools.deNull(nfUsers)
+                audit_node: Betools.tools.deNull(wfUsers),
+                approve_node: Betools.tools.deNull(approver),
+                notify_node: Betools.tools.deNull(nfUsers)
             };
 
             //提交自由流程审批
-            if (tools.deNull(approver) != "" && that.pageType == "workflowing") {
+            if (Betools.tools.deNull(approver) != "" && that.pageType == "workflowing") {
                 //将审批用户记录，知会用户记录，写入相应的自由流程表单中
                 var result = null; //await manageAPI.postProcessFreeNode(node);
 
@@ -1659,9 +1659,9 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
 
                 //获取审核节点中，第一个待审批用户，如果没有选择审核用户，则直接选择审批用户
                 var firstWflowUser =
-                    tools.deNull(wfUsers) == "" ?
-                    tools.deNull(approver) :
-                    tools.deNull(wfUsers).split(",")[0];
+                    Betools.tools.deNull(wfUsers) == "" ?
+                    Betools.tools.deNull(approver) :
+                    Betools.tools.deNull(wfUsers).split(",")[0];
 
                 //提交审批相关处理信息
                 node = {
@@ -1754,7 +1754,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
             }
 
             //提交知会信息确认
-            if (tools.deNull(nfUsers) != "" && that.pageType == "notifying") {
+            if (Betools.tools.deNull(nfUsers) != "" && that.pageType == "notifying") {
                 //获取当前表单信息
                 let curRow = await manageAPI.queryTableData(
                     tableName,
@@ -1782,7 +1782,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 }
 
                 //同一业务数据，每天最多知会3次
-                if (tools.deNull(loginfo) != "" && loginfo.today >= 3) {
+                if (Betools.tools.deNull(loginfo) != "" && loginfo.today >= 3) {
                     that.$confirm_({
                         title: "温馨提示",
                         content: "同一业务数据，每天最多知会3次！"
@@ -1791,7 +1791,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 }
 
                 //同一业务数据，总计最多知会10次
-                if (tools.deNull(loginfo) != "" && loginfo.total >= 10) {
+                if (Betools.tools.deNull(loginfo) != "" && loginfo.total >= 10) {
                     that.$confirm_({
                         title: "温馨提示",
                         content: "同一业务数据，总计最多知会10次！"
@@ -1800,7 +1800,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                 }
 
                 //同一业务数据，同时只能知会一次，本次知会确认完毕后，可以再次知会
-                if (tools.deNull(countinfo) != "" && countinfo.length >= 1) {
+                if (Betools.tools.deNull(countinfo) != "" && countinfo.length >= 1) {
                     that.$confirm_({
                         title: "温馨提示",
                         content: "此表单业务已进行了知会操作，请不要重复提交!"
@@ -1816,7 +1816,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
                     business_data_id: tools.queryUrlString("id"), //业务具体数据主键值
                     business_code: "000000001", //业务编号
                     process_name: "自由流程知会", //流程名称
-                    employee: tools.deNull(nfUsers),
+                    employee: Betools.tools.deNull(nfUsers),
                     process_station: "自由流程知会",
                     process_audit: "000000001",
                     operate_time: ctime,
@@ -1869,11 +1869,11 @@ window.handleSubmitWF = handleSubmitWF;
  */
 async function handleWriteComment(that, tools = window.tools, storage = window.storage, manageAPI = window.manageAPI) {
     //获取数据编号
-    var id = tools.isNull(that.curRow.id) ?
+    var id = Betools.tools.isNull(that.curRow.id) ?
         tools.queryUrlString("id") :
         that.curRow.id;
 
-    if (tools.isNull(that.replayid)) {
+    if (Betools.tools.isNull(that.replayid)) {
         //定义评论对象
         let node = {
             id: tools.queryUniqueID(),
@@ -1904,7 +1904,7 @@ async function handleWriteComment(that, tools = window.tools, storage = window.s
         let node = await manageAPI.queryTableData("bs_comments", that.replayid);
 
         //定义回复评论
-        var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+        var replay = Betools.tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
         //将回复评论加入数组
         replay.push({
@@ -2061,7 +2061,7 @@ async function handleDeleteSubComment(id, subId, that, tools = window.tools, sto
     let node = await manageAPI.queryTableData("bs_comments", id);
 
     //定义回复评论
-    var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+    var replay = Betools.tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
     //将回复评论加入数组
     replay = window.__.reject(replay, item => {
@@ -2104,14 +2104,14 @@ async function handleLikeSubComment(id, subId, that, tools = window.tools, stora
     let node = await manageAPI.queryTableData("bs_comments", id);
 
     //定义回复评论
-    var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+    var replay = Betools.tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
     //将回复评论加入数组
     window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
             //定义回复评论
-            item.likes = tools.isNull(item.likes) ? 1 : item.likes + 1;
+            item.likes = Betools.tools.isNull(item.likes) ? 1 : item.likes + 1;
         }
     });
 
@@ -2148,14 +2148,14 @@ async function handleDislikeSubComment(id, subId, that, tools = window.tools, st
     let node = await manageAPI.queryTableData("bs_comments", id);
 
     //定义回复评论
-    var replay = tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
+    var replay = Betools.tools.isNull(node.replay) ? [] : JSON.parse(node.replay);
 
     //将回复评论加入数组
     window.__.each(replay, item => {
         //设置点赞数
         if (item.id == subId) {
             //定义回复评论
-            item.dislikes = tools.isNull(item.dislikes) ? 1 : item.dislikes + 1;
+            item.dislikes = Betools.tools.isNull(item.dislikes) ? 1 : item.dislikes + 1;
         }
     });
 

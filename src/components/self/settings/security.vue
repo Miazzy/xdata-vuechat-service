@@ -114,7 +114,7 @@ export default {
         async userStatus(){
           try {
             let info = await Betools.storage.getStore('system_userinfo');
-            if( tools.isNull(info) ){
+            if( Betools.tools.isNull(info) ){
               vant.Toast('尚未登录！');
               await this.clearLoginInfo();
               this.$router.push(`/login`);

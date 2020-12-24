@@ -414,7 +414,7 @@ export default {
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
-          await tools.sleep(300);
+          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -510,7 +510,7 @@ export default {
         const pid = tools.getUrlParam('pid');
 
         //查询业务编号，如果不存在，则直接返回
-        if(tools.isNull(id) || tools.isNull(pid)){
+        if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
 
@@ -533,7 +533,7 @@ export default {
       },
       // 选中当前盖印人
       async selectFrontUser(value){
-        await tools.sleep(0);
+        await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
         //获取盖印人姓名
@@ -548,7 +548,7 @@ export default {
         // 邮箱验证正则表达式
         const regMail = workconfig.system.config.regexp.mail;
 
-        this.message[fieldName] = tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
+        this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
 
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
@@ -556,14 +556,14 @@ export default {
 
         Betools.storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
 
-        return tools.isNull(this.message[fieldName]);
+        return Betools.tools.isNull(this.message[fieldName]);
       },
       // 获取URL或者二维码信息
       async queryInfo() {
 
         try {
 
-          this.iswechat = tools.isWechat(); //查询当前是否微信端
+          this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
 
           //获取用户基础信息
@@ -643,7 +643,7 @@ export default {
         const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
 
         //获取到用户列表数据
-        if(tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
+        if(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '您没有物品领用的审批权限，请联系管理员进行处理！',
@@ -776,7 +776,7 @@ export default {
         const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
 
         //获取到用户列表数据
-        if(tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
+        if(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
           await vant.Dialog.alert({
             title: '温馨提示',
             message: '您没有物品领用的审批权限，请联系管理员进行处理！',

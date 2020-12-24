@@ -50,15 +50,15 @@ export async function queryTableFieldInfoJSON(tableName) {
             tableName
         );
         //如果信息不为空，则解析表单信息
-        if (window.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
+        if (Betools.Betools.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
             try {
-                tableInfo = window.tools.deNull(tableInfo[0]['value']);
+                tableInfo = Betools.Betools.tools.deNull(tableInfo[0]['value']);
             } catch (error) {
                 console.log('tabale info :' + tableInfo);
             }
         }
         //如果信息不为空，则进行解析数据
-        if (window.tools.deNull(tableInfo) != '') {
+        if (Betools.Betools.tools.deNull(tableInfo) != '') {
             try {
                 tableInfo = JSON.parse(tableInfo);
             } catch (error) {
@@ -87,15 +87,15 @@ export async function queryTableFieldOrderJSON(tableName) {
             tableName
         );
         //如果信息不为空，则解析表单信息
-        if (window.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
+        if (Betools.Betools.tools.deNull(tableInfo) != '' && tableInfo.length > 0) {
             try {
-                tableInfo = window.tools.deNull(tableInfo[0]['num']);
+                tableInfo = Betools.Betools.tools.deNull(tableInfo[0]['num']);
             } catch (error) {
                 console.log('tabale info :' + tableInfo);
             }
         }
         //如果信息不为空，则进行解析数据
-        if (window.tools.deNull(tableInfo) != '') {
+        if (Betools.Betools.tools.deNull(tableInfo) != '') {
             try {
                 tableInfo = JSON.parse(tableInfo);
             } catch (error) {
@@ -443,7 +443,7 @@ export async function queryFrontBySealData(username) {
  */
 export async function queryUserInfoByAccount(userid) {
 
-    if (tools.isNull(userid)) {
+    if (Betools.tools.isNull(userid)) {
         return {};
     }
 
@@ -465,7 +465,7 @@ export async function queryUserInfoByAccount(userid) {
         if (res != null && res.length > 0) {
             Betools.storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res[0], 3600 * 24 * 31);
             return res[0];
-        } else if (!tools.isNull(res.text)) {
+        } else if (!Betools.tools.isNull(res.text)) {
             Betools.storage.setStore(`sys_user_cache_account#queryemployee#@${userid}`, res.text, 3600 * 24 * 31);
             return JSON.parse(res.text);
         }
