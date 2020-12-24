@@ -293,7 +293,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -513,7 +513,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(user_admin_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim());
 
             if(!!user){
 
@@ -853,7 +853,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manage.postTableData(this.tablename , elem);
+        const result = await Betools.manage.postTableData(this.tablename , elem);
 
         //计算批量物品
         const tsize = this.size - 1;
@@ -883,7 +883,7 @@ export default {
                   status: '待处理',
                 };
             //向表单提交form对象数据
-            await manage.postTableData(this.tablename , element);
+            await Betools.manage.postTableData(this.tablename , element);
           }
         }
 

@@ -97,7 +97,7 @@
 
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manage from '@/request/manage';
+
 
 export default {
     mixins: [window.mixin],
@@ -197,7 +197,7 @@ export default {
           userlist: '',
           zonename: '',
         };
-        await manage.postTableData(this.tableName , item);
+        await Betools.manage.postTableData(this.tableName , item);
         await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
         await this.queryTabList(0,0);
       },
@@ -216,7 +216,7 @@ export default {
           if(record.newVal == ''){
             return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
           }
-          await manage.patchTableData(this.tableName , item.id , elem);
+          await Betools.manage.patchTableData(this.tableName , item.id , elem);
         }
       },
       async userStatus(){
@@ -332,8 +332,8 @@ export default {
         }
         await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
         const whereSQL = `_where=~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
-        this.initContractList = await manage.queryTableData(this.tableName , whereSQL);
-        this.totalpages = await manage.queryTableDataCount(this.tableName , whereSQL);
+        this.initContractList = await Betools.manage.queryTableData(this.tableName , whereSQL);
+        this.totalpages = await Betools.manage.queryTableDataCount(this.tableName , whereSQL);
         this.initContractList.map((item , index) => {
           item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
         });

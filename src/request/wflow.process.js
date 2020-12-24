@@ -1,4 +1,3 @@
-import * as manage from '@/request/manage';
 import * as workflow from '@/request/workflow';
 import * as query from '@/request/query';
 
@@ -23,7 +22,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     var wflowSpecUser = wflowAddUsers + "," + wflowNotifyUsers;
 
     //查询自由流程节点
-    var wfreeNode = await manage.queryCurFreeWorkflow(bussinessCodeID);
+    var wfreeNode = await Betools.manage.queryCurFreeWorkflow(bussinessCodeID);
 
     //查询当前数据
     curRow = await query.queryTableData(tableName, bussinessCodeID);
@@ -63,7 +62,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //如果用户流程中已经存在，则提示无法选择
     if (!Betools.tools.isNull(readyUser)) {
         //将英文名转化为中文名
-        readyUser = await manage.patchEnameCname(readyUser);
+        readyUser = await Betools.manage.patchEnameCname(readyUser);
         //提示错误信息
         vant.Dialog.alert({
             message: `加签/会签用户，不能选择审批流程中已经存在的用户(${readyUser})!`
@@ -83,7 +82,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     var userInfo = Betools.storage.getStore("system_userinfo");
 
     //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
-    await manage.handleUserInfo(userInfo);
+    await Betools.manage.handleUserInfo(userInfo);
 
     //获取当前时间
     var date = Betools.tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
@@ -110,7 +109,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
     try {
         //获取当前审批节点的所有数据
-        curRow = await manage.queryProcessLogByID(tableName, processLogID);
+        curRow = await Betools.manage.queryProcessLogByID(tableName, processLogID);
     } catch (error) {
         console.log(error);
     }
@@ -141,7 +140,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
     try {
         //获取关于此表单的所有当前审批日志信息
-        node = await manage.queryProcessLog(tableName, bussinessCodeID);
+        node = await Betools.manage.queryProcessLog(tableName, bussinessCodeID);
     } catch (error) {
         console.log(error);
     }
@@ -165,7 +164,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     //转历史日志节点
     prLogHisNode = JSON.parse(JSON.stringify(node));
     //第一步，获取此表单，关联的流程业务模块；查询SQL , 获取流程权责中关联业务含有tableName的流程权责
-    rights = await manage.queryBusinessInfo(tableName);
+    rights = await Betools.manage.queryBusinessInfo(tableName);
     //选定流程权责
     fixedWFlow = rights[0];
 
@@ -240,7 +239,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 }
 
                 //如果仍然未获取到自由流程节点，则从自由流程表中找
-                var freeNodeBack = await manage.queryCurFreeWorkflow(
+                var freeNodeBack = await Betools.manage.queryCurFreeWorkflow(
                     bussinessCodeID
                 );
 
@@ -354,15 +353,15 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 if (curRow.business_code != "000000000") {
 
                     try {
-                        employee = await manage.queryProcessNodeEmployee(item);
-                        process_station = await manage.queryProcessNodeProcName(item);
+                        employee = await Betools.manage.queryProcessNodeEmployee(item);
+                        process_station = await Betools.manage.queryProcessNodeProcName(item);
                     } catch (error) {
                         console.error(error);
                     }
 
                     //提交审批相关处理信息
                     pnode = {
-                        id: manage.queryRandomStr(32), //获取随机数
+                        id: Betools.manage.queryRandomStr(32), //获取随机数
                         table_name: tableName, //业务表名
                         main_value: curRow["main_value"], //表主键值
                         business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -381,7 +380,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
                     //提交审批相关处理信息
                     pnode = {
-                        id: manage.queryRandomStr(32), //获取随机数
+                        id: Betools.manage.queryRandomStr(32), //获取随机数
                         table_name: tableName, //业务表名
                         main_value: curRow["business_data_id"], //表主键值
                         business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -399,12 +398,12 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
                 }
 
                 //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-                result = await manage.postProcessLogInformed(pnode);
+                result = await Betools.manage.postProcessLogInformed(pnode);
             }
 
             //执行事务处理
             var operationData = {
-                id: manage.queryRandomStr(32),
+                id: Betools.manage.queryRandomStr(32),
                 type: "approve",
                 create_by: userInfo["username"],
                 create_time: date,
@@ -511,16 +510,16 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
 
             if (curRow.business_code != "000000000") {
                 //第二步，根据流程业务模块，获取流程审批节点；操作职员，可能有多个，则每个员工推送消息,需要从流程配置节点中获取
-                employee = await manage.queryProcessNodeEmployee(
+                employee = await Betools.manage.queryProcessNodeEmployee(
                     firstAuditor
                 );
                 //流程岗位
-                process_station = await manage.queryProcessNodeProcName(
+                process_station = await Betools.manage.queryProcessNodeProcName(
                     firstAuditor
                 );
                 //提交审批相关处理信息
                 pnode = {
-                    id: manage.queryRandomStr(32), //获取随机数
+                    id: Betools.manage.queryRandomStr(32), //获取随机数
                     table_name: tableName, //业务表名
                     main_value: curRow["main_value"], //表主键值
                     business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -537,7 +536,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             } else {
                 //提交审批相关处理信息
                 pnode = {
-                    id: manage.queryRandomStr(32), //获取随机数
+                    id: Betools.manage.queryRandomStr(32), //获取随机数
                     table_name: tableName, //业务表名
                     main_value: curRow["business_data_id"], //表主键值
                     business_data_id: curRow["business_data_id"], //业务具体数据主键值
@@ -555,7 +554,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             }
 
             //提交审批前，先检测同一业务表名下，是否有同一业务数据主键值，如果存在，则提示用户，此记录，已经提交审批
-            var vflag = await manage.queryApprovalLength(
+            var vflag = await Betools.manage.queryApprovalLength(
                 tableName,
                 curRow["business_data_id"]
             );
@@ -568,7 +567,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
             } else {
                 //执行事务处理
                 let operationData = {
-                    id: manage.queryRandomStr(32),
+                    id: Betools.manage.queryRandomStr(32),
                     type: "next",
                     create_by: userInfo["username"],
                     create_time: date,
@@ -694,7 +693,7 @@ async function handleTaskItem(data, curRow, result = "") {
             //设置任务状态
             item.status = "待提交";
             //生成数据，并持久化
-            result = await manage.postTableData("bs_plan_task_mission", item);
+            result = await Betools.manage.postTableData("bs_plan_task_mission", item);
         }
     }
 
@@ -732,7 +731,7 @@ export async function handleRejectWF() {
             var userInfo = Betools.storage.getStore("system_userinfo");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
-            await manage.handleUserInfo(userInfo);
+            await Betools.manage.handleUserInfo(userInfo);
 
             //获取当前时间
             var date = Betools.tools.formatDate(
@@ -753,7 +752,7 @@ export async function handleRejectWF() {
             var bpmStatus = { bpm_status: "1" };
 
             //获取当前审批节点的所有数据
-            curRow = await manage.queryProcessLogByID(tableName, processLogID);
+            curRow = await Betools.manage.queryProcessLogByID(tableName, processLogID);
 
             //检查审批权限，当前用户必须属于操作职员中，才可以进行审批操作
             if (!(
@@ -767,10 +766,10 @@ export async function handleRejectWF() {
             }
 
             //获取当前审批节点的所有数据
-            curRow = await manage.queryProcessLogByID(tableName, curRow["id"]);
+            curRow = await Betools.manage.queryProcessLogByID(tableName, curRow["id"]);
 
             //获取关于此表单的所有当前审批日志信息
-            let node = await manage.queryProcessLog(
+            let node = await Betools.manage.queryProcessLog(
                 tableName,
                 curRow["business_data_id"]
             );
@@ -853,7 +852,7 @@ export async function handleConfirmWF() {
             var userInfo = Betools.storage.getStore("system_userinfo");
 
             //如果没有获取到用户信息，提示用户登录信息过期，请重新登录
-            await manage.handleUserInfo(userInfo);
+            await Betools.manage.handleUserInfo(userInfo);
 
             //获取当前时间
             var date = Betools.tools.formatDate(
@@ -874,7 +873,7 @@ export async function handleConfirmWF() {
             var bpmStatus = { bpm_status: "5" };
 
             //获取当前审批节点的所有数据
-            curRow = await manage.queryProcessLogInfByID(
+            curRow = await Betools.manage.queryProcessLogInfByID(
                 tableName,
                 processLogID
             );
@@ -890,11 +889,11 @@ export async function handleConfirmWF() {
                 //（1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
                 try {
                     //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-                    result = await manage.postProcessLogHistory(curRow);
+                    result = await Betools.manage.postProcessLogHistory(curRow);
                     //删除当前审批节点中的所有记录
-                    result = await manage.deleteProcessLogInf(tableName, [curRow]);
+                    result = await Betools.manage.deleteProcessLogInf(tableName, [curRow]);
                     //如果当前已经进入流程，则需要将流程状态设置为5：已完成
-                    result = await manage.patchTableData(
+                    result = await Betools.manage.patchTableData(
                         tableName,
                         curRow["business_data_id"],
                         bpmStatus
@@ -968,7 +967,7 @@ export async function handleConfirmWF() {
                 `${userInfo["username"]}:${message}`;
 
             //保存当前数据到数据库中
-            await manage.patchTableData(
+            await Betools.manage.patchTableData(
                 "PR_LOG_INFORMED",
                 curRow["id"],
                 curRow
@@ -978,11 +977,11 @@ export async function handleConfirmWF() {
             if (curRow["approve_user"].length >= curRow["employee"].length) {
                 try {
                     //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-                    result = await manage.postProcessLogHistory(curRow);
+                    result = await Betools.manage.postProcessLogHistory(curRow);
                     //删除当前审批节点中的所有记录
-                    result = await manage.deleteProcessLogInf(tableName, [curRow]);
+                    result = await Betools.manage.deleteProcessLogInf(tableName, [curRow]);
                     //如果当前已经进入流程，则需要将流程状态设置为5：已完成  （1：待提交	2：审核中	3：审批中 4：已完成 5：已完成	10：已作废）
-                    result = await manage.patchTableData(
+                    result = await Betools.manage.patchTableData(
                         tableName,
                         curRow["business_data_id"],
                         bpmStatus

@@ -320,7 +320,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -547,7 +547,7 @@ export default {
           if(!!hr_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(hr_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(hr_name.trim());
 
             if(!!user){
 
@@ -608,7 +608,7 @@ export default {
           if(!!admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(admin_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(admin_name.trim());
 
             if(!!user){
 
@@ -669,7 +669,7 @@ export default {
           if(!!front_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(front_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(front_name.trim());
 
             if(!!user){
 
@@ -730,7 +730,7 @@ export default {
           if(!!meal_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(meal_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(meal_name.trim());
 
             if(!!user){
 
@@ -995,7 +995,7 @@ export default {
         const id = Betools.tools.getUrlParam('id');
 
         //设置前台确认时间
-        await manage.patchTableData(`bs_entry_job` , id , { id , status: '已驳回' });
+        await Betools.manage.patchTableData(`bs_entry_job` , id , { id , status: '已驳回' });
 
         //修改状态
         this.status = '已驳回';
@@ -1037,7 +1037,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         // 修改状态为已确认
-        await manage.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , join_time , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
+        await Betools.manage.patchTableData(`bs_entry_job` , id , { id , status:'已确认' , join_time , hr_time: time , front_id , admin_id , meal_id , front_name , admin_name , meal_name,   front_account: front_name , admin_account: admin_name });
 
         // 检查行政/前台/食堂人员是否存在，如果存在，则向对应用户发送通知
         front = await this.queryUserInfo(front_name);
@@ -1111,7 +1111,7 @@ export default {
         const id = Betools.tools.getUrlParam('id');
 
         //设置前台确认时间
-        await manage.patchTableData(`bs_entry_job` , id , { id , front_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+        await Betools.manage.patchTableData(`bs_entry_job` , id , { id , front_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
         this.item.front_time = dayjs().format('YYYY-MM-DD');
@@ -1135,7 +1135,7 @@ export default {
         const id = Betools.tools.getUrlParam('id');
 
         //设置行政确认时间
-        await manage.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+        await Betools.manage.patchTableData(`bs_entry_job` , id , { id , admin_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
         this.item.admin_time = dayjs().format('YYYY-MM-DD');
@@ -1170,7 +1170,7 @@ export default {
         }
 
         //设置食堂确认时间
-        await manage.patchTableData(`bs_entry_job` , id , { id , meal_account, meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+        await Betools.manage.patchTableData(`bs_entry_job` , id , { id , meal_account, meal_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
         //设置确认时间
         this.item.meal_time = dayjs().format('YYYY-MM-DD');
@@ -1209,7 +1209,7 @@ export default {
           const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=done`);
 
            //设置确认完成时间
-          await manage.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+          await Betools.manage.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
           //向HR推送入职引导完成通知
           await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${value.username}’入职登记通知已被前台、行政、食堂确认!?rurl=${receiveURL}`)

@@ -78,7 +78,7 @@
 <script>
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manage from '@/request/manage';
+
 
 export default {
     mixins: [window.mixin],
@@ -218,7 +218,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manage.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
@@ -229,7 +229,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manage.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
@@ -240,7 +240,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manage.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
@@ -251,7 +251,7 @@ export default {
 
          } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manage.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,

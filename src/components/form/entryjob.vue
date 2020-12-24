@@ -349,7 +349,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -667,7 +667,7 @@ export default {
           if(!!hr_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(hr_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(hr_name.trim());
 
             if(!!user){
 
@@ -729,7 +729,7 @@ export default {
           if(!!admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(admin_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(admin_name.trim());
 
             if(!!user){
 
@@ -791,7 +791,7 @@ export default {
           if(!!front_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(front_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(front_name.trim());
 
             if(!!user){
 
@@ -853,7 +853,7 @@ export default {
           if(!!meal_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(meal_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(meal_name.trim());
 
             if(!!user){
 
@@ -1034,28 +1034,28 @@ export default {
           //如果前台人员填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(this.item.front)){
             //获取盖印人姓名
-            this.item.front_name = await manage.queryUsernameByID(this.item.front);
+            this.item.front_name = await Betools.manage.queryUsernameByID(this.item.front);
           }
           //如果行政人员填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(this.item.admin)){
             //获取盖印人姓名
-            this.item.admin_name = await manage.queryUsernameByID(this.item.admin);
+            this.item.admin_name = await Betools.manage.queryUsernameByID(this.item.admin);
           }
           //如果行政人员填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(this.item.meal)){
             //获取盖印人姓名
-            this.item.meal_name = await manage.queryUsernameByID(this.item.meal);
+            this.item.meal_name = await Betools.manage.queryUsernameByID(this.item.meal);
           }
           //如果行政人员填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(this.item.hr)){
             //获取盖印人姓名
-            this.item.hr_name = await manage.queryUsernameByID(this.item.hr);
+            this.item.hr_name = await Betools.manage.queryUsernameByID(this.item.hr);
           }
 
           //如果行政人候选列表存在
           if(this.item.admin){
             //获取可选填报人列表
-            let slist = await manage.queryUsernameByIDs(this.item.admin.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await Betools.manage.queryUsernameByIDs(this.item.admin.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1069,7 +1069,7 @@ export default {
           //如果行政人候选列表存在
           if(this.item.front){
             //获取可选填报人列表
-            let slist = await manage.queryUsernameByIDs(this.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await Betools.manage.queryUsernameByIDs(this.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1083,7 +1083,7 @@ export default {
           //如果行政人候选列表存在
           if(this.item.meal){
             //获取可选填报人列表
-            let slist = await manage.queryUsernameByIDs(this.item.meal.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await Betools.manage.queryUsernameByIDs(this.item.meal.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1097,7 +1097,7 @@ export default {
           //如果行政人候选列表存在
           if(this.item.hr){
             //获取可选填报人列表
-            let slist = await manage.queryUsernameByIDs(this.item.hr.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await Betools.manage.queryUsernameByIDs(this.item.hr.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1264,7 +1264,7 @@ export default {
 
 
         //第二步，向表单提交form对象数据
-        const result = await manage.postTableData('bs_entry_job' , elem);
+        const result = await Betools.manage.postTableData('bs_entry_job' , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${hrinfo.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)

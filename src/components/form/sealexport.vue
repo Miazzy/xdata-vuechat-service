@@ -79,7 +79,7 @@
 import * as announce from '@/request/announce';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 Vue.component('downloadExcel', JsonExcel)

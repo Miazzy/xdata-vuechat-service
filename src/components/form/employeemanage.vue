@@ -60,7 +60,7 @@
 
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manage from '@/request/manage';
+
 
 export default {
     mixins: [window.mixin],
@@ -234,8 +234,8 @@ export default {
         // 设置当前页为第一页
         this.currentPage = page + 1;
         const whereSQL = `_sort=-id&_p=${page}&_size=10000`;
-        this.initContractList = await manage.queryTableData(this.tableName , whereSQL);
-        this.totalpages = await manage.queryTableDataCount(this.tableName , whereSQL);
+        this.initContractList = await Betools.manage.queryTableData(this.tableName , whereSQL);
+        this.totalpages = await Betools.manage.queryTableDataCount(this.tableName , whereSQL);
         this.initContractList.map((item , index) => {
           item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
         });

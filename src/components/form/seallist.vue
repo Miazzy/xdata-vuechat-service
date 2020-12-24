@@ -131,7 +131,7 @@
 
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manage from '@/request/manage';
+
 
 export default {
     mixins: [window.mixin],
@@ -335,8 +335,8 @@ export default {
         if(tabname == 1){
           const whereSQL = `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的待用印记录
-          this.initContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -348,8 +348,8 @@ export default {
         } else if(tabname == 2){
           const whereSQL = `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已用印记录
-          this.sealContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -361,8 +361,8 @@ export default {
         } else if(tabname == 3){
           const whereSQL = `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已领取记录
-          this.receiveContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -374,8 +374,8 @@ export default {
         } else if(tabname == 4){
           const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已移交记录
-          this.frontContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -387,8 +387,8 @@ export default {
         } else if(tabname == 5){
           const whereSQL = `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已归档记录
-          this.doneContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -400,8 +400,8 @@ export default {
         } else if(tabname == 6 || tabname == 0){
           const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已归档记录
-          this.failContractList = await manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await manage.queryTableDataCount('bs_seal_regist' , whereSQL);
+          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -416,7 +416,7 @@ export default {
           sealTypeSql = `~and(seal_type,like,合同类)`;
           const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           //获取最近6个月的已归档记录
-          this.json_data = await manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
           this.json_data.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -429,7 +429,7 @@ export default {
           sealTypeSql = `~and(seal_type,like,非合同类)`;
           const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           //获取最近6个月的已归档记录
-          this.json_data_common = await manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data_common = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
           this.json_data_common.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';

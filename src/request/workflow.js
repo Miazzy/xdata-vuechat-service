@@ -1,4 +1,3 @@
-import * as manage from '@/request/manage';
 import * as query from '@/request/query';
 
 /**
@@ -193,7 +192,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
     //流程事务处理框架，保证流程处理操作的事务最终一致性
     try {
         //执行事务处理框架
-        result = await manage.postTableData(
+        result = await Betools.manage.postTableData(
             "BS_TRANSACTION",
             operationData
         );
@@ -205,7 +204,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         //如果“审批处理下一节点的审批信息”不为空，则执行当前处理
         if (pnode != null) {
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manage.postProcessLog(pnode);
+            result = await Betools.manage.postProcessLog(pnode);
         }
     } catch (error) {
         console.log("审批处理下一节点的审批信息", error);
@@ -216,28 +215,28 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
         if (tableName != null && curRow != null && prLogHisNode != null && bpmStatus != null) {
 
             //将当前审批日志转为历史日志，并删除当前审批日志中相关信息
-            result = await manage.postProcessLogHistory(prLogHisNode);
+            result = await Betools.manage.postProcessLogHistory(prLogHisNode);
 
             //删除当前审批节点中的所有记录
-            result = await manage.deleteProcessLog(
+            result = await Betools.manage.deleteProcessLog(
                 tableName,
                 prLogHisNode
             );
 
             //修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中
-            result = await manage.patchTableData(
+            result = await Betools.manage.patchTableData(
                 tableName,
                 curRow["business_data_id"],
                 bpmStatus
             );
 
             //如果本次流程结束，即状态变为已完成，或者，状态变成，待处理，则将当前的自由流程记录转为历史，以前此表单的自由流程进入历史，并删除以前此表单对应的自由流程
-            result = await manage.transFreeWflowHis(curRow["business_data_id"]);
+            result = await Betools.manage.transFreeWflowHis(curRow["business_data_id"]);
 
             //二次提交审批状态
             setTimeout(async() => {
                 //修改审批状态为审批中
-                result = await manage.patchTableData(
+                result = await Betools.manage.patchTableData(
                     tableName,
                     curRow["business_data_id"],
                     bpmStatus
@@ -290,7 +289,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
             freeNode.audit_node = freeNode.audit_node.substring(0, freeNode.audit_node.length - 1);
         }
 
-        result = await manage.patchTableData(
+        result = await Betools.manage.patchTableData(
             'bs_free_process',
             freeNode["id"], {
                 audit_node: freeNode.audit_node
@@ -332,7 +331,7 @@ export async function postWorkflowApprove(tableName, curRow, operationData, pnod
  */
 export async function approveViewProcessLog(prLogHisNode) {
     //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-    const result = await manage.postProcessLogHistory(prLogHisNode);
+    const result = await Betools.manage.postProcessLogHistory(prLogHisNode);
     //返回数据
     return result;
 }
@@ -343,7 +342,7 @@ export async function approveViewProcessLog(prLogHisNode) {
  */
 export async function taskViewProcessLog(prLogNode) {
     //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-    const result = await manage.postProcessLog(prLogNode);
+    const result = await Betools.manage.postProcessLog(prLogNode);
     //返回数据
     return result;
 }
@@ -359,7 +358,7 @@ export async function deleteViewProcessLog(node) {
         item.id = item.pid;
     });
     //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-    const result = await manage.deleteProcessLog(
+    const result = await Betools.manage.deleteProcessLog(
         '',
         node
     );
@@ -460,7 +459,7 @@ export async function postWorkflowFree(userInfo, tableName, curRow, freeWFNode, 
         var mainData = await query.queryTableData(tableName, curRow.id);
 
         //获取表单的中文名称
-        var tname = await manage.queryTableDataByField('v_table_name', 'id', tableName);
+        var tname = await Betools.manage.queryTableDataByField('v_table_name', 'id', tableName);
 
         try {
             tname = tname[0]['name'];
@@ -497,28 +496,28 @@ export async function postWorkflowFree(userInfo, tableName, curRow, freeWFNode, 
 
         try {
             //将审批用户记录，知会用户记录，写入相应的自由流程表单中
-            result = await manage.postProcessFreeNode(freeWFNode);
+            result = await Betools.manage.postProcessFreeNode(freeWFNode);
         } catch (error) {
             console.log(error);
         }
 
         try {
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manage.postProcessLogHistory(startFreeNode);
+            result = await Betools.manage.postProcessLogHistory(startFreeNode);
         } catch (error) {
             console.log(error);
         }
 
         try {
             //向流程审批日志表PR_LOG和审批处理表BS_APPROVE添加数据 , 并获取审批处理返回信息
-            result = await manage.postProcessLog(nextWflowNode);
+            result = await Betools.manage.postProcessLog(nextWflowNode);
         } catch (error) {
             console.log(error);
         }
 
         try {
             //第四步，修改审批状态为审批中，并记录审批日志；将当前审批状态修改为处理中 （1:待提交 2:处理中 3:审批中 4:已完成 5:已完成） //修改审批状态为处理中，并记录审批日志；将当前审批状态修改为处理中
-            result = await manage.patchTableData(tableName, curRow["id"], statusNode);
+            result = await Betools.manage.patchTableData(tableName, curRow["id"], statusNode);
         } catch (error) {
             console.log(error);
         }
@@ -526,14 +525,14 @@ export async function postWorkflowFree(userInfo, tableName, curRow, freeWFNode, 
         //第五步，新增动态数据，内容：XXX 发起了 XX 业务的流程申请。
         try {
             //第五步，新增动态数据，内容：XXX 发起了 XX 业务的流程申请。
-            result = await manage.postTableData('bs_dynamic', dynamicNode);
+            result = await Betools.manage.postTableData('bs_dynamic', dynamicNode);
         } catch (error) {
             console.log(error);
         }
 
         try {
             //修改审批状态为审批中,第二次修改
-            result = await manage.patchTableData(tableName, curRow["id"], statusNode);
+            result = await Betools.manage.patchTableData(tableName, curRow["id"], statusNode);
         } catch (error) {
             console.log(error);
         }

@@ -165,7 +165,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -386,7 +386,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //修改状态为已用印
-        manage.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , receive_time: time});
+        Betools.manage.patchTableData(`bs_seal_regist` , id , {id , status: '已领取' , receive_time: time});
 
         //修改用印状态
         this.item.status = '已领取';

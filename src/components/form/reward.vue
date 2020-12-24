@@ -198,7 +198,7 @@ import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
 import * as workflow from '@/request/workflow';
-import * as manage from '@/request/manage';
+
 import * as wflowprocess from '@/request/wflow.process';
 
 export default {
@@ -464,7 +464,7 @@ export default {
           if(!!hr_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manage.queryUserByNameHRM(hr_name.trim());
+            let user = await Betools.manage.queryUserByNameHRM(hr_name.trim());
 
             if(!!user){
 
