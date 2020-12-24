@@ -1,5 +1,5 @@
 import * as tools from '@/request/tools';
-import * as storage from '@/request/storage';
+
 
 /**
  * 获取行政公告数据

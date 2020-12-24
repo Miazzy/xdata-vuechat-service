@@ -85,7 +85,7 @@
 <script>
 
 import * as manageAPI from '@/request/manage';
-import * as storage from '@/request/storage';
+
 import * as contact from '@/vuex/contacts';
 import * as tools from '@/request/tools';
 import * as query from '@/request/query';

@@ -70,7 +70,7 @@
   </div>
 </template>
 <script>
-import * as storage from '@/request/storage';
+
 import * as tools from '@/request/tools';
 
 export default {

@@ -1,5 +1,5 @@
 import * as tools from '@/request/tools';
-import * as storage from '@/request/storage';
+
 import * as manage from '@/request/manage';
 import * as workflow from '@/request/workflow';
 import * as query from '@/request/query';

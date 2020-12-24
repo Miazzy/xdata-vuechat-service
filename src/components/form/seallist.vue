@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import * as storage from '@/request/storage';
+
 import * as tools from '@/request/tools';
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
