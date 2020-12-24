@@ -88,7 +88,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
     await manage.handleUserInfo(userInfo);
 
     //获取当前时间
-    var date = tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+    var date = Betools.tools.formatDate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
     //审批动作
     var operation = operation || "同意";
     //审批意见
@@ -161,7 +161,7 @@ export async function handleApproveWF(curRow = '', fixedWFlow = '', data = [], t
         //设置操作意见
         item["action_opinion"] = message;
         //设置创建时间
-        item["create_time"] = tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
+        item["create_time"] = Betools.tools.formatDate(ctime, "yyyy-MM-dd hh:mm:ss");
     });
 
     //转历史日志节点
@@ -690,7 +690,7 @@ async function handleTaskItem(data, curRow, result = "") {
             delete item.date;
             delete item.work_date;
             //设置创建日期
-            item.create_time = tools.formatDate(timestamp, "yyyy-MM-dd");
+            item.create_time = Betools.tools.formatDate(timestamp, "yyyy-MM-dd");
             //设置所属部门
             item.depart_name = curRow.depart_name;
             //设置任务状态
@@ -737,7 +737,7 @@ export async function handleRejectWF() {
             await manage.handleUserInfo(userInfo);
 
             //获取当前时间
-            var date = tools.formatDate(
+            var date = Betools.tools.formatDate(
                 new Date().getTime(),
                 "yyyy-MM-dd hh:mm:ss"
             );
@@ -790,7 +790,7 @@ export async function handleRejectWF() {
                 //设置操作意见
                 item["action_opinion"] = message;
                 //设置创建时间
-                item["create_time"] = tools.formatDate(
+                item["create_time"] = Betools.tools.formatDate(
                     ctime,
                     "yyyy-MM-dd hh:mm:ss"
                 );
@@ -858,7 +858,7 @@ export async function handleConfirmWF() {
             await manage.handleUserInfo(userInfo);
 
             //获取当前时间
-            var date = tools.formatDate(
+            var date = Betools.tools.formatDate(
                 new Date().getTime(),
                 "yyyy-MM-dd hh:mm:ss"
             );

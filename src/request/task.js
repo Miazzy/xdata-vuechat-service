@@ -28,10 +28,10 @@ export async function queryProcessLogDone(
         //遍历并格式化日期
         result = result.filter(item => {
             //格式化日期
-            var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-            var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-            var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-            var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+            var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+            var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            var dtime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
             item['createtime'] = dtime;
             item['operate_time'] = optime;
             item['create_time'] = ctime;
@@ -96,10 +96,10 @@ export async function queryProcessLogWait(
         try {
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var dtime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
                 item['createtime'] = dtime;
                 item['timestamp'] = time;
                 item['operate_time'] = optime;
@@ -173,10 +173,10 @@ export async function queryProcessLogWaitSeal(
         try {
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                var dtime = tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var dtime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd hh:mm:ss');
                 item['createtime'] = dtime;
                 item['timestamp'] = time;
                 item['operate_time'] = optime;

@@ -367,7 +367,7 @@ async function handleShort(that, storage, tools, manageAPI) {
 
         //获取当前时间
         var expire = new Date();
-        expire = tools.formatDate(date, "yyyyMMdd");
+        expire = Betools.tools.formatDate(date, "yyyyMMdd");
 
         //缓存未失效，则直接展示二维码
         if (expire <= expire_) {
@@ -395,8 +395,8 @@ async function handleShort(that, storage, tools, manageAPI) {
     //失效时间
     var date = new Date();
     date.setMonth(date.getMonth() + 1);
-    var datetime = tools.formatDate(date, "yyyy-MM-dd hh:mm:ss");
-    var datestr = tools.formatDate(date, "yyyyMMdd");
+    var datetime = Betools.tools.formatDate(date, "yyyy-MM-dd hh:mm:ss");
+    var datestr = Betools.tools.formatDate(date, "yyyyMMdd");
 
     //设置应该保存数据
     var node = {
@@ -551,7 +551,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
             await that.handleUserInfo(userInfo);
 
             //获取当前时间
-            var date = tools.formatDate(
+            var date = Betools.tools.formatDate(
                 new Date().getTime(),
                 "yyyy-MM-dd hh:mm:ss"
             );
@@ -634,7 +634,7 @@ async function handleApproveWF(that, tools = window.tools, storage = window.stor
                 //设置操作意见
                 item["action_opinion"] = message;
                 //设置创建时间
-                item["create_time"] = tools.formatDate(
+                item["create_time"] = Betools.tools.formatDate(
                     ctime,
                     "yyyy-MM-dd hh:mm:ss"
                 );
@@ -1134,7 +1134,7 @@ async function handleTaskItem(result = "", that, tools = window.tools, manageAPI
             delete item.date;
             delete item.work_date;
             //设置创建日期
-            item.create_time = tools.formatDate(timestamp, "yyyy-MM-dd");
+            item.create_time = Betools.tools.formatDate(timestamp, "yyyy-MM-dd");
             //设置所属部门
             item.depart_name = that.curRow.depart_name;
             //设置任务状态
@@ -1170,7 +1170,7 @@ async function handleRejectWF(that, storage = window.storage, tools = window.too
             await that.handleUserInfo(userInfo);
 
             //获取当前时间
-            var date = tools.formatDate(
+            var date = Betools.tools.formatDate(
                 new Date().getTime(),
                 "yyyy-MM-dd hh:mm:ss"
             );
@@ -1230,7 +1230,7 @@ async function handleRejectWF(that, storage = window.storage, tools = window.too
                 //设置操作意见
                 item["action_opinion"] = message;
                 //设置创建时间
-                item["create_time"] = tools.formatDate(
+                item["create_time"] = Betools.tools.formatDate(
                     ctime,
                     "yyyy-MM-dd hh:mm:ss"
                 );
@@ -1286,7 +1286,7 @@ async function handleConfirmWF(that, tools = window.tools, storage = window.stor
             await that.handleUserInfo(userInfo);
 
             //获取当前时间
-            var date = tools.formatDate(
+            var date = Betools.tools.formatDate(
                 new Date().getTime(),
                 "yyyy-MM-dd hh:mm:ss"
             );
@@ -1602,7 +1602,7 @@ async function handleSubmitWF(that, tools = window.tools, storage = window.stora
             var approver = that.approveUser;
 
             //当前时间
-            var ctime = tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
+            var ctime = Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss");
 
             //获取此表单，关联的流程业务模块
             var tableName = tools.queryUrlString("table_name");
@@ -1878,7 +1878,7 @@ async function handleWriteComment(that, tools = window.tools, storage = window.s
         let node = {
             id: tools.queryUniqueID(),
             create_by: that.userInfo.username,
-            create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+            create_time: Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
             content: `${that.replayvalue} `,
             table_name: that.tableName,
             main_key: id,
@@ -1910,7 +1910,7 @@ async function handleWriteComment(that, tools = window.tools, storage = window.s
         replay.push({
             id: tools.queryUniqueID(),
             create_by: that.userInfo.username,
-            create_time: tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
+            create_time: Betools.tools.formatDate(new Date(), "yyyy-MM-dd hh:mm:ss"),
             content: `${that.replayvalue} `,
             table_name: that.tableName,
             avatar: that.avatar

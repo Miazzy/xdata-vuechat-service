@@ -289,7 +289,7 @@ try {
         window.tools = window.tools == null ? tools : window.tools;
 
         //获取日期格式
-        var ctime = window.tools.formatDate(new Date(), 'yyyy-MM-dd');
+        var ctime = Betools.Betools.tools.formatDate(new Date(), 'yyyy-MM-dd');
 
         //提交URL
         var queryURL = `${window.requestAPIConfig.restapi}/api/v_workflow_total?_where=(ctime,eq,${ctime})`;
@@ -1065,8 +1065,8 @@ try {
                     }
                 }
 
-                starttime = window.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-                endtime = window.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+                starttime = Betools.Betools.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+                endtime = Betools.Betools.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
                 whereSQL = whereSQL + `~and(join_time,bw,${starttime},${endtime})`;
             }
@@ -1085,8 +1085,8 @@ try {
             //遍历所有数据，设置日期格式
             result = window.__.filter(res.body, item => {
                 //日期格式化操作
-                item['create_time'] = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                item['join_time'] = window.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+                item['create_time'] = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                item['join_time'] = Betools.Betools.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
@@ -1138,8 +1138,8 @@ try {
             //遍历所有数据，设置日期格式
             result = window.__.filter(res.body, item => {
                 //日期格式化操作
-                item['create_time'] = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                item['join_time'] = window.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+                item['create_time'] = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                item['join_time'] = Betools.Betools.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
@@ -1191,8 +1191,8 @@ try {
             //遍历所有数据，设置日期格式
             result = window.__.filter(res.body, item => {
                 //日期格式化操作
-                //item['create_time'] = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                item['join_time'] = window.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+                //item['create_time'] = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                item['join_time'] = Betools.Betools.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
@@ -1274,8 +1274,8 @@ try {
                     }
                 }
 
-                starttime = window.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-                endtime = window.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+                starttime = Betools.Betools.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+                endtime = Betools.Betools.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
                 whereSQL = whereSQL + `~and(pay_wages_date,bw,${starttime},${endtime})`;
             }
@@ -1294,8 +1294,8 @@ try {
             //遍历所有数据，设置日期格式
             result = window.__.filter(res.body, item => {
                 //日期格式化操作
-                item['wages_date'] = window.tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
-                item['join_time'] = window.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+                item['wages_date'] = Betools.Betools.tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
+                item['join_time'] = Betools.Betools.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
@@ -1381,8 +1381,8 @@ try {
                     }
                 }
 
-                starttime = window.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-                endtime = window.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+                starttime = Betools.Betools.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+                endtime = Betools.Betools.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
                 whereSQL = whereSQL + `~and(pay_wages_date,bw,${starttime},${endtime})`;
             }
@@ -1401,8 +1401,8 @@ try {
             //遍历所有数据，设置日期格式
             result = window.__.filter(res.body, item => {
                 //日期格式化操作
-                item['wages_date'] = window.tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
-                item['join_time'] = window.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
+                item['wages_date'] = Betools.Betools.tools.formatDate(item['wages_date'], 'yyyy-MM-dd');
+                item['join_time'] = Betools.Betools.tools.formatDate(item['join_time'], 'yyyy-MM-dd');
 
                 //遍历对象属性
                 for (let key of Object.keys(item)) {
@@ -1937,11 +1937,11 @@ try {
             if (wfnode instanceof Array && wfnode.length > 0) {
                 for (var item of wfnode) {
                     //转化日期格式
-                    item['operate_time'] = window.tools.formatDate(
+                    item['operate_time'] = Betools.Betools.tools.formatDate(
                         item['operate_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
-                    item['create_time'] = window.tools.formatDate(
+                    item['create_time'] = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -1950,11 +1950,11 @@ try {
                 }
             } else {
                 //转化日期格式
-                wfnode['operate_time'] = window.tools.formatDate(
+                wfnode['operate_time'] = Betools.Betools.tools.formatDate(
                     wfnode['operate_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
-                wfnode['create_time'] = window.tools.formatDate(
+                wfnode['create_time'] = Betools.Betools.tools.formatDate(
                     wfnode['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -2118,14 +2118,14 @@ try {
 
         try {
             //查询申请开始日期
-            that.curRow.starttime = window.tools.formatDate(
+            that.curRow.starttime = Betools.Betools.tools.formatDate(
                 that.curRow.starttime,
                 'yyyy-MM-dd hh:mm:ss'
             );
 
             //如果未查询到开始日期，则使用申请日期
             if (that.curRow.starttime == '--') {
-                that.curRow.starttime = window.tools.formatDate(
+                that.curRow.starttime = Betools.Betools.tools.formatDate(
                     that.curRow.create_time,
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -2136,7 +2136,7 @@ try {
 
         try {
             //查询申请结束日期
-            that.curRow.endtime = window.tools.formatDate(
+            that.curRow.endtime = Betools.Betools.tools.formatDate(
                 that.curRow.endtime,
                 'yyyy-MM-dd hh:mm:ss'
             );
@@ -2146,64 +2146,64 @@ try {
 
         try {
             //查询申请创建日期
-            that.curRow.create_time = window.tools.formatDate(
+            that.curRow.create_time = Betools.Betools.tools.formatDate(
                 that.curRow.create_time,
                 'yyyy-MM-dd'
             );
 
             //查询采购交付日期
-            that.curRow.purchase_date = window.tools.formatDate(that.curRow.purchase_date, 'yyyy-MM-dd');
+            that.curRow.purchase_date = Betools.Betools.tools.formatDate(that.curRow.purchase_date, 'yyyy-MM-dd');
 
             //设置申请日期
-            that.curRow.apply_date = window.tools.formatDate(that.curRow.apply_date, 'yyyy-MM-dd');
+            that.curRow.apply_date = Betools.Betools.tools.formatDate(that.curRow.apply_date, 'yyyy-MM-dd');
 
             //设置归还日期
-            that.curRow.pay_back_date = window.tools.formatDate(that.curRow.pay_back_date, 'yyyy-MM-dd');
+            that.curRow.pay_back_date = Betools.Betools.tools.formatDate(that.curRow.pay_back_date, 'yyyy-MM-dd');
 
             //设置支付日期
-            that.curRow.pay_date = window.tools.formatDate(that.curRow.pay_date, 'yyyy-MM-dd');
+            that.curRow.pay_date = Betools.Betools.tools.formatDate(that.curRow.pay_date, 'yyyy-MM-dd');
 
             //设置开始日期
-            that.curRow.start_time = window.tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
+            that.curRow.start_time = Betools.Betools.tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
 
             //设置结束日期
-            that.curRow.end_time = window.tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
+            that.curRow.end_time = Betools.Betools.tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
 
             //设置开始日期
-            that.curRow.real_start_time = window.tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
+            that.curRow.real_start_time = Betools.Betools.tools.formatDate(that.curRow.start_time, 'yyyy-MM-dd');
 
             //设置结束日期
-            that.curRow.real_end_time = window.tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
+            that.curRow.real_end_time = Betools.Betools.tools.formatDate(that.curRow.end_time, 'yyyy-MM-dd');
 
             //设置工作日期
-            that.curRow.work_date = window.tools.formatDate(that.curRow.work_date, 'yyyy-MM-dd');
+            that.curRow.work_date = Betools.Betools.tools.formatDate(that.curRow.work_date, 'yyyy-MM-dd');
 
             //设置完成日期
-            that.curRow.complete_date = window.tools.formatDate(that.curRow.complete_date, 'yyyy-MM-dd');
+            that.curRow.complete_date = Betools.Betools.tools.formatDate(that.curRow.complete_date, 'yyyy-MM-dd');
 
             //设置汇报日期
-            that.curRow.report_date = window.tools.formatDate(that.curRow.report_date, 'yyyy-MM-dd');
+            that.curRow.report_date = Betools.Betools.tools.formatDate(that.curRow.report_date, 'yyyy-MM-dd');
 
             //设置期望到岗日期
-            that.curRow.exp_join_date = window.tools.formatDate(that.curRow.exp_join_date, 'yyyy-MM-dd');
+            that.curRow.exp_join_date = Betools.Betools.tools.formatDate(that.curRow.exp_join_date, 'yyyy-MM-dd');
 
             //设置最后工作日
-            that.curRow.resign_date = window.tools.formatDate(that.curRow.resign_date, 'yyyy-MM-dd');
+            that.curRow.resign_date = Betools.Betools.tools.formatDate(that.curRow.resign_date, 'yyyy-MM-dd');
 
             //设置入职日期
-            that.curRow.join_date = window.tools.formatDate(that.curRow.join_date, 'yyyy-MM-dd');
+            that.curRow.join_date = Betools.Betools.tools.formatDate(that.curRow.join_date, 'yyyy-MM-dd');
 
             //设置面试日期
-            that.curRow.interview_date = window.tools.formatDate(that.curRow.interview_date, 'yyyy-MM-dd');
+            that.curRow.interview_date = Betools.Betools.tools.formatDate(that.curRow.interview_date, 'yyyy-MM-dd');
 
             //设置换班日期
-            that.curRow.shift_date = window.tools.formatDate(that.curRow.shift_date, 'yyyy-MM-dd');
+            that.curRow.shift_date = Betools.Betools.tools.formatDate(that.curRow.shift_date, 'yyyy-MM-dd');
 
             //设置还班日期
-            that.curRow.back_date = window.tools.formatDate(that.curRow.back_date, 'yyyy-MM-dd');
+            that.curRow.back_date = Betools.Betools.tools.formatDate(that.curRow.back_date, 'yyyy-MM-dd');
 
             //设置补卡日期
-            that.curRow.repair_date = window.tools.formatDate(that.curRow.repair_date, 'yyyy-MM-dd');
+            that.curRow.repair_date = Betools.Betools.tools.formatDate(that.curRow.repair_date, 'yyyy-MM-dd');
 
         } catch (error) {
             console.error(error);
@@ -2372,7 +2372,7 @@ try {
                     //获取标识
                     var flag = index == processLogs.length - 1;
                     //获取操作时间
-                    var optime = window.tools.formatDate(
+                    var optime = Betools.Betools.tools.formatDate(
                         new Date(item.operate_time),
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -2471,7 +2471,7 @@ try {
 
                 window.__.each(processLogs, (item, index) => {
                     //获取操作时间
-                    var optime = window.tools.formatDate(
+                    var optime = Betools.Betools.tools.formatDate(
                         new Date(item.operate_time),
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -2566,7 +2566,7 @@ try {
 
             //遍历数据，格式化日期
             for await (let item of wflow) {
-                item['create_time'] = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                item['create_time'] = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 item['replay'] = JSON.parse(item['replay']);
                 item['avatar'] = `${window._CONFIG['uploadURL']}/` + (await authortool.queryAvatarByName(item.create_by, storage)).avatar;
                 //遍历二级评论
@@ -2600,7 +2600,7 @@ try {
         window.tools = window.tools == null ? tools : window.tools;
 
         if (tname == 'bs_ask_report') {
-            date = window.tools.formatDate(new Date(curRow.starttime), 'yyyyMMddhhmmss');
+            date = Betools.Betools.tools.formatDate(new Date(curRow.starttime), 'yyyyMMddhhmmss');
             var fileNO = `${companyName}审字第${date}号`;
             console.log('文件编号：' + fileNO);
             return fileNO;
@@ -2798,47 +2798,47 @@ try {
                             console.error(error);
                         }
                         try {
-                            item.date = window.tools.formatDate(item.date, 'yyyy-MM-dd');
+                            item.date = Betools.Betools.tools.formatDate(item.date, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.start_time = window.tools.formatDate(item.start_time, 'yyyy-MM-dd');
+                            item.start_time = Betools.Betools.tools.formatDate(item.start_time, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.end_time = window.tools.formatDate(item.end_time, 'yyyy-MM-dd');
+                            item.end_time = Betools.Betools.tools.formatDate(item.end_time, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.real_start_time = window.tools.formatDate(item.real_start_time, 'yyyy-MM-dd');
+                            item.real_start_time = Betools.Betools.tools.formatDate(item.real_start_time, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.real_end_time = window.tools.formatDate(item.real_end_time, 'yyyy-MM-dd');
+                            item.real_end_time = Betools.Betools.tools.formatDate(item.real_end_time, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.work_date = window.tools.formatDate(item.work_date, 'yyyy-MM-dd');
+                            item.work_date = Betools.Betools.tools.formatDate(item.work_date, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.complete_date = window.tools.formatDate(item.complete_date, 'yyyy-MM-dd');
+                            item.complete_date = Betools.Betools.tools.formatDate(item.complete_date, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.join_date = window.tools.formatDate(item.join_date, 'yyyy-MM-dd');
+                            item.join_date = Betools.Betools.tools.formatDate(item.join_date, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
                         try {
-                            item.interview_date = window.tools.formatDate(item.interview_date, 'yyyy-MM-dd');
+                            item.interview_date = Betools.Betools.tools.formatDate(item.interview_date, 'yyyy-MM-dd');
                         } catch (error) {
                             console.error(error);
                         }
@@ -3084,9 +3084,9 @@ try {
 
             //遍历并格式化日期
             window.__.each(result, function(item) {
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -3121,9 +3121,9 @@ try {
 
             //遍历并格式化日期
             window.__.each(result, function(item) {
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -3308,7 +3308,7 @@ try {
      */
     var queryPRLogInfTotal = async(business_data_id, tools = window.tools) => {
         //获取今天日期
-        var ctime = window.tools.formatDate(new Date(), 'yyyy-MM-dd');
+        var ctime = Betools.Betools.tools.formatDate(new Date(), 'yyyy-MM-dd');
 
         //提交URL
         var queryURL = `${window.requestAPIConfig.restapi}/api/pr_log_informed/count?_where=(business_data_id,eq,${business_data_id})`;
@@ -3863,12 +3863,12 @@ try {
 
                 //遍历并格式化日期
                 window.__.each(result, function(item) {
-                    var optime = window.tools.formatDate(
+                    var optime = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
-                    var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                    item['createtime'] = window.tools.formatDate(
+                    var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                    item['createtime'] = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -3952,12 +3952,12 @@ try {
 
                 //遍历并格式化日期
                 window.__.each(result, function(item) {
-                    var optime = window.tools.formatDate(
+                    var optime = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
-                    var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                    item['createtime'] = window.tools.formatDate(
+                    var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                    item['createtime'] = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -4001,12 +4001,12 @@ try {
 
                 //遍历并格式化日期
                 window.__.each(result, function(item) {
-                    var optime = window.tools.formatDate(
+                    var optime = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
-                    var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                    item['createtime'] = window.tools.formatDate(
+                    var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                    item['createtime'] = Betools.Betools.tools.formatDate(
                         item['create_time'],
                         'yyyy-MM-dd hh:mm:ss'
                     );
@@ -4328,12 +4328,12 @@ try {
                 item['status'] = '1';
                 item['orgCode'] = '';
                 item['updateBy'] = '';
-                item['createTime'] = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                item['createTime'] = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
                 item['createBy'] = 'admin';
                 item['workNo'] = '';
                 item['delFlag'] = '0';
                 item['status_dictText'] = '';
-                item['birthday'] = window.tools.formatDate(item['birthday'], 'yyyy-MM-dd');
+                item['birthday'] = Betools.Betools.tools.formatDate(item['birthday'], 'yyyy-MM-dd');
                 item['updateTime'] = item['createTime'];
                 item['telephone'] = item['phone'];
                 item['activitiSync'] = '';
@@ -4414,7 +4414,7 @@ try {
 
             //遍历并格式化日期
             window.__.each(result.records, function(item) {
-                var optime = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(
                     item['operate_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -4460,10 +4460,10 @@ try {
             result = res.body;
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -4784,8 +4784,8 @@ try {
                 endtime = param.time[1].format('YYYY-MM-DD');
             }
 
-            starttime = window.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-            endtime = window.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+            starttime = Betools.Betools.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+            endtime = Betools.Betools.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
             whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
         }
@@ -4802,10 +4802,10 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -4858,10 +4858,10 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -4913,9 +4913,9 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -4968,9 +4968,9 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -5028,9 +5028,9 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -5087,10 +5087,10 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -5176,12 +5176,12 @@ try {
                 //获取到数据，查询最新的数据，取出数组中第一条数据，然后查询时间大于等于这条的待办，然后去掉重复数据
                 var first = window.__.max(result, function(item) {
                     let time = window.tools.isNull(item.timestamp) ?
-                        window.tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
+                        Betools.Betools.tools.formatDate(new Date(item.create_time), 'yyyyMMddhhmmss') :
                         item.timestamp;
                     return time;
                 });
                 var curtime = window.tools.isNull(first.createtime) ?
-                    window.tools.formatDate(first['create_time'], 'yyyy-MM-dd hh:mm:ss') :
+                    Betools.Betools.tools.formatDate(first['create_time'], 'yyyy-MM-dd hh:mm:ss') :
                     first.createtime;
                 var nlist = [];
 
@@ -5438,8 +5438,8 @@ try {
                 }
             }
 
-            starttime = window.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
-            endtime = window.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
+            starttime = Betools.Betools.tools.formatDate(starttime, 'yyyy-MM-dd') + ' 00:00:00';
+            endtime = Betools.Betools.tools.formatDate(endtime, 'yyyy-MM-dd') + ' 23:59:59';
 
             whereSQL = whereSQL + `~and(create_time,bw,${starttime},${endtime})`;
         }
@@ -5455,10 +5455,10 @@ try {
             //遍历并格式化日期
             result = window.__.filter(result, function(item) {
                 //格式化日期
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-                item['createtime'] = window.tools.formatDate(
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                item['createtime'] = Betools.Betools.tools.formatDate(
                     item['create_time'],
                     'yyyy-MM-dd hh:mm:ss'
                 );
@@ -6021,9 +6021,9 @@ try {
 
             //遍历并格式化日期
             window.__.each(result, function(item) {
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -6060,9 +6060,9 @@ try {
 
             //遍历并格式化日期
             window.__.each(result, function(item) {
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -6099,9 +6099,9 @@ try {
 
             //遍历并格式化日期
             window.__.each(result, function(item) {
-                var optime = window.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;

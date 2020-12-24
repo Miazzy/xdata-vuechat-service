@@ -237,17 +237,17 @@ export default {
           } catch (error) {
             console.log(error);
           }
-          let ntime = tools.formatDate(new Date(),'yyyyMMddhhmmss');
-          let ctime = tools.formatDate(this.item.create_time,'yyyyMMddhhmmss');
-          this.item.create_time = tools.formatDate(this.item.create_time,'yyyy-MM-dd');
-          this.item.exp_join_date = tools.formatDate(this.item.exp_join_date,'yyyy-MM-dd');
-          this.item.start_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
-          this.item.end_time = tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
-          this.item.starttime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
-          this.item.endtime = tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
-          this.item.interview_date = tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm');
-          this.item.join_date = tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
-          this.item.resign_date = tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
+          let ntime = Betools.tools.formatDate(new Date(),'yyyyMMddhhmmss');
+          let ctime = Betools.tools.formatDate(this.item.create_time,'yyyyMMddhhmmss');
+          this.item.create_time = Betools.tools.formatDate(this.item.create_time,'yyyy-MM-dd');
+          this.item.exp_join_date = Betools.tools.formatDate(this.item.exp_join_date,'yyyy-MM-dd');
+          this.item.start_time = Betools.tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
+          this.item.end_time = Betools.tools.formatDate(this.item.start_time,'yyyy-MM-dd hh:mm');
+          this.item.starttime = Betools.tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
+          this.item.endtime = Betools.tools.formatDate(this.item.starttime,'yyyy-MM-dd hh:mm');
+          this.item.interview_date = Betools.tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm');
+          this.item.join_date = Betools.tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
+          this.item.resign_date = Betools.tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
           this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_value = this.item.bpm_status;
           this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_value];
@@ -298,7 +298,7 @@ export default {
         this.informList = ilist;
 
         this.workflowlist.map(async (item)=>{
-          item.operate_time = tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
+          item.operate_time = Betools.tools.formatDate(item.operate_time,'yyyy-MM-dd hh:mm');
           item.approve_user = await workflow.queryUserByName(item.approve_user);
         });
       },

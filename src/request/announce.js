@@ -21,9 +21,9 @@ export async function queryAnnounceList(page = 0, size = 50) {
 
             //遍历并格式化日期
             result.map(item => {
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -63,9 +63,9 @@ export async function queryHeadList(page = 0, size = 50) {
 
             //遍历并格式化日期
             result.map(item => {
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -105,9 +105,9 @@ export async function queryNewsList(page = 0, size = 50) {
 
             //遍历并格式化日期
             result.map(function(item) {
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;
@@ -147,9 +147,9 @@ export async function queryNoticeList(page = 0, size = 50) {
 
             //遍历并格式化日期
             result.map(function(item) {
-                var optime = tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
-                var ctime = tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-                var time = tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+                var optime = Betools.tools.formatDate(item['operate_time'], 'yyyy-MM-dd');
+                var ctime = Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+                var time = Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
                 item['operate_time'] = optime;
                 item['create_time'] = ctime;
                 item['timestamp'] = time;

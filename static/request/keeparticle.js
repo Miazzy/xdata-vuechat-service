@@ -29,9 +29,9 @@ const queryBlogArticleInfo = async(
         //遍历并格式化日期
         result = window.__.filter(result, function(item) {
             //格式化日期
-            var ctime = window.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
-            var time = window.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
-            item['createtime'] = window.tools.formatDate(
+            var ctime = Betools.Betools.tools.formatDate(item['create_time'], 'yyyy-MM-dd');
+            var time = Betools.Betools.tools.formatDate(item['create_time'], 'yyyyMMddhhmmss');
+            item['createtime'] = Betools.Betools.tools.formatDate(
                 item['create_time'],
                 'yyyy-MM-dd hh:mm:ss'
             );

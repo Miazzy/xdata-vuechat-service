@@ -478,7 +478,7 @@ export async function postWorkflowFree(userInfo, tableName, curRow, freeWFNode, 
         dynamicNode = {
             id: id,
             create_by: userInfo['username'],
-            create_time: tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
+            create_time: Betools.tools.formatDate(timestamp, "yyyy-MM-dd hh:mm:ss"),
             update_by: userInfo.username,
             title: title,
             content: title,
