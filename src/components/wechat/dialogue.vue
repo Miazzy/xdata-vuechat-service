@@ -83,11 +83,6 @@
     </div>
 </template>
 <script>
-
-
-import * as contact from '@/vuex/contacts';
-import * as query from '@/request/query';
-
 export default {
     data() {
         return {
@@ -211,7 +206,7 @@ export default {
           this.myuserinfo = await Betools.storage.getStore('system_userinfo');
 
           //获取聊天对象信息
-          this.userinfo = await contact.getUserInfo(this.wxid);
+          this.userinfo = await Betools.contact.getUserInfo(this.wxid);
 
           //查询用户聊天消息
           await this.queryMessages();

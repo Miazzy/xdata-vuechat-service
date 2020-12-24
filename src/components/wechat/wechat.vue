@@ -9,9 +9,6 @@
 </template>
 <script>
 
-
-import * as query from '@/request/query';
-
 import search from "../common/search";
 import msgItem from "../wechat/msg-item";
 
