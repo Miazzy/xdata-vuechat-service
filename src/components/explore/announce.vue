@@ -98,9 +98,9 @@ export default {
         this.tabname = window.decodeURIComponent(this.getUrlParam('tabname'));
         this.previewurl = await Betools.tools.queryFileViewURL(this.files);
         if(this.previewurl&&this.previewurl.endsWith('pdf')){
-          this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
+          this.purl = Betools.constant.PDF_PREVIEW_URL + this.previewurl;
         } else if(this.previewurl){
-          this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+          this.purl = Betools.constant.OFFICE_PREVIEW_URL + this.previewurl;
         }
       },
       async queryAnnounce(){

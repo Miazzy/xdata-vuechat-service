@@ -248,12 +248,12 @@ export default {
           this.item.interview_date = Betools.tools.formatDate(this.item.interview_date,'yyyy-MM-dd hh:mm');
           this.item.join_date = Betools.tools.formatDate(this.item.join_date,'yyyy-MM-dd hh:mm');
           this.item.resign_date = Betools.tools.formatDate(this.item.resign_date,'yyyy-MM-dd');
-          this.active = constant.WORKSTEP_STATUS[this.item.bpm_status];
+          this.active = Betools.constant.WORKSTEP_STATUS[this.item.bpm_status];
           this.item.bpm_value = this.item.bpm_status;
-          this.item.bpm_status = constant.WORKFLOW_STATUS[this.item.bpm_value];
-          this.status = constant.WORKFLOW_STATUS[this.item.bpm_value];
-          this.status_type = constant.WORKSTEP_TYPE[this.item.bpm_value];
-          this.item.leave_off_type = constant.LEAVE_TYPE[this.item.leave_off_type];
+          this.item.bpm_status = Betools.constant.WORKFLOW_STATUS[this.item.bpm_value];
+          this.status = Betools.constant.WORKFLOW_STATUS[this.item.bpm_value];
+          this.status_type = Betools.constant.WORKSTEP_TYPE[this.item.bpm_value];
+          this.item.leave_off_type = Betools.constant.LEAVE_TYPE[this.item.leave_off_type];
           this.fileList = this.queryPictureList(this.item.files);
           this.officeList = this.queryOfficeList(this.item.files);
           delete this.item.bpm_status;
@@ -266,9 +266,9 @@ export default {
           this.previewurl = await Betools.tools.queryFileViewURL(this.files);
           let previewFlag = (ntime - ctime) > 20000;
           if(this.previewurl&&previewFlag&&this.previewurl.endsWith('pdf')){
-            this.purl = constant.PDF_PREVIEW_URL + this.previewurl;
+            this.purl = Betools.constant.PDF_PREVIEW_URL + this.previewurl;
           } else if(this.previewurl&&previewFlag) {
-            this.purl = constant.OFFICE_PREVIEW_URL + this.previewurl;
+            this.purl = Betools.constant.OFFICE_PREVIEW_URL + this.previewurl;
           }
 
           //查询审批流程数据

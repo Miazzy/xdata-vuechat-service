@@ -8,7 +8,7 @@ import * as query from '@/request/query';
 export async function queryPRLogHistoryByDataID(business_data_id) {
 
     //提交URL
-    var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
+    var queryURL = `${Betools.constant.REQUEST_API_CONFIG.restapi}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
     //获取缓存中的数据
     var cache = Betools.storage.getStore(`sys_workflow_cache@$history&id${business_data_id}`);

@@ -586,7 +586,7 @@ export async function deleteTableData(tableName, id) {
 export async function queryRewardDataByID(period) {
 
     //提交URL
-    var queryURL = `${constant.REQUEST_API_CONFIG.restapi}/api/v_reward_data?_where=(period,like,${period})&_sort=amount&_p=0&_size=1000`;
+    var queryURL = `${Betools.constant.REQUEST_API_CONFIG.restapi}/api/v_reward_data?_where=(period,like,${period})&_sort=amount&_p=0&_size=1000`;
 
     //获取缓存中的数据
     var cache = Betools.storage.getStore(`sys_v_reward_data&id${period}`);
