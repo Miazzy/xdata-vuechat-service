@@ -13,6 +13,7 @@ self.addEventListener('install', function(event) {
                 "https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css",
                 "https://cdn.jsdelivr.net/gh/Miazzy/vue-excel-editor@r1.0.2/dist/datepicker.min.css",
                 "https://cdn.jsdelivr.net/gh/Miazzy/vue-excel-editor@r1.0.2/dist/vue-excel-editor.umd.min.css",
+                "https://cdn.bootcdn.net/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r1.0.0/request/keeplocation.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/vue/vue.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/common/vuex.min.js",
