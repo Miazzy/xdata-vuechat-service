@@ -15,7 +15,7 @@
           </div>
           <div class="weui-cell_app_hd">
           <router-link to="/explore/news?back=/explore" tag="dl">
-           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png" >
+           <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png" >
             <div class="weui-cell_app_bd">
               公告
             </div>
@@ -221,7 +221,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=4`)}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=4&from=/explore`)">
@@ -240,7 +240,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&pid=${item.pid}&backpath=${encodeURI(`/explore?tabname=4`)}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=4&from=/explore`)">
@@ -412,10 +412,10 @@ export default {
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
 
-          let alist = await announce.queryAnnounceList(0,10);
-          let hlist = await announce.queryHeadList(0,10);
-          let nlist = await announce.queryNewsList(0,10);
-          let tlist = await announce.queryNoticeList(0,10);
+          let alist = await Betools.announce.queryAnnounceList(0,10);
+          let hlist = await Betools.announce.queryHeadList(0,10);
+          let nlist = await Betools.announce.queryNewsList(0,10);
+          let tlist = await Betools.announce.queryNoticeList(0,10);
 
           temp = [...alist , ...hlist , ...nlist , ...tlist];
           temp = temp.flat();

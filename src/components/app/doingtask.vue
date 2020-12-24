@@ -143,10 +143,10 @@ export default {
 
         if( Betools.tools.isNull(result) || result.length <= 0 || result == 'undefined') {
 
-          this.alist = await announce.queryAnnounceList(0,30);
-          this.hlist = await announce.queryHeadList(0,30);
-          this.nlist = await announce.queryNewsList(0,30);
-          this.tlist = await announce.queryNoticeList(0,30);
+          this.alist = await Betools.announce.queryAnnounceList(0,30);
+          this.hlist = await Betools.announce.queryHeadList(0,30);
+          this.nlist = await Betools.announce.queryNewsList(0,30);
+          this.tlist = await Betools.announce.queryNoticeList(0,30);
 
           temp = [...this.alist , ...this.hlist , ...this.nlist , ...this.tlist];
           temp = temp.flat();
@@ -161,10 +161,10 @@ export default {
         this.announces = temp.slice(0,30);
       },
       async queryEach(){
-        this.alist = await announce.queryAnnounceList(0,30);
-        this.hlist = await announce.queryHeadList(0,30);
-        this.nlist = await announce.queryNewsList(0,30);
-        this.tlist = await announce.queryNoticeList(0,30);
+        this.alist = await Betools.announce.queryAnnounceList(0,30);
+        this.hlist = await Betools.announce.queryHeadList(0,30);
+        this.nlist = await Betools.announce.queryNewsList(0,30);
+        this.tlist = await Betools.announce.queryNoticeList(0,30);
       },
       async queryTaskDone(){
         let info = await Betools.storage.getStore('system_userinfo');
