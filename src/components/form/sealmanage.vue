@@ -396,7 +396,7 @@ export default {
       },
       async queryInfo(){
         //获取tabname
-        this.tabname = (storage.getStore('system_seal_list_tabname') || '1') % 10 ;
+        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ;
         this.tabname = this.tabname > 6 ? 1 : this.tabname;
         //获取最近6个月对应的日期
         var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');

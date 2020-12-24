@@ -9,7 +9,7 @@ import getters from "./getters"
 Vue.use(Vuex);
 
 // 统一管理接口域名
-let apiPublicDomain = '//vrapi.snail.com/';
+const apiPublicDomain = '//vrapi.snail.com/';
 
 const state = {
     currentLang: "zh", //当前使用的语言 zh：简体中文 en:英文 后期需要
@@ -23,7 +23,7 @@ const state = {
     tipsStatus: false, //控制首页右上角菜单的显示(true)/隐藏(false)
     // 所有接口地址 后期需要
     apiUrl: {
-        demo: apiPublicDomain + ""
+        address: apiPublicDomain + ""
     },
     msgList: {
         stickMsg: [], //置顶消息列表 后期需要
