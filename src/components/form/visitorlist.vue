@@ -77,10 +77,9 @@
 
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 
 export default {
     mixins: [window.mixin],
@@ -245,7 +244,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -260,7 +259,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -275,7 +274,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -289,7 +288,7 @@ export default {
           });
         } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -303,7 +302,7 @@ export default {
           });
         } else if(tabname == '办公') {
           //获取最近6个月的已领取记录
-          this.json_data_office = await manageAPI.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_office = await manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_office.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -314,7 +313,7 @@ export default {
 
         } else if(tabname == '药品') {
           //获取最近6个月的已领取记录
-          this.json_data_drug = await manageAPI.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_drug = await manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_drug.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -325,7 +324,7 @@ export default {
 
         } else if(tabname == '防疫') {
           //获取最近6个月的已领取记录
-          this.json_data_prevent = await manageAPI.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_prevent = await manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_prevent.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,

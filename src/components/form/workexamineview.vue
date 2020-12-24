@@ -276,14 +276,11 @@
   </keep-alive>
 </template>
 <script>
-
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
 
 
@@ -668,7 +665,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
 
         //批量领取物品修改状态
@@ -680,7 +677,7 @@ export default {
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+          const result = await manage.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
 
@@ -793,7 +790,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
         //批量领取物品修改状态
         for(let i = 0 ; i < this.tlist.length ; i++){
@@ -804,7 +801,7 @@ export default {
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+          const result = await manage.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
 
@@ -927,7 +924,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
         /************************  工作流程日志(开始)  ************************/
 

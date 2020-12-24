@@ -187,16 +187,12 @@
   </keep-alive>
 </template>
 <script>
-
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
 
 export default {
     mixins: [window.mixin],
@@ -333,7 +329,7 @@ export default {
           if(!!prefix){
 
             //从用户表数据中获取填报人资料
-            let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
+            let list = await manage.queryContractInfoByPrefix(prefix.trim());
 
             //清空原数据
             this.hContractList = [];
@@ -404,7 +400,7 @@ export default {
           if(!!archive_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(archive_name.trim());
+            let user = await manage.queryUserByNameHRM(archive_name.trim());
 
             if(!!user){
 
@@ -465,7 +461,7 @@ export default {
           if(!!front_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(front_name.trim());
+            let user = await manage.queryUserByNameHRM(front_name.trim());
 
             if(!!user){
 
@@ -528,7 +524,7 @@ export default {
           if(!!sealman){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(sealman.trim());
+            let user = await manage.queryUserByNameHRM(sealman.trim());
 
             if(!!user){
 
@@ -713,9 +709,9 @@ export default {
           if(!!manager){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(manager.trim());
+            let user = await manage.queryUserByNameHRM(manager.trim());
             //从提交的历史数据中获取填报人资料
-            let info = await manageAPI.queryUserBySealData(manager.trim());
+            let info = await manage.queryUserBySealData(manager.trim());
 
             if(!!user){
               if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
@@ -887,7 +883,7 @@ export default {
           //如果盖印人候选列表存在
           if(that.item.sealman){
             //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await manage.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -902,7 +898,7 @@ export default {
           //如果前台人候选列表存在
           if(that.item.front){
             //获取可选填报人列表
-            let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            let flist = await manage.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             flist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -918,7 +914,7 @@ export default {
             let names = [];
             let ids = [];
             //获取可选填报人列表
-            let alist = await manageAPI.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
+            let alist = await manage.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             alist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1005,7 +1001,7 @@ export default {
           const elem = {id , status }; // 待提交元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData('bs_seal_regist' , id , elem);
+          const result = await manage.patchTableData('bs_seal_regist' , id , elem);
 
           //第三步，回显当前用印登记信息，并向印章管理员推送消息
           this.loading = false;
@@ -1108,7 +1104,7 @@ export default {
 
         //第二步，向表单提交form对象数据
         this.loading = true;
-        const result = await manageAPI.patchTableData('bs_seal_regist' , id , elem);
+        const result = await manage.patchTableData('bs_seal_regist' , id , elem);
 
         //第三步，回显当前用印登记信息，并向印章管理员推送消息
         this.loading = false;

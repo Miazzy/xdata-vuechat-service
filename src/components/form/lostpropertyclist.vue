@@ -63,10 +63,9 @@
 
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as query from '@/request/query';
 
 export default {
@@ -229,7 +228,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
@@ -244,7 +243,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已认领)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await manage.queryTableData(this.tname , `_where=(status,eq,已认领)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
@@ -259,7 +258,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
@@ -273,7 +272,7 @@ export default {
           });
          } else if(tabname == '认领') {
            //获取最近6个月的已领取记录
-          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data = await manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
          }
 

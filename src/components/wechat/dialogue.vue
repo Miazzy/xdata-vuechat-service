@@ -84,10 +84,8 @@
 </template>
 <script>
 
-import * as manageAPI from '@/request/manage';
-
+import * as manage from '@/request/manage';
 import * as contact from '@/vuex/contacts';
-
 import * as query from '@/request/query';
 
 export default {
@@ -266,7 +264,7 @@ export default {
         },
         async readMessages(){
           const mid = this.$route.query.mid;
-          const result = await manageAPI.patchTableData(this.tablename , mid , {read_flag: 'true'});
+          const result = await manage.patchTableData(this.tablename , mid , {read_flag: 'true'});
         },
         async sendMessage(){
 
@@ -295,7 +293,7 @@ export default {
             status: '0',
           }
 
-          const result = await manageAPI.postTableData(this.tablename , elem);
+          const result = await manage.postTableData(this.tablename , elem);
 
           this.message = '';
 

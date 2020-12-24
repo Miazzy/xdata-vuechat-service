@@ -91,10 +91,9 @@
 
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 
 export default {
     mixins: [window.mixin],
@@ -279,7 +278,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.initContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -289,7 +288,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.sealContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -299,7 +298,7 @@ export default {
           })
         } else if(tabname == 3){
           //获取最近6个月的已领取记录
-          this.receiveContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.receiveContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -309,7 +308,7 @@ export default {
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.frontContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -319,7 +318,7 @@ export default {
           })
         } else if(tabname == 5){
           //获取最近6个月的已归档记录
-          this.doneContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.doneContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -329,7 +328,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await manageAPI.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.failContractList = await manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -342,7 +341,7 @@ export default {
           month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
           sealTypeSql = `~and(seal_type,like,合同类)`;
           const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await manageAPI.queryTableData('bs_seal_regist', whereSQL);
+          this.json_data = await manage.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
       },

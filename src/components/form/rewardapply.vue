@@ -205,16 +205,12 @@
   </keep-alive>
 </template>
 <script>
-
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
 
 export default {
     mixins: [window.mixin],
@@ -466,7 +462,7 @@ export default {
           if(!!hr_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(hr_name.trim());
+            let user = await manage.queryUserByNameHRM(hr_name.trim());
 
             if(!!user){
 
@@ -773,7 +769,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.postTableData(this.tablename , elem);
+        const result = await manage.postTableData(this.tablename , elem);
 
         //发送自动设置排序号请求
         const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');

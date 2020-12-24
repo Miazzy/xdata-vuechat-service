@@ -137,15 +137,12 @@
 </template>
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
 
 export default {
     mixins: [window.mixin],
@@ -510,7 +507,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
 
         //批量领取物品修改状态
@@ -522,7 +519,7 @@ export default {
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+          const result = await manage.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
 
@@ -621,7 +618,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
         //第三步 向物品管理员推送消息确认，物品管理员确认后，将遗失物品递交给认领人员
         await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.user_group_ids},${this.item.create_by}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’在失物招领处认领了‘${this.item.lost_name}’，请及时审核确认！?rurl=${receiveURL}`)
@@ -705,7 +702,7 @@ export default {
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
-        const result = await manageAPI.patchTableData(this.tablename , id , elem);
+        const result = await manage.patchTableData(this.tablename , id , elem);
 
         //批量领取物品修改状态
         for(let i = 0 ; i < this.tlist.length ; i++){
@@ -716,7 +713,7 @@ export default {
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
-          const result = await manageAPI.patchTableData(this.tablename , this.tlist[i].id , element);
+          const result = await manage.patchTableData(this.tablename , this.tlist[i].id , element);
 
         }
 

@@ -103,10 +103,9 @@
 
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 
 export default {
     mixins: [window.mixin],
@@ -319,7 +318,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
+          this.initList = await manage.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
 
           this.initList.map((item , index) => {
             item.name = item.username + ' ' + item.mobile ,
@@ -329,7 +328,7 @@ export default {
           });
         } else if(tabname == 2) {
           //获取最近6个月的已确认记录
-          this.confirmList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
+          this.confirmList = await manage.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
 
           this.confirmList.map((item , index) => {
             item.name = item.username + ' ' + item.mobile ,
@@ -339,7 +338,7 @@ export default {
           });
         } else if(tabname == 3) {
           //获取最近6个月的已完成记录
-          this.doneList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
+          this.doneList = await manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
 
           this.doneList.map((item , index) => {
             item.name = item.username + ' ' + item.mobile ,
@@ -349,7 +348,7 @@ export default {
           });
         } else if(tabname == 4) {
           //获取最近6个月的已驳回记录
-          this.rejectList = await manageAPI.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
+          this.rejectList = await manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
 
           this.rejectList.map((item , index) => {
             item.name = item.username + ' ' + item.mobile ,
@@ -359,7 +358,7 @@ export default {
           });
         } else if(tabname == '入职') {
           //获取最近6个月的已驳回记录
-          this.json_data = await manageAPI.queryTableData(this.tname , `_where=(status,ne,已测试)~and(create_time,gt,${month})${searchSql}`);
+          this.json_data = await manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(create_time,gt,${month})${searchSql}`);
 
           this.json_data.map((item , index) => {
             item.name = item.username + ' ' + item.mobile ,

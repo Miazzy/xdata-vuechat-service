@@ -173,16 +173,12 @@
 </template>
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
-
 
 export default {
     mixins: [window.mixin],
@@ -437,7 +433,7 @@ export default {
           if(!!prefix){
 
             //从用户表数据中获取填报人资料
-            let list = await manageAPI.queryContractInfoByPrefixAll(prefix.trim());
+            let list = await manage.queryContractInfoByPrefixAll(prefix.trim());
 
             //清空原数据
             this.hContractList = [];
@@ -526,7 +522,7 @@ export default {
           if(!!archive_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(archive_name.trim());
+            let user = await manage.queryUserByNameHRM(archive_name.trim());
 
             if(!!user){
 
@@ -586,7 +582,7 @@ export default {
           if(!!finance_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
+            let user = await manage.queryUserByNameHRM(finance_name.trim());
 
             if(!!user){
 
@@ -656,7 +652,7 @@ export default {
           if(!!record_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(record_name.trim());
+            let user = await manage.queryUserByNameHRM(record_name.trim());
 
             if(!!user){
 
@@ -726,7 +722,7 @@ export default {
           if(!!front_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(front_name.trim());
+            let user = await manage.queryUserByNameHRM(front_name.trim());
 
             if(!!user){
 
@@ -802,7 +798,7 @@ export default {
           if(!!sealman){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(sealman.trim());
+            let user = await manage.queryUserByNameHRM(sealman.trim());
 
             if(!!user){
 
@@ -1081,9 +1077,9 @@ export default {
           if(!!manager){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(manager.trim());
+            let user = await manage.queryUserByNameHRM(manager.trim());
             //从提交的历史数据中获取填报人资料
-            let info = await manageAPI.queryUserBySealData(manager.trim());
+            let info = await manage.queryUserBySealData(manager.trim());
 
             if(!!user){
               if(Array.isArray(user)){ //如果是用户数组列表，则展示列表，让用户自己选择
@@ -1204,19 +1200,19 @@ export default {
           //如果盖印人填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
             //获取盖印人姓名
-            that.item.sealman = await manageAPI.queryUsernameByID(that.item.sealman);
+            that.item.sealman = await manage.queryUsernameByID(that.item.sealman);
           }
 
           //如果前台人员填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.front)){
             //获取盖印人姓名
-            that.item.front_name = await manageAPI.queryUsernameByID(that.item.front);
+            that.item.front_name = await manage.queryUsernameByID(that.item.front);
           }
 
           //如果盖印人候选列表存在
           if(that.item.seal){
             //获取可选填报人列表
-            let slist = await manageAPI.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
+            let slist = await manage.queryUsernameByIDs(that.item.seal.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             slist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1231,7 +1227,7 @@ export default {
           //如果前台人候选列表存在
           if(that.item.front){
             //获取可选填报人列表
-            let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            let flist = await manage.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             flist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1247,7 +1243,7 @@ export default {
             let names = [];
             let ids = [];
             //获取可选填报人列表
-            let alist = await manageAPI.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
+            let alist = await manage.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             alist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1402,7 +1398,7 @@ export default {
         }
 
         //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
-        if(!(await manageAPI.queryUserByNameFindOne(this.item.sealman , this.item.seal))){
+        if(!(await manage.queryUserByNameFindOne(this.item.sealman , this.item.seal))){
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '请在盖印人下拉列表，点击选择盖印人后在进行提交，或认真检查盖印人名字是否拼写错误！',
@@ -1519,7 +1515,7 @@ export default {
 
         //第二步，向表单提交form对象数据
         this.loading = true;
-        const result = await manageAPI.postTableData('bs_seal_regist' , elem);
+        const result = await manage.postTableData('bs_seal_regist' , elem);
 
         //sleep一下
         await Betools.tools.sleep(0);

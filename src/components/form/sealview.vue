@@ -204,15 +204,12 @@
 </template>
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
 
 export default {
     mixins: [window.mixin],
@@ -391,7 +388,7 @@ export default {
           if(!!prefix){
 
             //从用户表数据中获取填报人资料
-            let list = await manageAPI.queryContractInfoByPrefix(prefix.trim());
+            let list = await manage.queryContractInfoByPrefix(prefix.trim());
 
             //清空原数据
             this.hContractList = [];
@@ -478,10 +475,10 @@ export default {
           if(!!archive_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(archive_name.trim());
+            let user = await manage.queryUserByNameHRM(archive_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM(this.item.archive.trim());
+            let user_ = await manage.queryUserByNameHRM(this.item.archive.trim());
 
             if(!!user){
 
@@ -545,10 +542,10 @@ export default {
           if(!!finance_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(finance_name.trim());
+            let user = await manage.queryUserByNameHRM(finance_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM((this.item.finance || '').trim());
+            let user_ = await manage.queryUserByNameHRM((this.item.finance || '').trim());
 
             if(!!user){
 
@@ -622,10 +619,10 @@ export default {
           if(!!record_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(record_name.trim());
+            let user = await manage.queryUserByNameHRM(record_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM((this.item.record||'').trim());
+            let user_ = await manage.queryUserByNameHRM((this.item.record||'').trim());
 
             if(!!user){
 
@@ -699,10 +696,10 @@ export default {
           if(!!front_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(front_name.trim());
+            let user = await manage.queryUserByNameHRM(front_name.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM(this.item.front.trim());
+            let user_ = await manage.queryUserByNameHRM(this.item.front.trim());
 
             if(!!user){
 
@@ -769,10 +766,10 @@ export default {
           if(!!sealman){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(sealman.trim());
+            let user = await manage.queryUserByNameHRM(sealman.trim());
 
             //从用户表数据中获取填报人资料
-            let user_ = await manageAPI.queryUserByNameHRM(this.item.seal.trim());
+            let user_ = await manage.queryUserByNameHRM(this.item.seal.trim());
 
             if(!!user){
 
@@ -998,7 +995,7 @@ export default {
           //如果前台人候选列表存在
           if(that.item.front){
             //获取可选填报人列表
-            let flist = await manageAPI.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
+            let flist = await manage.queryUsernameByIDs(that.item.front.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             flist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1014,7 +1011,7 @@ export default {
             let names = [];
             let ids = [];
             //获取可选填报人列表
-            let alist = await manageAPI.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
+            let alist = await manage.queryUsernameByIDs(that.item.archive.split(',').map(item => { return `'${item}'`; }).join(','));
             //遍历填报人列表
             alist.map((elem , index) => {
               let company = elem.textfield1.split('||')[0];
@@ -1058,7 +1055,7 @@ export default {
 
             try {
               //修改状态为已用印，保存当前合同编号
-              await manageAPI.patchTableData(`bs_seal_regist` , id , {seal_group_ids,seal_group_names});
+              await manage.patchTableData(`bs_seal_regist` , id , {seal_group_ids,seal_group_names});
             } catch (error) {
               console.log(error);
             }
@@ -1275,7 +1272,7 @@ export default {
 
         try {
           //修改状态为已用印，保存当前合同编号
-          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
+          await manage.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company});
         } catch (error) {
           console.log(error);
         }
@@ -1470,7 +1467,7 @@ export default {
 
         try {
           //修改状态为已退回
-          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
+          await manage.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
         } catch (error) {
           console.log(error);
         }
@@ -1590,7 +1587,7 @@ export default {
         const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
-        manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已寄送' , send_time: time});
+        manage.patchTableData(`bs_seal_regist` , id , {id , status: '已寄送' , send_time: time});
 
         //修改用印状态
         this.item.status = '已寄送';
@@ -1678,7 +1675,7 @@ export default {
 
         try {
           //修改状态为已用印
-          manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
+          manage.patchTableData(`bs_seal_regist` , id , {id , status: '移交前台' , front_time: time});
         } catch (error) {
           console.log(error);
         }
@@ -1816,7 +1813,7 @@ export default {
         }
 
         //修改状态为已用印
-        await manageAPI.patchTableData(`bs_seal_regist` , id , node);
+        await manage.patchTableData(`bs_seal_regist` , id , node);
 
         //延时处理
         await Betools.tools.sleep(300);
@@ -1911,7 +1908,7 @@ export default {
 
         try {
           //修改状态为已用印
-          await manageAPI.patchTableData(`bs_seal_regist` , id , {id , done_time: time });
+          await manage.patchTableData(`bs_seal_regist` , id , {id , done_time: time });
         } catch (error) {
           console.log(error);
         }
@@ -1927,7 +1924,7 @@ export default {
 
         try {
           //将数据转存到用印台账记录中
-          await manageAPI.postTableData(`bs_seal_registed` , value);
+          await manage.postTableData(`bs_seal_registed` , value);
         } catch (error) {
           console.log(error);
         }
@@ -2038,7 +2035,7 @@ export default {
 
           try {
             //修改状态为已用印
-            await manageAPI.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
+            await manage.patchTableData(`bs_seal_regist` , id , {id , status: '已归档'});
           } catch (error) {
             console.log(error);
           }

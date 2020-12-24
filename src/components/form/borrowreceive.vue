@@ -294,15 +294,12 @@
 </template>
 <script>
 
-
 import * as announce from '@/request/announce';
 import * as task from '@/request/task';
 import * as query from '@/request/query';
-
 import * as workflow from '@/request/workflow';
-import * as manageAPI from '@/request/manage';
+import * as manage from '@/request/manage';
 import * as wflowprocess from '@/request/wflow.process';
-
 
 export default {
     mixins: [window.mixin],
@@ -510,7 +507,7 @@ export default {
           if(!!user_admin_name){
 
             //从用户表数据中获取填报人资料
-            let user = await manageAPI.queryUserByNameHRM(user_admin_name.trim());
+            let user = await manage.queryUserByNameHRM(user_admin_name.trim());
 
             if(!!user){
 
@@ -878,7 +875,7 @@ export default {
         //第二步，向表单提交form对象数据
         try {
           if(!Betools.tools.isNull(elem.name.trim()) && !Betools.tools.isNull(elem.amount.trim())){
-            const result = await manageAPI.postTableData(this.tablename , elem);
+            const result = await manage.postTableData(this.tablename , elem);
           }
         } catch (error) {
           console.log(error);
@@ -914,7 +911,7 @@ export default {
 
               if(!Betools.tools.isNull(element.name) && !Betools.tools.isNull(elemnet.amount)){
                 //向表单提交form对象数据
-                await manageAPI.postTableData(this.tablename , element);
+                await manage.postTableData(this.tablename , element);
               }
             } catch (error) {
               console.log(error);
