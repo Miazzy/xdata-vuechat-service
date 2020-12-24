@@ -83,7 +83,7 @@
 
 <script>
 
-import * as announce from '@/request/announce';
+
 
 
 import * as query from '@/request/query';

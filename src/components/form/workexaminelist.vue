@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import * as announce from '@/request/announce';
+
 
 
 

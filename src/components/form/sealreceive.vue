@@ -160,7 +160,7 @@
   </keep-alive>
 </template>
 <script>
-import * as announce from '@/request/announce';
+
 import * as query from '@/request/query';
 
 export default {

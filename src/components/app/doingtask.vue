@@ -73,9 +73,6 @@
 </template>
 <script>
 
-
-import * as announce from '@/request/announce';
-
 import news from "../explore/news";
 
 export default {
