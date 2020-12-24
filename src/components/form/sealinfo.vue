@@ -1507,7 +1507,7 @@ export default {
           message: '确认提交用印登记申请？',
         })
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name , seal_group_ids , seal_group_names}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , partner , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name , seal_group_ids , seal_group_names}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;

@@ -93,9 +93,6 @@
     </div>
 </template>
 <script>
-
-
-
 export default {
     mixins: [window.mixin],
     data() {

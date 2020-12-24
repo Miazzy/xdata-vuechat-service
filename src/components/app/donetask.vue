@@ -73,9 +73,6 @@
 </template>
 <script>
 
-
-
-
 import news from "../explore/news";
 
 export default {

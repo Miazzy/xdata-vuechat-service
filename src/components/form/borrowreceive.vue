@@ -293,9 +293,7 @@
   </keep-alive>
 </template>
 <script>
-
 import * as query from '@/request/query';
-
 export default {
     mixins: [window.mixin],
     data() {
