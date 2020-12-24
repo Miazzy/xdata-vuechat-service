@@ -1,6 +1,5 @@
 import * as contact from '@/vuex/contacts';
 
-
 export async function queryUserInfoByView(username) {
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key http://api.shengtai.club/api/v_admin?_where=(username,eq,zhaoziyun)
     var queryURL = `${window.requestAPIConfig.restapi}/api/v_user?_where=(username,eq,${username})`;
