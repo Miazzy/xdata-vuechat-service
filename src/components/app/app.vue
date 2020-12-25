@@ -362,11 +362,12 @@ export default {
           // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const etimestamp = await Betools.storage.getStore('system_role_rights_expire');
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
+          const username = userinfo && userinfo.username ? userinfo.username : '';
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
             this.queryRoleInfo(userinfo , null , 'view');
           }
-          const resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
+          const resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' ,username);
+          if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
             window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
           };
           return this.userinfo;
