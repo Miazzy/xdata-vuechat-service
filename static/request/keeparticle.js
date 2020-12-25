@@ -16,7 +16,7 @@ const queryBlogArticleInfo = async(
     var sortSQL = key == '推荐文章' ? `_sort=-star` : `_sort=-create_time`;
 
     //查询URL
-    var queryURL = `${window.requestAPIConfig.restapi}/api/bs_blog?_p=${page}&_size=${size}&${whereSQL}${sortSQL}`;
+    var queryURL = `${window.BECONFIG['restAPI']}/api/bs_blog?_p=${page}&_size=${size}&${whereSQL}${sortSQL}`;
 
     //重置返回结果
     result = {};

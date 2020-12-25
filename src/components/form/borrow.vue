@@ -646,7 +646,7 @@ export default {
         }
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/物品借用被驳回通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 已驳回，请沟通后重新发起借用！?rurl=${receiveURL}`)
+        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.create_by}/物品借用被驳回通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 已驳回，请沟通后重新发起借用！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
@@ -765,7 +765,7 @@ export default {
 
         try {
           //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.create_by}/${userinfo.realname}已将物品借出，请使用完后按时归还！?rurl=${receiveURL}`)
+          await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.create_by}/${userinfo.realname}已将物品借出，请使用完后按时归还！?rurl=${receiveURL}`)
                   .set('accept', 'json');
         } catch (error) {
           console.log(error);

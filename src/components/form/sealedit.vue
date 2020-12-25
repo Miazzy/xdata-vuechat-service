@@ -1044,7 +1044,7 @@ export default {
         })
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
+        var maxinfo = await superagent.get(`${window.BECONFIG['restAPI']}/api/v_seal_max`).set('accept', 'json');
         maxinfo = maxinfo.body[0];
         var maxno = '';
         var noname = '合同编号';
@@ -1121,7 +1121,7 @@ export default {
 
           try {
             //通知签收人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1129,7 +1129,7 @@ export default {
 
           try {
             //通知印章人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1137,7 +1137,7 @@ export default {
 
           try {
             //推送群消息，告知印章管理员进行用印处理(企业微信群)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
                         .set('accept', 'json');
           } catch (error) {
             console.log(error);

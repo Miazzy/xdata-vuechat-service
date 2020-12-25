@@ -577,7 +577,7 @@ export default {
         }
 
         //查询URL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})`;
+        const queryURL = `${window.BECONFIG['restAPI']}/api/bs_entry_man?_where=(name,eq,${this.item.username})~and(mobile,eq,${this.item.mobile})~and(idcard,eq,${this.item.idcard})`;
 
         //获取返回结果
         const resp = await superagent.get(queryURL).set('accept', 'json');
@@ -1123,7 +1123,7 @@ export default {
         let hrinfo = {};
 
         // 查询SQL
-        const queryURL = `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${hr_name}~)~or(loginid,like,~${hr_name}~))~and(status,ne,5)&_fields=id,lastname,loginid`;
+        const queryURL = `${window.BECONFIG['restAPI']}/api/bs_hrmresource?_where=((lastname,like,~${hr_name}~)~or(loginid,like,~${hr_name}~))~and(status,ne,5)&_fields=id,lastname,loginid`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         const resp = await superagent.get(queryURL).set('accept', 'json');
@@ -1260,7 +1260,7 @@ export default {
         const result = await Betools.manage.postTableData('bs_entry_job' , elem);
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${hrinfo.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)
+        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${hrinfo.id}/入职登记通知：员工‘${elem.username}’入职登记完毕，请HR确认！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         //设置状态

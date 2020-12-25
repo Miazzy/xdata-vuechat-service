@@ -8,7 +8,7 @@ var postTableData = async(tableName, node) => {
     //大写转小写
     tableName = tableName.toLowerCase();
     //Post数据的URL地址
-    var insertURL = `${window.requestAPIConfig.restapi}/api/${tableName}`;
+    var insertURL = `${window.BECONFIG['restAPI']}/api/${tableName}`;
 
     //如果传入数据为数组，则URL添加bulk路径
     if (typeof node != 'undefined' && node != null && node instanceof Array) {
@@ -35,7 +35,7 @@ var queryTableData = async(tableName, whereSQL) => {
     //大写转小写
     tableName = tableName.toLowerCase();
     //更新URL PATCH	/api/tableName/:id	Updates row element by primary key
-    var queryURL = `${window.requestAPIConfig.restapi}/api/${tableName}?${whereSQL}`;
+    var queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}?${whereSQL}`;
 
     try {
 

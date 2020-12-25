@@ -1072,7 +1072,7 @@ export default {
         this.item.serialid = value.serialid;
 
         //第三步 向物品管理员推送通知，已准备办公用品等
-        await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
+        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
                 .set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/

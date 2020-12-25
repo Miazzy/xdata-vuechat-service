@@ -968,7 +968,7 @@ export default {
       // 查询用户信息
       async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
         // 查询前台人员SQL
-        queryURL = `${window.requestAPIConfig.restapi}/api/bs_hrmresource?_where=((lastname,like,~${name}~)~or(loginid,like,~${name}~))~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
+        queryURL = `${window.BECONFIG['restAPI']}/api/bs_hrmresource?_where=((lastname,like,~${name}~)~or(loginid,like,~${name}~))~and(status,ne,5)&_fields=id,lastname,loginid,textfield1,sex`;
 
         // 预处理 检查HR名字是否存在，如果不存在直接返回，检查填写内容是否正确，如果不正确，则直接返回，并提升错误信息
         resp = await superagent.get(queryURL).set('accept', 'json');
@@ -1053,11 +1053,11 @@ export default {
           }
 
           try {
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${front.id},${user_group_ids},${this.item.front_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${front.id},${user_group_ids},${this.item.front_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请前台确认，并准备好相应的入职办公用品！?rurl=${receiveURL}front`)
                   .set('accept', 'json');
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${admin.id},${this.item.admin_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${admin.id},${this.item.admin_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请行政确认，并准备好相应的入职资产配置！?rurl=${receiveURL}admin`)
                   .set('accept', 'json');
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${meal.id},${this.item.meal_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${meal.id},${this.item.meal_id}/入职登记通知：员工‘${this.item.username}’入职登记完毕，请食堂确认，并准备好相应的饭卡及餐补配额！?rurl=${receiveURL}meal`)
                   .set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1205,7 +1205,7 @@ export default {
           await Betools.manage.patchTableData(`bs_entry_job` , id , { id , status : '已完成' , done_time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 
           //向HR推送入职引导完成通知
-          await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${value.username}’入职登记通知已被前台、行政、食堂确认!?rurl=${receiveURL}`)
+          await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${value.hr_id}/入职登记确认完成通知：员工‘${value.username}’入职登记通知已被前台、行政、食堂确认!?rurl=${receiveURL}`)
                 .set('accept', 'json');
         }
 

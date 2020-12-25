@@ -1371,7 +1371,7 @@ export default {
         }
 
         // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.requestAPIConfig.restapi}/api/v_seal_max`).set('accept', 'json');
+        var maxinfo = await superagent.get(`${window.BECONFIG['restAPI']}/api/v_seal_max`).set('accept', 'json');
 
         maxinfo = maxinfo.body[0];
         var maxno = '';
@@ -1539,7 +1539,7 @@ export default {
 
           try {
             //通知签收人领取资料(企业微信发送)
-            await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${username}/亲爱的同事，您提交的用印申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
                          .set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1549,11 +1549,11 @@ export default {
             const message = `亲爱的用印管理员，您有一份新的用印申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
             if(this.item.seal_mobile){
               //通知印章人领取资料(企业微信发送)
-                await superagent.post(`${window.requestAPIConfig.restapi}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`)
+                await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`)
                              .set('accept', 'json');
             } else {
                 //通知印章人领取资料(企业微信发送)
-                await superagent.get(`${window.requestAPIConfig.restapi}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`)
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`)
                              .set('accept', 'json');
             }
           } catch (error) {
