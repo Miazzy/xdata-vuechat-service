@@ -1,5 +1,4 @@
-//import VueRouter from 'vue-router'
-
+import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 
 // app整体由店面页和店内页组成 暂时并没有用到嵌套路由
