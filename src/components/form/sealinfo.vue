@@ -286,8 +286,7 @@ export default {
             orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
-            //非集团总部成员，合同盖印也不显示前台和归档字段
-            isGroupHeader:false,
+            isGroupHeader:false, //非集团总部成员，合同盖印也不显示前台和归档字段
             zonename:'',
         }
     },
