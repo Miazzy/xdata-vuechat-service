@@ -198,10 +198,10 @@
     </div>
 </template>
 <script>
-import PhotoSwipe from 'photoswipe'
-import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
-import 'photoswipe/dist/photoswipe.css'
-import 'photoswipe/dist/default-skin/default-skin.css'
+// import PhotoSwipe from 'photoswipe'
+// import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
+// import 'photoswipe/dist/photoswipe.css'
+// import 'photoswipe/dist/default-skin/default-skin.css'
 
 export default {
     methods: {
