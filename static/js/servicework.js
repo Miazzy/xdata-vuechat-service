@@ -2,7 +2,8 @@ self.addEventListener('install', function(event) {
     console.log(event);
     event.waitUntil(
         caches.open('v1').then(function(cache) {
-            return cache.addAll([
+            let resp = null;
+            const cacheList = [
                 "/index.html",
                 "https://cdn.jsdelivr.net/npm/vant@2.9/lib/index.css",
                 "https://cdn.jsdelivr.net/npm/@nutui/nutui@2.2.10/dist/nutui.min.css",
@@ -137,7 +138,13 @@ self.addEventListener('install', function(event) {
                 "/static/request/topics.js",
                 "/static/request/requestflow.js",
                 "/static/request/request.js",
-            ]);
+            ];
+            try {
+                resp = cache.addAll(cacheList);
+            } catch (error) {
+                console.log(error);
+            }
+            return resp;
         })
     );
 });

@@ -381,50 +381,55 @@ export default {
           }
         },
         async queryRoleInfo(userinfo , resp = null , role = ''){
-          resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',COMMON_RECEIVE_BORROW';
-          };
-          resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',SEAL_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',SEAL_FRONT_SERVICE';
-          };
-          resp = await Betools.query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',SEAL_ARCHIVE_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',COMMON_AUTH_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',JOB_HR_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',JOB_EXEC_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',JOB_FRONT_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',JOB_MEAL_ADMIN';
-          };
-          resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            role += ',COMMON_DEBUG_ADMIN';
-            window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
-          };
-          Betools.storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
-          this.role = role;
-          return role;
+          try {
+            const username = userinfo && userinfo.username ? userinfo.username : '';
+            resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',COMMON_RECEIVE_BORROW';
+            };
+            resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',SEAL_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',SEAL_FRONT_SERVICE';
+            };
+            resp = await Betools.query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',SEAL_ARCHIVE_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',COMMON_AUTH_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('JOB_HR_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',JOB_HR_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('JOB_EXEC_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',JOB_EXEC_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('JOB_FRONT_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',JOB_FRONT_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',JOB_MEAL_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',COMMON_DEBUG_ADMIN';
+              window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
+            };
+            Betools.storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
+            this.role = role;
+            return role;
+          } catch (error) {
+            console.log(error);
+          }
         },
         async userLogin(){
 
