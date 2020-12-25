@@ -41,14 +41,14 @@
 
           <van-cell-group>
             <template v-for="(value,key) in fields">
-              <van-cell v-show=" value!='id' && item[value] != '' && typeof item[value] != 'undefined' && item[value] != null "
+              <van-cell :key="`${key}-van-cell`" v-show=" value!='id' && item[value] != '' && typeof item[value] != 'undefined' && item[value] != null "
                 :title="tableInfo[value]"
                 :value="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length > 16 ) || value.includes('content') || value.includes('require') ? '' : item[value])"
                 :label="((item[value] != '' && typeof item[value] != 'undefined' && item[value] != null && item[value].toString().length <= 16) || value.includes('content') || value.includes('require') ? '' : item[value])"
                 size="large"
               />
-              <div v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:14.5px;"></div>
-              <div v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #fafafa;"></div>
+              <div :key="`${key}-div-frist`" v-show="value.includes('content') || value.includes('require') "  v-html="item[value]" style="margin-left:21px;margin-bottom:10px;font-size:14.5px;"></div>
+              <div :key="`${key}-div-second`" v-show="value.includes('content') || value.includes('require') " style="border-bottom:1px solid #fafafa;"></div>
             </template>
           </van-cell-group>
 
@@ -74,7 +74,7 @@
             <div style="margin-left:10px;margin-top:10px;">
               <van-cell-group>
                 <template v-for="(value,key) in officeList">
-                  <van-cell class="van-ellipsis" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
+                  <van-cell :key="key" class="van-ellipsis" :value="value.name" is-link :clickable="true" @click="saveAsFile(value.url , value.name)" style="padding: 10px 2px 10px 2px;" />
                 </template>
               </van-cell-group>
             </div>
@@ -96,7 +96,7 @@
 
             <van-steps direction="vertical" :active="workflowlist.length-1" active-icon="success" active-color="#38f">
               <template v-for="(value,key) in workflowlist" >
-                <van-step v-if="value.approve_user != null" >
+                <van-step :key="`${key}-van-step`"  v-if="value.approve_user != null" >
                   <h3 style="font-size:14px;"> 审批：{{ `${value.approve_user}，意见：${value.action_opinion}` }} </h3>
                   <p style="font-size:12px;margin-top:2px;"> {{ value.operate_time }}</p>
                 </van-step>
