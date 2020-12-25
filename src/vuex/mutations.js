@@ -45,7 +45,7 @@ const mutations = {
     // 将联系人根据首字母进行分类
     contactsInitialList: async(state) => {
         var initialList = [];
-        var allContacts = await state.contact.queryContacts();
+        var allContacts = await Betools.contact.queryContacts();
         var max = allContacts.length;
         state.contact = allContacts;
         for (var i = 0; i < max; i++) {
@@ -58,7 +58,7 @@ const mutations = {
     // 将联系人根据首字母进行分类
     contactsList: async(state, getters) => {
         var initialList = [];
-        var allContacts = await state.contact.queryContacts();
+        var allContacts = await Betools.contact.queryContacts();
         var max = allContacts.length;
         state.contact = allContacts;
         for (var i = 0; i < getters.contactsInitialList.length; i++) {

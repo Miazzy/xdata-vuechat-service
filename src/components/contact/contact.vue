@@ -58,9 +58,6 @@
 </template>
 <script>
 
-
-import * as contact from '@/vuex/contacts';
-
 const ALL_CONTACT_INIT_CACHE_LIST = 'ALL_CONTACT_INIT_CACHE_LIST_V9';
 const ALL_CONTACT_CACHE_LIST = 'ALL_CONTACT_CACHE_LIST_V9';
 
@@ -94,13 +91,10 @@ export default {
     methods: {
         // 将联系人根据首字母进行分类
         async queryContactsInitialList(){
-
             const userinfo = await Betools.storage.getStore('system_userinfo');
-
             var initialList = await Betools.storage.getStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department) || [];
-
             if(Betools.tools.isNull(initialList) || initialList.length <= 0){
-              var allContacts = await contact.queryContacts();
+              var allContacts = await Betools.contact.queryContacts();
               var max = allContacts.length;
               for (var i = 0; i < max; i++) {
                   if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
@@ -110,24 +104,19 @@ export default {
               initialList = initialList.sort();
               Betools.storage.setStoreDB(ALL_CONTACT_INIT_CACHE_LIST + '#depart#' + userinfo.main_department , initialList , 3600 * 24);
             }
-
             return initialList;
         },
 
         // 将联系人根据首字母进行分类
         async queryContactsList() {
-
             const userinfo = await Betools.storage.getStore('system_userinfo');
-
             var initialList = [];
             var contactsList = await Betools.storage.getStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department) || {};
-
             if(Betools.tools.isNull(contactsList) || contactsList.length <= 0){
               contactsList = {};
-              var allContacts = await contact.queryContacts();
+              var allContacts = await Betools.contact.queryContacts();
               var contactsInitialList = await this.queryContactsInitialList();
               var max = allContacts.length;
-
               for (var i = 0; i < contactsInitialList.length; i++) {
                   var protoTypeName = contactsInitialList[i];
                   contactsList[protoTypeName] = [];
@@ -140,7 +129,6 @@ export default {
               let cache = JSON.stringify(contactsList);
               Betools.storage.setStoreDB(ALL_CONTACT_CACHE_LIST + '#depart#' + userinfo.main_department , cache , 3600 * 24);
             }
-
             return contactsList;
         },
         toPs(i) {
@@ -149,10 +137,8 @@ export default {
         async clearLoginInfo(){
           try {
             const userinfo = await Betools.storage.getStore('system_linfo');
-
             this.username = userinfo.username;
             this.password = userinfo.password;
-
             Betools.storage.clearStore('system_userinfo');
             Betools.storage.clearStore('system_token');
             Betools.storage.clearStore('system_department');
@@ -174,8 +160,4 @@ export default {
 </script>
 <style>
     @import "../../assets/css/contact.css";
-
-    .app-footer {
-      display:block;
-    }
 </style>

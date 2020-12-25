@@ -63,9 +63,6 @@
     </div>
 </template>
 <script>
-import * as contact from '@/vuex/contacts';
-
-
 export default {
     data() {
         return {
@@ -88,14 +85,11 @@ export default {
     },
     methods: {
       async queryInfo() {
-
         const wxid = this.$route.query.wxid;
-        const allContacts = await contact.queryContacts();
-
+        const allContacts = await Betools.contact.queryContacts();
         const userinfo = allContacts.find(item => {
           return item.userid == wxid;
         });
-
         this.userinfo = userinfo;
       },
       async sendMessage(userinfo) {

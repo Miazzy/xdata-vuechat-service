@@ -33,13 +33,6 @@
 </template>
 <script>
 
-
-import * as contact from '@/vuex/contacts';
-
-const loginURL = `${window.requestAPIConfig.domain}/jeecg-boot/sys/login`;
-
-window.storage = storage;
-
 export default {
     mixins: [window.mixin],
     data() {
@@ -56,7 +49,6 @@ export default {
         }
     },
     activated() {
-
       this.displayFoot();
       this.clearLoginInfo();
     },
@@ -74,7 +66,7 @@ export default {
       // 将联系人根据首字母进行分类
       async queryContactsInitialList(){
           var initialList = [];
-          var allContacts = await contact.queryContacts();
+          var allContacts = await Betools.contact.queryContacts();
           var max = allContacts.length;
           for (var i = 0; i < max; i++) {
               if (initialList.indexOf(allContacts[i].initial.toUpperCase()) == -1) {
@@ -86,15 +78,11 @@ export default {
 
       // 将联系人根据首字母进行分类
       async queryContactsList() {
-
           var initialList = [];
           var contactsList = [];
-
-          var allContacts = await contact.queryContacts();
+          var allContacts = await Betools.contact.queryContacts();
           var contactsInitialList = await this.queryContactsInitialList();
-
           var max = allContacts.length;
-
           for (var i = 0; i < contactsInitialList.length; i++) {
               var protoTypeName = contactsInitialList[i];
               contactsList[protoTypeName] = [];
@@ -104,18 +92,14 @@ export default {
                   }
               }
           }
-
           return contactsList;
-
       },
       async userLogin(){
 
         //检查用户是否存在
         let vuser = await queryUserInfoByView(this.username);
-
         //显示加载状态
         this.loading = true;
-
         try {
           if(Betools.tools.isNull(this.username)){
             vant.Toast('请输入账号/手机/邮箱登录！');
@@ -127,10 +111,9 @@ export default {
             let username = this.username;
             let password = this.password;
             let response = await superagent
-                  .post(loginURL)
+                  .post(`${window.requestAPIConfig.domain}/jeecg-boot/sys/login`)
                   .send({"remember_me":true,"auto_login":false,"username":username,"password":password})
                   .set('accept', 'application/json');
-
             if(!Betools.tools.isNull(response) && !Betools.tools.isNull(response.body)
               && response.body.code == 200 && response.body.message == "登录成功"){
                 let userinfo = response.body.result.userInfo;
