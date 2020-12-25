@@ -2,7 +2,6 @@ import VueAxios from 'vue-axios';
 import App from './App';
 import router from './router';
 import store from './vuex/store';
-import FastClick from 'fastclick'; //使用 fastclick 解决移动端 300ms 点击延迟
 import filters from './filters'; //将全部过滤器放在 filters/index.js 中便于管理
 import '@/reservice'; //注册service worker服务
 
