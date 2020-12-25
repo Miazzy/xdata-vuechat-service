@@ -1256,9 +1256,9 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=seal&type=front`);
+        const url = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealview?id=${id}&statustype=seal&type=front`);
         //领取地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealreceive?id=${id}&type=receive`);
 
         try {
           //修改状态为已用印，保存当前合同编号
@@ -1453,7 +1453,7 @@ export default {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         //领取地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealedit?id=${id}&type=done&res=edit`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
         try {
           //修改状态为已退回
@@ -1574,7 +1574,7 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
+        const url = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealview?id=${id}&statustype=done&type=done`);
 
         //修改状态为已用印
         Betools.manage.patchTableData(`bs_seal_regist` , id , {id , status: '已寄送' , send_time: time});
@@ -1659,9 +1659,9 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=done&type=done`);
+        const url = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealview?id=${id}&statustype=done&type=done`);
         //回调地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealreceive?id=${id}&type=done`);
 
         try {
           //修改状态为已用印
@@ -1792,7 +1792,7 @@ export default {
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
-        const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=archive&type=archive`);
+        const url = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealview?id=${id}&statustype=archive&type=archive`);
 
         let node = null;
 
@@ -1976,7 +1976,7 @@ export default {
         const value = await Betools.query.queryTableData(`bs_seal_regist` , id);
 
         //回调地址
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=done`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealreceive?id=${id}&type=done`);
 
         //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
         if(this.item.sealtype === '合同类') {

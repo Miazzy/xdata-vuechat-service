@@ -621,7 +621,7 @@ export default {
         const pid = Betools.tools.getUrlParam('pid');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
@@ -740,7 +740,7 @@ export default {
         }
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/borrowview?id=${id}&statustype=office&role=receive`);
 
         //第一步 保存用户数据到数据库中
         const elem = {

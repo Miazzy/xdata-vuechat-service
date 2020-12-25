@@ -1129,7 +1129,7 @@ export default {
         const resp = await superagent.get(queryURL).set('accept', 'json');
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/entryview?id=${id}&statustype=none&role=hr`);
+        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/entryview?id=${id}&statustype=none&role=hr`);
 
         // 如果没有获取到返回信息，说明填写的HR姓名有误，如果有获取到HR的返回信息，则执行转换
         if(resp && resp.body && resp.body.length > 0){

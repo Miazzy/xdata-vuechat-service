@@ -1531,11 +1531,11 @@ export default {
           const title = '用印登记申请';
           const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
 
-          const url = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealview?id=${id}&statustype=none`);
+          const url = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealview?id=${id}&statustype=none`);
           const signmail = this.mailconfig[seal_man];
 
           //领取地址
-          const receiveURL = encodeURIComponent(`${window.requestAPIConfig.vuechatdomain}/#/app/sealreceive?id=${id}&type=receive`);
+          const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/sealreceive?id=${id}&type=receive`);
 
           try {
             //通知签收人领取资料(企业微信发送)
