@@ -1,5 +1,3 @@
-//import Vue from 'vue'
-//import Vuex from 'vuex'
 import OfficialAccounts from "./official-account" //存放所有关注的应用号
 import contact from './contacts' //存放所有联系人的数据
 import mutations from "./mutations"

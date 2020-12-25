@@ -1,7 +1,4 @@
-// import Vue from 'vue'
-import Router from 'vue-router';
-
-Vue.use(Router);
+Vue.use(VueRouter);
 
 // app整体由店面页和店内页组成 暂时并没有用到嵌套路由
 const routes = [{
@@ -496,7 +493,7 @@ const routes = [{
 
 ];
 
-const router = new Router({
+const router = new VueRouter({
     base: "/vue-wechat/",
     routes,
 })
