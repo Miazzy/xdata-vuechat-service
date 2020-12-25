@@ -296,7 +296,6 @@ export default {
         }
     },
     activated() {
-
         this.queryAnnounce();
         this.queryEach();
     },
