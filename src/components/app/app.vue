@@ -17,7 +17,7 @@
         </router-link>
       </div>
 
-      <div id="weui-cells-flex" v-if="role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') " class="weui-cells" style="display:block; position:relative;">
+      <div id="weui-cells-flex" v-if="role ? ( role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') ) : false " class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
           <div style="position:absolute; top: 0.6rem; right:25px;">
@@ -31,7 +31,7 @@
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
-            <van-col span="6" v-if="role.includes('JOB_HR_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('JOB_HR_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="entryjob('hr');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_03.png" >
                 <div class="weui-cell_app_bd">
@@ -39,7 +39,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('JOB_EXEC_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('JOB_EXEC_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="entryjob('admin');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png" >
                 <div class="weui-cell_app_bd" >
@@ -47,7 +47,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('JOB_FRONT_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('JOB_FRONT_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="entryjob('front');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png" >
                 <div class="weui-cell_app_bd" >
@@ -55,7 +55,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('JOB_MEAL_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('JOB_MEAL_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="entryjob('meal');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png" >
                 <div class="weui-cell_app_bd">
@@ -89,7 +89,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false " >
               <div v-show="true " class="weui-cell_app_hd" @click="sealApprove();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
@@ -97,7 +97,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('SEAL_FRONT_SERVICE')" >
+            <van-col span="6" v-if="role ? role.includes('SEAL_FRONT_SERVICE') : false " >
               <div class="weui-cell_app_hd" @click="sealFront();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png" >
                 <div class="weui-cell_app_bd" >
@@ -105,7 +105,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('SEAL_ARCHIVE_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('SEAL_ARCHIVE_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="sealArchive();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png" >
                 <div class="weui-cell_app_bd" >
@@ -113,7 +113,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="!role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="role ? !role.includes('SEAL_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png" >
                 <div class="weui-cell_app_bd" >
@@ -121,7 +121,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('SEAL_ADMIN')" >
+            <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="sealManage();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png" >
                 <div class="weui-cell_app_bd" >
@@ -129,7 +129,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('SEAL_ADMIN')">
+            <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false ">
               <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
                 <div class="weui-cell_app_bd">
@@ -185,7 +185,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')">
+            <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
               <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','apply');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_08.png" >
                 <div class="weui-cell_app_bd" >
@@ -193,7 +193,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role.includes('COMMON_RECEIVE_BORROW')">
+            <van-col span="6" v-if="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
               <div class="weui-cell_app_hd" @click="goodsReceive('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi.png" >
                 <div class="weui-cell_app_bd" >
@@ -201,7 +201,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+            <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
               <div class="weui-cell_app_hd" @click="goodsBorrow('approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_06.png" >
                 <div class="weui-cell_app_bd" >
@@ -209,7 +209,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+            <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
               <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','approve');" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_06.png" >
                 <div class="weui-cell_app_bd" >
@@ -217,7 +217,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_RECEIVE_BORROW')" >
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
               <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_9.png" >
                 <div class="weui-cell_app_bd">
@@ -297,7 +297,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="cooperate('auth');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/game_00.png" >
                 <div class="weui-cell_app_bd">
@@ -305,7 +305,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;" v-show="role.includes('COMMON_AUTH_ADMIN')" >
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false " >
               <div class="weui-cell_app_hd" @click="cooperate('employee');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_12.png" >
                 <div class="weui-cell_app_bd">
@@ -368,7 +368,7 @@ export default {
           }
           const resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' ,username);
           if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
-            window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
+            setTimeout(()=>{window.vConsole = window.vConsole ? window.vConsole : new VConsole();},300); // 初始化vconsole
           };
           return this.userinfo;
         },
