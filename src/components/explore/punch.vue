@@ -25,7 +25,7 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
              </div>
             </div>
             <div class="desc-box">
@@ -43,7 +43,7 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
              </div>
             </div>
             <div class="desc-box">
@@ -61,7 +61,7 @@
              <i class="new-msg-count" style="display: none;">3</i>
              <i class="new-msg-dot" style="display: none;"></i>
              <div class="header">
-               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
              </div>
             </div>
             <div class="desc-box">

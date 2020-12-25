@@ -46,7 +46,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -65,7 +65,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -94,7 +94,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -113,7 +113,7 @@
               <i class="new-msg-count" style="display: none;"></i>
               <i class="new-msg-dot" style="display: none;"></i>
               <div class="header">
-                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
               </div>
               </div>
               <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -142,7 +142,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -161,7 +161,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -190,7 +190,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -209,7 +209,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -238,7 +238,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
@@ -257,7 +257,7 @@
                 <i class="new-msg-count" style="display: none;"></i>
                 <i class="new-msg-dot" style="display: none;"></i>
                 <div class="header">
-                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/Betools.announce.png">
+                  <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/announce.png">
                 </div>
                 </div>
                 <div class="desc-box" @click="$router.push(`/explore/announce?id=${item.id}&type=${item.announce_type}&title=${encodeURI(item.title)}&content=${encodeURI(item.content)}&files=${encodeURI(item.files)}&tabname=${tabname}&from=/explore/news`)">
