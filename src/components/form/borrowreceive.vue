@@ -753,6 +753,15 @@ export default {
             this.item.company = userinfo.parent_company.name;
           }
 
+          // 根据用户以前填写的物品管理员名称，编辑当前物品管理员名称
+          const historyList = await Betools.query.queryGoodsAdmin(userinfo.username);
+          if(historyList && historyList.length > 0){
+            this.item.userid = historyList[0].userid;
+            this.item.user_admin_name = historyList[0].user_admin_name;
+            this.item.user_group_ids = historyList[0].user_group_ids;
+            this.item.user_group_names = historyList[0].user_group_names;
+          }
+
         } catch (error) {
           console.log(error);
         }

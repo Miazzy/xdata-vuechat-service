@@ -740,6 +740,15 @@ export default {
             this.item.company = userinfo.parent_company.name;
           }
 
+          // 根据用户以前填写的物品管理员名称，编辑当前物品管理员名称
+          const historyList = await Betools.query.queryGoodsAdmin(userinfo.username);
+          if(historyList && historyList.length > 0){
+            this.item.userid = historyList[0].userid;
+            this.item.user_admin_name = historyList[0].user_admin_name;
+            this.item.user_group_ids = historyList[0].user_group_ids;
+            this.item.user_group_names = historyList[0].user_group_names;
+          }
+
         } catch (error) {
           console.log(error);
         }
@@ -793,12 +802,22 @@ export default {
           return;
         }
 
-        //未获取到选择的物品领用接待人员
+        //未获取到选择的物品
         if(Betools.tools.isNull(this.item.name) || Betools.tools.isNull(this.item.amount)){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
               message: '请输入领用物品名称与数量！',
+            });
+          return;
+        }
+
+        //未获取到选择的物品领用接待人员
+        if(!Betools.tools.isNull(this.item.name) && /[,|/|，|、]/g.test(this.item.name) ){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请分开输入多个领用物品（领用物品不能含有逗号，顿号）！',
             });
           return;
         }

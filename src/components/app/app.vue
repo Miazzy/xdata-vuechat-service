@@ -229,7 +229,7 @@
         </div>
       </div>
 
-      <div id="weui-cells-flex" class="weui-cells" style="display:block; position:relative;">
+      <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false "  style="display:block; position:relative;">
         <div class="weui-cell-title">来访管理</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -359,8 +359,7 @@ export default {
           this.role = await Betools.storage.getStore('system_role_rights');
           this.userinfo = await Betools.query.queryWeworkUser();
           const userinfo = await Betools.storage.getStore('system_userinfo');
-          // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
-          const etimestamp = await Betools.storage.getStore('system_role_rights_expire');
+          const etimestamp = await Betools.storage.getStore('system_role_rights_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
           const username = userinfo && userinfo.username ? userinfo.username : '';
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
@@ -419,6 +418,10 @@ export default {
             resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , username);
             if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
               role += ',JOB_MEAL_ADMIN';
+            };
+            resp = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH' , username);
+            if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
+              role += ',COMMON_VISIT_AUTH';
             };
             resp = await Betools.query.queryRoleGroupList('COMMON_DEBUG_ADMIN' , username);
             if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
