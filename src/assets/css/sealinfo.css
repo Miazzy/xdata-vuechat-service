@@ -273,3 +273,10 @@
     right: 0;
     text-align: center;
 }
+
+#van-visit-group .van-field__button {
+    position: absolute;
+    left: -25px;
+    top: 2.5px;
+    transform: scale(0.75);
+}

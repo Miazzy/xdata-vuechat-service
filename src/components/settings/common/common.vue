@@ -1,6 +1,5 @@
 <template>
     <div id="common">
-        common
         <router-link to="/self/settings/common/language">language设置</router-link>
     </div>
 </template>

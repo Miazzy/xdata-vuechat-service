@@ -1,6 +1,5 @@
 <template>
     <div id="language">
-        language设置
     </div>
 </template>
 <script>

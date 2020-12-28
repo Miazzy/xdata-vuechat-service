@@ -35,7 +35,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">预约登记</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">来访登记</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>
@@ -51,13 +51,23 @@
 
             <van-form >
 
-              <van-cell-group style="margin-top:10px;position:relative;">
+              <van-cell-group id="van-visit-group" style="margin-top:10px;position:relative;">
 
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
 
-                <van-field :readonly="readonly" :required="false" clearable label="预约时间" v-model="item.time"  placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time"  />
+                <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time"  placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time"  />
+                
+                <van-field id="van-visit-dtime-field" center clearable label="来访时间" placeholder="">
+                  <template id="van-visit-dtime-button" #button>
+                    <van-radio-group id="van-visit-dtime-radio" v-model="item.dtime" direction="horizontal" name="来访时间">
+                      <van-radio name="上午">上午</van-radio>
+                      <van-radio name="下午">下午</van-radio>
+                    </van-radio-group>
+                  </template>
+                </van-field>
+
                 <van-field :readonly="readonly" :required="false" clearable label="访客单位" v-model="item.visitor_company"  placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company"  />
 
 
@@ -258,27 +268,24 @@
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-
-                <van-cell value="登记人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :readonly="readonly" required clearable label="填报人员" v-model="item.create_by"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
-                <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
-                <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写您的部门名称！" @blur="validField('department');" :error-message="message.department" />
-
+                <van-cell value="被访人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :readonly="readonly" required clearable label="被访人员" v-model="item.create_by"  placeholder="请填写被访人员的姓名！" @blur="validField('create_by')" :error-message="message.create_by"  />
+                <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写被访人员的职务名称！" @blur="validField('position')" :error-message="message.position"/>
+                <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写被访人员的联系电话！" @blur="validField('mobile');" :error-message="message.mobile" />
               </van-cell-group>
 
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="接待管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');querySealMan();" :error-message="message.user_admin_name" @click="querySealMan();"  />
-                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectSealUser()" />
+                <van-field required clearable label="来访地址" v-model="item.address" placeholder="请输入来访地址!" @blur="validField('address');queryAddress();" :error-message="message.address" @click="queryAddress();"  />
+                <van-address-list v-show="addressList.length > 0" v-model="addressId" :list="addressList" default-tag-text="默认" edit-disabled @select="selectAddress" />
+                <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();"  />
+                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName()" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 备注说明（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="备注说明" v-model="item.remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -370,6 +377,7 @@ export default {
               id: '',
               serialid:'',
               time: dayjs().format('YYYY-MM-DD'),
+              dtime:'上午',
               create_by: '',
               create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
 
@@ -500,6 +508,7 @@ export default {
             fileList:[],
             loading:false,
             officeList:[],
+            addressList:[],
             tag:{
               showPicker: false,
               showPickerCommon: false,
@@ -601,10 +610,52 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      // 用户选择盖印人
-      async querySealMan(){
+      // 查询来访地址
+      async queryAddress(){
 
-        //获取盖章人信息
+        try {
+          if(!!this.item.address){
+
+            //从用户表数据中获取填报人资料
+            let list = await Betools.manage.queryAddressByName(this.item.address.trim());
+
+            if(!!list && Array.isArray(list)){
+
+              try {
+                list.map((elem,index) => {
+                  this.addressList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                })
+                this.item.address = list[0].lastname;
+              } catch (error) {
+                console.log(error);
+              }
+
+              try {
+                this.addressList = this.addressList.filter((item,index) => {  //遍历去重
+                  let findex = this.addressList.findIndex((subitem,index) => { return subitem.name == item.name });
+                  return index == findex;
+                })
+              } catch (error) {
+                console.log(error);
+              }
+
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
+      },
+      // 选择来访地址
+      async selectAddress(name , value){
+
+        //选择来访地址后，接待人员被相应带出，来访地址和接待人员是关联的
+        console.log(`name:${name},value:${value}`);
+      },
+      // 用户选择接待人员
+      async queryUserName(){
+
+        //获取接待人员信息
         const user_admin_name = this.item.user_admin_name;
 
         try {
@@ -674,23 +725,21 @@ export default {
         }
 
       },
-      // 选中当前盖印人
-      async selectSealUser(value){
-        await Betools.tools.sleep(0);
+      // 选中当前接待人员
+      async selectUserName(value){
         const id = this.userid;
         this.item.userid = id;
-
-        //获取盖印人姓名
-        const user = this.userList.find((item,index) => {return id == item.id});
+        const user = this.userList.find((item,index) => {return id == item.id}); //获取接待人员姓名
         this.item.user_admin_name = user.name;
       },
       // 设置重置
       async reduction(){
         this.item = {
-              id: '',
-              serialid:'',
+              id: '' ,
+              serialid:'' ,
               time: dayjs().format('YYYY-MM-DD'),
-              create_by: '',
+              dtime: '上午' ,
+              create_by: '' ,
               create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
 
               visitor_name:'',     //访客姓名
@@ -872,16 +921,13 @@ export default {
           }
         }
 
-
       },
 
       // 选中当前盖印人
       async selectFrontUser(value){
-        await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
+        this.item.front_name = user.name; //获取盖印人姓名
         this.item.front_id = id;
       },
       // 字段必填有效验证
@@ -1008,6 +1054,8 @@ export default {
           visitor_position: this.item.visitor_position,
 
           time: this.item.time,
+          dtime: this.item.dtime,
+          address: this.item.address,
           zone,
           userid : this.item.userid,
           user_admin_name : this.item.user_admin_name,
