@@ -270,15 +270,15 @@ export default {
         if(this.tabname == '1'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=goodslist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=goodslist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=goodslist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
          }
       },
     }
