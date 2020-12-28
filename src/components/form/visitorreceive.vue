@@ -623,10 +623,12 @@ export default {
             if(!!list && Array.isArray(list)){
               
               try {
-                list.map((elem,index) => { this.addressList.push({id:elem.serialid , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
-                this.item.address = list[0].address; // 设置地址信息
-                this.item.zone_name = list[0].zonename;
-                debugger
+                list.map((elem,index) => { this.addressList.push({id:elem.serialid ,zonename:elem.zonename, userlist: elem.userlist , reception : elem.userlist_reception , reception_name : elem.userlist_reception_name  , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
+                this.item.address = addressList[0].address; // 设置地址信息
+                this.item.zone_name = addressList[0].zonename;
+                this.item.userid = addressList[0].reception;
+                this.item.user_admin_name = addressList[0].reception_name;
+                await this.queryUserName();
               } catch (error) {
                 console.log(error);
               }
@@ -650,10 +652,11 @@ export default {
       // 选择来访地址
       async selectAddress(name , value){
         //选择来访地址后，接待人员被相应带出，来访地址和接待人员是关联的
-        console.log(`name:${name},value:${value}`);
         this.item.address = name.address; // 设置地址信息
         this.item.zone_name = name.zonename;
-        debugger;
+        this.item.userid = name.reception;
+        this.item.user_admin_name = name.reception_name;
+        await this.queryUserName();
       },
       // 用户选择接待人员
       async queryUserName(){
