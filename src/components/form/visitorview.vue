@@ -285,7 +285,7 @@
                 <van-field :readonly="true" :required="false" clearable label="流程状态" v-model="item.status"   />
               </van-cell-group>
 
-              <van-cell-group v-show="((item.status == '待处理' || item.status == '已驳回' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;" >
+              <van-cell-group v-show="((item.status == '待处理' || item.status == '未到访' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;" >
                 <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field :readonly="false" :required="false" clearable label="驳回原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
               </van-cell-group>
@@ -748,11 +748,11 @@ export default {
             this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
             this.processLogList.sort();
 
-            //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
+            //获取最后一条处理记录，如果是已到访，或者未到访，则删除待办记录
             const temp = this.processLogList[this.processLogList.length - 1];
 
             //检查状态并删除多余记录
-            if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
+            if((temp.action == '完成' && temp.action_opinion.includes('已到访')) || (temp.action == '确认' && temp.action_opinion.includes('未到访')) ){
               await this.deleteProcessLog();
             }
 
@@ -776,7 +776,7 @@ export default {
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
-        //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
+        //如果最后一条是已到访，或者未到访，则删除待办记录 //查询当前所有待办记录
         let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
 
         //过滤出只关联当前流程的待办数据
@@ -874,7 +874,7 @@ export default {
               this.item.status = this.vstatus[item.status] || this.item.status;
           }
 
-          if (this.item && this.item.status === '已驳回') {
+          if (this.item && this.item.status === '未到访') {
             this.readonly = true
           }
 
@@ -932,7 +932,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '已驳回',
+          status: '未到访',
           disagree_remark : this.item.disagree_remark,
         }; // 待处理元素
 
@@ -944,7 +944,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已驳回',
+            status: '未到访',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -992,7 +992,7 @@ export default {
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '确认'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已驳回]',//text          null comment '操作意见',
+          action_opinion : '审批领用申请[未到访]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
@@ -1191,7 +1191,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          status: '已完成',
+          status: '已到访',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -1222,12 +1222,12 @@ export default {
           employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
           approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
           action         : '完成'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已完成]',//text          null comment '操作意见',
+          action_opinion : '审批领用申请[已到访]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已到访 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
@@ -1247,9 +1247,9 @@ export default {
 
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已完成物品领用申请！',
-          });
+          title: '温馨提示',
+          message: '来访预约人员已到访！',
+        });
 
       }
     }
