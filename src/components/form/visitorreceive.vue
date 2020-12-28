@@ -498,6 +498,7 @@ export default {
               user_group_ids:'',
               user_group_names:'',
               user_admin_name:'',
+              zone_name:'',
 
               status: '',
             },
@@ -615,17 +616,17 @@ export default {
 
         try {
           if(!!this.item.address){
-
+            debugger;
             //从用户表数据中获取填报人资料
             let list = await Betools.manage.queryAddressByName(this.item.address.trim());
 
             if(!!list && Array.isArray(list)){
-
+              
               try {
-                list.map((elem,index) => {
-                  this.addressList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
-                })
-                this.item.address = list[0].lastname;
+                list.map((elem,index) => { this.addressList.push({id:elem.serialid , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
+                this.item.address = list[0].address; // 设置地址信息
+                this.item.zone_name = list[0].zonename;
+                debugger
               } catch (error) {
                 console.log(error);
               }
@@ -648,9 +649,11 @@ export default {
       },
       // 选择来访地址
       async selectAddress(name , value){
-
         //选择来访地址后，接待人员被相应带出，来访地址和接待人员是关联的
         console.log(`name:${name},value:${value}`);
+        this.item.address = name.address; // 设置地址信息
+        this.item.zone_name = name.zonename;
+        debugger;
       },
       // 用户选择接待人员
       async queryUserName(){
@@ -1056,6 +1059,7 @@ export default {
           time: this.item.time,
           dtime: this.item.dtime,
           address: this.item.address,
+          zone_name: this.item.zone_name,
           zone,
           userid : this.item.userid,
           user_admin_name : this.item.user_admin_name,
@@ -1093,6 +1097,9 @@ export default {
                   visitor_position: this.item['visitor_position' + i],
 
                   time: this.item.time,
+                  dtime: this.item.dtime,
+                  address: this.item.address,
+                  zone_name: this.item.zone_name,
                   zone,
                   userid : this.item.userid,
                   user_admin_name : this.item.user_admin_name,
