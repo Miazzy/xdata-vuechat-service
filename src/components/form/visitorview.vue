@@ -57,7 +57,8 @@
 
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
 
-                <van-field :readonly="readonly" :required="false" clearable label="预约时间" v-model="item.time"  placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time"  />
+                <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time"  placeholder="请填写预约日期！" @blur="validField('time')" :error-message="message.time"  />
+                <van-field :readonly="readonly" :required="false" clearable label="预约时间" v-model="item.dtime"  placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time"  />
                 <van-field :readonly="readonly" :required="false" clearable label="访客单位" v-model="item.visitor_company"  placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company"  />
 
 
@@ -65,9 +66,9 @@
                 <van-field :readonly="readonly" required clearable label="访客职务" v-model="item.visitor_position" placeholder="请填写访客职务！" @blur="validField('visitor_position')" :error-message="message.visitor_position"  />
                 <van-field :readonly="readonly" required clearable label="访客电话" v-model="item.visitor_mobile"   placeholder="请填写访客电话！" @blur="validField('visitor_mobile')" :error-message="message.visitor_mobile"  />
 
-                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 20 ? size++ : size;"/>
-                <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;"  />
-                <span class="van-goods-span-number" style="top:130px;">#1</span>
+                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;display:none;" @click="size <= 20 ? size++ : size;"/>
+                <van-icon name="circle" style="position:absolute;top:155px;right:0px;display:none;" @click="size > 1 ? size-- : size;"  />
+                <span class="van-goods-span-number" style="top:215px;">#1</span>
 
               </van-cell-group>
 
@@ -259,8 +260,8 @@
 
               <van-cell-group style="margin-top:10px;">
 
-                <van-cell value="登记人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :readonly="readonly" required clearable label="填报人员" v-model="item.create_by"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
+                <van-cell value="被访人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :readonly="readonly" required clearable label="被访人员" v-model="item.create_by"  placeholder="请填写您的姓名！" @blur="validField('receive_name')" :error-message="message.receive_name"  />
                 <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写您的单位名称！" @blur="validField('company')" :error-message="message.company"/>
                 <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写您的部门名称！" @blur="validField('department');" :error-message="message.department" />
 
@@ -286,7 +287,7 @@
 
               <van-cell-group v-show="((item.status == '待处理' || item.status == '已驳回' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;" >
                 <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :readonly="readonly" :required="false" clearable label="驳回原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
+                <van-field :readonly="false" :required="false" clearable label="驳回原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -359,6 +360,7 @@ export default {
             auserList:[],
             fuserid:'',
             fuserList:[],
+            vstatus:{init:'待处理',visited:'已到访',devisited:'未到访'},
             muserid:'',
             muserList:[],
             processLogList:[],
@@ -830,6 +832,7 @@ export default {
           const id = Betools.tools.getUrlParam('id');
           this.role = Betools.tools.getUrlParam('role');
           this.back = Betools.tools.getUrlParam('back') || '/app';
+          this.readonly = true;
 
           //查询领用数据
           let tlist = await Betools.query.queryTableDataByPid(this.tablename , id);
@@ -851,6 +854,7 @@ export default {
               this.item.id = item.id;
               this.item.serialid = item.serialid || this.item.serialid
               this.item.time = dayjs(item.time).format('YYYY-MM-DD') || this.item.time
+              this.item.dtime = item.dtime;
               this.item.create_by = item.create_by || this.item.create_by;
               this.item.create_time = item.create_time || this.item.create_time;
               this.item.visitor_name = item.visitor_name || this.item.visitor_name;
@@ -867,7 +871,7 @@ export default {
               this.item.user_group_ids = item.user_group_ids || this.item.user_group_ids;
               this.item.user_group_names = item.user_group_names || this.item.user_group_names;
               this.item.user_admin_name = item.user_admin_name || this.item.user_admin_name;
-              this.item.status = item.status || this.item.status;
+              this.item.status = this.vstatus[item.status] || this.item.status;
           }
 
           if (this.item && this.item.status === '已驳回') {
@@ -1014,7 +1018,7 @@ export default {
         //弹出确认提示
         await vant.Dialog.alert({
             title: '温馨提示',
-            message: '已驳回物品领用申请！',
+            message: '来访预约已设置为未到访！',
           });
 
       },
