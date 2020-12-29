@@ -548,10 +548,6 @@ export default {
       this.queryInfo();
     },
     methods: {
-      onTypeConfirm(value) {
-        this.item.type = value;
-        this.showTypePicker = false;
-      },
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -582,12 +578,8 @@ export default {
         const val = this.dropMenuValue;
         switch (val) {
           case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
             break;
           case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
             break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
@@ -613,41 +605,23 @@ export default {
       },
       // 查询来访地址
       async queryAddress(){
-
-        try {
-          if(!!this.item.address){
-            debugger;
-            //从用户表数据中获取填报人资料
-            let list = await Betools.manage.queryAddressByName(this.item.address.trim());
-
-            if(!!list && Array.isArray(list)){
-              
-              try {
-                list.map((elem,index) => { this.addressList.push({id:elem.serialid ,zonename:elem.zonename, userlist: elem.userlist , reception : elem.userlist_reception , reception_name : elem.userlist_reception_name  , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
-                this.item.address = addressList[0].address; // 设置地址信息
-                this.item.zone_name = addressList[0].zonename;
-                this.item.userid = addressList[0].reception;
-                this.item.user_admin_name = addressList[0].reception_name;
-                await this.queryUserName();
-              } catch (error) {
-                console.log(error);
-              }
-
-              try {
-                this.addressList = this.addressList.filter((item,index) => {  //遍历去重
-                  let findex = this.addressList.findIndex((subitem,index) => { return subitem.name == item.name });
-                  return index == findex;
-                })
-              } catch (error) {
-                console.log(error);
-              }
-
+        if(!!this.item.address){
+          //从用户表数据中获取填报人资料
+          let list = await Betools.manage.queryAddressByName(this.item.address.trim());
+          if(!!list && Array.isArray(list)){
+            try {
+              list.map((elem,index) => { this.addressList.push({id:elem.serialid ,zonename:elem.zonename, userlist: elem.userlist , reception : elem.userlist_reception , reception_name : elem.userlist_reception_name  , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
+              this.item.address = addressList[0].address; // 设置地址信息
+              this.item.zone_name = addressList[0].zonename;
+              this.item.userid = addressList[0].reception;
+              this.item.user_admin_name = addressList[0].reception_name;
+              this.addressList = this.addressList.filter((item,index) => { let findex = this.addressList.findIndex((subitem,index) => { return subitem.name == item.name }); return index == findex; });
+              await this.queryUserName();
+            } catch (error) {
+              console.log(error);
             }
           }
-        } catch (error) {
-          console.log(error);
         }
-
       },
       // 选择来访地址
       async selectAddress(name , value){
