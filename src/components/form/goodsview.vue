@@ -561,7 +561,6 @@ export default {
 
           this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
-          let receive_time = dayjs(item.receive_time || item.create_time).format('YYYY-MM-DD');
 
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -581,8 +580,9 @@ export default {
           this.size = tlist.length;
           this.tlist = tlist;
           const item = tlist[0];
-          //根据URL参数查询物资类型
-          this.item.type = this.goodstype[Betools.tools.getUrlParam('type')];
+          
+          this.item.type = this.goodstype[Betools.tools.getUrlParam('type')]; //根据URL参数查询物资类型
+          let receive_time = dayjs(item.receive_time || item.create_time).format('YYYY-MM-DD');
 
           //自动回显刚才填写的用户基础信息
           if(item){
