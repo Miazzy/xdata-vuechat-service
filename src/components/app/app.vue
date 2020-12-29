@@ -113,7 +113,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role ? !role.includes('SEAL_ADMIN') : false " >
+            <van-col span="6" v-if="role ? true : false " >
               <div class="weui-cell_app_hd" @click="sealMyList();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png" >
                 <div class="weui-cell_app_bd" >
@@ -249,7 +249,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;">
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
               <div class="weui-cell_app_hd" @click="visitmanage('approve');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
@@ -257,11 +257,19 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;">
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
               <div class="weui-cell_app_hd" @click="visitmanage('manage');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png" >
                 <div class="weui-cell_app_bd">
                   来访管理
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" v-if="role ? true : false " >
+              <div class="weui-cell_app_hd" @click="visitmanage('history');" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png" >
+                <div class="weui-cell_app_bd" >
+                  来访历史
                 </div>
               </div>
             </van-col>
@@ -741,6 +749,8 @@ export default {
             this.$router.push(`/app/visitorlist?back=/app&type=${name}`);
           } else if(name == 'manage'){
             this.$router.push(`/app/visitormanage?back=/app&type=${name}`);
+          } else if(name == 'history'){
+            this.$router.push(`/app/visitormylist?back=/app&type=${name}`);
           }
         },
         // 电子印章

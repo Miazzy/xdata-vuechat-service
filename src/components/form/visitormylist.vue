@@ -1,32 +1,20 @@
 <template>
-
 <keep-alive>
-
-  <!--首页组件-->
   <div id="visitorlist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>访客审核</span>
+            <span>来访历史</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel :data="json_data" :fields="json_fields" worksheet="访客台账" name="访客台账.xls" >访客台账</download-excel>
-                    </span>
-                  </template>
-                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
-
     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
           <van-search
@@ -222,7 +210,7 @@ export default {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,init)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,init)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.initList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
             item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
@@ -231,7 +219,7 @@ export default {
           })
           this.initList = this.initList.filter(item => { return item.id == item.pid; });
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,visit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,visit)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.confirmList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
             item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
@@ -240,7 +228,7 @@ export default {
           })
           this.confirmList = this.confirmList.filter(item => {  return item.id == item.pid; });
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,devisit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,devisit)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.doneList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
             item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
@@ -261,15 +249,15 @@ export default {
         if(this.tabname == '1'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
          }
       },
     }

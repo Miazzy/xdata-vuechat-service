@@ -230,6 +230,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/visitorlist.vue"], resolve)
         }
     }, {
+        path: '/app/visitormylist',
+        name: "访客历史",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitormylist.vue"], resolve)
+        }
+    }, {
         path: '/app/visitorreceive',
         name: "访客登记",
         components: {
