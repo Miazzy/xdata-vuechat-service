@@ -225,6 +225,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_04.png" >
+                <div class="weui-cell_app_bd">
+                  预约历史
+                </div>
+              </div>
+            </van-col>
           </van-row>
         </div>
       </div>
