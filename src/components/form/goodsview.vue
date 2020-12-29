@@ -561,6 +561,7 @@ export default {
 
           this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
+          let receive_time = dayjs(item.receive_time || item.create_time).format('YYYY-MM-DD');
 
           //获取用户基础信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -579,9 +580,7 @@ export default {
 
           this.size = tlist.length;
           this.tlist = tlist;
-
           const item = tlist[0];
-
           //根据URL参数查询物资类型
           this.item.type = this.goodstype[Betools.tools.getUrlParam('type')];
 
@@ -590,6 +589,7 @@ export default {
             this.item.id = id;
             this.item.serialid = item.serialid || this.item.serialid;
             this.item.create_by = item.create_by || this.item.create_by;
+            this.item.receive_time = receive_time == 'Invalid Date' ? dayjs().format('YYYY-MM-DD') : this.item.receive_time;
             this.item.name = item.name || this.item.name;
             this.item.amount = item.amount || this.item.amount;
             this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;

@@ -65,7 +65,7 @@
           <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已到访" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="未到访" edit-disabled @select="selectHContract()" />
         </template>
       </div>
     </section>

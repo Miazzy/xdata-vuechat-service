@@ -286,8 +286,8 @@
               </van-cell-group>
 
               <van-cell-group v-show="((item.status == '待处理' || item.status == '未到访' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;" >
-                <van-cell value="驳回原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                <van-field :readonly="false" :required="false" clearable label="驳回原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="驳回申请时，请填写驳回理由！" />
+                <van-cell value="作废原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                <van-field :readonly="false" :required="false" clearable label="作废原因" v-model="item.disagree_remark"  rows="2" autosize type="textarea"  maxlength="256"  placeholder="作废申请时，请填写未到访原因！" />
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -309,8 +309,8 @@
           </van-cell-group>
 
           <div v-show="item.status ==='待处理' && role == 'front' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
-            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;"  >确认</van-button>
+            <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="未到访"  @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;"  >已到访</van-button>
           </div>
 
           <div v-show="item.status ==='已领取' && (role == 'receive' || role == 'front') " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
@@ -360,7 +360,7 @@ export default {
             auserList:[],
             fuserid:'',
             fuserList:[],
-            vstatus:{init:'待处理',visited:'已到访',devisited:'未到访'},
+            vstatus:{init:'待处理',visit:'已到访',devisit:'未到访'},
             muserid:'',
             muserList:[],
             processLogList:[],
@@ -923,7 +923,7 @@ export default {
         if(!this.item.disagree_remark){
           return await vant.Dialog.alert({
             title: '温馨提示',
-            message: '请输入驳回原因！',
+            message: '请输入未到访原因！',
           });
         }
 
@@ -932,7 +932,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '未到访',
+          status: 'devisit',
           disagree_remark : this.item.disagree_remark,
         }; // 待处理元素
 
@@ -944,7 +944,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '未到访',
+            status: 'devisit',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -961,9 +961,6 @@ export default {
         }
 
         /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
         const front = user_group_ids;
@@ -1017,9 +1014,9 @@ export default {
 
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '来访预约已设置为未到访！',
-          });
+          title: '温馨提示',
+          message: '来访预约已设置为未到访！',
+        });
 
       },
 
@@ -1057,7 +1054,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '已领取',
+          status: 'visit',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -1068,7 +1065,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已领取',
+            status: 'visit',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -1086,9 +1083,6 @@ export default {
 
 
         /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
 
         //获取后端配置前端管理员组
         const front = user_group_ids;
@@ -1170,9 +1164,9 @@ export default {
 
         //弹出确认提示
         await vant.Dialog.alert({
-            title: '温馨提示',
-            message: '已确认物品领用申请！',
-          });
+          title: '温馨提示',
+          message: '预约人员已经到访！',
+        });
 
       },
       // 用户提交入职登记表函数
@@ -1191,7 +1185,7 @@ export default {
         //第一步 保存用户数据到数据库中
         const elem = {
           id,
-          status: '已到访',
+          status: 'visit',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
