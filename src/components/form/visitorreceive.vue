@@ -277,7 +277,7 @@
               <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                 <van-cell value="接待管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                 <van-field required clearable label="来访地址" v-model="item.address" placeholder="请输入来访地址!" @blur="validField('address');queryAddress();" :error-message="message.address" @click="queryAddress();"  />
-                <van-address-list v-show="addressList.length > 0" v-model="addressId" :list="addressList" default-tag-text="默认" edit-disabled @select="selectAddress" />
+                <van-address-list id="van-visit-address" v-show="addressList.length > 0" v-model="addressId" :list="addressList" default-tag-text="默认" edit-disabled @select="selectAddress" />
                 <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();"  />
                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName()" />
               </van-cell-group>
@@ -634,82 +634,37 @@ export default {
       },
       // 用户选择接待人员
       async queryUserName(){
-
-        //获取接待人员信息
-        const user_admin_name = this.item.user_admin_name;
-
-        try {
-          if(!!user_admin_name){
-
-            //从用户表数据中获取填报人资料
-            let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim());
-
-            if(!!user){
-
-              //如果是用户数组列表，则展示列表，让用户自己选择
-              if(Array.isArray(user)){
-
-                try {
-                  user.map((elem,index) => {
-                    let company = elem.textfield1.split('||')[0];
-                    company = company.slice(company.lastIndexOf('>')+1);
-                    let department = elem.textfield1.split('||')[1];
-                    department = department.slice(department.lastIndexOf('>')+1);
-                    this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
-                  })
-
-                  //获取盖印人姓名
-                  this.item.user_admin_name = user[0].lastname;
-                  //当前盖印人编号
-                  this.item.userid = this.userid = user[0].loginid;
-
-                } catch (error) {
-                  console.log(error);
-                }
-
-              } else { //如果只有一个用户数据，则直接设置
-
-                try {
-                  let company = user.textfield1.split('||')[0];
-                  company = company.slice(company.lastIndexOf('>')+1);
-                  let department = user.textfield1.split('||')[1];
-                  department = department.slice(department.lastIndexOf('>')+1);
-                  //将用户数据推送至对方数组
-                  this.userList.push({id:user.loginid , name:user.lastname , tel:user.mobile , address: company + "||" + user.textfield1.split('||')[1] , company: company , department:department , mail: this.item.dealMail, isDefault: !this.suserList.length });
-
-                  //获取盖印人姓名
-                  this.item.user_admin_name = user.lastname;
-                  //当前盖印人编号
-                  this.item.userid = this.userid = user.loginid;
-                } catch (error) {
-                  console.log(error);
-                }
-
-              }
-
-              //遍历去重
-              try {
-                this.userList = this.userList.filter((item,index) => {
-                  item.isDefault = index == 0 ? true : false;
-                  let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
-                  return index == findex;
-                })
-              } catch (error) {
-                console.log(error);
-              }
-
+        const user_admin_name = this.item.user_admin_name; //获取接待人员信息
+        if(!!user_admin_name){
+          let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim()); //从用户表数据中获取填报人资料
+          if(!!user && Array.isArray(user)){
+            this.userList = [];
+            try { 
+              user.map((elem,index) => {
+                let company = elem.textfield1.split('||')[0];
+                company = company.slice(company.lastIndexOf('>')+1);
+                let department = elem.textfield1.split('||')[1];
+                department = department.slice(department.lastIndexOf('>')+1);
+                this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+              });
+              this.item.user_admin_name = user[0].lastname; //获取盖印人姓名
+              this.item.userid = this.userid = user[0].loginid; //当前盖印人编号
+              this.userList = this.userList.filter((item,index) => {
+                item.isDefault = index == 0 ? true : false;
+                let findex = this.userList.findIndex((subitem,index) => { return subitem.id == item.id });
+                return index == findex;
+              });
+            } catch (error) {
+              console.log(error);
             }
           }
-        } catch (error) {
-          console.log(error);
         }
-
       },
       // 选中当前接待人员
       async selectUserName(value){
         const id = this.userid;
-        this.item.userid = id;
         const user = this.userList.find((item,index) => {return id == item.id}); //获取接待人员姓名
+        this.item.userid = id;
         this.item.user_admin_name = user.name;
       },
       // 设置重置

@@ -280,3 +280,7 @@
     top: 2.5px;
     transform: scale(0.75);
 }
+
+#van-visit-address .van-address-item__name {
+    display: none;
+}
