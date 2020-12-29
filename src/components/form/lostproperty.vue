@@ -329,7 +329,8 @@ export default {
         const id = Betools.tools.getUrlParam('id');
         try {
           this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
-          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+          this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
+          this.processLogList = this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
           this.processLogList.sort();
         } catch (error) {
           console.log(error);

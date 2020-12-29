@@ -1099,7 +1099,8 @@ export default {
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
 
-            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
+            this.processLogList = this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
             this.processLogList.sort();
 
             //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
