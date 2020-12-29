@@ -262,7 +262,7 @@
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;"  >确认</van-button>
           </div>
 
-          <div v-show="item.status ==='已领取' && (role == 'receive' || role == 'front') " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
+          <div v-show="(item.status ==='已领取' || item.status ==='已准备') && (role == 'receive' || role == 'front') " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;" >
             <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;"  >完成</van-button>
           </div>
 
@@ -482,7 +482,8 @@ export default {
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
 
-            this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
+            this.processLogList.map(item => { item.action_opinion = item.action_opinion.replace('已领取','已准备').replace('已领用','已准备'); item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
+            this.processLogList =  this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
             this.processLogList.sort();
 
             //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
@@ -785,7 +786,7 @@ export default {
 
         //第一步 保存用户数据到数据库中
         const elem = {
-          status: '已领取',
+          status: '已准备',
         }; // 待处理元素
 
         //第二步，向表单提交form对象数据
@@ -796,7 +797,7 @@ export default {
 
           //第一步 保存用户数据到数据库中
           let element = {
-            status: '已领取',
+            status: '已准备',
           }; // 待处理元素
 
           //第二步，向表单提交form对象数据
@@ -878,7 +879,7 @@ export default {
           functions_station : '经办人',//varchar(100)  null comment '职能岗位',
           process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
           business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已领取 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
+          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已准备 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
           process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
           create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
           relate_data       : '',//text          null comment '关联数据',
