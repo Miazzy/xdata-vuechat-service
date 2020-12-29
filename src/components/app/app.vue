@@ -251,9 +251,17 @@
             </van-col>
             <van-col span="6" style="display:block;">
               <div class="weui-cell_app_hd" @click="visitmanage('approve');">
-              <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_02.png" >
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png" >
                 <div class="weui-cell_app_bd">
                   来访审批
+                </div>
+              </div>
+            </van-col>
+            <van-col span="6" style="display:block;">
+              <div class="weui-cell_app_hd" @click="visitmanage('manage');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png" >
+                <div class="weui-cell_app_bd">
+                  来访管理
                 </div>
               </div>
             </van-col>
@@ -731,6 +739,8 @@ export default {
             this.$router.push(`/app/visitorreceive?back=/app&type=${name}`);
           } else if(name == 'approve'){
             this.$router.push(`/app/visitorlist?back=/app&type=${name}`);
+          } else if(name == 'manage'){
+            this.$router.push(`/app/visitormanage?back=/app&type=${name}`);
           }
         },
         // 电子印章

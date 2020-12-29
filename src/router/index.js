@@ -244,6 +244,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/visitorview.vue"], resolve)
         }
     }, {
+        path: '/app/visitormanage',
+        name: "访客数据",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/visitormanage.vue"], resolve)
+        }
+    }, {
         path: '/app/workexaminelist',
         name: "巡检记录",
         components: {
