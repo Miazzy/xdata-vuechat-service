@@ -256,17 +256,11 @@ export default {
 
         // 获取最近6个月对应的日期
         let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
-        let sealTypeSql = '';
+        let sealTypeSql = '~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)';
         let searchSql = '';
 
         // 设置当前页为第一页
         this.currentPage = page + 1;
-
-        if(this.sealType === 0) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-        }
 
         //如果存在搜索关键字
         if(this.searchWord) {
