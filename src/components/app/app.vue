@@ -2,13 +2,11 @@
   <div id="app">
     <section>
       <div class="weui-cells" style="margin-top:0px;">
-
         <van-swipe :autoplay="3000">
           <van-swipe-item v-for="(image, index) in images" :key="index">
             <img width="100%" height="200px;" v-lazy="image.files" />
           </van-swipe-item>
         </van-swipe>
-
         <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
           <van-notice-bar v-show="showNotice" style="width:100%;display:none;" color="#1989fa" background="#ecf9ff"
             left-icon="volume-o"
@@ -16,7 +14,6 @@
           />
         </router-link>
       </div>
-
       <div id="weui-cells-flex" v-if="role ? ( role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') ) : false " class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
@@ -66,7 +63,6 @@
           </van-row>
         </div>
       </div>
-
       <div id="weui-cells-flex" class="weui-cells" style="display: block; position:relative;">
         <div class="weui-cell-title">用印管理</div>
         <div style="display:none;">
@@ -140,7 +136,6 @@
           </van-row>
         </div>
       </div>
-
       <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">领用借用</div>
         <div v-show=" commonIconLength > 8 " @click=" commonIconToggle = !commonIconToggle;" style="position:absolute; top: 0.6rem; right:25px;display:block;">
@@ -237,7 +232,6 @@
           </van-row>
         </div>
       </div>
-
       <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false "  style="display:block; position:relative;">
         <div class="weui-cell-title">来访管理</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
@@ -285,7 +279,6 @@
           </van-row>
         </div>
       </div>
-
       <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">协同办公</div>
         <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
@@ -341,11 +334,8 @@
           </van-row>
         </div>
       </div>
-
       <div class="weui-cells" style="margin-top:80px;height:0px;">
       </div>
-
-
     </section>
   </div>
 </template>
@@ -390,7 +380,7 @@ export default {
          */
         async weworkLogin(){
           this.role = await Betools.storage.getStore('system_role_rights_v1');
-          this.userinfo = await Betools.query.queryWeworkUser();
+          const userinfo_work = await Betools.query.queryWeworkUser();
           const userinfo = await Betools.storage.getStore('system_userinfo');
           const etimestamp = await Betools.storage.getStore('system_role_rights_v1_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30.5 ;
@@ -400,11 +390,11 @@ export default {
           if(resp && resp.length > 0 && resp[0].userlist.includes(username)){
             setTimeout(()=>{window.vConsole = window.vConsole ? window.vConsole : new VConsole();},300); // 初始化vconsole
           };
-          return this.userinfo;
+          return userinfo_work;
         },
         async queryInfo(){
           try {
-            await this.weworkLogin();
+            this.userinfo = await this.weworkLogin();
             this.images = await this.queryImagesUrl();
             this.commonIconLength = await this.changeStyle();
           } catch (error) {
