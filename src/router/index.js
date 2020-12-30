@@ -336,10 +336,17 @@ const routes = [{
         }
     }, {
         path: '/app/borrowlist',
-        name: "借用进度",
+        name: "借用审批",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/borrowlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/borrowmylist',
+        name: "借用历史",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/borrowmylist.vue"], resolve)
         }
     }, {
         path: '/app/entryjob',
