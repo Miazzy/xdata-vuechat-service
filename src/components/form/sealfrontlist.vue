@@ -1,9 +1,6 @@
 <template>
-
 <keep-alive>
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
-
     <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center" style="position:relative;">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -32,6 +29,7 @@
             </van-dropdown-menu>
         </div>
     </header>
+
     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
           <van-search
@@ -64,14 +62,8 @@
         <template v-show="tabname == 2 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
         </template>
-        <template v-show="tabname == 3 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
-        </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 5 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
         </van-pull-refresh>
       </div>
