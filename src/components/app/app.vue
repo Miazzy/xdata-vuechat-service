@@ -129,14 +129,6 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false ">
-              <div v-show="true " class="weui-cell_app_hd" @click="sealExport();">
-              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/richang.png" >
-                <div class="weui-cell_app_bd">
-                  台账导出
-                </div>
-              </div>
-            </van-col>
             <van-col span="6" >
               <div class="weui-cell_app_hd" @click="sealElectron();" >
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.9/images/seal_7.png" >
@@ -226,7 +218,7 @@
               </div>
             </van-col>
             <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
-              <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
+              <div class="weui-cell_app_hd" @click="goodsBorrow('history');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_04.png" >
                 <div class="weui-cell_app_bd">
                   预约历史
@@ -564,12 +556,10 @@ export default {
           }
         },
         async sealFront(){
-
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           //获取角色列表
           const resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
-
           if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
             this.$router.push(`/app/sealfrontlist`);
           } else {
@@ -577,48 +567,17 @@ export default {
           }
         },
         async sealArchive(){
-
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await Betools.query.queryRoleGroupList('SEAL_ARCHIVE_ADMIN' , userinfo.username);
-
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealarchivelist`);
-          } else {
-            vant.Toast('您没有用印合同资料归档的权限！');
-          }
+          this.role.includes('SEAL_ARCHIVE_ADMIN') ? (this.$router.push(`/app/sealarchivelist`)) : (vant.Toast('您没有用印合同资料归档的权限！'));
         },
         async sealMyList(){
           this.$router.push(`/app/sealmylist`);
         },
         async sealExport(){
-
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-
-          if(resp && resp.length > 0 && resp[0].userlist && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealexport`);
-          } else {
-            vant.Toast('您没有用印合同资料导出的权限！');
-          }
+          this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/sealexport`)) : (vant.Toast('您没有用印合同资料导出的权限！'));
         },
         async goodsReceive(type){
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-
           if(type == 'approve'){
-            //验证是否为办公用品管理员，如果不是，则没有权限进入
-            const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
-              vant.Toast('您没有物品管理-物品领用角色的权限！');
-              return false;
-            }
-
-            this.$router.push(`/app/goodslist?type=${type}`);
+            this.role.includes('COMMON_RECEIVE_BORROW') ? (this.$router.push(`/app/goodslist?type=${type}`)) : ( vant.Toast('您没有物品管理-物品领用角色的权限！'))
           } else {
             this.$router.push(`/app/goodsreceive?type=${type}`);
           }
