@@ -88,7 +88,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "用印进度",
+            pageName: "用印归档",
             momentNewMsg: true,
             tabname: 4,
             id:'',

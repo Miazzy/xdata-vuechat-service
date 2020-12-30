@@ -71,7 +71,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "用印进度",
+            pageName: "用印管理",
             momentNewMsg: true,
             tabname: '1',
             id:'',

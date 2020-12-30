@@ -126,7 +126,7 @@ const routes = [{
         }
     }, {
         path: '/app/seallist',
-        name: "用印进度",
+        name: "用印审批",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/seallist.vue"], resolve)
