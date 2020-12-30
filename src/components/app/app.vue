@@ -143,13 +143,13 @@
 
       <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
         <div class="weui-cell-title">领用借用</div>
-        <div v-show=" commonIconLength > 8 "  style="position:absolute; top: 0.6rem; right:25px;display:block;">
+        <div v-show=" commonIconLength > 8 " @click=" commonIconToggle = !commonIconToggle;" style="position:absolute; top: 0.6rem; right:25px;display:block;">
           <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
             更多
           </span>
         </div>
         <div v-show=" commonIconLength > 8 "  style="position:absolute; top: 0.57rem; right:10px;display:block;">
-          <van-icon name="arrow" />
+          <van-icon name="arrow" style="transform: scale(.65);"/>
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van flex-layout-van-common" id="flex-layout-van" type="flex" justify="left">
@@ -217,7 +217,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 "  >
+            <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 || commonIconToggle "  >
               <div class="weui-cell_app_hd" @click="goodsBorrow('history');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_04.png" >
                 <div class="weui-cell_app_bd">
@@ -225,7 +225,7 @@
                 </div>
               </div>
             </van-col>
-            <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 "  >
+            <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 || commonIconToggle "  >
               <div class="weui-cell_app_hd" @click="goodsBorrow('equiphistory');">
               <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_03.png" >
                 <div class="weui-cell_app_bd">
@@ -367,6 +367,10 @@ export default {
             visitIconLength:0,
             officeIconLength:0,
             sealIconLength:0,
+            commonIconToggle:false,
+            visitIconToggle:false,
+            officeIconToggle:false,
+            sealIconToggle:false,
             imageTableName: 'bs_home_pictures',
             images: Betools.storage.getStore('system_app_image'),
             showNotice:false,
