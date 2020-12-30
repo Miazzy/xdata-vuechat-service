@@ -603,6 +603,8 @@ export default {
             }
           } else if(type == 'data') {
             this.$router.push(`/app/commonmanage?type=${type}`);
+          } else if(type == 'history') {
+            this.$router.push(`/app/goodsmylist?type=${type}`);
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }

@@ -10,39 +10,11 @@
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>借用审批</span>
+            <span>借用历史</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 5rem; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="设备借用台账" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="设备借用台账"
-                        name="设备借用台账.xls"
-                      >
-                        设备台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="传屏借用台账" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_box"
-                        :fields="json_fields_box"
-                        worksheet="传屏借用台账"
-                        name="传屏借用台账.xls"
-                      >
-                        传屏台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -107,7 +79,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "借用审批",
+            pageName: "借用历史",
             momentNewMsg: true,
             tabname: '1',
             id:'',

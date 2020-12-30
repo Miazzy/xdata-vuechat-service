@@ -19,9 +19,7 @@
     </header>
 
     <section v-if="iswechat">
-
       <div class="weui-cells" style="margin-top:0px;">
-
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
           <van-notice-bar
               v-show=" title!='' && title != null && typeof title != 'undefined' "
@@ -31,7 +29,6 @@
               :text="title"
             />
         </div>
-
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
@@ -39,7 +36,6 @@
             <van-col span="8"></van-col>
           </van-row>
         </div>
-
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
@@ -590,7 +586,7 @@ export default {
             this.item.id = id;
             this.item.serialid = item.serialid || this.item.serialid;
             this.item.create_by = item.create_by || this.item.create_by;
-            this.item.receive_time = receive_time == 'Invalid Date' ? dayjs().format('YYYY-MM-DD') : this.item.receive_time;
+            this.item.receive_time = receive_time == 'Invalid Date' ? dayjs().format('YYYY-MM-DD') : receive_time;
             this.item.name = item.name || this.item.name;
             this.item.amount = item.amount || this.item.amount;
             this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;

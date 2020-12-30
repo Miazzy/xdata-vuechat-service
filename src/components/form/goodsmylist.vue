@@ -1,63 +1,15 @@
 <template>
-
 <keep-alive>
-
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>领用进度</span>
+            <span>预约历史</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
-              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_office"
-                        :fields="json_fields_office"
-                        worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xls"
-                      >
-                        办公台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_drug"
-                        :fields="json_fields_drug"
-                        worksheet="药品领用台账"
-                        name="药品领用台账.xls"
-                      >
-                        药品台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_prevent"
-                        :fields="json_fields_prevent"
-                        worksheet="防疫物资领用台账"
-                        name="防疫物资领用台账.xls"
-                      >
-                        防疫台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -74,9 +26,7 @@
           </van-search>
         </div>
     </header>
-
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -93,7 +43,6 @@
           </div>
         </div>
       </div>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
@@ -108,20 +57,16 @@
           <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
-
     </section>
-
   </div>
 </keep-alive>
-
 </template>
-
 <script>
 export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "领用进度",
+            pageName: "预约历史",
             momentNewMsg: true,
             tabname: '1',
             id:'',
@@ -196,7 +141,6 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
@@ -204,13 +148,8 @@ export default {
     },
     watch: {
       $route(to, from) {
-
       },
       tabname(){
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-        },500);
       }
     },
     methods: {
@@ -282,11 +221,6 @@ export default {
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
 
-        //查询页面数据
-        this.queryTabList('办公' , 0);
-        this.queryTabList('药品' , 0);
-        this.queryTabList('防疫' , 0);
-
         //获取返回页面
         this.back = Betools.tools.getUrlParam('back') || '/app';
 
@@ -309,7 +243,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.initList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -324,7 +258,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -339,7 +273,7 @@ export default {
 
         } else if(tabname == 3) {
           //获取最近6个月的已领取记录
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.doneList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -353,7 +287,7 @@ export default {
           });
         } else if(tabname == 4) {
           //获取最近6个月的已领取记录
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.rejectList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -367,7 +301,7 @@ export default {
           });
         } else if(tabname == '办公') {
           //获取最近6个月的已领取记录
-          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_office.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -378,7 +312,7 @@ export default {
 
         } else if(tabname == '药品') {
           //获取最近6个月的已领取记录
-          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_drug.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -389,7 +323,7 @@ export default {
 
         } else if(tabname == '防疫') {
           //获取最近6个月的已领取记录
-          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.json_data_prevent.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -414,22 +348,17 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
          } else if(this.tabname == '4' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
         }
-
       },
     }
 }
