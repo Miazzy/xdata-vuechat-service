@@ -407,8 +407,8 @@ export default {
         async queryInfo(){
           try {
             await this.weworkLogin();
-            await this.queryImagesUrl();
-            await this.changeStyle();
+            this.images = await this.queryImagesUrl();
+            this.commonIconLength = await this.changeStyle();
           } catch (error) {
             console.log(error);
           }
@@ -653,7 +653,6 @@ export default {
             vant.Toast('您没有入职管理的权限！');
             return false;
           }
-
           //跳转到相应界面
           this.$router.push(`/app/entrylist?back=/app&role=${role}`);
         },
@@ -661,25 +660,14 @@ export default {
         async cooperate(name) {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
-
           if(name == 'share'){
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/bbb28e8ac84e4d66a49e9fd4f87553a8','_blank')
           } else if(name == 'property') {
             window.open('http://qy.leading-group.com:8082/wxapi/wxclientmenu/dc3b66b892bd42e1ab816b6c6ed5145e','_blank')
           } else if(name == 'auth'){ // 进行权限配置
-            const resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
-              return vant.Toast('您没有权限配置的权限！');
-            } else {
-              this.$router.push(`/app/authmanage?back=/app&type=${name}`);
-            }
+            this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/authmanage?back=/app&type=${name}`)) : (vant.Toast('您没有权限配置的权限！'));
           } else if(name == 'employee'){ // 进行员工管理
-            const resp = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN' , userinfo.username);
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
-              return vant.Toast('您没有员工管理的权限！');
-            } else {
-              this.$router.push(`/app/employeemanage?back=/app&type=${name}`);
-            }
+            this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/employeemanage?back=/app&type=${name}`)) : (vant.Toast('您没有员工管理的权限！'));
           } else if(name == 'visitor'){ // 来访登记
             const userinfo = await Betools.storage.getStore('system_userinfo');
             if (userinfo) {
@@ -708,7 +696,7 @@ export default {
            window.open('http://seal.leading-group.com:18071/#/login','_blank');
         },
         // 修改界面样式
-        changeStyle(name) {
+        async changeStyle(name) {
           try {
             var name = window.location.hash.slice(2);
             name = name.includes('?') ? name.split('?')[0] : name;
@@ -718,41 +706,27 @@ export default {
             $(`#wx-nav-${name}`).addClass('router-link-exact-active');
             $(`#wx-nav-${name}`).addClass('router-link-active');
             $('.app-footer').css('display','block'); // displayFoot
-
-            this.commonIconLength = $('.flex-layout-van-common')[0].children.length;
-            console.log(name);
+            return $('.flex-layout-van-common')[0].children.length;
           } catch (error) {
             console.log(error);
           }
         },
         // 查询首页图片
         async queryImagesUrl(){
-
-          // 获取缓存中的图片
-          const image = await Betools.storage.getStore('system_app_image');
-
-          // 如果存在图片数据，则直接使用图片数据
-          if(image){
-            return this.images = image;
-          }
-
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //查询SQL
-          let whereSQL = null;
-
           try {
-
-            whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
-            this.images = await Betools.query.queryTableDataByWhereSQL(this.imageTableName , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
-            this.images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
-
-            Betools.storage.setStore('system_app_image',JSON.stringify(this.images), 3600 * 24 * 3);
-
+            const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前登录用户信息
+            let whereSQL = null; //查询SQL
+            let images = await Betools.storage.getStore('system_app_image'); // 获取缓存中的图片
+            if(!images){ // 如果存在图片数据，则直接使用图片数据
+              whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
+              images = await Betools.query.queryTableDataByWhereSQL('bs_home_pictures' , `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
+              images.map(item => { item.files = `https://upload.yunwisdom.club:30443/${item.files}`; });
+              Betools.storage.setStore('system_app_image',JSON.stringify(images), 3600 * 24 * 3);
+            }
+            return images;
           } catch (error) {
             console.log(error);
           }
-
         },
     }
 }
