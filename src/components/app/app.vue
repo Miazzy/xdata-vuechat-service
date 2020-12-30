@@ -543,37 +543,13 @@ export default {
           this.$router.push(`/app/sealinfo`);
         },
         async sealApprove(){
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/seallist`);
-          } else {
-            vant.Toast('您没有用印合同资料审批的权限！');
-          }
+          this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/seallist`)) : (vant.Toast('您没有用印合同资料审批的权限！'));
         },
         async sealManage(){
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealmanage`);
-          } else {
-            vant.Toast('您没有用印合同资料审批的权限！');
-          }
+          this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/sealmanage`)) : (vant.Toast('您没有用印合同资料审批的权限！'));
         },
         async sealFront(){
-          //获取当前登录用户信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-          //获取角色列表
-          const resp = await Betools.query.queryRoleGroupList('SEAL_FRONT_SERVICE' , userinfo.username);
-          if(resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username)){
-            this.$router.push(`/app/sealfrontlist`);
-          } else {
-            vant.Toast('您没有用印合同资料前台移交的权限！');
-          }
+          this.role.includes('SEAL_FRONT_SERVICE') ? (this.$router.push(`/app/sealfrontlist`)) : (vant.Toast('您没有用印合同资料前台移交的权限！'));
         },
         async sealArchive(){
           this.role.includes('SEAL_ARCHIVE_ADMIN') ? (this.$router.push(`/app/sealarchivelist`)) : (vant.Toast('您没有用印合同资料归档的权限！'));
@@ -595,13 +571,7 @@ export default {
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
           if(type == 'approve'){
-            //验证是否为办公用品管理员，如果不是，则没有权限进入
-            const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
-              vant.Toast('您没有物品管理-物品借用角色的权限！');
-              return false;
-            }
-            this.$router.push(`/app/borrowlist?type=${type}`);
+            this.role.includes('COMMON_RECEIVE_BORROW') ? (this.$router.push(`/app/borrowlist?type=${type}`)) : (vant.Toast('您没有物品管理-物品借用角色的权限！'));
           } else if(type == 'lostproperty'){//失物招领都有权限
             if(name == 'apply'){
               this.$router.push(`/app/lostpropertyreceive?back=/app`);
