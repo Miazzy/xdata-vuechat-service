@@ -51,16 +51,10 @@
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已用印
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已领取
+            待移交
           </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已移交
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已归档
           </div>
         </div>
       </div>
@@ -279,7 +273,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -289,7 +283,7 @@ export default {
           })
         } else if(tabname == 3){
           //获取最近6个月的已领取记录
-          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -299,7 +293,7 @@ export default {
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
