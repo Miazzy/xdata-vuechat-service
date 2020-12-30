@@ -185,7 +185,7 @@ export default {
             process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
             employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
             approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-            action         : '同意'    ,//varchar(100)  null comment '操作动作',
+            action         : '修订'    ,//varchar(100)  null comment '操作动作',
             action_opinion : `修改用印记录[用印修改](${content})` ,//text          null comment '操作意见',
             operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
             functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
