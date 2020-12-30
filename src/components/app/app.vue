@@ -148,8 +148,9 @@
             更多
           </span>
         </div>
-        <div v-show=" commonIconLength > 8 "  style="position:absolute; top: 0.57rem; right:10px;display:block;">
-          <van-icon name="arrow" style="transform: scale(.65);"/>
+        <div v-show=" commonIconLength > 8 "  style="position:absolute; top: 0.50rem; right:10px;display:block; transform: scale(.65);">
+          <van-icon name="arrow" v-show="commonIconToggle" style="transform:rotate(90deg);"/>
+          <van-icon name="arrow" v-show="!commonIconToggle" style="transform:rotate(0deg);"/>
         </div>
         <div class="flex-layout-content" id="scanCell">
           <van-row class="flex-layout-van flex-layout-van-common" id="flex-layout-van" type="flex" justify="left">
