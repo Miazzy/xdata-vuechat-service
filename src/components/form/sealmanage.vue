@@ -170,8 +170,7 @@ export default {
           const item = temp.find( item => { return item.$id == record.$id });
           const elem = new Object() ;
           const oldRecord = JSON.stringify(item);
-          const oldValue = item[record.name];
-          const content = `${userinfo.realname}将ID为${item['id']}的用印记录${record.name}字段(原值:${oldValue})修改为${record.newVal}` ;
+          const content = `${userinfo.realname}将序号为${item['serialid']}的用印记录${record.name}字段(原值:${record.oldVal})修改为${record.newVal}` ;
           elem[record.name] = record.newVal ;
           if(record.newVal == ''){
             return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
