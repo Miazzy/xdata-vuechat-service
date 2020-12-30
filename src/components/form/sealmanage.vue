@@ -265,7 +265,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 获取最近6个月对应的日期
-        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
 
@@ -395,13 +395,9 @@ export default {
         }
       },
       async queryInfo(){
-        //获取tabname
-        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ;
+        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname > 6 ? 1 : this.tabname;
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
-        //查询合同类数据
-        this.queryTabList('合同类',0);
+        this.queryTabList('合同类',0); //查询合同类数据
       },
       async changePage(){
         const page = this.currentPage;

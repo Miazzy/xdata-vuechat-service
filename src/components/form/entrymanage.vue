@@ -303,7 +303,7 @@ export default {
       async queryTabList(tabname , page){
 
         //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         //设置查询语句
         var searchSql = '';
 

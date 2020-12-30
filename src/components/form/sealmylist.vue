@@ -228,7 +228,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         //获取最近6个月对应的日期
-        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
 
@@ -327,7 +327,7 @@ export default {
         this.tabname = Betools.storage.getStore('system_seal_mylist_tabname') || '1';
 
         //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
 
         //获取最近6个月的待用印记录
         this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);

@@ -241,7 +241,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 获取最近6个月对应的日期
-        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)';
         let searchSql = '';
 
@@ -330,9 +330,6 @@ export default {
         //获取tabname
         this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
         this.tabname = this.tabname > 6 ? 2 : this.tabname;
-
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
 
         //查询列表数据
         this.queryTabList(this.tabname , 0);

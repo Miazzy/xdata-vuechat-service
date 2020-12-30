@@ -252,7 +252,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 获取最近6个月对应的日期
-        let month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         let searchSql = '';
 
         // 设置当前页为第一页

@@ -214,7 +214,7 @@ export default {
         //获取当前用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
         //获取最近6个月对应的日期
-        var month = dayjs().subtract(6, 'months').format('YYYY-MM-DD');
+        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         //设置查询语句
         var searchSql = '';
         //如果存在搜索关键字
