@@ -225,6 +225,14 @@
                 </div>
               </div>
             </van-col>
+            <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false " >
+              <div class="weui-cell_app_hd" @click="goodsBorrow('equiphistory');">
+              <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_03.png" >
+                <div class="weui-cell_app_bd">
+                  借用历史
+                </div>
+              </div>
+            </van-col>
           </van-row>
         </div>
       </div>
@@ -605,6 +613,8 @@ export default {
             this.$router.push(`/app/commonmanage?type=${type}`);
           } else if(type == 'history') {
             this.$router.push(`/app/goodsmylist?type=${type}`);
+          } else if(type == 'equiphistory') {
+            this.$router.push(`/app/borrowmylist?type=${type}`);
           } else {
             this.$router.push(`/app/borrowreceive?type=${type}`);
           }
