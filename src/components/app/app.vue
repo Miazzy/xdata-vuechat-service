@@ -389,10 +389,10 @@ export default {
          * @function 企业微信登录处理函数
          */
         async weworkLogin(){
-          this.role = await Betools.storage.getStore('system_role_rights');
+          this.role = await Betools.storage.getStore('system_role_rights_v1');
           this.userinfo = await Betools.query.queryWeworkUser();
           const userinfo = await Betools.storage.getStore('system_userinfo');
-          const etimestamp = await Betools.storage.getStore('system_role_rights_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
+          const etimestamp = await Betools.storage.getStore('system_role_rights_v1_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30 ;
           const username = userinfo && userinfo.username ? userinfo.username : '';
           if(!this.role || this.role == 'view' || ctimestamp >= etimestamp){
@@ -461,7 +461,7 @@ export default {
               role += ',COMMON_DEBUG_ADMIN';
               window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
             };
-            Betools.storage.setStore('system_role_rights', this.role, 3600 * 24 * 31);
+            Betools.storage.setStore('system_role_rights_v1', this.role, 3600 * 24 * 31);
             this.role = role;
             return role;
           } catch (error) {
@@ -608,47 +608,29 @@ export default {
          * @function 入职管理
          */
         async entryjob(role){
-
           //获取当前登录用户信息
           const userinfo = await Betools.storage.getStore('system_userinfo');
-
           //先验证用户是否具备相应权限
           if(role == 'hr'){
-            //角色
-            const resp = await Betools.query.queryRoleGroupList('JOB_HR_ADMIN' , userinfo.username);
-
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+            if(!this.role.includes('JOB_HR_ADMIN')){
               vant.Toast('您没有入职管理-人力角色的权限！');
               return false;
             }
-
           } else if(role == 'admin'){
-            //角色
-            const resp = await Betools.query.queryRoleGroupList('JOB_EXEC_ADMIN' , userinfo.username);
-
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+            if(!this.role.includes('JOB_EXEC_ADMIN')){
               vant.Toast('您没有入职管理-行政角色的权限！');
               return false;
             }
-
           } else if(role == 'front'){
-            //角色
-            const resp = await Betools.query.queryRoleGroupList('JOB_FRONT_ADMIN' , userinfo.username);
-
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+            if(!this.role.includes('JOB_FRONT_ADMIN')){
               vant.Toast('您没有入职管理-前台角色的权限！');
               return false;
             }
-
           } else if(role == 'meal'){
-            //角色
-            const resp = await Betools.query.queryRoleGroupList('JOB_MEAL_ADMIN' , userinfo.username);
-
-            if(resp.length == 0 || !resp[0].userlist.includes(userinfo.username)){
+            if(this.role.includes('JOB_MEAL_ADMIN')){
               vant.Toast('您没有入职管理-食堂角色的权限！');
               return false;
             }
-
           } else { //没有权限，无法查看
             vant.Toast('您没有入职管理的权限！');
             return false;
