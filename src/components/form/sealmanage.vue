@@ -171,6 +171,7 @@ export default {
           const elem = new Object() ;
           const oldRecord = JSON.stringify(item);
           const oldValue = item[record.name];
+          const content = `${userinfo.realname}将ID为${item['id']}的用印记录${record.name}字段(原值:${oldValue})修改为${record.newVal}` ;
           elem[record.name] = record.newVal ;
           if(record.newVal == ''){
             return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
@@ -186,12 +187,12 @@ export default {
             employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
             approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
             action         : '同意'    ,//varchar(100)  null comment '操作动作',
-            action_opinion : '修改用印记录[用印修改]' ,//text          null comment '操作意见',
+            action_opinion : `修改用印记录[用印修改](${content})` ,//text          null comment '操作意见',
             operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
             functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
             process_station   : '用印审批[用印管理]',//varchar(100)  null comment '流程岗位',
             business_data     : JSON.stringify(elem),//text          null comment '业务数据',
-            content           : `${userinfo.realname}将ID为${elem['id']}的用印记录${record.name}字段(原值:${oldValue})修改为${record.newVal}` ,//text          null comment '业务内容',
+            content           : content ,//text          null comment '业务内容',
             process_audit     : '' ,//varchar(100)  null comment '流程编码',
             create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
             relate_data       : JSON.stringify(item),//text          null comment '关联数据',
