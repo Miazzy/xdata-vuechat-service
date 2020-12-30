@@ -348,16 +348,16 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
          } else if(this.tabname == '4' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodsmylist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         }
       },
     }
