@@ -161,6 +161,7 @@ export default {
         console.log('delete');
       },
       async onUpdate(records){
+        const userinfo = await Betools.storage.getStore('system_userinfo');
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
           return this.$toast.fail('管理员您好，一次只能更新一条数据！');
@@ -168,10 +169,35 @@ export default {
         for(const record of records){
           const item = temp.find( item => { return item.$id == record.$id });
           const elem = new Object() ;
+          const oldRecord = JSON.stringify(item);
+          const oldValue = item[record.name];
           elem[record.name] = record.newVal ;
           if(record.newVal == ''){
             return this.$toast.fail('管理员您好，不能将值修改为空字符串！');
           }
+          const prLogHisNode = {
+            id: Betools.tools.queryUniqueID(),
+            table_name: 'bs_seal_regist',
+            main_value: item['id'],
+            proponents: userinfo.username,
+            business_data_id : item['id'] ,//varchar(100)  null comment '业务数据主键值',
+            business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+            process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+            employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+            approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+            action         : '同意'    ,//varchar(100)  null comment '操作动作',
+            action_opinion : '修改用印记录[用印修改]' ,//text          null comment '操作意见',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+            functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+            process_station   : '用印审批[用印管理]',//varchar(100)  null comment '流程岗位',
+            business_data     : JSON.stringify(elem),//text          null comment '业务数据',
+            content           : `${userinfo.realname}将ID为${elem['id']}的用印记录${record.name}字段(原值:${oldValue})修改为${record.newVal}` ,//text          null comment '业务内容',
+            process_audit     : '' ,//varchar(100)  null comment '流程编码',
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+            relate_data       : JSON.stringify(item),//text          null comment '关联数据',
+            origin_data       : oldRecord,
+          }
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
           await Betools.manage.patchTableData('bs_seal_regist' , item.id , elem);
         }
       },
