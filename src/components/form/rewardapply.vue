@@ -726,7 +726,7 @@ export default {
         }
 
         // 返回预览URL
-        const receiveURL = encodeURIComponent(`${window.location.protocol}//${window.location.host}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
+        const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/reward?id=${id}&statustype=office&type=${type}&role=hr`);
 
         //第一步 保存用户数据到数据库中
         const elem = {
