@@ -418,51 +418,32 @@ export default {
       },
       //获取合同编号
       async queryHContract(){
-        //获取盖章人信息
-        const prefix = this.item.prefix = this.item.prefix.toUpperCase();
-
+        const prefix = this.item.prefix = this.item.prefix.toUpperCase(); //获取合同编号前缀
         try {
           if(!!prefix){
-
-            //从用户表数据中获取填报人资料
-            let list = await Betools.manage.queryContractInfoByPrefixAll(prefix.trim());
-
-            //清空原数据
-            this.hContractList = [];
-
+            let list = await Betools.manage.queryContractInfoByPrefixAll(prefix.trim()); //从用户表数据中获取填报人资料
+            this.hContractList = []; //清空原数据
+            //如果数据含有[]，且为去年数据，则清空
             if(!!list && Array.isArray(list) && list.length > 0){
-
-              //如果是用户数组列表，则展示列表，让用户自己选择
-              try {
+              try { //如果是用户数组列表，则展示列表，让用户自己选择
                 list.map((elem,index) => {
                   this.hContractList.push({id:elem.contract_id , value:`${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , label: `${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , address: elem.deal_manager + " " + elem.deal_depart + " 合同编号: " + elem.contract_id, name:elem.filename , tel:'' , mail: elem.mail , isDefault: !index });
                 })
-              } catch (error) {
-                console.log(error);
-              }
-
-              try {
-
                 this.hContractList = this.hContractList.sort((n1 , n2) => {
                   const year = `[${dayjs().format('YYYY')}]`;
                   const value1 =  n1.id.split(year)[1] ;
                   const value2 = n2.id.split(year)[1];
                   return value2 - value1;
                 });
-
-              } catch (error) {
-                console.log(error);
-              }
-
-              //遍历去重
-              try {
-
-                this.hContractList = this.hContractList.filter((item,index) => {
+                this.hContractList = this.hContractList.filter((item,index) => { //遍历去重
                   item.isDefault = index == 0 ? true : false;
                   let findex = this.hContractList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
                 });
-
+              } catch (error) {
+                console.log(error);
+              }
+              try {
                 const id = this.hContractList[0].id;
                 if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('商品房购房合同') ){
                   console.log('买卖合同等');
@@ -475,11 +456,9 @@ export default {
                   no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                   this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
                 }
-
               } catch (error) {
                 console.log(error);
               }
-
             } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
               const contract_id = `${prefix}[${dayjs().format('YYYY')}]000`;
               this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
