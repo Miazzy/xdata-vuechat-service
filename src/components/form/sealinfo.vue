@@ -1445,13 +1445,16 @@ export default {
           });
         }
 
-        if(contract_id && contract_id.includes('NaN')){
+        if(contract_id && contract_id.includes('NaN') && this.item.sealtype == '合同类'){
           //提示确认用印操作
           return await vant.Dialog.confirm({
               title: '用印确认',
               message: '此合同编号有误，请检查是否符合编码规则，注不能出现NaN！',
           });
         }
+
+        //如果非合同类出现NaN，则修改状态
+        contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN','0000') : contract_id;
 
         //查询直接所在工作组
         const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , seal);

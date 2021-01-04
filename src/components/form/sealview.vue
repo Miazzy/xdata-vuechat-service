@@ -1217,7 +1217,7 @@ export default {
         //合同编号
         const contract_id = this.item.contractId;
 
-        if(contract_id && contract_id.includes('NaN')){
+        if(contract_id && contract_id.includes('NaN') && this.item.sealtype == '合同类'){
           //提示确认用印操作
           return await vant.Dialog.confirm({
               title: '用印确认',
