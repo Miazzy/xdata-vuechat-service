@@ -843,6 +843,8 @@ export default {
           return;
         }
 
+        //校验所有填写的数量单位是否准确，如物品不能超过5个，笔记本不能超过2个 TODO
+
         //查询直接所在工作组
         const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
 
@@ -865,7 +867,7 @@ export default {
           create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           create_by : userinfo.username,
           name : this.item.name,
-          amount : this.item.amount,
+          amount : this.item && this.item.amount ? this.item.amount.replace('/','') : '1个',
           receive_name:this.item.receive_name ,
           department : this.item.department,
           remark : this.item.remark,
@@ -902,7 +904,7 @@ export default {
                     create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                     create_by : userinfo.username,
                     name : this.item['name' + i].trim(),
-                    amount : this.item['amount' + i].trim(),
+                    amount : this.item && this.item['amount' + i] ? this.item['amount' + i].replace('/','').trim() : '1个',
                     receive_name:this.item.receive_name ,
                     department : this.item.department,
                     remark : this.item.remark,
