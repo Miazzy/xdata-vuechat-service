@@ -990,9 +990,10 @@ export default {
           //第一步，构造form对象
           const item = this.item;
           const id = item.id;
+          const contract_id = this.item.contractId.includes(']') ? this.item.contractId.replace(this.item.contractId.split(']')[1],'0000') : (  this.item.contractId.includes(')') ? this.item.contractId.replace(this.item.contractId.split(')')[1],'0000') : this.item.contractId ); //合同编号
           const status = '已作废';
 
-          const elem = {id , status }; // 待提交元素
+          const elem = {id , contract_id , status }; // 待提交元素
 
           //第二步，向表单提交form对象数据
           const result = await Betools.manage.patchTableData('bs_seal_regist' , id , elem);
