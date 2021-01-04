@@ -1453,8 +1453,8 @@ export default {
           });
         }
 
-        //如果非合同类出现NaN，则修改状态
-        contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN','0000') : contract_id;
+        contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN','0000') : contract_id; //如果非合同类出现NaN，则修改为0000
+        contract_id = contract_id.includes(']') ? contract_id.replace(contract_id.split(']')[1],'0000') : ( contract_id.includes(')') ? contract_id.replace(contract_id.split(')')[1],'0000') : contract_id );
 
         //查询直接所在工作组
         const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , seal);
