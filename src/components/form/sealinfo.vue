@@ -1334,6 +1334,13 @@ export default {
           return !this.validFieldConfirm(key);
         });
 
+        if(!this.item.company || this.item.company.length < 6){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请检查表单填写内容，公司名称要求输入全称！',
+          });
+        }
+
         if(!this.item.partner && this.item.sealtype == '合同类'){
           return await vant.Dialog.alert({
             title: '温馨提示',
@@ -1362,10 +1369,8 @@ export default {
           this.noname = '合同编号';
         } else {
           this.noname = '流水编号';
-          //设置非合同类前缀编号
-          this.item.prefix = 'PTID';
-          //加载最近的同类型合同编号
-          await this.queryHContract();
+          this.item.prefix = 'COMMON'; //设置非合同类前缀编号
+          await this.queryHContract(); //加载最近的同类型合同编号
         }
 
         //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
