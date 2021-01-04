@@ -1447,6 +1447,8 @@ export default {
         const username = this.item.username;
         //提示信息
         const message = this.item.message;
+        //合同编号
+        const contract_id = this.item.contractId.includes(']') ? this.item.contractId.replace(this.item.contractId.split(']')[1],'0000') : (  this.item.contractId.includes(')') ? this.item.contractId.replace(this.item.contractId.split(')')[1],'0000') : this.item.contractId );
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
@@ -1454,8 +1456,7 @@ export default {
         const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealedit?id=${id}&type=done&res=edit`);
 
         try {
-          //修改状态为已退回
-          await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time});
+          await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time , contract_id}); //修改状态为已退回
         } catch (error) {
           console.log(error);
         }
@@ -1925,7 +1926,6 @@ export default {
 
         this.item.type = '';
 
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
         const prLogHisNode = {
           id: Betools.tools.queryUniqueID(),

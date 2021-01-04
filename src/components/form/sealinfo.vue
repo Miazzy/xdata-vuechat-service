@@ -542,9 +542,8 @@ export default {
 
               }
 
-              //遍历去重
               try {
-                this.auserList = this.auserList.filter((item,index) => {
+                this.auserList = this.auserList.filter((item,index) => { //遍历去重
                   item.isDefault = index == 0 ? true : false;
                   let findex = this.auserList.findIndex((subitem,index) => { return subitem.id == item.id });
                   return index == findex;
