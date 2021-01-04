@@ -258,7 +258,7 @@ export default {
 
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,已领取,已准备)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
 
           this.confirmList.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
