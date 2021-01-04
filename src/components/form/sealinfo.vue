@@ -1337,8 +1337,8 @@ export default {
 
         // 先验证是否合法
         const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
-          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'' , partner: '',}) :
-          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
+          Object.keys({sealtype:'', seal_category:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'' , partner: '',}) :
+          Object.keys({sealtype:'', seal_category:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
 
         const invalidKey =  keys.find(key => {
           this.validField();
@@ -1405,6 +1405,7 @@ export default {
         const filename = item && item.filename ? item.filename.trim() : item.filename ;
         const count = item && item.count ? item.count.trim() : 0 ;
         const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
+        const seal_category = item && item.seal_category ? item.seal_category.trim() : '';
         const order_type = item && item.ordertype ? item.ordertype.trim() : '';
         const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart ;
         const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
@@ -1488,7 +1489,7 @@ export default {
           message: '确认提交用印登记申请？',
         })
 
-        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type, order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , partner , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name , seal_group_ids , seal_group_names}; // 待提交元素
+        const elem = {id , no , create_by , create_time , filename , count , deal_depart , deal_manager , username , deal_mail , mobile , approve_type , seal_type , seal_category , order_type, seal_man , contract_id , sign_man , company , workno , seal_wflow , prefix , status , send_location , send_mobile , partner , seal, front, archive , front_name , archive_name , finance , finance_name , record , record_name , seal_group_ids , seal_group_names}; // 待提交元素
 
         //第二步，向表单提交form对象数据
         this.loading = true;
