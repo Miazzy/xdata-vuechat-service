@@ -1221,6 +1221,9 @@ export default {
           });
         }
 
+        //检查合同编号是否出现跳号现象，如果存在则提示管理员，合同编号出现跳号，请编写连续的合同编号
+        debugger;
+
         // 用印前，检查合同编号是否已经存在
         const cresponse = await Betools.query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
 
@@ -1240,7 +1243,6 @@ export default {
 
         //公司工作组
         const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
-
         //系统编号
         const id = Betools.tools.getUrlParam('id');
         //领取人邮箱
