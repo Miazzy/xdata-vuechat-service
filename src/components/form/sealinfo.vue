@@ -415,12 +415,10 @@ export default {
       },
       //删除原表单数据
       async deleteForm(){
-        //提示确认用印操作
-        await vant.Dialog.confirm({
+        await vant.Dialog.confirm({ //提示确认用印操作
           title: '清空表单',
           message: '将进行‘清空表单’处理，清空后请重新填写用印申请！',
         })
-
         this.item.filename = '';
         this.item.count = '';
         this.item.workno = '';
@@ -502,18 +500,13 @@ export default {
       async queryArchiveMan(){
         //获取盖章人信息
         const archive_name = this.item.archive_name;
-
         try {
           if(!!archive_name){
-
             //从用户表数据中获取填报人资料
             let user = await Betools.manage.queryUserByNameHRM(archive_name.trim());
-
             if(!!user){
-
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
-
                 try {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
@@ -525,9 +518,7 @@ export default {
                 } catch (error) {
                   console.log(error);
                 }
-
               } else { //如果只有一个用户数据，则直接设置
-
                 try {
                   let company = user.textfield1.split('||')[0];
                   company = company.slice(company.lastIndexOf('>')+1);
@@ -539,7 +530,6 @@ export default {
                 } catch (error) {
                   console.log(error);
                 }
-
               }
 
               try {
@@ -581,12 +571,10 @@ export default {
                     department = department.slice(department.lastIndexOf('>')+1);
                     this.financeuserList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   });
-
                    //获取盖印人姓名
                   this.item.finance_name = user[0].lastname;
                   //当前盖印人编号
                   this.item.finance = user[0].loginid;
-
                 } catch (error) {
                   console.log(error);
                 }
@@ -1346,12 +1334,18 @@ export default {
           return !this.validFieldConfirm(key);
         });
 
+        if(!this.item.partner && this.item.sealtype == '合同类'){
+          return await vant.Dialog.alert({
+            title: '温馨提示',
+            message: '请检查表单填写内容，并确认合作方是否填写！',
+          });
+        }
+
         if(invalidKey != '' && invalidKey != null){
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
             title: '温馨提示',
             message: '请检查表单填写内容，确认内容是否填写完整无误！',
           });
-          return false;
         }
 
         // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
@@ -1479,12 +1473,11 @@ export default {
         }
 
         if((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)){
-           //提示确认用印操作
-          await vant.Dialog.confirm({
+          //提示确认用印操作
+          return await vant.Dialog.confirm({
             title: '用印申请',
             message: '请输入并选择财务/档案归档人员！',
-          })
-          return false;
+          });
         }
 
         //提示确认用印操作
@@ -1618,9 +1611,7 @@ export default {
           title: '温馨提示',
           message: message,
         });
-
       }
-
     }
 }
 </script>
