@@ -268,7 +268,6 @@ export default {
             workflowlist:[],
             announces:[],
             informList:[],
-            loading:false,
             officeList:[],
             tag:{
               showPicker: false,
@@ -281,9 +280,11 @@ export default {
             config: Betools.workconfig.config,
             group: Betools.workconfig.group,
             fileList: [],
-            readonly: false,
             active:0,
+            loading:false,
+            readonly: false,
             searchFlag: false,
+            isGroupHeader:false, 
             dropMenuOldValue:'',
             dropMenuValue:'',
             dropMenuOption: [
@@ -297,7 +298,6 @@ export default {
             sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
             sealCategoryColumns: Betools.workconfig.compcolumns.sealCategoryColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
-            isGroupHeader:false, //非集团总部成员，合同盖印也不显示前台和归档字段
             zonename:'',
         }
     },
