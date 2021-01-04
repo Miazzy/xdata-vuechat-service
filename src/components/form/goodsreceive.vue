@@ -824,11 +824,11 @@ export default {
         }
 
         //未获取到选择的物品领用接待人员
-        if(!Betools.tools.isNull(this.item.name) && /[,|/|，|、]/g.test(this.item.name) ){
+        if(!Betools.tools.isNull(this.item.name) && /[,|/| |及|和|，|、]/g.test(this.item.name) ){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
-              message: '请分开输入多个领用物品（领用物品不能含有逗号，顿号）！',
+              message: '请分开输入多个领用物品（领用物品不能含有逗号、顿号、空格、‘及’等）！',
             });
           return;
         }
