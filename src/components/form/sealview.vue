@@ -48,6 +48,7 @@
               <van-field readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
               <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
               <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
+              <van-field readonly clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" />
               <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
               <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             </van-cell-group>
@@ -375,7 +376,7 @@ export default {
 
         try {
           if(!!prefix){
-            
+
             let list = await Betools.manage.queryContractInfoByPrefix(prefix.trim());  //从用户表数据中获取填报人资料
             this.hContractList = []; //清空原数据
             list = list.filter((item,index) => {
@@ -946,6 +947,7 @@ export default {
               send_mobile: value.send_mobile,
               send_location: value.send_location,
               sealtype: value.seal_type ? value.seal_type : (value.contract_id ? '合同类':'非合同类'),
+              seal_category: value.seal_category ? value.seal_category : '合同专用章',
               front: value.front,
               seal: value.seal,
               front_name: value.front_name,
