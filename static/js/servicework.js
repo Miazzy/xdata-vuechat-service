@@ -47,7 +47,7 @@ self.addEventListener('install', function(event) {
                 "https://cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@v8.0.0/cdn/common/FileSaver.min.js",
                 "https://cdn.jsdelivr.net/gh/YunWisdom/vConsole@v3.3.6/dist/vconsole.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/vue-excel-editor@r1.0.3/dist/xeditor.min.js",
-                "https://cdn.jsdelivr.net/gh/Miazzy/xdata-utils-btools@v1.3.1/dist/betools.min.js",
+                "https://cdn.jsdelivr.net/gh/Miazzy/xdata-utils-btools@v1.3.2/dist/betools.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/fastclick@v1.0.7/lib/fastclick.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/photoswipe@v5.0.0/dist/photoswipe.min.js",
                 "https://cdn.jsdelivr.net/gh/Miazzy/photoswipe@v5.0.0/dist/photoswipe-ui-default.min.js",

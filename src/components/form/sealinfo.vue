@@ -55,6 +55,7 @@
                 <van-field clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
                 <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                 <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
+                <van-field required readonly clickable clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" @blur="validField('seal_category')" :error-message="message.seal_category" @click="tag.showPickerSealCategory = true" />
                 <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
                 <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
               </van-cell-group>
@@ -118,6 +119,14 @@
                   :columns="sealTypeColumns"
                   @cancel="tag.showPickerSealType = false"
                   @confirm="sealTypeConfirm"
+                />
+              </van-popup>
+              <van-popup v-model="tag.showPickerSealCategory" round position="bottom">
+                <van-picker
+                  show-toolbar
+                  :columns="sealCategoryColumns"
+                  @cancel="tag.showPickerSealCategory = false"
+                  @confirm="sealCategoryConfirm"
                 />
               </van-popup>
             </van-form>
@@ -265,6 +274,7 @@ export default {
               showPicker: false,
               showPickerSealType:false,
               showPickerOrderType:false,
+              showPickerSealCategory:false,
             },
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -285,6 +295,7 @@ export default {
             archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            sealCategoryColumns: Betools.workconfig.compcolumns.sealCategoryColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
             isGroupHeader:false, //非集团总部成员，合同盖印也不显示前台和归档字段
             zonename:'',
@@ -884,10 +895,8 @@ export default {
         return Betools.tools.isNull(this.message[fieldName]);
       },
       afterRead(file) {
-
         file.status = 'uploading';
         file.message = '上传中...';
-
         setTimeout(() => {
           file.status = 'failed';
           file.message = '上传成功';
@@ -895,10 +904,8 @@ export default {
       },
       // 校验是否为集团总部
       async zoneNameValid(){
-        //查询直接所在工作组
-        const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal);
-        //如果查询到管理组数据，则设置区域名称
-        if(resp && resp.length > 0 && resp[0].zonename){
+        const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN' , this.item.seal); //查询直接所在工作组
+        if(resp && resp.length > 0 && resp[0].zonename){ //如果查询到管理组数据，则设置区域名称
           this.zonename = resp[0].zonename;
         } else {
           this.zonename = '';
@@ -906,31 +913,29 @@ export default {
       },
       sealTypeConfirm(value) {
         const userInfo = Betools.storage.getStore('system_userinfo');
-        //非总部的人不需要展示前台、档案、财务人员
-        if (userInfo && userInfo.systemuserinfo && userInfo.systemuserinfo.textfield1 && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) {
-          this.isGroupHeader = true;
-        }
+        (userInfo && userInfo.systemuserinfo && userInfo.systemuserinfo.textfield1 && userInfo.systemuserinfo.textfield1.indexOf('领地集团总部') > 0) ? (this.isGroupHeader = true) : (null); //非总部的人不需要展示前台、档案、财务人员
         this.item.sealtype = value;
         this.tag.showPickerSealType = false;
         this.validField('sealtype');
       },
-
+      sealCategoryConfirm(value) {
+        this.item.seal_category = value;
+        this.tag.showPickerSealCategory = false;
+        this.validField('seal_category');
+      },
       orderTypeConfirm(value) {
         this.item.ordertype = value;
         this.tag.showPickerOrderType = false;
         this.validField('ordertype');
       },
-
       approveTypeConfirm(value) {
         this.item.approveType = value;
         this.tag.showPicker = false;
         this.validField('approveType');
       },
-
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
-
       getUrlParam(name) {
         try {
           var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
