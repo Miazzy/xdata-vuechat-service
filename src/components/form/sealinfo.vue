@@ -460,8 +460,8 @@ export default {
                 console.log(error);
               }
             } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
-              const contract_id = `${prefix}[${dayjs().format('YYYY')}]000`;
-              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
+              const contract_id = `${prefix}[${dayjs().format('YYYY')}]0000`;
+              this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]0000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
 
               const id = this.hContractList[0].id;
               if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('商品房购房合同')){
