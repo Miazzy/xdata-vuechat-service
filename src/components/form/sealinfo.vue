@@ -437,8 +437,7 @@ export default {
             list = list.filter((item,index) => {
               return item.id.includes(`${dayjs().format('YYYY')}`);
             });
-            //如果数据含有[]，且为去年数据，则清空
-            if(!!list && Array.isArray(list) && list.length > 0){
+            if(!!list && Array.isArray(list) && list.length > 0){  //如果数据含有[]，且为去年数据，则清空
               try { //如果是用户数组列表，则展示列表，让用户自己选择
                 list.map((elem,index) => {
                   this.hContractList.push({id:elem.contract_id , value:`${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , label: `${elem.filename}[${elem.seal_type}] ${elem.contract_id},` , address: elem.deal_manager + " " + elem.deal_depart + " 合同编号: " + elem.contract_id, name:elem.filename , tel:'' , mail: elem.mail , isDefault: !index });
@@ -491,6 +490,7 @@ export default {
               }
 
             }
+            this.item.contractId = this.item.contractId.includes('NaN') ? this.item.contractId.replace('NaN','0000') : this.item.contractId; //如果非合同类出现NaN，则修改状态
           }
         } catch (error) {
           console.log(error);

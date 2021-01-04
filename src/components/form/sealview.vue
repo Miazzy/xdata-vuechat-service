@@ -376,13 +376,11 @@ export default {
 
         try {
           if(!!prefix){
-
             let list = await Betools.manage.queryContractInfoByPrefix(prefix.trim());  //从用户表数据中获取填报人资料
             this.hContractList = []; //清空原数据
             list = list.filter((item,index) => {
               return item.id.includes(`${dayjs().format('YYYY')}`);
             });
-
             if(!!list && Array.isArray(list) && list.length > 0){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
@@ -432,10 +430,8 @@ export default {
               }
 
             } else if(!!list && Array.isArray(list) && list.length == 0){ // 如果没有发现合同编号，则可以自动生成一个合同编号，500开头
-
               const contract_id = `${prefix}[${dayjs().format('YYYY')}]0000`;
               this.hContractList.push({id:contract_id , value: `${prefix}[${dayjs().format('YYYY')}]0000` , label : `自动合同编号 ` , address : `编号 ${contract_id} (系统中无此编号前缀，自动生成)` , name : `合同编号：${contract_id}` , tel: ''});
-
               const id = this.hContractList[0].id;
               if(this.item.filename.includes('商品房买卖合同') || this.item.filename.includes('商品房购房合同') ){
                 console.log('买卖合同等');
@@ -448,8 +444,8 @@ export default {
                 no = `00000${no}`.slice(Betools.workconfig.CON_SEAL_CODE_LENGTH);
                 this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
               }
-
             }
+            this.item.contractId = this.item.contractId.includes('NaN') ? this.item.contractId.replace('NaN','0000') : this.item.contractId; //如果非合同类出现NaN，则修改状态
           }
         } catch (error) {
           console.log(error);
