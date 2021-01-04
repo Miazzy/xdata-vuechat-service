@@ -434,6 +434,9 @@ export default {
           if(!!prefix){
             let list = await Betools.manage.queryContractInfoByPrefixAll(prefix.trim()); //从用户表数据中获取填报人资料
             this.hContractList = []; //清空原数据
+            list = list.filter((item,index) => {
+              return item.id.includes(`${dayjs().format('YYYY')}`);
+            });
             //如果数据含有[]，且为去年数据，则清空
             if(!!list && Array.isArray(list) && list.length > 0){
               try { //如果是用户数组列表，则展示列表，让用户自己选择
@@ -957,8 +960,7 @@ export default {
         } catch (error) {
           console.log(error);
         }
-        //缓存特定属性
-        this.cacheUserInfo();
+        this.cacheUserInfo();  //缓存特定属性
       },
       //选中当前合同编号
       async selectHContract(value){
@@ -1413,12 +1415,12 @@ export default {
         const username = item && item.username ? item.username.trim() : '';
         const approve_type = item && item.approveType ? item.approveType.trim() : '';
         const seal_time = item && item.sealtime ? item.sealtime.trim() : '' ;
-        const contract_id = item && item.contractId ? item.contractId.trim() : '';
         const prefix = item && item.prefix ? item.prefix.trim() : '';
         const sign_man = item && item.signman ? item.signman.trim() : '' ;
         const workno = item && item.workno ? item.workno.trim() : '';
         const mobile = item && item.mobile ? item.mobile.trim() : '';
         const partner = item && item.partner ? item.partner.trim() : '';
+        let contract_id = item && item.contractId ? item.contractId.trim() : '';
 
         //用印注意，此处需要找到用印人的同组用户，写入数据库
         const seal = item.seal;
