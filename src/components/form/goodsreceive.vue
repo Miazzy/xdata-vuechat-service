@@ -765,7 +765,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
         //领用之前先检查一下领用频率，办公用品预约，每人每月不能超过30次，每人每周不能超过15次。
-        let countInfo = await Betools.manage.queryTableData('v_goods_recieve_count' , `_where=(create_by,eq,${userinfo.username})`);
+        let countInfo = await Betools.manage.queryTableData('v_goods_receive_count' , `_where=(create_by,eq,${userinfo.username})`);
         countInfo = countInfo && countInfo.length > 0 ? countInfo[0]: {mcount:0,wcount:0};
         if(countInfo.mcount > 30 || countInfo.wcount > 15){
           await vant.Dialog.alert({
