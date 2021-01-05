@@ -824,11 +824,21 @@ export default {
         }
 
         //未获取到选择的物品领用接待人员
-        if(!Betools.tools.isNull(this.item.name) && /[,|/| |及|和|，|、]/g.test(this.item.name) ){
+        if(!Betools.tools.isNull(this.item.name) && /[,|/| |\ |及|和|，|、]/g.test(this.item.name) ){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
               message: '请分开输入多个领用物品（领用物品不能含有逗号、顿号、空格、‘及’等）！',
+            });
+          return;
+        }
+
+        //未获取到选择的物品领用接待人员
+        if(!Betools.tools.isNull(this.item.amount) && /[,|/| |\ |及|和|，|、]/g.test(this.item.amount) ){
+          //弹出确认提示
+          await vant.Dialog.alert({
+              title: '温馨提示',
+              message: '请分开输入多个领用物品及其数量单位（领用物品及数量单位不能含有逗号、顿号、空格、‘及’等）！',
             });
           return;
         }
@@ -867,7 +877,8 @@ export default {
           create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           create_by : userinfo.username,
           name : this.item.name,
-          amount : this.item && this.item.amount ? this.item.amount.replace('/','') : '1个',
+          amount : this.item && this.item.amount ? this.item.amount.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"").replace(/[^0-9]/ig, "") : '1',
+          unit: this.item && this.item.amount ? this.item.amount.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"").replace(/[0-9]/ig, "") : '个',
           receive_name:this.item.receive_name ,
           department : this.item.department,
           remark : this.item.remark,
@@ -904,7 +915,8 @@ export default {
                     create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                     create_by : userinfo.username,
                     name : this.item['name' + i].trim(),
-                    amount : this.item && this.item['amount' + i] ? this.item['amount' + i].replace('/','').trim() : '1个',
+                    amount : this.item && this.item['amount' + i] ? this.item['amount' + i].replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"").replace(/[^0-9]/ig, "") : '1',
+                    unit: this.item && this.item['amount' + i] ? this.item['amount' + i].replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"").replace(/[0-9]/ig, "") : '个',
                     receive_name:this.item.receive_name ,
                     department : this.item.department,
                     remark : this.item.remark,
