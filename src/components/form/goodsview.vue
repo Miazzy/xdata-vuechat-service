@@ -588,7 +588,7 @@ export default {
             this.item.create_by = item.create_by || this.item.create_by;
             this.item.receive_time = receive_time == 'Invalid Date' ? dayjs().format('YYYY-MM-DD') : receive_time;
             this.item.name = item.name || this.item.name;
-            this.item.amount = item.amount || this.item.amount;
+            this.item.amount = item.amount + Betools.tools.deNull(item.unit) || this.item.amount;
             this.item.receive_name = item.receive_name || userinfo.realname || this.item.receive_name ;
             this.item.department = item.department || this.item.department;
             this.item.remark = item.remark || this.item.remark;
@@ -606,7 +606,7 @@ export default {
 
           for(let i = 1 ; i < tlist.length ; i++){
             this.item['name'+i] = tlist[i].name ;
-            this.item['amount'+i] = tlist[i].amount ;
+            this.item['amount'+i] = tlist[i].amount + Betools.tools.deNull(tlist[i].unit) ;
           }
 
           await this.queryProcessLog();
