@@ -895,6 +895,34 @@ export default {
           status: '待处理',
         }; // 待处理元素
 
+        if(elem.name.includes('笔记本') && elem.amount > 2){ //检查申请数量是否较多
+          return await vant.Dialog.alert({ //弹出确认提示
+              title: '温馨提示',
+              message: '尊敬的同事，笔记本单次最多申请2本！',
+            });
+        }
+
+        if(elem.name.includes('笔') && elem.amount > 5){ //检查申请数量是否较多
+          return await vant.Dialog.alert({ //弹出确认提示
+              title: '温馨提示',
+              message: '尊敬的同事，签字笔/铅笔/中性笔等单次最多申请5支（如需多支可以申请一盒）！',
+            });
+        }
+
+        if(elem.name.includes('胶棒') && elem.amount > 5){ //检查申请数量是否较多
+          return await vant.Dialog.alert({ //弹出确认提示
+              title: '温馨提示',
+              message: '尊敬的同事，胶棒单次最多申请5支（如需多支可以申请一盒）！',
+            });
+        }
+        
+        if(elem.name.includes('鼠标') && elem.amount > 2){ //检查申请数量是否较多
+          return await vant.Dialog.alert({ //弹出确认提示
+              title: '温馨提示',
+              message: '尊敬的同事，鼠标/鼠标垫单次最多申请2个！',
+            });
+        }
+
         //第二步，向表单提交form对象数据
         try {
           if(!Betools.tools.isNull(elem.name) && !Betools.tools.isNull(elem.amount)){
