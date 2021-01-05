@@ -824,7 +824,7 @@ export default {
         }
 
         //未获取到选择的物品领用接待人员
-        if(!Betools.tools.isNull(this.item.name) && /[,|/| |\ |及|和|，|、]/g.test(this.item.name) ){
+        if(!Betools.tools.isNull(this.item.name) && (/[,|/| |\ |及|和|，|、]/g.test(this.item.name) || this.item.name.length > 12 ) ){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
@@ -834,7 +834,7 @@ export default {
         }
 
         //未获取到选择的物品领用接待人员
-        if(!Betools.tools.isNull(this.item.amount) && /[,|/| |\ |及|和|，|、]/g.test(this.item.amount) ){
+        if(!Betools.tools.isNull(this.item.amount) && (/[,|/| |\ |及|和|，|、]/g.test(this.item.amount) || this.item.amount.length > 12 ) ){
           //弹出确认提示
           await vant.Dialog.alert({
               title: '温馨提示',
