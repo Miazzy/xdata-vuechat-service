@@ -46,6 +46,7 @@
                 <vue-excel-column field="approve_type"  label="审批类型"  width="80px" :options="approveColumns" />
                 <vue-excel-column field="workno"        label="关联流程"  width="120px"/>
                 <vue-excel-column field="seal_type"     label="用印类型"  width="80px" :options="sealTypeColumns" />
+                <vue-excel-column field="seal_category" label="印章类型"  width="120px" :options="sealCategoryColumns" />
                 <vue-excel-column field="order_type"    label="用印顺序"  width="80px" :options="orderTypeColumns" />
                 <vue-excel-column field="seal_man"      label="盖印人"    width="60px" />
                 <vue-excel-column field="status"        label="状态"      width="80px" type="select" :options="sealStatusColumns" />
@@ -130,6 +131,7 @@ export default {
             archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
+            sealCategoryColumns: Betools.workconfig.compcolumns.sealCategoryColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
             sealStatusColumns: Betools.workconfig.compcolumns.sealStatusColumns,
             statusType:{'待用印':'待用印','已用印':'已用印','已领取':'已用印','移交前台':'已用印','财务归档':'已用印','档案归档':'已用印','已完成':'已用印','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
