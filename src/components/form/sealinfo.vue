@@ -1311,8 +1311,7 @@ export default {
         }
 
         if(!this.item.seal || !this.item.sealman){
-          //提示确认用印操作
-          return await vant.Dialog.confirm({
+          return await vant.Dialog.confirm({ //提示确认用印操作
               title: '用印确认',
               message: '请输入盖印人，并在下拉框中选择盖印人后，进行提交操作！',
           });
@@ -1341,7 +1340,7 @@ export default {
           });
         }
 
-        if(!this.item.partner && this.item.sealtype == '合同类'){
+        if( (!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类' ){
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '请检查表单填写内容，并确认合作方是否填写！',
