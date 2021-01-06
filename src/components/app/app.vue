@@ -369,7 +369,7 @@ export default {
         }
     },
     activated() {
-      this.queryInfo();
+      //this.queryInfo();
     },
     mounted() {
       this.queryInfo();
@@ -394,6 +394,7 @@ export default {
             this.userinfo = await this.weworkLogin();
             this.images = await this.queryImagesUrl();
             this.commonIconLength = await this.changeStyle();
+            this.queryCrontab();
           } catch (error) {
             console.log(error);
           }
@@ -704,10 +705,7 @@ export default {
 
             //向数据库上锁，如果查询到数据库有锁，则不推送消息
             const lockFlag = await Betools.manage.lock('crontab_task' , 12 * 3600 * 1000);
-
-            if(!lockFlag){/** 推送设备借用归还消息 */
-
-              debugger;
+            if(!!lockFlag){/** 推送设备借用归还消息 */
 
               //查询当日尚未归还信息设备的申请信息 *****
   
@@ -715,15 +713,22 @@ export default {
   
               //已推送的消息，添加到消息推送记录表中
   
-              //查询当日尚未领取办公用品的申请信息 *****
-  
-              //检查已推送消息表，如果消息尚未被推送，则将领取信息推送给用户，提醒用户领取用品
+              //查询当日尚未领取办公用品的申请信息 ***** call goods_complete('bs_goods_receive' , 'status' , '已准备' , '已完成' , 10 ); //超过10天未领取，默认已完成
+              const rmessage = await superagent.get(`${window.BECONFIG.domain.replace('www','api')}/api/v2/mysql/goods_complete`).set('accept', 'json'); 
+              const rlist = await Betools.query.queryTableDataByWhereSQL('bs_goods_receive' , `_where=(status,in,已准备)&_sort=-id`);
+              rlist.map( (item) => {
+                debugger;
+              });
+
+              //检查已推送消息表，如果消息尚未被推送，则将领取信息推送给用户，提醒用户领取用品，超过5天未领取，则状态修改为已领取
   
               //已推送的消息，添加到消息推送记录表中
               
               //向数据库解锁
               await Betools.manage.unlock('crontab_task');
             }
+
+            debugger;
             
 
             /** 推送每周周报填写计划 */
