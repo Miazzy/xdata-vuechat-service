@@ -700,11 +700,13 @@ export default {
         async queryCrontab(){
           
           try {
-
+            const nowtime = dayjs().format('HH:mm');
+            if(!(nowtime.includes('17:0') || nowtime.includes('17:1') || nowtime.includes('17:2'))){
+              return false;
+            }
             //向数据库上锁，如果查询到数据库有锁，则不推送消息
             const lockFlag = await Betools.manage.lock('crontab_task' ,  3600 * 1000);
             if(!!lockFlag){/** 推送设备借用归还消息 */
-
               /** 推送设备借用归还消息 */
               try{
                 //查询当日尚未归还信息设备的申请信息 ***** //检查已推送消息表，如果消息尚未被推送，则将归还信息推送给用户，提醒用户归还设备
@@ -727,7 +729,6 @@ export default {
                     }
                   }
                 }
-    
                 //查询当日尚未领取办公用品的申请信息 ***** call goods_complete('bs_goods_receive' , 'status' , '已准备' , '已完成' , 10 ); //超过10天未领取，默认已完成
                 const rmessage = await superagent.get(`${window.BECONFIG['restAPI']}/api/v2/mysql/goods_complete`).set('accept', 'json'); //检查已推送消息表，如果消息尚未被推送，则将领取信息推送给用户，提醒用户领取用品，超过5天未领取，则状态修改为已领取
                 const rlist = await Betools.query.queryTableDataByWhereSQL('bs_goods_receive' , `_where=(status,in,已准备)&_sort=-id`);
