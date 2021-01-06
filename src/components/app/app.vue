@@ -715,15 +715,18 @@ export default {
   
               //查询当日尚未领取办公用品的申请信息 ***** call goods_complete('bs_goods_receive' , 'status' , '已准备' , '已完成' , 10 ); //超过10天未领取，默认已完成
               const rmessage = await superagent.get(`${window.BECONFIG['restAPI']}/api/v2/mysql/goods_complete`).set('accept', 'json'); //检查已推送消息表，如果消息尚未被推送，则将领取信息推送给用户，提醒用户领取用品，超过5天未领取，则状态修改为已领取
-              const rlist = await Betools.query.queryTableDataByWhereSQL('bs_goods_receive' , `_where=(status,in,已准备)~and(id,eq,pid)&_sort=-id`);
+              const rlist = await Betools.query.queryTableDataByWhereSQL('bs_goods_receive' , `_where=(status,in,已准备)&_sort=-id`);
               debugger
               for(const item of rlist){
-                if(item.create_by && item.create_time && item.id){
+                if(item.id == item.pid){
                   const date = dayjs(item.create_time).format('YYYY-MM-DD');
                   const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/goodsview?id=${item.id}&statustype=office&role=receive`);
                   const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.create_by}/亲爱的同事，您于${date}预约的办公用品已准备，请在17:00-18:00至前台领取?rurl=${receiveURL}`;
                   const resp = await superagent.get(queryURL).set('accept', 'json');
                   //已推送的消息，添加到消息推送记录表中 TODO
+                } else {
+                  //查询Pid对应数据状态，如果是已完成，则修改为已完成，如果是已驳回，则修改为已驳回
+                  
                 }
               }
               

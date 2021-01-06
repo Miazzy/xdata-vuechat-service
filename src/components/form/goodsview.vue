@@ -912,13 +912,16 @@ export default {
         const id = this.item.id;
 
         //第一步 保存用户数据到数据库中
-        const elem = {
-          id,
-          status: '已完成',
-        }; // 待处理元素
+        const elem = {   id,  status: '已完成',  }; // 待处理元素
 
         //第二步，向表单提交form对象数据
         const result = await Betools.manage.patchTableData(this.tablename , id , elem);
+
+        //批量领取物品修改状态
+        for(let i = 0 ; i < this.tlist.length ; i++){
+          let element = { status: '已完成',  };
+          const result = await Betools.manage.patchTableData(this.tablename , this.tlist[i].id , element);
+        }
 
         /************************  工作流程日志(开始)  ************************/
 
