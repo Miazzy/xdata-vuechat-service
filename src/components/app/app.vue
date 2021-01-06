@@ -702,7 +702,7 @@ export default {
           try {
 
             //向数据库上锁，如果查询到数据库有锁，则不推送消息
-            const lockFlag = await Betools.manage.lock('crontab_task' , 12 * 3600 * 1000);
+            const lockFlag = await Betools.manage.lock('crontab_task' ,  3600 * 1000);
             if(!!lockFlag){/** 推送设备借用归还消息 */
 
               /** 推送设备借用归还消息 */
