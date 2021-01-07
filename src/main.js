@@ -5,10 +5,15 @@ import store from './vuex/store';
 import filters from './filters'; //将全部过滤器放在 filters/index.js 中便于管理
 import '@/reservice'; //注册service worker服务
 
+import singleSelect from './components/common/singleSelect';
+import checkSelect from './components/common/checkSelect';
+
 try {
     Vue.use(VueAxios, axios, Vue); //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
     Vue.use(xediter.default, vant.Empty, vant.Lazyload, vant.Icon, vant.Dialog, vant.AddressList); //设置VueExcel编辑组件
     Vue.component("downloadExcel", JsonExcel || null);
+    Vue.component("singleSelect", singleSelect || null);
+    Vue.component("checkSelect", checkSelect || null);
 } catch (error) {
     console.log(error);
 }

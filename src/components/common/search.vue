@@ -1,6 +1,4 @@
 <template>
-    <!--复用性非常高，涉及的动效也比较复杂-->
-    <!--search-open 控制搜索框被激活时的动效、样式-->
   <div id="search" :class="{'search-open':!$store.state.headerStatus}">
     <div class="weui-search-bar" id="search_bar" :class="{'weui-search-bar_focusing':!$store.state.headerStatus}">
       <form class="weui-search-bar__form">
