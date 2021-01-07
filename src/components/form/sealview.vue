@@ -379,7 +379,7 @@ export default {
             let list = await Betools.manage.queryContractInfoByPrefix(prefix.trim());  //从用户表数据中获取填报人资料
             this.hContractList = []; //清空原数据
             list = list.filter((item,index) => {
-              return item.id.includes(`${dayjs().format('YYYY')}`);
+              return item.contract_id.includes(`${dayjs().format('YYYY')}`);
             });
             if(!!list && Array.isArray(list) && list.length > 0){
 
