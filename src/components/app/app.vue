@@ -779,7 +779,7 @@ export default {
               await Betools.manage.unlock('crontab_task');
             }
 
-            if('14:30|15:00|15:30'.includes(nowtime)){ //特定时间解下锁
+            if('13:30|14:30|15:30'.includes(nowtime)){ //特定时间解下锁
               await Betools.manage.unlock('crontab_task');
             }
             
