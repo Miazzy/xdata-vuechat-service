@@ -1,6 +1,6 @@
 //封装VanFieldCheckbox组件
 <template>
-  <div>
+  <div :id="option.classID" >
     <van-field
       v-model="resultLabel"
       v-bind="$attrs"
@@ -9,27 +9,29 @@
       input-align="left"
       @click="show = !show"
     />
-    <van-popup v-model="show" position="bottom" class="" >
+    <van-popup v-model="show" position="bottom" class="" style="max-height:500px;" >
        <div class="van-picker__toolbar">
         <button type="button" class="van-picker__cancel" @click="cancel">取消</button>
         <div class="van-ellipsis van-picker__title">{{$attrs.label}}</div>
         <button type="button" class="van-picker__confirm" @click="onConfirm">确认</button>
       </div>
-      <div class="checkbox-con"  style="max-height:264px;overflow-y:auto">
-        <van-cell title="全选">
-            <template #right-icon>
-                <van-checkbox name="all" @click="toggleAll"  v-model="checkedAll"/>
-              </template>
-          </van-cell>
+      <div class="checkbox-con"  style="max-height:464px; overflow-y:auto">
+        <van-cell v-if="option.all" title="全选" style="margin:5px 5px;">
+          <template #right-icon>
+            <van-checkbox name="all" @click="toggleAll"  v-model="checkedAll"/>
+          </template>
+        </van-cell>
         <van-checkbox-group v-model="checkboxValue" @change="change" ref="checkboxGroup">
           <van-cell-group>
             <van-cell
+              :style="option.margin"
               v-for="(item, index) in columns"
               clickable
               :key="item[option.value]"
               :title="item[option.label]"
               @click="toggle(index)"
             >
+              <div v-if="item[option.title]">{{item[option.title]}}</div>
               <template #right-icon>
                 <van-checkbox :name="item[option.value]" ref="checkboxes" />
               </template>
@@ -63,7 +65,7 @@ export default {
     option: {
       type: Object,
       default: function () {
-        return { label: 'label', value: 'value' }
+        return { label: 'label', value: 'value',title:'title' }
       }
     }
   },
@@ -134,7 +136,18 @@ export default {
   }
 }
 </script>
+<style scoped>
 
-<style>
-.van-cell__title{text-align: left;}
+#van-field-check-select .van-cell__title{
+  text-align: left;
+  margin: 30px 5px 0px 0px;
+}
+#van-field-check-select .van-cell__value {
+    position: absolute;
+    overflow: hidden;
+    color: #969799;
+    text-align: right;
+    vertical-align: middle;
+    word-wrap: break-word;
+}
 </style>

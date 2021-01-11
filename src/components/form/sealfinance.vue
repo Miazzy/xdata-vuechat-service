@@ -40,8 +40,8 @@
             <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
             <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
-            <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{label:'name',value:'name'}" />
-            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name'}" />
+            <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{label:'name',value:'name',title:'',all:true , margin:'0px 0px' , classID:'',}" />
+            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
@@ -142,6 +142,7 @@ export default {
               { name: '档案移交', code: '1', },
               { name: '财务移交', code: '2', },
             ],
+            fileColumns:[],
             view:'',
             readonly: true,
             zonename:'',
@@ -159,7 +160,17 @@ export default {
        */
       async queryInfo(){
         try {
-          
+          const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
+          const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
+          const clist = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+          clist.map((item , index) => {
+            item.title = item.filename.slice(0,16) ,
+            item.code = item.id;
+            item.tel = '';
+            item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
+            item.isDefault = true;
+          })
+          this.fileColumns = clist;
         } catch (error) {
           console.log(error);
         }
