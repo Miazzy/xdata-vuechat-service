@@ -254,8 +254,7 @@ export default {
           await Betools.storage.setStore('system_search_word_v1', this.searchWord, 60 * 5 );
           await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
       //点击右侧菜单
       async headDropMenu(value){
