@@ -8,7 +8,7 @@
             <router-link :to="back" @click="$router.push(`/app/sealfrontlist`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
-            <span>档案移交</span>
+            <span>财务移交</span>
         </div>
     </header>
 
@@ -27,7 +27,7 @@
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
-            <van-col span="8" style="text-align: center;font-size:1.15rem;">档案移交申请</van-col>
+            <van-col span="8" style="text-align: center;font-size:1.15rem;">财务移交申请</van-col>
             <van-col span="8"></van-col>
           </van-row>
         </div>

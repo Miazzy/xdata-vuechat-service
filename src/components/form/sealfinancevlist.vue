@@ -1,29 +1,26 @@
 <template>
-
 <keep-alive>
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
-
-    <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;" >
+    <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center" style="position:relative;">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
               <span>返回</span>
             </router-link>
-            <span>用印归档</span>
+            <span>用印移交</span>
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 45px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="归档台账" icon="balance-list-o"  >
+                <van-cell id="van-cell-export" class="van-cell-export" title="移交台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
                       <download-excel
                         :data="json_data"
                         :fields="json_fields"
-                        worksheet="归档台账"
-                        name="归档台账(合同类).xls"
+                        worksheet="移交台账"
+                        name="移交台账(合同类).xls"
                       >
-                        归档台账
+                        移交台账
                       </download-excel>
                     </span>
                   </template>
@@ -32,6 +29,7 @@
             </van-dropdown-menu>
         </div>
     </header>
+
     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
           <van-search
@@ -49,28 +47,24 @@
     <section>
 
       <div class="weui-cells" style="margin-top: 0px;">
-
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            待归档
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+            待移交
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
-            已归档
+          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+            已移交
           </div>
         </div>
-
       </div>
 
       <div class="wechat-list">
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
-
+        <template v-show="tabname == 2 && !loading && !isLoading">
+            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
+        </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
-        <template v-show="tabname == 5 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
-        </template>
-
         </van-pull-refresh>
       </div>
 
@@ -88,9 +82,9 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "用印归档",
+            pageName: "用印移交",
             momentNewMsg: true,
-            tabname: 4,
+            tabname: 2,
             id:'',
             initContractList:[],
             sealContractList:[],
@@ -118,9 +112,12 @@ export default {
               { text: '重置', value: 4 , icon: 'aim' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
-              { text: '财务归档', value: 10 , icon: 'logistics' },
-              { text: '档案归档', value: 11 , icon: 'sign' },
+              { text: '财务移交', value: 10 , icon: 'logistics' },
+              { text: '档案移交', value: 11 , icon: 'sign' },
             ],
+            menuCssValue:'',
+            isLoading:false,
+            loading:false,
             json_fields: {
               '排序编号':'serialid',
               '登记时间': 'create_time',
@@ -138,13 +135,10 @@ export default {
               '用印状态': 'status',
             },
             json_data: [],
-            menuCssValue:'',
-            isLoading:false,
-            loading:false,
         }
     },
     activated() {
-      this.queryInfo();
+        this.queryInfo();
     },
     mounted() {
       this.queryInfo();
@@ -163,7 +157,7 @@ export default {
     methods: {
       async userStatus(){
         try {
-          let info = await Betools.storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -173,14 +167,10 @@ export default {
       },
       //刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname); //刷新相应表单
+        await Betools.tools.sleep(300); //等待一下
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false;  //设置加载状态
       },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
@@ -233,26 +223,29 @@ export default {
           case 6: //返回首页
             this.$router.push(`/explore`);
             break;
+          case 10: //财务归档
+            this.$router.push(`/app/sealfinance`);
+            break;
+          case 11: //档案归档
+            this.$router.push(`/app/sealarchive`);
+            break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
       //点击Tab栏
-      async queryTabList(tabname){
+      async queryTabList(tabname , page){
 
-        //获取当前用户信息
+         //获取当前用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
-        //获取最近6个月对应的日期
+        // 获取最近6个月对应的日期
         let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        let sealTypeSql = '';
+        let sealTypeSql = '~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)';
         let searchSql = '';
 
-        if(this.sealType === 0 || true) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-        }
+        // 设置当前页为第一页
+        this.currentPage = page + 1;
 
         //如果存在搜索关键字
         if(this.searchWord) {
@@ -261,7 +254,7 @@ export default {
 
         if(tabname == 1){
           //获取最近6个月的待用印记录
-          this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -271,7 +264,7 @@ export default {
           })
         } else if(tabname == 2){
           //获取最近6个月的已用印记录
-          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已用印)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -281,7 +274,7 @@ export default {
           })
         } else if(tabname == 3){
           //获取最近6个月的已领取记录
-          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已领取)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -291,7 +284,7 @@ export default {
           })
         } else if(tabname == 4){
           //获取最近6个月的已移交记录
-          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -301,7 +294,7 @@ export default {
           })
         } else if(tabname == 5){
           //获取最近6个月的已归档记录
-          this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -311,7 +304,7 @@ export default {
           })
         } else if(tabname == 6){
           //获取最近6个月的已归档记录
-          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(record,like,~${userinfo.username}~)~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
 
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
@@ -323,7 +316,7 @@ export default {
           // 获取最近6个月对应的日期
           month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
           sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(status,in,,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(record,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           this.json_data = await Betools.manage.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
@@ -333,32 +326,15 @@ export default {
         //强制渲染
         this.$forceUpdate();
 
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //获取tabname
-        this.tabname = Betools.storage.getStore('system_seal_archive_list_tabname') || 4;
+        this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
+        this.tabname = this.tabname > 6 ? 2 : this.tabname;
 
-        //获取最近6个月的待用印记录
-        await this.queryTabList(1);
+        //查询列表数据
+        this.queryTabList(this.tabname , 0);
 
-        //获取最近6个月的已用印记录
-        await this.queryTabList(2);
-
-        //获取最近6个月的已领取记录
-        await this.queryTabList(3);
-
-        //获取最近6个月的已移交记录
-        await this.queryTabList(4);
-
-        //获取最近6个月的已完成记录
-        await this.queryTabList(5);
-
-        //获取最近6个月的已退回记录
-        await this.queryTabList(6);
-
-        //获取最近12个月的已退回记录
-        await this.queryTabList('合同类');
+        //查询合同类数据
+        this.queryTabList('合同类' , 0);
 
       },
       async selectHContract(){
@@ -373,29 +349,29 @@ export default {
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealarchivelist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealfrontlist`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealarchivelist`);
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealfrontlist`);
         } else if(this.tabname == '2' || this.tabname == '3'){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealarchivelist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealfrontlist`);
         } else if(this.tabname == '4' ){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealarchivelist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '5' ){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealarchivelist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '6' ){
-          Betools.storage.setStore('system_seal_archive_list_tabname' , this.tabname);
+          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealarchivelist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         }
 
       },

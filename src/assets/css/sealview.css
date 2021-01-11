@@ -242,3 +242,12 @@
     opacity: 0.4;
     filter: alpha(opacity=40);
 }
+
+#van-finance-apply .van-goods-action-button--danger {
+    background: -webkit-linear-gradient(left, #ff6034, #ee0a24);
+    background: linear-gradient(to right, #ff6034, #ee0a24);
+    border-radius: 10px 10px 10px 10px;
+    margin: 0px 10px;
+    width: 95%;
+    text-align: center;
+}
