@@ -58,12 +58,14 @@
                 <van-field required readonly clickable clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" @blur="validField('seal_category')" :error-message="message.seal_category" @click="tag.showPickerSealCategory = true" />
                 <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
                 <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
+                <!--
                 <single-select  label="单项选择"
                       placeholder="请选择"
                       v-model="value1"
                       :columns="singleColumns"
                       :option="{label:'name',value:'code'}"
                       @confirm="confirm2" />
+                -->
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
