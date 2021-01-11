@@ -447,7 +447,7 @@ export default {
               role += ',COMMON_DEBUG_ADMIN';
               window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
             };
-            Betools.storage.setStore('system_role_rights_v1', this.role, 3600 * 24 * 31);
+            Betools.storage.setStore('system_role_rights_v1', role, 3600 * 24 * 31);
             this.role = role;
             return role;
           } catch (error) {
