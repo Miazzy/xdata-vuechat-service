@@ -55,16 +55,19 @@
                 <van-field clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
                 <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                 <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
+                <!--
                 <van-field required readonly clickable clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" @blur="validField('seal_category')" :error-message="message.seal_category" @click="tag.showPickerSealCategory = true" />
-                <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
-                <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
-                
-                <check-select  label="单项选择"
+                -->
+                <check-select required label="印章类型"
                       placeholder="请选择"
                       v-model="item.seal_category"
                       :columns="categoryColumns"
                       :option="{label:'name',value:'name'}"
-                      @confirm="confirm2" />
+                      @confirm="confirmCategory" />
+                <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
+                <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
+                
+               
                 
               </van-cell-group>
 
@@ -337,9 +340,8 @@ export default {
       }
     },
     methods: {
-      confirm2 (data1, index, data2) { // checkbox确定,
+      confirmCategory (data1, index, data2) { // checkbox确定,
         console.log(data1, data2, index)
-        this.value4 = data1
       },
       // 企业微信登录处理函数
       async weworkLogin(){
@@ -1430,7 +1432,7 @@ export default {
         const filename = item && item.filename ? item.filename.trim() : item.filename ;
         const count = item && item.count ? item.count.trim() : 0 ;
         const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
-        const seal_category = item && item.seal_category ? item.seal_category.trim() : '';
+        const seal_category = item && item.seal_category ? Array.isArray(item.seal_category) ? item.seal_category.toString() : item.seal_category.trim() : '';
         const order_type = item && item.ordertype ? item.ordertype.trim() : '';
         const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart ;
         const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
