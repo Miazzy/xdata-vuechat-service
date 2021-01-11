@@ -58,14 +58,14 @@
                 <van-field required readonly clickable clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" @blur="validField('seal_category')" :error-message="message.seal_category" @click="tag.showPickerSealCategory = true" />
                 <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
                 <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
-                <!--
-                <single-select  label="单项选择"
+                
+                <check-select  label="单项选择"
                       placeholder="请选择"
-                      v-model="value1"
-                      :columns="singleColumns"
-                      :option="{label:'name',value:'code'}"
+                      v-model="item.seal_category"
+                      :columns="categoryColumns"
+                      :option="{label:'name',value:'name'}"
                       @confirm="confirm2" />
-                -->
+                
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -251,6 +251,7 @@ export default {
               sealtime:'',
               sealman: '',
               sealtype: '',
+              seal_category:[],
               ordertype:'常规用印',
               mobile:'',
               send_mobile:'',
@@ -307,17 +308,19 @@ export default {
             sealCategoryColumns: Betools.workconfig.compcolumns.sealCategoryColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
             zonename:'',
-            value1: '1', // select选中的value
-            singleColumns: [// 如果可选数据不是label-value,需要配置下option，如果是就不需要配置
-                    { name: '我是选中的label', code: '1', other: '额外数据' },
-                    { name: '我也是选中的label33333', code: '2', other: '额外数据' },
-                    { name: '我是选中的label', code: '21', other: '额外数据' },
-                    { name: '我也是选中的label555555555', code: '22', other: '额外数据' },
-                    { name: '我是选中的label', code: '11', other: '额外数据' },
-                    { name: '我也是选中的label', code: '52', other: '额外数据' },
-                    { name: '我是选中的label', code: '71', other: '额外数据' },
-                    { name: '我也是选中的label', code: '72', other: '额外数据' }
-                  ]
+            categoryColumns: [
+              { name: '公章', code: '1', },
+              { name: '法人章', code: '2', },
+              { name: '法人私章', code: '3', },
+              { name: '合同专用章', code: '4', },
+              { name: '财务专用章', code: '5', },
+              { name: '发票专用章', code: '6', },
+              { name: '物业服务章', code: '7', },
+              { name: '工会公章', code: '8', },
+              { name: '党支部章', code: '9', },
+              { name: '工会法人章', code: '10', },
+              { name: '工会财务章', code: '11', },
+            ],
         }
     },
     async activated() {
@@ -335,13 +338,9 @@ export default {
     },
     methods: {
       confirm2 (data1, index, data2) { // checkbox确定,
-    // tips 正常获取值，用不到这个方法，用v-model获取值即可，这个方法是告诉你，可以获取任何你想要的数据
-    // data1 当前这一条的obj数据
-    // index 当前选择的索引
-    // data2 当前这一条数据的value
-      console.log(data1, data2, index)
-      this.value4 = data1
-    },
+        console.log(data1, data2, index)
+        this.value4 = data1
+      },
       // 企业微信登录处理函数
       async weworkLogin(){
         try {

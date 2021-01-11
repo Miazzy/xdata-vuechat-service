@@ -6,7 +6,7 @@
       v-bind="$attrs"
       readonly
       is-link
-      input-align="right"
+      input-align="left"
       @click="show = !show"
     />
     <van-popup v-model="show" position="bottom" class="" >
