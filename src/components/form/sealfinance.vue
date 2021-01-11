@@ -41,7 +41,8 @@
             <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
             <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
             <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{label:'name',value:'name',title:'',all:true , margin:'0px 0px' , classID:'',}" />
-            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" />
+            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+             <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
@@ -124,6 +125,9 @@ export default {
               createtime: dayjs().format('YYYY-MM-DD'),
               serialid:'',
               filename:'',
+              flist:[],
+              remark:'',
+              status:100,
             },
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -143,6 +147,7 @@ export default {
               { name: '财务移交', code: '2', },
             ],
             fileColumns:[],
+            flist:[],
             view:'',
             readonly: true,
             zonename:'',
@@ -155,9 +160,12 @@ export default {
       this.queryInfo();
     },
     methods: {
-      /**
-       * 查询初始化信息
-       */
+      /** 确认选择合同文件 */
+      async fileConfirm(data , value , index){
+        console.log(data , value , index);
+        this.flist = this.item.flist = value;
+      },
+      /** 查询初始化信息 */
       async queryInfo(){
         try {
           const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
@@ -175,9 +183,7 @@ export default {
           console.log(error);
         }
       },
-      /**
-       * 处理同意/提交操作
-       */
+      /** 处理同意/提交操作 */
       async handleAgree(){
         try {
           

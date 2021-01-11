@@ -55,20 +55,9 @@
                 <van-field clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" readonly />
                 <van-field required readonly clickable clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                 <van-field required readonly clickable clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
-                <!--
-                <van-field required readonly clickable clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" @blur="validField('seal_category')" :error-message="message.seal_category" @click="tag.showPickerSealCategory = true" />
-                -->
-                <check-select required label="印章类型"
-                      placeholder="请选择"
-                      v-model="item.seal_category"
-                      :columns="categoryColumns"
-                      :option="{label:'name',value:'name'}"
-                      @confirm="confirmCategory" />
+                <check-select required label="印章类型" placeholder="请选择"  v-model="item.seal_category" :columns="categoryColumns" :option="{label:'name',value:'name'}" @confirm="confirmCategory" />
                 <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
-                <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
-                
-               
-                
+                <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" /> 
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
