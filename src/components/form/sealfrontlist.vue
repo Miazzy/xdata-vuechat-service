@@ -112,6 +112,8 @@ export default {
               { text: '重置', value: 4 , icon: 'aim' },
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
+              { text: '财务移交', value: 10 , icon: 'logistics' },
+              { text: '档案移交', value: 11 , icon: 'sign' },
             ],
             menuCssValue:'',
             isLoading:false,
@@ -155,12 +157,7 @@ export default {
     methods: {
       async userStatus(){
         try {
-          let info = await Betools.storage.getStore('system_userinfo');
-          // if( Betools.tools.isNull(info) ){
-          //   vant.Toast('尚未登录！');
-          //   await this.clearLoginInfo();
-          //   this.$router.push(`/login`);
-          // }
+          const userinfo = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
@@ -170,14 +167,10 @@ export default {
       },
       //刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname); //刷新相应表单
+        await Betools.tools.sleep(300); //等待一下
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false;  //设置加载状态
       },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
@@ -228,6 +221,12 @@ export default {
             this.$router.push(`/app`);
             break;
           case 6: //返回首页
+            this.$router.push(`/explore`);
+            break;
+          case 10: //财务归档
+            this.$router.push(`/explore`);
+            break;
+          case 11: //档案归档
             this.$router.push(`/explore`);
             break;
           default:
