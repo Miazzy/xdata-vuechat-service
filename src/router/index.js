@@ -174,13 +174,6 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealmylist.vue"], resolve)
         }
     }, {
-        path: '/app/sealexport',
-        name: "用印导出",
-        components: {
-            "default": resolve => require(["../components/app/app.vue"], resolve),
-            "subPage": resolve => require(["../components/form/sealexport.vue"], resolve)
-        }
-    }, {
         path: '/app/goodsreceive',
         name: "物品领用",
         components: {
