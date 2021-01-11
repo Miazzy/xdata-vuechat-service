@@ -204,13 +204,10 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
-        //this.userStatus();
     },
     mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     watch: {
       $route(to, from) {
@@ -252,12 +249,10 @@ export default {
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.storage.setStore('system_search_word_v1', this.searchWord, 60 * 5 );
+          await Betools.tools.sleep(300); //等待一下
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -433,23 +428,13 @@ export default {
         }
       },
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
-        //获取tabname
-        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ;
+        this.$forceUpdate(); //强制渲染
+        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname > 6 ? 1 : this.tabname;
-
-        //查询列表数据
-        this.queryTabList(this.tabname , 0);
-
-        //查询合同类数据
-        this.queryTabList('合同类',0);
-
-        //查询非合同类数据
-        this.queryTabList('非合同类',0);
-
+        this.searchWord = await Betools.storage.getStore('system_search_word_v1');
+        this.queryTabList(this.tabname , 0); //查询列表数据
+        this.queryTabList('合同类',0); //查询合同类数据
+        this.queryTabList('非合同类',0); //查询非合同类数据
       },
       async selectHContract(){
 
