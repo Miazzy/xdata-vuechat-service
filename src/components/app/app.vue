@@ -385,7 +385,7 @@ export default {
           const etimestamp = await Betools.storage.getStore('system_role_rights_v1_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
           const ctimestamp = new Date().getTime()/1000 + 3600 * 24 * 30.99 ;
           const username = userinfo && userinfo.username ? userinfo.username : '';
-          (!this.role || this.role == 'view' || ctimestamp >= etimestamp) ? (this.queryRoleInfo(userinfo , null , 'view')) : (null);
+          (!this.role || this.role == 'view' || this.role == 'null' || ctimestamp >= etimestamp) ? (this.queryRoleInfo(userinfo , null , 'view')) : (null);
           (this.role.includes('COMMON_DEBUG_ADMIN')) ? ( setTimeout(()=>{window.vConsole = window.vConsole ? window.vConsole : new VConsole();},300)) : (null);
           return userinfo_work;
         },
