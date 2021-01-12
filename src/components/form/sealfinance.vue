@@ -40,14 +40,14 @@
             <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
             <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
-            <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{label:'name',value:'name',title:'',all:true , margin:'0px 0px' , classID:'',}" />
-            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+            <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , margin:'0px 0px' , classID:'',}" />
+            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
             <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
             <van-cell value="移交说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-            <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="500" placeholder="请输入移交备注说明事项！" @blur="validField('message')" :error-message="message.message" show-word-limit />
+            <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="500" placeholder="请输入移交备注说明事项！" show-word-limit />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -111,10 +111,11 @@ export default {
               id:'',
               createtime: dayjs().format('YYYY-MM-DD'),
               serialid:'',
-              type:'',
+              type:[],
               filename:'',
               flist:[],
               remark:'',
+              message:'',
               status:100,
             },
             backPath:'/app',
