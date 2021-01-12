@@ -42,7 +42,7 @@
             <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
             <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{label:'name',value:'name',title:'',all:true , margin:'0px 0px' , classID:'',}" />
             <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
-             <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
+            <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
           </van-cell-group>
 
           <van-cell-group style="margin-top:10px;">
@@ -165,7 +165,22 @@ export default {
       /** 处理同意/提交操作 */
       async handleAgree(){
         try {
-          
+          const userinfo = await Betools.storage.getStore('system_userinfo');
+          const elem = { 
+            id: Betools.tools.queryUniqueID() ,
+            create_by: userinfo.username ,
+            create_name: userinfo.realname ,
+            create_time: dayjs().format('YYYY-MM-DD HH:mm:ss') ,
+            type: this.item.type ,
+            flist: this.flist && this.flist.length > 0 ? JSON.stringify(this.flist) : '',
+            status: 100,
+            message: this.message, 
+          };
+          const result = await Betools.manage.postTableData('bs_contract_transfer_apply' , elem);
+          if(result.protocol41 == true && result.affectedRows > 0){
+            const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.username}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
+          }
         } catch (error) {
           console.log(error);
         }
