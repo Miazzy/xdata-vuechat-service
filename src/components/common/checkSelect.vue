@@ -1,4 +1,3 @@
-//封装VanFieldCheckbox组件
 <template>
   <div :id="option.classID" >
     <van-field
@@ -16,6 +15,11 @@
         <button type="button" class="van-picker__confirm" @click="onConfirm">确认</button>
       </div>
       <div class="checkbox-con"  style="max-height:464px; overflow-y:auto">
+        <van-search v-if="option.search" v-model="searchWord" show-action placeholder="请输入搜索关键词" >
+          <template #action>
+            <div @click="search" >搜索</div>
+          </template>
+        </van-search>
         <van-cell v-if="option.all" title="全选" style="margin:5px 5px;">
           <template #right-icon>
             <van-checkbox name="all" @click="toggleAll"  v-model="checkedAll"/>
@@ -53,19 +57,25 @@ export default {
     columns: {
       type: Array,
       default: function () {
-        return []
+        return [] ;
+      }
+    },
+    columns_origin: {
+      type: Array,
+      default: function () {
+        return this.columns ? JSON.parse(JSON.stringify(this.columns)) : [];
       }
     },
     selectValue: {
       type: Array,
       default: function () {
-        return []
+        return [];
       }
     },
     option: {
       type: Object,
       default: function () {
-        return { label: 'label', value: 'value',title:'title' }
+        return { label: 'label', value: 'value',title:'title' } ;
       }
     }
   },
@@ -88,6 +98,8 @@ export default {
   data () {
     return {
       show: false,
+      searchWord:'',
+      allColumns:[],
       checkboxValue: JSON.parse(JSON.stringify(this.selectValue)),
       checkedAll: false,
       resultValue: JSON.parse(JSON.stringify(this.selectValue))
@@ -117,6 +129,14 @@ export default {
     },
     toggleAll (all) {//全选
       this.$refs.checkboxGroup.toggleAll(this.checkedAll)
+    },
+    search(){
+      const key = this.searchWord;
+      this.columns_origin = this.columns_origin && this.columns_origin.length > 0 ? this.columns_origin : this.columns;
+      this.columns = this.columns_origin.filter( item => {
+        const content = JSON.stringify(item);
+        return content ? content.includes(key) : false ;
+      });
     }
   },
   watch: {

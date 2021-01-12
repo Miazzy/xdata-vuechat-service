@@ -40,8 +40,8 @@
             <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
             <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
             <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
-            <check-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , margin:'0px 0px' , classID:'',}" />
-            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+            <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
+            <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
             <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
           </van-cell-group>
 
