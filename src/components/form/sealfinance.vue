@@ -166,14 +166,16 @@ export default {
       /** 处理同意/提交操作 */
       async handleAgree(){
         try {
+          const id = Betools.tools.queryUniqueID();
           const userinfo = await Betools.storage.getStore('system_userinfo');
           const elem = { 
-            id: Betools.tools.queryUniqueID() ,
+            id ,
             create_by: userinfo.username ,
             create_name: userinfo.realname ,
             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss') ,
             type: this.item.type ,
             flist: this.flist && this.flist.length > 0 ? JSON.stringify(this.flist) : '',
+            pid:id,
             status: 100,
             message: this.message, 
           };
