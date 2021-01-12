@@ -25,7 +25,7 @@
             <van-checkbox name="all" @click="toggleAll"  v-model="checkedAll"/>
           </template>
         </van-cell>
-        <van-checkbox-group v-model="checkboxValue" @change="change" ref="checkboxGroup">
+        <van-checkbox-group v-model="checkboxValue" @change="change" ref="checkboxGroup" style="min-height:150px;">
           <van-cell-group>
             <van-cell
               :style="option.margin"
