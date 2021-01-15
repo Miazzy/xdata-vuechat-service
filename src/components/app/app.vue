@@ -344,9 +344,6 @@
 <script>
 
 export default {
-   components: {
-        vfd
-    },
     mixins: [window.mixin],
     data() {
         return {
