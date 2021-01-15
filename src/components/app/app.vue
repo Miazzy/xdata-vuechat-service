@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <section>
+
       <div class="weui-cells" style="margin-top:0px;">
         <van-swipe :autoplay="3000">
           <van-swipe-item v-for="(image, index) in images" :key="index">
@@ -14,6 +15,7 @@
           />
         </router-link>
       </div>
+
       <div id="weui-cells-flex" v-if="role ? ( role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') ) : false " class="weui-cells" style="display:block; position:relative;">
         <div class="weui-cell-title">入职管理</div>
         <div style="display:none;">
@@ -342,6 +344,9 @@
 <script>
 
 export default {
+   components: {
+        vfd
+    },
     mixins: [window.mixin],
     data() {
         return {
@@ -399,6 +404,7 @@ export default {
             console.log(error);
           }
         },
+
         async queryRoleInfo(userinfo , resp = null , role = ''){
           try {
             const username = userinfo && userinfo.username ? userinfo.username : '';
