@@ -45,23 +45,15 @@ export default {
     this.setGraphData()
   },
   methods: {
-    setGraphData() {
-        const data = { 'rootId': '', 'nodes': [], 'links': [] };
+    async setGraphData() {
+        const data = { 'rootId': '18', 'nodes': [], 'links': [] };
         //获取所有公司信息
-        
+        const nodes = await Betools.query.queryTableDataByWhereSQL('bs_company_flow_base' , `_where=(level,lt,100)~and(level,gt,0)&_sort=-id`);
         //获取所有公司关联信息
-
-        data.nodes.forEach(thisNode => {
-            if (thisNode.text === '深圳市腾讯计算机系统有限公司') {
-                thisNode.width = 300;
-                thisNode.height = 100;
-                thisNode.offset_x = -80;
-            } else if (thisNode.text && thisNode.text.length <= 3) {
-                thisNode.width = 100;
-                thisNode.height = 80;
-                thisNode.offset_y = 80;
-            } 
-        });
+        const links = await Betools.query.queryTableDataByWhereSQL('bs_company_flow_link' , '_where=(status,in,0)&_sort=-id');
+        data.nodes = nodes;
+        data.links = links;
+        data.nodes.forEach(thisNode => { });
         this.$refs.seeksRelationGraph.setJsonData(data, (seeksRGGraph) => {});
     },
     onNodeExpand(node, e) {
@@ -70,7 +62,6 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>
