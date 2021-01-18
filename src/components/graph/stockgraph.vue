@@ -25,12 +25,14 @@ export default {
             'defaultLineShape': 1,
             'centerOffset_x': -300,
             'centerOffset_y': 0,
+            'allowSwitchLineShape': true,
+            'allowSwitchJunctionPoint': true,
             'min_per_width': '60',
             'min_per_height': '400'
           }
         ],
         "defaultExpandHolderPosition": "bottom",
-        'defaultLineShape': 4,
+        'defaultLineShape': 2,
         'defaultJunctionPoint': 'tb',
         'defaultNodeShape': 1,
         'defaultNodeWidth': '50',

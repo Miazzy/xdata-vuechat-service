@@ -104,11 +104,25 @@ const routes = [{
         name: "智慧行政",
         component: resolve => require(["../components/app/app.vue"], resolve)
     }, {
+        path: '/app/stockbtree',
+        name: "股权架构",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockbtree.vue"], resolve)
+        }
+    }, {
         path: '/app/stockgraph',
         name: "股权架构",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/graph/stockgraph.vue"], resolve)
+        }
+    }, {
+        path: '/app/stockgroup',
+        name: "股权架构",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockgroup.vue"], resolve)
         }
     }, {
         path: '/app/moments',
