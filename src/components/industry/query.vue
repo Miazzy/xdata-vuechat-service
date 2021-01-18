@@ -204,8 +204,8 @@
          </div> </li> 
        </ul> 
       </section> </li> 
-     <li class="dropdown user-drop"> <a rel="nofollow" style="padding-left: 5px;padding-right: 5px;" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'个人中心'});" href="/user_home"> <span class="headface"> <img src=" https://co-image.qichacha.com/upload/face/108.jpg " alt="个人中心" onerror="this.src='https://www.qcc.com/material/theme/chacha/cms/v2/images/icon_user2_default@2x.png'" /> </span> </a> 
-      <ul class="dropdown-menu nav-user" style="dispaly:none;"> 
+     <li class="dropdown user-drop" style="margin-right:30px;"> <a rel="nofollow" style="padding-left: 5px;padding-right: 5px;" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'个人中心'});" href="/user_home"> <span class="headface"> <img src=" https://co-image.qichacha.com/upload/face/108.jpg " alt="个人中心" onerror="this.src='https://www.qcc.com/material/theme/chacha/cms/v2/images/icon_user2_default@2x.png'" /> </span> </a> 
+      <ul class="dropdown-menu nav-user" style="display:none;"> 
        <li> <a onclick="zhugeTrack('个人中心下拉菜单点击',{'按钮名称':'个人中心'});" href="/user_home"> <b> 九百飞翔 </b> </a> </li> 
        <li class="divider"></li> 
        <li><a rel="nofollow" onclick="zhugeTrack('个人中心下拉菜单点击',{'按钮名称':'导出记录'});" href="/user_download"> 导出记录</a></li> 
