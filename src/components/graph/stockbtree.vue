@@ -35,6 +35,7 @@ export default {
             'defaultLineShape': 1,
             'allowSwitchLineShape': true,
             'allowSwitchJunctionPoint': true,
+            useLayoutStyleOptions: true,
             'from': 'left',
             'max_per_width': '500',
             'min_per_height': '100'

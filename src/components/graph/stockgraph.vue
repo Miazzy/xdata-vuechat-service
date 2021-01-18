@@ -20,6 +20,7 @@ export default {
             'label': '中心',
             'layoutName': 'tree',
             'layoutClassName': 'seeks-layout-tree',
+            useLayoutStyleOptions: false,
             'defaultJunctionPoint': 'border',
             'defaultNodeShape': 0,
             'defaultLineShape': 1,

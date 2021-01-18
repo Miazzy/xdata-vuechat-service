@@ -24,6 +24,7 @@ export default {
             'layoutClassName': 'seeks-layout-center',
             'allowSwitchLineShape': true,
             'allowSwitchJunctionPoint': true,
+            'useLayoutStyleOptions': true,
           },
         ],
         "defaultExpandHolderPosition": "bottom",
