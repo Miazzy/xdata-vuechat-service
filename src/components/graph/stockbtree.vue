@@ -24,7 +24,6 @@ export default {
       currentCase: '双向树',
       isShowCodePanel: false,
       graphOptions: {
-        'backgrounImage': 'http://ai-mark.cn/images/ai-mark-desc.png',
         'backgrounImageNoRepeat': true,
         'layouts': [
           {
