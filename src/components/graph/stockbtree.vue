@@ -50,7 +50,7 @@ export default {
         },
         'defaultNodeShape': 1,
         'defaultNodeWidth': '100',
-        'defaultLineShape': 4,
+        'defaultLineShape': 2,
         'defaultJunctionPoint': 'lr',
         'defaultNodeBorderWidth': 0,
         'defaultLineColor': 'rgba(0, 186, 189, 1)',
