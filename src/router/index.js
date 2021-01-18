@@ -132,6 +132,13 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stocktips.vue"], resolve)
         }
     }, {
+        path: '/industry/query',
+        name: "股权架构",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/industry/query.vue"], resolve)
+        }
+    }, {
         path: '/app/stockreship',
         name: "股权关系",
         components: {
