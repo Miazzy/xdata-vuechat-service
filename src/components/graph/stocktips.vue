@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     async showSeeksGraph(query) {
-      const data = { rootId: '1', nodes: [], links: [] };
+      const data = { rootId: '18', nodes: [], links: [] };
         //获取所有公司信息
         const nodes = await Betools.query.queryTableDataByWhereSQL('bs_company_flow_base' , `_where=(level,lt,100)~and(level,gt,0)&_fields=id,name&_sort=-id`);
         //获取所有公司关联信息
