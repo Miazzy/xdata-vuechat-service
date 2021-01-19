@@ -20,10 +20,8 @@
 </template>
 
 <script>
-import SeeksRelationGraph from 'relation-graph'
 export default {
   name: 'Demo',
-  components: { SeeksRelationGraph },
   data() {
     return {
       isShowCodePanel: false,

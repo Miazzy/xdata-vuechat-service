@@ -5,12 +5,9 @@
     </div>
   </div>
 </template>
-
 <script>
-import SeeksRelationGraph from 'relation-graph'
 export default {
   name: 'SeeksRelationGraphDemo',
-  components: { SeeksRelationGraph },
   data() {
     return {
       g_loading: true,

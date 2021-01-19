@@ -18,10 +18,8 @@
 </template>
 
 <script>
-import SeeksRelationGraph from 'relation-graph'
 export default {
   name: 'Demo',
-  components: { SeeksRelationGraph },
   data() {
     return {
       currentCase: '横向树状图谱',
