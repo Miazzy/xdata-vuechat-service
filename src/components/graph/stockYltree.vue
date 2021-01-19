@@ -6,7 +6,7 @@
         <el-radio-button label="纵向树状图谱" ></el-radio-button>
       </el-radio-group>
     </div>
-    <div style="height:calc(100vh - 0px);">
+    <div style="height:calc(100vh - 100px);">
       <SeeksRelationGraph
         ref="seeksRelationGraph"
         :options="graphOptions"
@@ -63,8 +63,8 @@ export default {
     this.showSeeksGraph()
   },
   methods: {
-    showSeeksGraph(query) {
-      const data = { 'rootId': '24', 'nodes': [], 'links': [] };
+    async showSeeksGraph(query) {
+      const data = { 'rootId': '18', 'nodes': [], 'links': [] };
       //获取所有公司信息
       const nodes = await Betools.query.queryTableDataByWhereSQL('bs_company_flow_base' , `_where=(level,lt,100)~and(level,gt,0)&_sort=-id`);
       //获取所有公司关联信息
