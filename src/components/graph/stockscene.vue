@@ -23,7 +23,7 @@ export default {
             'layoutClassName': 'seeks-layout-fixed',
             'defaultJunctionPoint': 'border',
             'defaultNodeShape': 0,
-            'defaultLineShape': 1,
+            'defaultLineShape': 2,
             'allowSwitchLineShape': true,
             'allowSwitchJunctionPoint': true,
             'useLayoutStyleOptions': false,
@@ -36,7 +36,7 @@ export default {
         'allowShowMiniNameFilter': false,
         'allowShowMiniToolBar': false,
         'defaultJunctionPoint': 'lr',
-        'defaultLineShape': 2,
+        'defaultLineShape': 1,
         "defaultExpandHolderPosition": "bottom",
       },
       graphOptions: {
@@ -76,7 +76,6 @@ export default {
         persons.map(item => {item.id = 'persons_' + item.id ;item.text = item.holder_name; item.desc = item.position; });
         branchs.map(item => {item.id = 'branchs_' + item.id ;item.text = item.name; item.desc = '法人: ' + item.principal; });
         asInvs.map(item => {item.id = 'asInvs_' + item.id ;item.text = item.company_name; item.desc= '法人: ' + item.legal_person; });
-        debugger;
         const _orign_data = {
             entname: nodes && nodes.length > 0 ? nodes[0].name : '' ,
             invs: invs , 
@@ -126,7 +125,7 @@ export default {
             thisNode.x = invRootNode.x - 300 - thisNode.width
             thisNode.y = invRootNode.y + _index * 35 * -1 + 50
             graphData.nodes.push(thisNode)
-            graphData.links.push({ from: invRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFC5A6', arrow: 'none', lineShape: 4 })
+            graphData.links.push({ from: invRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFC5A6', arrow: 'none', lineShape: 1 })
         })
         // 将高管加入虚拟节点"高管"
         _orign_data.persons.forEach((thisNode, _index) => {
