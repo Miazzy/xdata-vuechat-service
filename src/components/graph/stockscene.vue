@@ -65,103 +65,93 @@ export default {
     this.setGraphData()
   },
   methods: {
-    setGraphData() {
-      var _orign_data = {
-        entname: '中数智汇数据科技股份有限公司',
-        invs: [
-          { id: 'inv1', text: '北京某个公司科技有限公司', desc: '40%' },
-          { id: 'inv2', text: '张蜈支', desc: '30%' },
-          { id: 'inv3', text: '如花', desc: '10%' },
-          { id: 'inv4', text: '路人甲', desc: '10%' },
-          { id: 'inv5', text: '路人乙', desc: '10%' }
-        ],
-        persons: [
-          { id: 'person1', text: '张蜈支', desc: '董事长' },
-          { id: 'person2', text: '包奥曼', desc: '总经理' },
-          { id: 'person3', text: '路人甲', desc: '监事' },
-          { id: 'person4', text: '路人乙', desc: '董事' }
-        ],
-        asInvs: [
-          { id: 'asinv1', text: '北京超级大橘科技有限公司', desc: '80%' },
-          { id: 'asinv2', text: '北京超级大蚂蚁科技有限公司', desc: '70%' },
-          { id: 'asinv3', text: '北京超级大米粒儿科技有限公司', desc: '20%' }
-        ],
-        branchs: [
-          { id: 'branch1', text: '某个公司（北京）科技股份有限公司', desc: '80%' },
-          { id: 'branch2', text: '某个公司（天津）科技股份有限公司', desc: '70%' },
-          { id: 'branch4', text: '某个公司（成都）科技股份有限公司', desc: '70%' },
-          { id: 'branch5', text: '某个公司（武汉）科技股份有限公司', desc: '20%' }
-        ]
-      }
-      var _graphSetting = this.$refs.seeksRelationGraph.graphSetting
-      this.$refs.seeksRelationGraph.graphSetting.defaultLineShape = 1
-      // 手工设置节点的坐标
-      const _center = {
-        x: (_graphSetting.viewSize.width) / 2 - _graphSetting.canvasOffset.x,
-        y: (_graphSetting.viewSize.height) / 2 - _graphSetting.canvasOffset.y
-      }
-      var graphData = {
-        rootId: 'root',
-        nodes: [],
-        links: []
-      }
-      // 添加根节点和虚拟节点
-      var rootNode = { id: graphData.rootId, name: _orign_data.entname, styleClass: 'c-g-center', color: '#A4C1FF', width: 250, height: 50, x: _center.x - 125, y: _center.y - 25 }
-      var invRootNode = { id: 'invRoot', name: '股东', styleClass: 'c-g-group-node', color: '#FFC5A6', width: 100, height: 50 }
-      var personRootNode = { id: 'personRoot', name: '高管', styleClass: 'c-g-group-node', color: '#B9FFA7', width: 100, height: 50 }
-      var asinvRootNode = { id: 'asinvRoot', name: '对外投资', styleClass: 'c-g-group-node', color: '#FFBEC1', width: 100, height: 50 }
-      var branchRootNode = { id: 'branchRoot', name: '分支机构', styleClass: 'c-g-group-node', color: '#FFA1F8', width: 100, height: 50 }
-      invRootNode.x = _center.x - 200 - invRootNode.width
-      invRootNode.y = _center.y - 130
-      personRootNode.x = _center.x - 200 - personRootNode.width
-      personRootNode.y = _center.y + 90
-      asinvRootNode.x = _center.x + 200
-      asinvRootNode.y = _center.y - 130
-      branchRootNode.x = _center.x + 200
-      branchRootNode.y = _center.y + 90
-      // 添加节点数据到graphData
-      graphData.nodes.push(rootNode)
-      graphData.nodes.push(invRootNode)
-      graphData.nodes.push(personRootNode)
-      graphData.nodes.push(asinvRootNode)
-      graphData.nodes.push(branchRootNode)
-      // 添加根节点和虚拟节点之间的关系，并将关系数据放入graphData
-      graphData.links.push({ from: rootNode.id, to: invRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
-      graphData.links.push({ from: rootNode.id, to: personRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
-      graphData.links.push({ from: rootNode.id, to: asinvRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
-      graphData.links.push({ from: rootNode.id, to: branchRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
-      // 将股东加入虚拟节点"股东"
-      _orign_data.invs.forEach((thisNode, _index) => {
-        thisNode.width = 200
-        thisNode.x = invRootNode.x - 300 - thisNode.width
-        thisNode.y = invRootNode.y + _index * 35 * -1 + 50
-        graphData.nodes.push(thisNode)
-        graphData.links.push({ from: invRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFC5A6', arrow: 'none', lineShape: 4 })
-      })
-      // 将高管加入虚拟节点"高管"
-      _orign_data.persons.forEach((thisNode, _index) => {
-        thisNode.width = 200
-        thisNode.x = personRootNode.x - 200 - thisNode.width
-        thisNode.y = personRootNode.y + _index * 35
-        graphData.nodes.push(thisNode)
-        graphData.links.push({ from: personRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#B9FFA7', arrow: 'none', lineShape: 4 })
-      })
-      // 将对外投资企业加入虚拟节点"对外投资"
-      _orign_data.asInvs.forEach((thisNode, _index) => {
-        thisNode.x = asinvRootNode.x + 200
-        thisNode.y = asinvRootNode.y + _index * 35 * -1 + 50
-        graphData.nodes.push(thisNode)
-        graphData.links.push({ from: asinvRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFBEC1', lineShape: 4 })
-      })
-      // 将分支机构加入虚拟节点"分支机构东"
-      _orign_data.branchs.forEach((thisNode, _index) => {
-        thisNode.x = branchRootNode.x + 200
-        thisNode.y = branchRootNode.y + _index * 35
-        graphData.nodes.push(thisNode)
-        graphData.links.push({ from: branchRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFA1F8', lineShape: 4 })
-      })
-      this.$refs.seeksRelationGraph.setJsonData(graphData, (seeksRGGraph) => {
-      })
+    async setGraphData() {
+        const companyID = 25; //获取所有公司信息
+        const nodes = await Betools.query.queryTableDataByWhereSQL('bs_company_flow_base' , `_where=(id,eq,25)~and(status,eq,0)&_sort=-id`);
+        const invs = await Betools.query.queryTableDataByWhereSQL('bs_company_stockholder' , `_where=(company_id,eq,25)~and(status,eq,valid)&_sort=-id`);
+        const persons = await Betools.query.queryTableDataByWhereSQL('bs_company_senior_executive' , `_where=(company_id,eq,25)~and(status,eq,valid)&_sort=-id`);
+        const branchs = await Betools.query.queryTableDataByWhereSQL('bs_company_branch' , `_where=(company_id,eq,25)&_sort=-id`);
+        const asInvs = await Betools.query.queryTableDataByWhereSQL('bs_company_investments' , `_where=(relation_company_id,eq,25)&_sort=-id`);
+        invs.map(item => {item.id = 'invs_' + item.id ; item.text = item.holder_name; item.desc = '控股: ' + item.ratio + '%'; });
+        persons.map(item => {item.id = 'persons_' + item.id ;item.text = item.holder_name; item.desc = item.position; });
+        branchs.map(item => {item.id = 'branchs_' + item.id ;item.text = item.name; item.desc = '法人: ' + item.principal; });
+        asInvs.map(item => {item.id = 'asInvs_' + item.id ;item.text = item.company_name; item.desc= '法人: ' + item.legal_person; });
+        debugger;
+        const _orign_data = {
+            entname: nodes && nodes.length > 0 ? nodes[0].name : '' ,
+            invs: invs , 
+            persons: persons ,
+            asInvs: asInvs,
+            branchs: branchs ,
+        }
+        var _graphSetting = this.$refs.seeksRelationGraph.graphSetting
+        this.$refs.seeksRelationGraph.graphSetting.defaultLineShape = 1
+        const _center = {
+            x: (_graphSetting.viewSize.width) / 2 - _graphSetting.canvasOffset.x,
+            y: (_graphSetting.viewSize.height) / 2 - _graphSetting.canvasOffset.y
+        };
+        var graphData = {
+            rootId: 'root',
+            nodes: [],
+            links: []
+        };
+        // 添加根节点和虚拟节点
+        var rootNode = { id: graphData.rootId, name: _orign_data.entname, styleClass: 'c-g-center', color: '#A4C1FF', width: 250, height: 50, x: _center.x - 125, y: _center.y - 25 }
+        var invRootNode = { id: 'invRoot', name: '股东', styleClass: 'c-g-group-node', color: '#FFC5A6', width: 100, height: 50 }
+        var personRootNode = { id: 'personRoot', name: '高管', styleClass: 'c-g-group-node', color: '#B9FFA7', width: 100, height: 50 }
+        var asinvRootNode = { id: 'asinvRoot', name: '对外投资', styleClass: 'c-g-group-node', color: '#FFBEC1', width: 100, height: 50 }
+        var branchRootNode = { id: 'branchRoot', name: '分支机构', styleClass: 'c-g-group-node', color: '#FFA1F8', width: 100, height: 50 }
+        invRootNode.x = _center.x - 200 - invRootNode.width
+        invRootNode.y = _center.y - 130
+        personRootNode.x = _center.x - 200 - personRootNode.width
+        personRootNode.y = _center.y + 90
+        asinvRootNode.x = _center.x + 200
+        asinvRootNode.y = _center.y - 130
+        branchRootNode.x = _center.x + 200
+        branchRootNode.y = _center.y + 90
+        // 添加节点数据到graphData
+        graphData.nodes.push(rootNode)
+        graphData.nodes.push(invRootNode)
+        graphData.nodes.push(personRootNode)
+        graphData.nodes.push(asinvRootNode)
+        graphData.nodes.push(branchRootNode)
+        // 添加根节点和虚拟节点之间的关系，并将关系数据放入graphData
+        graphData.links.push({ from: rootNode.id, to: invRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
+        graphData.links.push({ from: rootNode.id, to: personRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
+        graphData.links.push({ from: rootNode.id, to: asinvRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
+        graphData.links.push({ from: rootNode.id, to: branchRootNode.id, styleClass: 'c-g-l-group', color: '#C7E9FF', lineShape: 2 })
+        // 将股东加入虚拟节点"股东"
+        _orign_data.invs.forEach((thisNode, _index) => {
+            thisNode.width = 200
+            thisNode.x = invRootNode.x - 300 - thisNode.width
+            thisNode.y = invRootNode.y + _index * 35 * -1 + 50
+            graphData.nodes.push(thisNode)
+            graphData.links.push({ from: invRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFC5A6', arrow: 'none', lineShape: 4 })
+        })
+        // 将高管加入虚拟节点"高管"
+        _orign_data.persons.forEach((thisNode, _index) => {
+            thisNode.width = 200
+            thisNode.x = personRootNode.x - 200 - thisNode.width
+            thisNode.y = personRootNode.y + _index * 35
+            graphData.nodes.push(thisNode)
+            graphData.links.push({ from: personRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#B9FFA7', arrow: 'none', lineShape: 4 })
+        })
+        // 将对外投资企业加入虚拟节点"对外投资"
+        _orign_data.asInvs.forEach((thisNode, _index) => {
+            thisNode.x = asinvRootNode.x + 300
+            thisNode.y = asinvRootNode.y + _index * 35 * -1 + 50
+            graphData.nodes.push(thisNode)
+            graphData.links.push({ from: asinvRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFBEC1', lineShape: 4 })
+        })
+        // 将分支机构加入虚拟节点"分支机构东"
+        _orign_data.branchs.forEach((thisNode, _index) => {
+            thisNode.x = branchRootNode.x + 300
+            thisNode.y = branchRootNode.y + _index * 35
+            graphData.nodes.push(thisNode)
+            graphData.links.push({ from: branchRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFA1F8', lineShape: 4 })
+        })
+        this.$refs.seeksRelationGraph.setJsonData(graphData, (seeksRGGraph) => {
+        })
     }
   }
 }
