@@ -23,7 +23,12 @@ export default {
             'layoutClassName': 'seeks-layout-fixed',
             'defaultJunctionPoint': 'border',
             'defaultNodeShape': 0,
-            'defaultLineShape': 1
+            'defaultLineShape': 1,
+            'allowSwitchLineShape': true,
+            'allowSwitchJunctionPoint': true,
+            'useLayoutStyleOptions': false,
+            'max_per_width': '150',
+            'min_per_height': '250',
           }
         ],
         'defaultNodeBorderWidth': 0,
@@ -31,7 +36,26 @@ export default {
         'allowShowMiniNameFilter': false,
         'allowShowMiniToolBar': false,
         'defaultJunctionPoint': 'lr',
-        'defaultLineShape': 2
+        'defaultLineShape': 2,
+        "defaultExpandHolderPosition": "bottom",
+      },
+      graphOptions: {
+        'layouts': [
+          {
+            'label': '中心',
+            'layoutName': 'center',
+            'layoutClassName': 'seeks-layout-center',
+            'allowSwitchLineShape': true,
+            'allowSwitchJunctionPoint': true,
+            'useLayoutStyleOptions': true,
+          },
+        ],
+        "defaultExpandHolderPosition": "bottom",
+        'defaultLineShape': 2,
+        'defaultNodeShape': 0,
+        'defaultNodeWidth': '120',
+        'defaultNodeHeight': '120',
+        'defaultNodeBorderWidth': 1
       }
     }
   },
@@ -110,7 +134,7 @@ export default {
       _orign_data.invs.forEach((thisNode, _index) => {
         thisNode.width = 200
         thisNode.x = invRootNode.x - 300 - thisNode.width
-        thisNode.y = invRootNode.y + _index * 30 * -1 + 30
+        thisNode.y = invRootNode.y + _index * 35 * -1 + 50
         graphData.nodes.push(thisNode)
         graphData.links.push({ from: invRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFC5A6', arrow: 'none', lineShape: 4 })
       })
@@ -118,21 +142,21 @@ export default {
       _orign_data.persons.forEach((thisNode, _index) => {
         thisNode.width = 200
         thisNode.x = personRootNode.x - 200 - thisNode.width
-        thisNode.y = personRootNode.y + _index * 30
+        thisNode.y = personRootNode.y + _index * 35
         graphData.nodes.push(thisNode)
         graphData.links.push({ from: personRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#B9FFA7', arrow: 'none', lineShape: 4 })
       })
       // 将对外投资企业加入虚拟节点"对外投资"
       _orign_data.asInvs.forEach((thisNode, _index) => {
         thisNode.x = asinvRootNode.x + 200
-        thisNode.y = asinvRootNode.y + _index * 30 * -1 + 30
+        thisNode.y = asinvRootNode.y + _index * 35 * -1 + 50
         graphData.nodes.push(thisNode)
         graphData.links.push({ from: asinvRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFBEC1', lineShape: 4 })
       })
       // 将分支机构加入虚拟节点"分支机构东"
       _orign_data.branchs.forEach((thisNode, _index) => {
         thisNode.x = branchRootNode.x + 200
-        thisNode.y = branchRootNode.y + _index * 30
+        thisNode.y = branchRootNode.y + _index * 35
         graphData.nodes.push(thisNode)
         graphData.links.push({ from: branchRootNode.id, to: thisNode.id, text: thisNode.desc, color: '#FFA1F8', lineShape: 4 })
       })
