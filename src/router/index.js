@@ -139,6 +139,20 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stockscene.vue"], resolve)
         }
     }, {
+        path: '/app/stockXltree',
+        name: "企业关系",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockXltree.vue"], resolve)
+        }
+    }, {
+        path: '/app/stockYltree',
+        name: "企业关系",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockYltree.vue"], resolve)
+        }
+    }, {
         path: '/industry/query',
         name: "股权架构",
         components: {
