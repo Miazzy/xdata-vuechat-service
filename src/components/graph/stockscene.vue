@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: calc(100% - 2px);height:calc(100vh - 50px);">
+    <div style="width: calc(100% - 0px);height:calc(100vh - 0px);">
       <SeeksRelationGraph ref="seeksRelationGraph" :options="userGraphOptions" />
     </div>
   </div>
