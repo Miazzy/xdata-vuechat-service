@@ -378,10 +378,6 @@
                 </li>
                 <li class="head-line">|</li>
                 <li class="">
-                    <a onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'企业套餐'});" href="/qiye" rel="nofollow">企业套餐</a>
-                </li>
-                <li class="head-line">|</li>
-                <li class="">
                     <a rel="nofollow" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'APP下载'});" class="dropdown-toggle header-qrcode">
                         <span class="hicon-app"></span>
                     </a>
