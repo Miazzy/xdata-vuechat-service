@@ -32,9 +32,183 @@
                 <a-tab-pane key="9" tab="招投标"></a-tab-pane>
             </a-tabs>
         </div>
+        <div class="industry-query-condition" style="margin-top:15px;padding-left:100px;padding-right:100px;">
+            <div class="adsearch-filter">
+                <div class="npanel">
+                    <div class="npanel-heading clearfix">
+                        <h4 class="pull-left">筛选条件</h4>
+                        <div class="pull-right">
+                            <a href="https://www.qcc.com/search_adsearchmulti" class="text-primary">
+                                <span class="bicon bicon-sadvance"></span>高级查询
+                            </a>
+                        </div>
+                    </div>
+                    <div class="npanel-body">
+                        <div>
+                            <div class="expanded-wrap">
+                                <div class="app-pselect hfoot pills" style="margin-top:2px; margin-bottom: 6px;">
+                                    <div class="pills-header">查找范围</div>
+                                    <div class="pills-after">
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">企业名</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">法定代表人</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">股东</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">高管</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">品牌/产品</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">联系地址</span></label></div>
+                                        <div class="fitem"><label class="fcheck"><input autocomplete="off" type="checkbox"> <span data-v-7a34d786="">经营范围</span></label></div>
+                                    </div>
+                                    <div class="pills-foot"></div>
+                                </div>
+                                <div class="app-cascader-inline pills hfoot">
+                                    <div class="pills-header">省份地区</div>
+                                    <div class="pills-after">
+                                        <a class="pills-item">北京</a>
+                                        <a class="pills-item">西藏</a>
+                                    </div>
+                                    <div class="pills-foot"></div>
+                                </div>
+                                <div class="app-cascader-inline pills hfoot">
+                                    <div class="pills-header">行业分类</div>
+                                    <div class="pills-after"><a class="pills-item">
+                                            农、林、牧、渔业</a><a class="pills-item">
+                                            采矿业</a><a class="pills-item">
+                                            制造业</a><a class="pills-item">
+                                            建筑业</a><a class="pills-item">
+                                            批发和零售业</a><a class="pills-item">
+                                            住宿和餐饮业</a><a class="pills-item">
+                                            信息传输、软件和信息技术服务业</a><a class="pills-item">
+                                            金融业</a><a class="pills-item">
+                                            房地产业</a><a class="pills-item">
+                                            租赁和商务服务业</a><a class="pills-item">
+                                            科学研究和技术服务业</a><a class="pills-item">
+                                            水利、环境和公共设施管理业</a><a class="pills-item">
+                                            居民服务、修理和其他服务业</a><a class="pills-item">
+                                            教育</a><a class="pills-item">
+                                            卫生和社会工作</a><a class="pills-item">
+                                            文化、体育和娱乐业</a><a class="pills-item">
+                                            其他行业</a></div>
+                                    <div class="pills-foot"></div>
+                                </div>
+                                <div class="app-pinline pills hfoot">
+                                    <div class="pills-header">成立日期</div>
+                                    <div class="pills-after">
+                                        <template v-for="item in yearlist">
+                                            <a :key="`year_id_${item}`" class="pills-item">{{ item }}</a>
+                                        </template>
+                                    </div>
+                                    <div class="pills-foot">
+                                    </div>
+                                </div>
+                                <div class="pills">
+                                    <div class="pills-header">
+                                        更多筛选
+                                    </div>
+                                    <div class="pills-after">
+                                        <div class="fitem">
+                                            <div class="app-dselect drop-hover"><span data-toggle="dropdown" aria-expanded="false" class="toggle"><a class="dselect-text">
+                                                    注册资本
+                                                    <span class="caret"></span></a></span>
+                                                <div class="dropdown-menu">
+                                                    <ul class="drop-col">
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >100万以内</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >100-500万</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >500-1000万</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >1000-3000万</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >3000-5000万</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >5000万以上</span></label></a></li>
+                                                        <li ></li>
+                                                    </ul>
+                                                    <div class="drop-x"><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >自定义</span></label> <i class="fa fa-caret-right"></i>
+                                                            <div class="drop-right" style="display: none;"><span  class="app-number-range">
+                                                                    <div class="range-wrap">
+                                                                        <div class="clearfix"><span >从</span> <input  maxlength="10" type="text" class="form-control"> <span  class="unit">万</span></div>
+                                                                        <div class="clearfix"><span >至</span> <input  maxlength="10" type="text" class="form-control"> <span  class="unit">万</span></div> <span  class="commit">确定</span>
+                                                                    </div>
+                                                                </span></div>
+                                                        </a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fitem">
+                                            <div class="app-dselect drop-hover"><span data-toggle="dropdown" aria-expanded="false" class="toggle"><a class="dselect-text">
+                                                        登记状态
+                                                        <span class="caret"></span></a></span>
+                                                <div class="dropdown-menu">
+                                                    <ul class="drop-col">
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >在业/存续</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >筹建</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >清算</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >迁入</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >迁出</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >停业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >撤销</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >吊销</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >注销</span></label></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fitem">
+                                            <div class="app-dselect drop-hover"><span data-toggle="dropdown" aria-expanded="false" class="toggle"><a class="dselect-text">
+                                                        企业类型
+                                                        <span class="caret"></span></a></span>
+                                                <div class="dropdown-menu">
+                                                    <ul class="drop-col">
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >有限责任公司</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >股份有限公司</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >国企</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >外商投资企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >独资企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >个体工商户</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >联营企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >集体所有制</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >有限合伙</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >普通合伙</span></label></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fitem">
+                                            <div class="app-dselect drop-hover"><span data-toggle="dropdown" aria-expanded="false" class="toggle"><a class="dselect-text">
+                                                        组织机构
+                                                <span class="caret"></span></a></span>
+                                                <div class="dropdown-menu">
+                                                    <ul class="drop-col">
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >大陆企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >社会组织</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >香港企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >台湾企业</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >基金会</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >事业单位</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >律师事务所</span></label></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fitem">
+                                            <div class="app-dselect drop-hover"><span data-toggle="dropdown" aria-expanded="false" class="toggle"><a class="dselect-text">
+                                                        资本类型
+                                                        <span class="caret"></span></a></span>
+                                                <div class="dropdown-menu">
+                                                    <ul class="drop-col">
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >人民币</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >美元</span></label></a></li>
+                                                        <li ><a class="item"><label class="text"><input autocomplete="off" type="checkbox"> <span >其它</span></label></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="industry-result" style="margin-top:15px;padding-left:7%;padding-right:7%;">
-            <div data-v-738ea2ea="" data-v-0590b132="" class="adsearch-list">
-                <!---->
+            <div data-v-738ea2ea="" class="adsearch-list">
                 <div data-v-738ea2ea="" class="npanel">
                     <div data-v-738ea2ea="" class="npanel-heading">
                         <h4 data-v-738ea2ea="">
@@ -290,7 +464,7 @@
                                                 <div data-v-1a4367d8="" class="rline"><span data-v-1a4367d8="" class="f">
                                                         电话：
                                                         <span data-v-1a4367d8="" class="val">
-                                                            <!----> <span data-v-1a4367d8="">-</span></span>
+                                                            <span data-v-1a4367d8="">-</span></span>
                                                         <!----></span> <span data-v-1a4367d8="" class="f">
                                                         邮箱：
                                                         <span data-v-1a4367d8="" class="val">-</span>
@@ -332,7 +506,7 @@
                                                 <div data-v-1a4367d8="" class="rline"><span data-v-1a4367d8="" class="f">
                                                         电话：
                                                         <span data-v-1a4367d8="" class="val">
-                                                            <!----> <span data-v-1a4367d8="">-</span></span>
+                                                            <span data-v-1a4367d8="">-</span></span>
                                                         <!----></span> <span data-v-1a4367d8="" class="f">
                                                         邮箱：
                                                         <span data-v-1a4367d8="" class="val">-</span>
@@ -374,7 +548,7 @@
                                                 <div data-v-1a4367d8="" class="rline"><span data-v-1a4367d8="" class="f">
                                                         电话：
                                                         <span data-v-1a4367d8="" class="val">
-                                                            <!----> <span data-v-1a4367d8="">-</span></span>
+                                                            <span data-v-1a4367d8="">-</span></span>
                                                         <!----></span> <span data-v-1a4367d8="" class="f">
                                                         邮箱：
                                                         <span data-v-1a4367d8="" class="val">-</span>
@@ -416,7 +590,7 @@
                                                 <div data-v-1a4367d8="" class="rline"><span data-v-1a4367d8="" class="f">
                                                         电话：
                                                         <span data-v-1a4367d8="" class="val">
-                                                            <!----> <span data-v-1a4367d8="">-</span></span>
+                                                            <span data-v-1a4367d8="">-</span></span>
                                                         <!----></span> <span data-v-1a4367d8="" class="f">
                                                         邮箱：
                                                         <span data-v-1a4367d8="" class="val">-</span>
@@ -908,6 +1082,7 @@ export default {
     data() {
         return {
             appflag: false,
+            yearlist: [2021, 2020, 2019],
         };
     },
     activated() {},
