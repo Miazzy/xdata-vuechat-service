@@ -1,5 +1,5 @@
 <template>
-<div id="query" style="width:100%;">
+<div id="query" style="width:100%;background:#f8f8f8;">
     <header class="header navi-header box-shadow">
         <div class="container" style="position: absolute; width: 1350px">
             <div class="navi-brand">
@@ -20,7 +20,7 @@
     </header>
     <section id="section">
         <div style="background:white;width:100%;">
-            <a-tabs default-active-key="1" @change="callback" style="padding-left:110px;">
+            <a-tabs default-active-key="1" style="padding-left:110px;">
                 <a-tab-pane key="1" tab="企业"></a-tab-pane>
                 <a-tab-pane key="2" tab="人员"></a-tab-pane>
                 <a-tab-pane key="3" tab="风险"></a-tab-pane>

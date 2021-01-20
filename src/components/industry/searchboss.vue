@@ -20,7 +20,7 @@
     </header>
     <section id="section">
         <div style="background:white;width:100%;">
-            <a-tabs default-active-key="2" @change="callback" style="padding-left:110px;">
+            <a-tabs default-active-key="2" style="padding-left:110px;">
                 <a-tab-pane key="1" tab="企业"></a-tab-pane>
                 <a-tab-pane key="2" tab="人员"></a-tab-pane>
                 <a-tab-pane key="3" tab="风险"></a-tab-pane>
