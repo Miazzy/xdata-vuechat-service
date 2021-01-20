@@ -7,28 +7,7 @@
                     <img src="https://co-image.qichacha.com/CompanyImage/f50d972bf1d7aa5bb88da915da782762.jpg?x-oss-process=style/qcc_cmp" class="m-r-sm" alt="企业查询" />
                 </a>
             </div>
-            <ul class="navi-nav pull-right lpan" style="position: relative">
-                <li class="dropdown msg-drop">
-                    <a @click="null">
-                        <span class="hicon-notify"></span>
-                    </a>
-                    <section class="dropdown-menu msg-box" style="display: none">
-                        <ul class="list-group m-b-none">
-                            <li class="list-group-item">
-                                <div class="he">
-                                    消息中心（
-                                    <span class="text-danger unreadmsgnum">0</span> 条未读）
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="pnodata">
-                                    <img src="https://www.qcc.com/material/theme/chacha/cms/v2/images/nno_image.png" />
-                                    <p>暂无消息</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </section>
-                </li>
+            <ul>
                 <li class="dropdown user-drop" style="margin-right: 0px">
                     <a rel="nofollow" style="padding-left: 0px; padding-right: 15px" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'个人中心'});" href="/user_home">
                         <span class="headface">
