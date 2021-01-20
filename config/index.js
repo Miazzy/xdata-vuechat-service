@@ -13,6 +13,7 @@ module.exports = {
         productionGzipExtensions: ['js', 'css'],
         bundleAnalyzerReport: process.env.npm_config_report
     },
+
     dev: {
         env: require('./dev.env'),
         port: 8080,
