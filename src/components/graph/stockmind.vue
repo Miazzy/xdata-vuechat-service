@@ -2,7 +2,7 @@
   <mindmap
     :nodes="nodes"
     :connections="connections"
-    :editable="true"
+    :editable="false"
   />
 </template>
 
