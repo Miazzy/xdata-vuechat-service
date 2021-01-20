@@ -11,6 +11,7 @@ import checkSelect from './components/common/checkSelect';
 try {
     Vue.use(VueAxios, axios, Vue); //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
     Vue.use(xediter.default, vant.Empty, vant.Lazyload, vant.Icon, vant.Dialog, vant.AddressList); //设置VueExcel编辑组件
+    Vue.use(VueMindmap);
     Vue.component("SeeksRelationGraph", relationGraph || null);
     Vue.component("downloadExcel", JsonExcel || null);
     Vue.component("singleSelect", singleSelect || null);
