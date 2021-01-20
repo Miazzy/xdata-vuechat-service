@@ -161,10 +161,17 @@ const routes = [{
         }
     }, {
         path: '/industry/query',
-        name: "股权架构",
+        name: "查询主页",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/industry/query.vue"], resolve)
+        }
+    }, {
+        path: '/industry/search',
+        name: "查询结果",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/industry/search.vue"], resolve)
         }
     }, {
         path: '/app/stockreship',
