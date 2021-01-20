@@ -153,6 +153,13 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stockYltree.vue"], resolve)
         }
     }, {
+        path: '/app/stockmind',
+        name: "思维导图",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockmind.vue"], resolve)
+        }
+    }, {
         path: '/industry/query',
         name: "股权架构",
         components: {
