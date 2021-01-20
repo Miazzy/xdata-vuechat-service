@@ -181,6 +181,13 @@ const routes = [{
             "subPage": resolve => require(["../components/industry/searchboss.vue"], resolve)
         }
     }, {
+        path: '/vchart/vline',
+        name: "vline",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/vchart/vline.vue"], resolve)
+        }
+    }, {
         path: '/app/stockreship',
         name: "股权关系",
         components: {
