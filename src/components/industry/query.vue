@@ -370,13 +370,6 @@
                     </section>
                 </li>
                 <li class="head-line">|</li>
-                <li class=""></li>
-                <li class="">
-                    <a rel="nofollow" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'VIP服务'});" href="/vip?vf=1">
-                        <img class="hicon-vip" src="https://www.qcc.com/material/theme/chacha/cms/v2/images/vip_service.png" />
-                    </a>
-                </li>
-                <li class="head-line">|</li>
                 <li class="">
                     <a rel="nofollow" onclick="zhugeTrack('顶栏按钮点击',{'按钮名称':'APP下载'});" class="dropdown-toggle header-qrcode">
                         <span class="hicon-app"></span>
