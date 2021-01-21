@@ -1,0 +1,76 @@
+<template>
+  <div>
+    <cloud :data="words" :fontSizeMapper="fontSizeMapper" style="width:100%;height:100vh;"/>
+  </div>
+</template>
+<script>
+import Cloud from 'vue-d3-cloud';
+export default {
+    name: 'demo',
+    components: {
+        Cloud,
+    },
+    data() {
+        return {
+            words: [
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+                { text: 'Vue', value: 1000 },
+                { text: 'js', value: 200 },
+                { text: 'is', value: 800 },
+                { text: 'very cool', value: 1000000 },
+                { text: 'lunch', value: 100 },
+            ],
+            fontSizeMapper: word => Math.log10(word.value) * 10,
+        }
+    },
+}
+</script>

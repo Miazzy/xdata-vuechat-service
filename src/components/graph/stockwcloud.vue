@@ -1,5 +1,5 @@
 <template>
-  <div id="wordcloud">
+  <div>
       <wordcloud
       :data="defaultWords"
       nameKey="name"
@@ -13,7 +13,7 @@
 <script>
 import wordcloud from 'vue-wordcloud';
 export default {
-  name: 'wordcloud',
+  name: 'demo',
   components: { wordcloud },
   methods: {
     wordClickHandler(name, value, vm) {
@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
+      myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef',"#c000f0" , "#0f3f2f"],
       defaultWords: [{
           "name": "Cat",
           "value": 26
@@ -38,6 +38,85 @@ export default {
         {
           "name": "look",
           "value": 16
+        },
+        {
+          "name": "two",
+          "value": 15
+        },
+        {
+          "name": "fun",
+          "value": 9
+        },
+        {
+          "name": "know",
+          "value": 9
+        },
+        {
+          "name": "good",
+          "value": 9
+        },
+        {
+          "name": "play",
+          "value": 6
+        },{
+          "name": "two",
+          "value": 15
+        },
+        {
+          "name": "fun",
+          "value": 9
+        },
+        {
+          "name": "know",
+          "value": 9
+        },
+        {
+          "name": "good",
+          "value": 9
+        },
+        {
+          "name": "play",
+          "value": 6
+        },
+        {
+          "name": "two",
+          "value": 15
+        },
+        {
+          "name": "fun",
+          "value": 9
+        },
+        {
+          "name": "know",
+          "value": 9
+        },
+        {
+          "name": "good",
+          "value": 9
+        },
+        {
+          "name": "play",
+          "value": 6
+        },
+        {
+          "name": "two",
+          "value": 15
+        },
+        {
+          "name": "fun",
+          "value": 9
+        },
+        {
+          "name": "know",
+          "value": 9
+        },
+        {
+          "name": "good",
+          "value": 9
+        },
+        {
+          "name": "play",
+          "value": 6
         },
         {
           "name": "two",
