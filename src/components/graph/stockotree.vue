@@ -1,6 +1,6 @@
 <template>
   <div>
-    <organization-chart :datasource="ds" style="height:100vh;width:100%;"></organization-chart>
+    <organization-chart :datasource="ds" style="height:100vh;width:100%;border:0px solid #fefefe;"></organization-chart>
   </div>
 </template>
 
@@ -29,6 +29,12 @@
                     { 'id': '7', 'name': 'Xiang Xiang', 'title': 'UE engineer' },
                     { 'id': '10', 'name': 'Tie Hua Hua', 'title': 'senior engineer' },
                     { 'id': '11', 'name': 'Hei Hei Hi', 'title': 'senior engineer'},
+                    { 'id': '12', 'name': 'Tie Hua Hua', 'title': 'senior engineer' },
+                    { 'id': '13', 'name': 'Hei Hei Hi', 'title': 'senior engineer'},
+                    { 'id': '14', 'name': 'Tie Hua Hua', 'title': 'senior engineer' },
+                    { 'id': '15', 'name': 'Hei Hei Hi', 'title': 'senior engineer'},
+                    { 'id': '16', 'name': 'Tie Hua Hua', 'title': 'senior engineer' },
+                    { 'id': '17', 'name': 'Hei Hei Hi', 'title': 'senior engineer'},
                   ]
                  }
                ]

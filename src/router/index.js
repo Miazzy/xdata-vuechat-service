@@ -118,6 +118,13 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stockgraph.vue"], resolve)
         }
     }, {
+        path: '/app/stockwcloud',
+        name: "股权词云",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockwcloud.vue"], resolve)
+        }
+    }, {
         path: '/app/stockgroup',
         name: "股权架构",
         components: {
