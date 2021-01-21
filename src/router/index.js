@@ -160,6 +160,13 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stockmind.vue"], resolve)
         }
     }, {
+        path: '/app/stockotree',
+        name: "分叉树图",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockotree.vue"], resolve)
+        }
+    }, {
         path: '/industry/query',
         name: "查询主页",
         components: {
@@ -172,6 +179,13 @@ const routes = [{
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/industry/search.vue"], resolve)
+        }
+    }, {
+        path: '/industry/searchboss',
+        name: "查询人员",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/industry/searchboss.vue"], resolve)
         }
     }, {
         path: '/industry/searchboss',
