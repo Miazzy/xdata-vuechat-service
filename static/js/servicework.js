@@ -91,6 +91,8 @@ self.addEventListener('install', function(event) {
                 "https://unpkg.com/vue-mindmap",
                 "https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js",
                 "https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js",
+                "https://unpkg.com/vuewordcloud",
+                "https://cdn.jsdelivr.net/gh/Miazzy/DataV@v2.9.0/dist/datav.min.vue.js",
                 "/static/fonts/iconfont@v1.3.45.ttf",
                 "/static/fonts/iconfont@v1.3.45.eot",
                 "/static/img/iconfont@v1.3.45.svg",

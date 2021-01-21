@@ -13,6 +13,7 @@
     "dependencies": {
         "@antv/x6": "^1.11.3",
         "@hellowuxin/mindmap": "^2.1.4",
+        "@jiaminghi/data-view": "^2.10.0",
         "@nutui/nutui": "^2.2.10",
         "ant-design-vue": "^2.0.0-beta.13",
         "await-sleep": "0.0.1",

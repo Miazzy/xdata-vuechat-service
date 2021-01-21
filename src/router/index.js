@@ -132,6 +132,13 @@ const routes = [{
             "subPage": resolve => require(["../components/graph/stockd3cloud.vue"], resolve)
         }
     }, {
+        path: '/app/stockcapsule',
+        name: "胶囊柱图",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/graph/stockcapsule.vue"], resolve)
+        }
+    }, {
         path: '/app/stockvcloud',
         name: "V词云",
         components: {
