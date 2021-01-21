@@ -16,6 +16,7 @@ try {
     Vue.component("downloadExcel", JsonExcel || null);
     Vue.component("singleSelect", singleSelect || null);
     Vue.component("checkSelect", checkSelect || null);
+    Vue.component(VueWordCloud.name, VueWordCloud);
 } catch (error) {
     console.log(error);
 }
