@@ -11,10 +11,8 @@
   </div>
 </template>
 <script>
-import wordcloud from 'vue-wordcloud';
 export default {
   name: 'demo',
-  components: { wordcloud },
   methods: {
     wordClickHandler(name, value, vm) {
       console.log('wordClickHandler', name, value, vm);

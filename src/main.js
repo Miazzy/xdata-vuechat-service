@@ -18,6 +18,7 @@ try {
     Vue.component("checkSelect", checkSelect || null);
     Vue.component(VueWordCloud.name, VueWordCloud);
     Vue.component("vueD3Cloud", vueD3Cloud.default);
+    Vue.component(WordCloud.default.name, WordCloud.default);
 } catch (error) {
     console.log(error);
 }
