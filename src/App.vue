@@ -2,31 +2,21 @@
     <div id="app">
         <welcome></welcome>
         <div class="outter" :class="{'hideLeft':$route.path.split('/').length>2}">
-            <!--通用头部-->
             <header class="app-header" :class="{'header-hide':!$store.state.headerStatus}">
                 <wx-header :pageName="pageName"></wx-header>
             </header>
-            <!--搜索框 只在“微信”和“联系人”页面下显示-->
             <search v-show="false"></search>
-            <!--四个门面页 “微信” “联系人” “发现” “我”-->
             <section class="app-content">
                 <keep-alive>
                     <router-view name="default" ></router-view>
                 </keep-alive>
             </section>
-            <!--底部导航 路由
-            <footer class="app-footer" style="display:none;">
-                <wx-nav></wx-nav>
-            </footer>
-            -->
         </div>
-        <!--其他店内页集合 有过渡效果-->
         <transition name="custom-classes-transition" :enter-active-class="enterAnimate" :leave-active-class="leaveAnimate">
             <router-view name="subPage" class="sub-page"></router-view>
         </transition>
     </div>
 </template>
-
 <script>
     import welcome from './components/common/welcome.vue'
     import WxHeader from './components/common/wx-header'
