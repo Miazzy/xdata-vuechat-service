@@ -1,10 +1,9 @@
 <template>
   <div>
-    <cloud :data="words" :fontSizeMapper="fontSizeMapper" style="width:100%;height:100vh;"/>
+    <vue-d3-cloud :data="words" :fontSizeMapper="fontSizeMapper" style="width:100%;height:100vh;"/>
   </div>
 </template>
 <script>
-import Cloud from 'vue-d3-cloud';
 export default {
     name: 'demo',
     components: {
