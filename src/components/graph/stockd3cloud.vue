@@ -6,9 +6,6 @@
 <script>
 export default {
     name: 'demo',
-    components: {
-        Cloud,
-    },
     data() {
         return {
             words: [
