@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import mindmap from '@hellowuxin/mindmap'
 export default {
   components: { mindmap },
   data: () => ({
