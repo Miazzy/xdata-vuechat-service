@@ -1,17 +1,12 @@
 <template>
   <div>
-    <organization-chart :datasource="ds" style="height:100vh;width:100%;border:0px solid #fefefe;"></organization-chart>
+    <orgchart :datasource="ds" style="height:100vh;width:100%;border:0px solid #fefefe;"></orgchart>
   </div>
 </template>
 
 <script>
-  import OrganizationChart from 'vue-organization-chart'
   import 'vue-organization-chart/dist/orgchart.css'
-
   export default {
-    components: {
-      OrganizationChart
-    },
     data () {
       return {
         ds: {
