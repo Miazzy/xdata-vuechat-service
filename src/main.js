@@ -19,6 +19,7 @@ try {
     Vue.component(VueWordCloud.name, VueWordCloud);
     Vue.component("vueD3Cloud", vueD3Cloud.default);
     Vue.component(WordCloud.default.name, WordCloud.default);
+    Vue.component(mindmap, mindmap);
 } catch (error) {
     console.log(error);
 }
