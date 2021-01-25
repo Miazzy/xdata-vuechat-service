@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import 'vue-organization-chart/dist/orgchart.css'
+  //import 'https://cdn.jsdelivr.net/gh/Miazzy/xdata-vuechat-service@v1.0.6/dist/orgchart.css';
   export default {
     data () {
       return {
