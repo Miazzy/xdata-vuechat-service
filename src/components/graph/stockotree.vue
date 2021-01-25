@@ -3,9 +3,7 @@
     <orgchart :datasource="ds" style="height:100vh;width:100%;border:0px solid #fefefe;"></orgchart>
   </div>
 </template>
-
 <script>
-  //import 'https://cdn.jsdelivr.net/gh/Miazzy/xdata-vuechat-service@v1.0.6/dist/orgchart.css';
   export default {
     data () {
       return {
