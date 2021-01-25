@@ -20,6 +20,7 @@ try {
     Vue.component("vueD3Cloud", vueD3Cloud.default);
     Vue.component(WordCloud.default.name, WordCloud.default);
     Vue.component(mindmap, mindmap);
+    Vue.component("orgchart", orgchart.default);
 } catch (error) {
     console.log(error);
 }
