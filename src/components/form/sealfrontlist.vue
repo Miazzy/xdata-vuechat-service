@@ -224,10 +224,10 @@ export default {
             this.$router.push(`/explore`);
             break;
           case 10: //财务归档
-            this.$router.push(`/app/sealfinance`);
+            this.$router.push(`/app/sealfinance?transfer_type=finance`);
             break;
           case 11: //档案归档
-            this.$router.push(`/app/sealarchive`);
+            this.$router.push(`/app/sealfinance?transfer_type=archive`);
             break;
           default:
             console.log(`no operate. out of switch. `);
