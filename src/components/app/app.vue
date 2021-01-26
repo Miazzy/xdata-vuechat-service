@@ -101,18 +101,18 @@
                         </div>
                     </van-col>
                     <van-col span="6" v-if="role ? role.includes('SEAL_ARCHIVE_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="sealFinanceArchive();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png">
+                        <div class="weui-cell_app_hd" @click="sealDocumentArchive();">
+                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_07.png">
                             <div class="weui-cell_app_bd">
-                                财务归档
+                                档案归档
                             </div>
                         </div>
                     </van-col>
                     <van-col span="6" v-if="role ? role.includes('SEAL_ARCHIVE_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="sealDocumentArchive();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/yuebao.png">
+                        <div class="weui-cell_app_hd" @click="sealFinanceArchive();">
+                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_02.png">
                             <div class="weui-cell_app_bd">
-                                档案归档
+                                财务归档
                             </div>
                         </div>
                     </van-col>
