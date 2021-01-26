@@ -181,7 +181,7 @@ export default {
                         message: '请输入备注信息！',
                     });
                 }
-                
+
                 const fileidlist = this.flist.map(obj => {
                     return obj.id;
                 }).toString();
@@ -218,12 +218,8 @@ export default {
                     this.view = 'view';
                     const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
                     await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
-                    await vant.Dialog.alert({
-                        title: '温馨提示',
-                        message: '您的文件移交申请已经提交成功！',
-                    });
-
-                    for (const elem of flist) {
+                    
+                    for (const elem of this.flist) {
                         let node = null;
                         if (this.item.type == '财务移交') {
                             node = {
@@ -240,8 +236,12 @@ export default {
                         }
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
-                }
 
+                    await vant.Dialog.alert({
+                        title: '温馨提示',
+                        message: '您的文件移交申请已经提交成功！',
+                    });
+                }
             } catch (error) {
                 console.log(error);
             }
