@@ -12,15 +12,31 @@ try {
     Vue.use(VueAxios, axios, Vue); //技巧 同时 use 多个插件 被依赖的插件应放在偏后方
     Vue.use(xediter.default, vant.Empty, vant.Lazyload, vant.Icon, vant.Dialog, vant.AddressList); //设置VueExcel编辑组件
     Vue.use(VueMindmap);
-    Vue.component("SeeksRelationGraph", relationGraph || null);
-    Vue.component("downloadExcel", JsonExcel || null);
-    Vue.component("singleSelect", singleSelect || null);
-    Vue.component("checkSelect", checkSelect || null);
-    Vue.component(VueWordCloud.name, VueWordCloud);
-    Vue.component("vueD3Cloud", vueD3Cloud.default);
-    Vue.component(WordCloud.default.name, WordCloud.default);
-    Vue.component(mindmap, mindmap);
-    Vue.component("orgchart", orgchart.default);
+
+    try {
+        Vue.component("singleSelect", singleSelect || null);
+        Vue.component("checkSelect", checkSelect || null);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        Vue.component("SeeksRelationGraph", relationGraph || null);
+        Vue.component("downloadExcel", JsonExcel || null);
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        Vue.component(VueWordCloud.name, VueWordCloud);
+        Vue.component("vueD3Cloud", vueD3Cloud.default);
+        Vue.component(WordCloud.default.name, WordCloud.default);
+        Vue.component(mindmap, mindmap);
+        Vue.component("orgchart", orgchart.default);
+    } catch (error) {
+        console.log(error);
+    }
+
 } catch (error) {
     console.log(error);
 }
