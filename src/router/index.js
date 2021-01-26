@@ -314,6 +314,20 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealarchive.vue"], resolve)
         }
     }, {
+        path: '/app/sealfinancevlist',
+        name: "财务审批",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealfinancevlist.vue"], resolve)
+        }
+    }, {
+        path: '/app/sealarchivevlist',
+        name: "档案审批",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealarchivevlist.vue"], resolve)
+        }
+    }, {
         path: '/app/sealmylist',
         name: "用印历史",
         components: {
