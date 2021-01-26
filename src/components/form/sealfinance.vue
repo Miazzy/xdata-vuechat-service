@@ -168,18 +168,25 @@ export default {
             try {
                 const id = Betools.tools.queryUniqueID();
                 const userinfo = await Betools.storage.getStore('system_userinfo');
+                debugger;
                 if (!this.flist || this.flist.length <= 0) {
                     return await vant.Dialog.confirm({ //提示确认用印操作
                         title: '温馨提示',
                         message: '请选择移交文件！',
                     });
                 }
-                if (!this.message) {
+                if (!this.item.message) {
                     return await vant.Dialog.confirm({ //提示确认用印操作
                         title: '温馨提示',
                         message: '请输入备注信息！',
                     });
                 }
+                const fileidlist = this.flist.map(obj => {
+                    return obj.id
+                }).toString();
+                const filenamelist = this.flist.map(obj => {
+                    return obj.filename
+                }).toString();
                 const elem = {
                     id,
                     create_by: userinfo.username,
@@ -187,14 +194,22 @@ export default {
                     create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                     type: this.item.type,
                     flist: this.flist && this.flist.length > 0 ? JSON.stringify(this.flist) : '',
+                    fileidlist,
+                    filenamelist,
                     pid: id,
                     status: 100,
-                    message: this.message,
+                    message: this.item.message,
                 };
+                // 根据移交类型不同，选择不同的移交接收人员
+                if (this.item.type == '财务移交') {
+                    userinfo.receive_name = 'zhaozy1028';
+                } else if (this.item.type == '档案移交') {
+                    userinfo.receive_name = 'zhaozy1028';
+                }
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
                 if (result.protocol41 == true && result.affectedRows > 0) {
                     const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.username}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
                 }
             } catch (error) {
                 console.log(error);
