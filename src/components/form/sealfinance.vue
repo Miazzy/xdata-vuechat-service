@@ -147,17 +147,18 @@ export default {
         /** 查询初始化信息 */
         async queryInfo() {
             try {
+                const transfer_type = Betools.tools.queryUrlString('transfer_type');
                 const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
-                    item.title = item.filename.slice(0, 16),
-                        item.code = item.id;
+                    item.title = item.filename.slice(0, 16);
+                    item.code = item.id;
                     item.tel = '';
                     item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                     item.isDefault = true;
-                })
-                this.item.type = Betools.tools.queryUrlString('transfer_type') == 'archive' ? '档案移交' : Betools.tools.queryUrlString('transfer_type') == 'finance' ? '财务移交' : '';
+                });
+                this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
                 this.fileColumns = clist;
             } catch (error) {
                 console.log(error);
@@ -224,13 +225,15 @@ export default {
                         if (this.item.type == '财务移交') {
                             node = {
                                 id: elem.id,
-                                status: '财务归档',
+                                status: '移交前台',
+                                finance_status: 100,
                                 finance_time: time
                             };
                         } else if (this.item.type == '档案移交') {
                             node = {
                                 id: elem.id,
-                                status: '档案归档',
+                                status: '移交前台',
+                                archive_status: 100,
                                 doc_time: time
                             };
                         }
