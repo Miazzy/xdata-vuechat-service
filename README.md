@@ -57,17 +57,23 @@ http://oa.leading-group.com:90/workflow/request/RequestTypeShow.jsp?offical=&col
 
 ## spug 账号
 admin/Miazzy@163.com$***
+```js
+
+```
 ## eyeblue 账号
 zhaoziyu/Miazzy@163.com$***
 
 ### 定时执行，防止前台、财务、档案人员等不存在
-
+```sql
 update bs_seal_regist set front = seal where (front = '' or front is null) and seal is not null ;
 update bs_seal_regist set finance = seal where (finance = '' or finance is null) and seal is not null ;
 update bs_seal_regist set record = seal where (record = '' or record is null) and seal is not null ;
 update bs_seal_regist set archive = seal where (archive = '' or archive is null) and seal is not null ;
-
 update bs_seal_regist set front_name = seal_man where (front_name = '' or front_name is null) and seal is not null ;
 update bs_seal_regist set record_name = seal_man where (record_name = '' or record_name is null) and seal is not null ;
 update bs_seal_regist set finance_name = seal_man where (finance_name = '' or finance_name is null) and seal is not null ;
 update bs_seal_regist set archive_name = seal_man where (archive_name = '' or archive_name is null) and seal is not null ;
+
+update bs_seal_regist set zone_name = '领地集团总部' where zone_name is null and seal_group_ids like '%yanggc%';
+update bs_seal_regist set zone_name = '物业总部' where zone_name is null and seal_group_ids like '%longcl%';
+```
