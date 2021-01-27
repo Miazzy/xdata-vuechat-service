@@ -213,7 +213,7 @@ export default {
                 }
 
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
-                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI).replace('bs_seal_regist','bs_contract_transfer_apply').set('accept', 'json'); //发送自动设置排序号请求
+                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist','bs_contract_transfer_apply')).set('accept', 'json'); //发送自动设置排序号请求
 
                 if (result.protocol41 == true && result.affectedRows > 0) {
 
