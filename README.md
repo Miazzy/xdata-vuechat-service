@@ -55,6 +55,10 @@ https://e-cloudstore.com/doc.html#ecode%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E
 ### 泛微e8流程首页
 http://oa.leading-group.com:90/workflow/request/RequestTypeShow.jsp?offical=&colnum4show=mulitcol&fromadvancedmenu=0&selectedContent=&infoId=0&needPopupNewPage=true&needall=0&prjid=&docid=&crmid=&hrmid=&topage=&isec=&usedtodo=-1
 
+## spug 账号
+admin/Miazzy@163.com$***
+## eyeblue 账号
+zhaoziyu/Miazzy@163.com$***
 
 ### 定时执行，防止前台、财务、档案人员等不存在
 
