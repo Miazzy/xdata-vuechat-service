@@ -45,10 +45,8 @@ http://app.shengtai.club/#/app
 #### Account 
 
 * 13689075109
-# L*********7
 
-
-
+### L*********7
 ### 泛微在线文档
 https://e-cloudstore.com/doc.html#ecode%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E
 
@@ -58,7 +56,21 @@ http://oa.leading-group.com:90/workflow/request/RequestTypeShow.jsp?offical=&col
 ## spug 账号
 admin/Miazzy@163.com$***
 ```js
-
+https://api.yunwisdom.club:30443/api/v2/mysql/updata_zonename
+https://api.yunwisdom.club:30443/api/v1/datasync_schedule_sign
+https://api.yunwisdom.club:30443/api/v3/mysql/backup
+https://api.yunwisdom.club:30443/api/v1/datasync
+https://api.yunwisdom.club:30443/api/v1_cd/wework_depart_user/2/1
+https://api.yunwisdom.club:30443/api/v1_cd/wework_sdepart_user/1/1
+https://api.yunwisdom.club:30443/api/v1_cd/wework_depart/1
+https://api.yunwisdom.club:30443/api/v1_cd/wework_depart_list/1
+https://api.yunwisdom.club:30443/api/v2/mysql/serial/update_seal_info
+https://api.yunwisdom.club:30443/api/v3/employee
+https://api.yunwisdom.club:30443/api/v2/wework_depart_list/2
+https://api.yunwisdom.club:30443/api/v2/wework_depart/2
+https://api.yunwisdom.club:30443/api/v2/wework_sdepart_user/2/1
+https://api.yunwisdom.club:30443/api/v2/wework_depart_user/2/1
+https://api.yunwisdom.club:30443/api/v2/mysql/serial/bs_seal_regist/serialid/id
 ```
 ## eyeblue 账号
 zhaoziyu/Miazzy@163.com$***
@@ -73,7 +85,6 @@ update bs_seal_regist set front_name = seal_man where (front_name = '' or front_
 update bs_seal_regist set record_name = seal_man where (record_name = '' or record_name is null) and seal is not null ;
 update bs_seal_regist set finance_name = seal_man where (finance_name = '' or finance_name is null) and seal is not null ;
 update bs_seal_regist set archive_name = seal_man where (archive_name = '' or archive_name is null) and seal is not null ;
-
 update bs_seal_regist set seal_group_ids = 'yanggc,chenll,zhaozy1028' where seal_group_ids like '%yanggc%';
 update bs_seal_regist set zone_name = '领地集团总部' where zone_name is null and seal_group_ids like '%yanggc%';
 update bs_seal_regist set zone_name = '物业总部' where zone_name is null and seal_group_ids like '%longcl%';
