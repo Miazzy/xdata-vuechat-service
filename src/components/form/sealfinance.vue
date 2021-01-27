@@ -34,7 +34,7 @@
                         <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                         <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
-                        <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
+                        <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
                         <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
                     </van-cell-group>
@@ -139,6 +139,21 @@ export default {
         this.queryInfo();
     },
     methods: {
+        async typeConfirm(value) {
+            const transfer_type = this.item.type == '档案移交' ? 'archive' : 'finance';
+            debugger;
+            const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
+            const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
+            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+            clist.map((item, index) => {
+                item.title = item.filename.slice(0, 16);
+                item.code = item.id;
+                item.tel = '';
+                item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                item.isDefault = true;
+            });
+            this.fileColumns = clist;
+        },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
             console.log(data, value, index);
@@ -213,14 +228,14 @@ export default {
                 }
 
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
-                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist','bs_contract_transfer_apply')).set('accept', 'json'); //发送自动设置排序号请求
+                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_contract_transfer_apply')).set('accept', 'json'); //发送自动设置排序号请求
 
                 if (result.protocol41 == true && result.affectedRows > 0) {
 
                     this.view = 'view';
                     const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
                     await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
-                    
+
                     for (const elem of this.flist) {
                         let node = null;
                         if (this.item.type == '财务移交') {
