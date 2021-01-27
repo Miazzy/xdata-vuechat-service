@@ -74,6 +74,7 @@ update bs_seal_regist set record_name = seal_man where (record_name = '' or reco
 update bs_seal_regist set finance_name = seal_man where (finance_name = '' or finance_name is null) and seal is not null ;
 update bs_seal_regist set archive_name = seal_man where (archive_name = '' or archive_name is null) and seal is not null ;
 
+update bs_seal_regist set seal_group_ids = 'yanggc,chenll,zhaozy1028' where seal_group_ids like '%yanggc%';
 update bs_seal_regist set zone_name = '领地集团总部' where zone_name is null and seal_group_ids like '%yanggc%';
 update bs_seal_regist set zone_name = '物业总部' where zone_name is null and seal_group_ids like '%longcl%';
 ```
