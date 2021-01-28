@@ -804,7 +804,7 @@ export default {
                     company = Betools.tools.isNull(company) ? company : company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
                     department = Betools.tools.isNull(department) ? department : department.slice(department.lastIndexOf('>')+1);
-                    this.suserList.push({id:elem.loginid , name:elem.lastname , mobile: elem.mobile , tel:'' , address: Betools.tools.isNull(company) ? '' : company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    this.suserList.push({id:elem.loginid , name:elem.lastname , mobile: elem.mobile , tel:'' , address: Betools.tools.isNull(company) ? '' : company + "||" + Betools.tools.deNull(elem.textfield1.split('||')[1]) , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
                   //获取盖印人姓名
