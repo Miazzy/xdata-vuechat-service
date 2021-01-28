@@ -188,18 +188,23 @@ export default {
             try {
                 let table_type = null;
 
-                // 根据移交类型不同，选择不同的移交接收人员
                 if (this.item.type == '财务移交') {
-                  table_type = 'finance';
+                    table_type = 'finance';
                 } else if (this.item.type == '档案移交') {
-                  table_type = 'archive';
+                    table_type = 'archive';
                 }
 
-                for(const node of this.flist){
-                  await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
+                for (const node of this.flist) {
+                    delete node.tel;
+                    delete node.title;
+                    delete node.code;
+                    delete node.isDefault;
+                    await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
                 }
 
-                // await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_seal_regist_' + table_type)).set('accept', 'json'); //发送自动设置排序号请求
+                const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
+                    status: 200
+                });
 
                 if (result.protocol41 == true && result.affectedRows > 0) {
                     this.view = 'view';
@@ -234,11 +239,13 @@ export default {
                         }
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
+
                     await vant.Dialog.alert({
                         title: '温馨提示',
                         message: '文件已完成归档操作！',
                     });
                 }
+
             } catch (error) {
                 console.log(error);
             }
