@@ -249,7 +249,7 @@ export default {
             //强制渲染
             this.$forceUpdate();
             //获取tabname
-            this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
+            this.tabname = Betools.storage.getStore('system_seal_archive_vlist_tabname') || 2;
             this.tabname = this.tabname > 6 ? 2 : this.tabname;
             //查询列表数据
             this.queryTabList(this.tabname, 0);
@@ -261,7 +261,7 @@ export default {
             await Betools.tools.sleep(0);
             //查询当前用印信息
             const id = this.hContractID;
-            Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
+            Betools.storage.setStore('system_seal_archive_vlist_tabname', this.tabname);
             //跳转到相应的用印界面
             this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=/app/sealarchivevlist`);
         },
