@@ -206,7 +206,7 @@ export default {
                     status: 200
                 });
 
-                if (result.protocol41 == true && result.affectedRows > 0) {
+                if (resp.protocol41 == true && resp.affectedRows > 0) {
                     this.view = 'view';
                     for (const elem of this.flist) {
                         let node = null;
