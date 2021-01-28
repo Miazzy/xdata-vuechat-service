@@ -114,16 +114,6 @@ export default {
                     value: 6,
                     icon: 'wap-home-o'
                 },
-                {
-                    text: '财务移交',
-                    value: 10,
-                    icon: 'logistics'
-                },
-                {
-                    text: '档案移交',
-                    value: 11,
-                    icon: 'sign'
-                },
             ],
             menuCssValue: '',
             isLoading: false,
@@ -233,19 +223,12 @@ export default {
                 case 6: //返回首页
                     this.$router.push(`/explore`);
                     break;
-                case 10: //财务归档
-                    this.$router.push(`/app/sealfinance`);
-                    break;
-                case 11: //档案归档
-                    this.$router.push(`/app/sealarchive`);
-                    break;
                 default:
                     console.log(`no operate. out of switch. `);
             }
         },
         //点击Tab栏
         async queryTabList(tabname, page) {
-
             const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
             let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
             let sealTypeSql = '';
@@ -258,65 +241,29 @@ export default {
             this.initContractList.map((item, index) => {
                 item.name = item.filenamelist.slice(0, 16) + '...';
                 item.tel = '';
-                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist + ' 序号:' + item.serialid ;
+                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist + ' 序号:' + item.serialid;
                 item.isDefault = true;
             });
         },
         async queryInfo() {
-
             //强制渲染
             this.$forceUpdate();
-
             //获取tabname
             this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
             this.tabname = this.tabname > 6 ? 2 : this.tabname;
-
             //查询列表数据
             this.queryTabList(this.tabname, 0);
-
             //查询合同类数据
             this.queryTabList('合同类', 0);
-
         },
         async selectHContract() {
-
             //等待N毫秒
             await Betools.tools.sleep(0);
-
             //查询当前用印信息
             const id = this.hContractID;
-            const list = this[this.tabmap[this.tabname]];
-            const item = list.find((item, index) => {
-                return id == item.id
-            });
-
-            //根据当前状态，跳转到不同页面
-            if (this.tabname == '1') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealfrontlist`);
-            } else if (this.tabname == '2' && item.seal_type == '非合同类') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealfrontlist`);
-            } else if (this.tabname == '2' || this.tabname == '3') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealfrontlist`);
-            } else if (this.tabname == '4') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            } else if (this.tabname == '5') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            } else if (this.tabname == '6') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            }
-
+            Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
+            //跳转到相应的用印界面
+            this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=/app/sealarchivevlist`);
         },
     }
 }

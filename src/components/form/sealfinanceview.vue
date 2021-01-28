@@ -176,6 +176,8 @@ export default {
                 const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
                 this.fileColumns = flist;
                 this.flist = flist;
+                const back = Betools.tools.queryUrlString('back');
+                this.back = back;
             } catch (error) {
                 console.log(error);
             }
