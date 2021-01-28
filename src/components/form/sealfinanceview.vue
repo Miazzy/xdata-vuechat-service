@@ -127,6 +127,7 @@ export default {
             fileColumns: [],
             flist: [],
             view: '',
+            table_type: '',
             readonly: true,
             zonename: '',
         }
@@ -138,7 +139,7 @@ export default {
         this.queryInfo();
     },
     methods: {
-        async typeConfirm(value , index , resp) {
+        async typeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
@@ -185,83 +186,57 @@ export default {
         /** 处理同意/提交操作 */
         async handleAgree() {
             try {
-                const id = Betools.tools.queryUniqueID();
-                const userinfo = await Betools.storage.getStore('system_userinfo');
-                const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-                if (!this.flist || this.flist.length <= 0) {
-                    return await vant.Dialog.confirm({ //提示确认用印操作
-                        title: '温馨提示',
-                        message: '请选择移交文件！',
-                    });
-                }
-                if (!this.item.message) {
-                    return await vant.Dialog.confirm({ //提示确认用印操作
-                        title: '温馨提示',
-                        message: '请输入备注信息！',
-                    });
-                }
-
-                const fileidlist = this.flist.map(obj => {
-                    return obj.id;
-                }).toString();
-
-                const filenamelist = this.flist.map(obj => {
-                    return obj.filename;
-                }).toString();
-
-                const elem = {
-                    id,
-                    create_by: userinfo.username,
-                    create_name: userinfo.realname,
-                    create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-                    type: this.item.type,
-                    flist: this.flist && this.flist.length > 0 ? JSON.stringify(this.flist) : '',
-                    fileidlist,
-                    filenamelist,
-                    pid: id,
-                    status: 100,
-                    message: this.item.message,
-                };
+                let table_type = null;
 
                 // 根据移交类型不同，选择不同的移交接收人员
                 if (this.item.type == '财务移交') {
-                    userinfo.receive_name = 'zhaozy1028';
+                  table_type = 'finance';
                 } else if (this.item.type == '档案移交') {
-                    userinfo.receive_name = 'zhaozy1028';
+                  table_type = 'archive';
                 }
 
-                const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
-                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_contract_transfer_apply')).set('accept', 'json'); //发送自动设置排序号请求
+                for(const node of this.flist){
+                  await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
+                }
+
+                // await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_seal_regist_' + table_type)).set('accept', 'json'); //发送自动设置排序号请求
 
                 if (result.protocol41 == true && result.affectedRows > 0) {
-
                     this.view = 'view';
-                    const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
-
                     for (const elem of this.flist) {
                         let node = null;
-                        if (this.item.type == '财务移交') {
+                        if (elem.type == '移交前台' && this.item.type == '财务移交') {
                             node = {
                                 id: elem.id,
-                                status: '移交前台',
-                                finance_status: 100,
-                                finance_time: time
+                                status: '财务归档',
+                                finance_status: 200,
                             };
-                        } else if (this.item.type == '档案移交') {
+                        } else if (elem.type == '移交前台' && this.item.type == '档案移交') {
                             node = {
                                 id: elem.id,
-                                status: '移交前台',
-                                archive_status: 100,
-                                doc_time: time
+                                status: '档案归档',
+                                archive_status: 200,
+                            };
+                        } else if (elem.type == '财务归档' && this.item.type == '档案移交') {
+                            node = {
+                                id: elem.id,
+                                status: '已完成',
+                                archive_status: 200,
+                                finance_status: 200,
+                            };
+                        } else if (elem.type == '档案归档' && this.item.type == '财务移交') {
+                            node = {
+                                id: elem.id,
+                                status: '已完成',
+                                archive_status: 200,
+                                finance_status: 200,
                             };
                         }
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
-
                     await vant.Dialog.alert({
                         title: '温馨提示',
-                        message: '您的文件移交申请已经提交成功！',
+                        message: '文件已完成归档操作！',
                     });
                 }
             } catch (error) {
