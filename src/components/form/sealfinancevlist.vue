@@ -283,11 +283,10 @@ export default {
             await Betools.tools.sleep(0);
             //查询当前用印信息
             const id = this.hContractID;
-            debugger;
             //根据当前状态，跳转到不同页面
             Betools.storage.setStore('system_seal_finance_vlist_tabname', this.tabname);
             //跳转到相应的用印界面
-            this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=sealfinancevlist`);
+            this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=/app/sealfinancevlist`);
         },
     }
 }

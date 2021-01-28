@@ -3,7 +3,7 @@
     <div id="content" style="margin-top: 0px;">
         <header id="wx-header" style="overflow-x: hidden;">
             <div class="center">
-                <router-link :to="back" @click="$router.push(`/app/sealfrontlist`)" tag="div" class="iconfont icon-left">
+                <router-link :to="back" @click="$router.push(`/app/sealfinancevlist`)" tag="div" class="iconfont icon-left">
                     <span>返回</span>
                 </router-link>
                 <span>{{ item.type }}</span>
@@ -98,7 +98,7 @@ export default {
             sealuserid: '',
             iswechat: false,
             agroup: [],
-            back: '/app/sealfrontlist',
+            back: '/app/sealfinancevlist',
             hContractID: '',
             item: {
                 id: '',
@@ -111,7 +111,7 @@ export default {
                 message: '',
                 status: 100,
             },
-            backPath: '/app/sealfrontlist',
+            backPath: '/app/sealfinancevlist',
             loading: false,
             hContractList: [],
             processLogList: [],
@@ -163,8 +163,19 @@ export default {
             try {
                 const id = Betools.tools.queryUrlString('id');
                 const clist = await Betools.manage.queryTableData('bs_contract_transfer_apply', `_where=(id,eq,${id})&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
-                this.item = clist && clist.length > 0 ? clist[0] : null;
-                this.fileColumns = clist && clist.length > 0 ? clist[0].flist : null;
+                const item = clist && clist.length > 0 ? clist[0] : null;
+                this.item.id = item.id;
+                this.item.createtime = dayjs(item.create_time).format('YYYY-MM-DD');
+                this.item.serialid = item.serialid;
+                this.item.type = item.type;
+                this.item.filename = item.filename;
+                this.item.flist = item.flist;
+                this.item.remark = item.remark;
+                this.item.message = item.message;
+                this.item.status = item.status;
+                const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
+                this.fileColumns = flist;
+                this.flist = flist;
             } catch (error) {
                 console.log(error);
             }
