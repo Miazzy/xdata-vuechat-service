@@ -93,6 +93,7 @@ export default {
             tableInfo: '',
             orderInfo: '',
             status: '',
+            status_name : '已移交',
             status_type: '',
             fields: [],
             sealuserid: '',
