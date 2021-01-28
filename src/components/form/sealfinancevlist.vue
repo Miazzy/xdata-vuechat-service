@@ -49,8 +49,9 @@
             </div>
 
             <div class="wechat-list">
-                <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
+                <van-pull-refresh v-model="isLoading" @refresh="queryFresh()">
                     <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
                 </van-pull-refresh>
             </div>
 
@@ -237,7 +238,8 @@ export default {
             if (this.searchWord) { //如果存在搜索关键字
                 searchSql = `~and((create_time,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(fileidlist,like,~${this.searchWord}~)~or(filenamelist,like,~${this.searchWord}~)~or(remark,like,~${this.searchWord}~)~or(status,like,~${this.searchWord}~)~or(flist,like,~${this.searchWord}~)~or(create_name,like,~${this.searchWord}~)~or(message,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~))`;
             }
-            this.initContractList = await Betools.manage.queryTableData('bs_contract_transfer_apply', `_where=(status,eq,100)~and(create_time,gt,${month})~and(type,like,~财务移交~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+            const status = tabname == 2 || tabname == '2' ? '100' : '200';
+            this.initContractList = await Betools.manage.queryTableData('bs_contract_transfer_apply', `_where=(status,eq,${status})~and(create_time,gt,${month})~and(type,like,~财务移交~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
             this.initContractList.map((item, index) => {
                 item.name = item.filenamelist.slice(0, 16) + '...';
                 item.tel = '';
@@ -249,12 +251,9 @@ export default {
             //强制渲染
             this.$forceUpdate();
             //获取tabname
-            this.tabname = Betools.storage.getStore('system_seal_finance_vlist_tabname') || 2;
-            this.tabname = this.tabname > 6 ? 2 : this.tabname;
+            this.tabname = Betools.storage.getStore('system_seal_finance_vlist_tabname') || '2';
             //查询列表数据
             this.queryTabList(this.tabname, 0);
-            //查询合同类数据
-            this.queryTabList('合同类', 0);
         },
         async selectHContract() {
             //等待N毫秒
