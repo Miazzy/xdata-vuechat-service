@@ -789,6 +789,10 @@ export default {
             //从用户表数据中获取填报人资料
             let user = await Betools.manage.queryUserByNameHRM(sealman.trim());
 
+            if(sealman.startsWith('陈')){
+              debugger;
+            }
+
             if(!!user){
 
               //如果是用户数组列表，则展示列表，让用户自己选择
@@ -797,10 +801,10 @@ export default {
                 try {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
-                    company = company.slice(company.lastIndexOf('>')+1);
+                    company = Betools.tools.isNull(company) ? company : company.slice(company.lastIndexOf('>')+1);
                     let department = elem.textfield1.split('||')[1];
-                    department = department.slice(department.lastIndexOf('>')+1);
-                    this.suserList.push({id:elem.loginid , name:elem.lastname , mobile: elem.mobile , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
+                    department = Betools.tools.isNull(department) ? department : department.slice(department.lastIndexOf('>')+1);
+                    this.suserList.push({id:elem.loginid , name:elem.lastname , mobile: elem.mobile , tel:'' , address: Betools.tools.isNull(company) ? '' : company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
 
                   //获取盖印人姓名
