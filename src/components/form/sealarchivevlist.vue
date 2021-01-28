@@ -49,9 +49,9 @@
             </div>
 
             <div class="wechat-list">
-                <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
-                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
-                    <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
+                <van-pull-refresh v-model="isLoading" @refresh="queryFresh()">
+                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已移交" edit-disabled @select="selectHContract" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract" />
                 </van-pull-refresh>
             </div>
 
@@ -252,8 +252,9 @@ export default {
             this.tabname = Betools.storage.getStore('system_seal_archive_vlist_tabname') || '2';
             this.queryTabList(this.tabname, 0);
         },
-        async selectHContract() {
-            const id = this.hContractID;
+        async selectHContract(key,value,node) {
+            console.log(`key:${JSON.stringify(key)},value:${value},node:${node}`);
+            const id = this.initContractList[value].id;
             Betools.storage.setStore('system_seal_archive_vlist_tabname', this.tabname);
             this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=/app/sealarchivevlist`);
         },
