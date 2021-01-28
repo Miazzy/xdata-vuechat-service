@@ -258,7 +258,7 @@ export default {
             this.initContractList.map((item, index) => {
                 item.name = item.filenamelist.slice(0, 16) + '...';
                 item.tel = '';
-                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist + ' 序号:' + item.serialid ;
+                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist + ' 序号:' + item.serialid;
                 item.isDefault = true;
             });
         },
@@ -268,7 +268,7 @@ export default {
             this.$forceUpdate();
 
             //获取tabname
-            this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
+            this.tabname = Betools.storage.getStore('system_seal_finance_vlist_tabname') || 2;
             this.tabname = this.tabname > 6 ? 2 : this.tabname;
 
             //查询列表数据
@@ -279,44 +279,15 @@ export default {
 
         },
         async selectHContract() {
-
             //等待N毫秒
             await Betools.tools.sleep(0);
-
             //查询当前用印信息
             const id = this.hContractID;
-            const list = this[this.tabmap[this.tabname]];
-            const item = list.find((item, index) => {
-                return id == item.id
-            });
-
+            debugger;
             //根据当前状态，跳转到不同页面
-            if (this.tabname == '1') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealfrontlist`);
-            } else if (this.tabname == '2' && item.seal_type == '非合同类') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealfrontlist`);
-            } else if (this.tabname == '2' || this.tabname == '3') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealfrontlist`);
-            } else if (this.tabname == '4') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            } else if (this.tabname == '5') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            } else if (this.tabname == '6') {
-                Betools.storage.setStore('system_seal_front_list_tabname', this.tabname);
-                //跳转到相应的用印界面
-                this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
-            }
-
+            Betools.storage.setStore('system_seal_finance_vlist_tabname', this.tabname);
+            //跳转到相应的用印界面
+            this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=sealfinancevlist`);
         },
     }
 }

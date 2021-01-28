@@ -321,6 +321,13 @@ const routes = [{
             "subPage": resolve => require(["../components/form/sealfinancevlist.vue"], resolve)
         }
     }, {
+        path: '/app/sealfinanceview',
+        name: "财审详情",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/form/sealfinanceview.vue"], resolve)
+        }
+    }, {
         path: '/app/sealarchivevlist',
         name: "档案审批",
         components: {
