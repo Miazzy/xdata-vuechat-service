@@ -553,7 +553,7 @@ export default {
             this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/sealmanage`)) : (vant.Toast('您没有用印合同资料审批的权限！'));
         },
         async sealFront() {
-            this.role.includes('SEAL_FRONT_SERVICE') ? (this.$router.push(`/app/sealfrontlist`)) : (vant.Toast('您没有用印合同资料前台移交的权限！'));
+            this.role.includes('SEAL_FRONT_SERVICE') ? (this.$router.push(`/app/sealfinance?transfer_type=finance`)) : (vant.Toast('您没有用印合同资料前台移交的权限！'));
         },
         async sealArchive() {
             this.role.includes('SEAL_ARCHIVE_ADMIN') ? (this.$router.push(`/app/sealarchivelist`)) : (vant.Toast('您没有用印合同资料归档的权限！'));
