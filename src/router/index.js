@@ -203,7 +203,7 @@ const routes = [{
         }
     }, {
         path: '/industry/search',
-        name: "查询结果",-
+        name: "查询结果",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/industry/search.vue"], resolve)
