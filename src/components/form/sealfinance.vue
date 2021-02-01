@@ -3,7 +3,7 @@
     <div id="content" style="margin-top: 0px;">
         <header id="wx-header" style="overflow-x: hidden;">
             <div class="center">
-                <router-link :to="back" @click="$router.push(`/app/sealfrontlist`)" tag="div" class="iconfont icon-left">
+                <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                     <span>返回</span>
                 </router-link>
                 <span>{{ item.type }}</span>
@@ -99,7 +99,7 @@ export default {
             sealuserid: '',
             iswechat: false,
             agroup: [],
-            back: '/app/sealfrontlist',
+            back: '/app',
             hContractID: '',
             item: {
                 id: '',
@@ -112,7 +112,7 @@ export default {
                 message: '',
                 status: 100,
             },
-            backPath: '/app/sealfrontlist',
+            backPath: '/app',
             loading: false,
             hContractList: [],
             processLogList: [],
