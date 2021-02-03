@@ -6,7 +6,7 @@
 
     <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;" >
         <div class="center" style="position:relative;">
-            <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+            <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                 <span>返回</span>
             </router-link>
             <span>访客登记</span>
@@ -94,6 +94,7 @@ export default {
             isLoading:false,
             loading:false,
             currentPage: 1,
+            back:'/app/app_subvisitor',
             statusType:{'init':'待处理','visit':'已到访','devisit':'未到访'},
         }
     },

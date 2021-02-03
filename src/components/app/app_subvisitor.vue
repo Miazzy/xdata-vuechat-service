@@ -1,245 +1,18 @@
 <template>
 <div id="app">
-    <section>
 
-        <div class="weui-cells" style="margin-top:0px;">
-            <van-swipe :autoplay="3000">
-                <van-swipe-item v-for="(image, index) in images" :key="index">
-                    <img width="100%" height="200px;" v-lazy="image.files" />
-                </van-swipe-item>
-            </van-swipe>
-            <router-link to="" class="weui-cell weui-cell-app_access" style="padding:0px 0px;padding-left:0px;border-top:0px solid #ffffff;">
-                <van-notice-bar v-show="showNotice" style="width:100%;display:none;" color="#1989fa" background="#ecf9ff" left-icon="volume-o" text="欢迎使用OA移动APP" />
+    <header id="wx-header" style="overflow-x: hidden;" >
+        <div class="center" >
+            <router-link :to="back" tag="div" class="iconfont icon-left">
+                <span>返回</span>
             </router-link>
+            <span>来访管理</span>
         </div>
+    </header>
 
-        <div id="weui-cells-flex" v-if="role ? ( role.includes('JOB_HR_ADMIN') || role.includes('JOB_EXEC_ADMIN') || role.includes('JOB_FRONT_ADMIN') || role.includes('JOB_MEAL_ADMIN') ) : false " class="weui-cells" style="display:block; position:relative;">
-            <div class="weui-cell-title">入职管理</div>
-            <div style="display:none;">
-                <div style="position:absolute; top: 0.6rem; right:25px;">
-                    <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-                        更多
-                    </span>
-                </div>
-                <div style="position:absolute; top: 0.57rem; right:10px;">
-                    <van-icon name="arrow" />
-                </div>
-            </div>
-            <div class="flex-layout-content" id="scanCell">
-                <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
-                    <van-col span="6" v-if="role ? role.includes('JOB_HR_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="entryjob('hr');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.4/images/shenpi_03.png">
-                            <div class="weui-cell_app_bd">
-                                入职审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('JOB_EXEC_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="entryjob('admin');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/hire.png">
-                            <div class="weui-cell_app_bd">
-                                行政审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('JOB_FRONT_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="entryjob('front');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/phone_01.png">
-                            <div class="weui-cell_app_bd">
-                                前台审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('JOB_MEAL_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="entryjob('meal');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/xiuxian_00.png">
-                            <div class="weui-cell_app_bd">
-                                食堂审批
-                            </div>
-                        </div>
-                    </van-col>
-                </van-row>
-            </div>
-        </div>
-        <div id="weui-cells-flex" class="weui-cells" style="display: block; position:relative;">
-            <div class="weui-cell-title">用印管理</div>
-            <div style="display:none;">
-                <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
-                    <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-                        更多
-                    </span>
-                </div>
-                <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
-                    <van-icon name="arrow" />
-                </div>
-            </div>
-            <div class="flex-layout-content" id="scanCell">
-                <van-row class="flex-layout-van" id="flex-layout-van" type="flex" gutter="0" justify="left">
-                    <van-col span="6">
-                        <div class="weui-cell_app_hd" @click="sealApply();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png">
-                            <div class="weui-cell_app_bd">
-                                用印申请
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false ">
-                        <div v-show="true " class="weui-cell_app_hd" @click="sealApprove();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
-                            <div class="weui-cell_app_bd">
-                                用印审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_FRONT_SERVICE') : false ">
-                        <div class="weui-cell_app_hd" @click="sealFront();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/dimission.png">
-                            <div class="weui-cell_app_bd">
-                                用印移交
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_ARCHIVE_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="sealDocumentArchive();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_07.png">
-                            <div class="weui-cell_app_bd">
-                                档案归档
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_ARCHIVE_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="sealFinanceArchive();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_02.png">
-                            <div class="weui-cell_app_bd">
-                                财务归档
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? true : false ">
-                        <div class="weui-cell_app_hd" @click="sealMyList();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_05.png">
-                            <div class="weui-cell_app_bd">
-                                用印历史
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="sealManage();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png">
-                            <div class="weui-cell_app_bd">
-                                用印管理
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6">
-                        <div class="weui-cell_app_hd" @click="sealElectron();">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.9/images/seal_7.png">
-                            <div class="weui-cell_app_bd">
-                                电子印章
-                            </div>
-                        </div>
-                    </van-col>
-                </van-row>
-            </div>
-        </div>
-        <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
-            <div class="weui-cell-title">领用借用</div>
-            <div v-show=" commonIconLength > 8 " @click=" commonIconToggle = !commonIconToggle;" style="position:absolute; top: 0.6rem; right:25px;display:block;">
-                <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-                    更多
-                </span>
-            </div>
-            <div v-show=" commonIconLength > 8 " style="position:absolute; top: 0.50rem; right:10px;display:block; transform: scale(.65);">
-                <van-icon name="arrow" v-show="commonIconToggle" style="transform:rotate(90deg);" />
-                <van-icon name="arrow" v-show="!commonIconToggle" style="transform:rotate(0deg);" />
-            </div>
-            <div class="flex-layout-content" id="scanCell">
-                <van-row class="flex-layout-van flex-layout-van-common" id="flex-layout-van" type="flex" justify="left">
-                    <van-col span="6">
-                        <div class="weui-cell_app_hd" @click="goodsReceive('office');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/list_00.png">
-                            <div class="weui-cell_app_bd">
-                                办公预约
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('common');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/tag_00.png">
-                            <div class="weui-cell_app_bd">
-                                设备借用
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','clist');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/material.png">
-                            <div class="weui-cell_app_bd">
-                                失物认领
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','apply');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_08.png">
-                            <div class="weui-cell_app_bd">
-                                失物登记
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="goodsReceive('approve');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi.png">
-                            <div class="weui-cell_app_bd">
-                                领用审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('approve');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.5/images/shenpi_06.png">
-                            <div class="weui-cell_app_bd">
-                                借用审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('lostproperty','approve');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.7/images/material_06.png">
-                            <div class="weui-cell_app_bd">
-                                失物审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('data');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_9.png">
-                            <div class="weui-cell_app_bd">
-                                数据管理
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 || commonIconToggle ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('history');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_04.png">
-                            <div class="weui-cell_app_bd">
-                                预约历史
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show=" commonIconLength <= 8 || commonIconToggle ">
-                        <div class="weui-cell_app_hd" @click="goodsBorrow('equiphistory');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_03.png">
-                            <div class="weui-cell_app_bd">
-                                借用历史
-                            </div>
-                        </div>
-                    </van-col>
-                </van-row>
-            </div>
-        </div>
-        <!-- <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " style="display:block; position:relative;">
+    <section style="margin-top:0px;">
+
+        <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " style="display:block; position:relative;margin-top:0px;">
             <div class="weui-cell-title">来访管理</div>
             <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
                 <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
@@ -259,7 +32,7 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
+                    <van-col span="6" style="display:block;" >
                         <div class="weui-cell_app_hd" @click="visitmanage('approve');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
                             <div class="weui-cell_app_bd">
@@ -267,7 +40,7 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
+                    <van-col span="6" style="display:block;" >
                         <div class="weui-cell_app_hd" @click="visitmanage('manage');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png">
                             <div class="weui-cell_app_bd">
@@ -275,74 +48,11 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" v-if="role ? true : false ">
+                    <van-col span="6">
                         <div class="weui-cell_app_hd" @click="visitmanage('history');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
                             <div class="weui-cell_app_bd">
                                 来访历史
-                            </div>
-                        </div>
-                    </van-col>
-                </van-row>
-            </div>
-        </div> -->
-        <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
-            <div class="weui-cell-title">协同办公</div>
-            <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
-                <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-                    更多
-                </span>
-            </div>
-            <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
-                <van-icon name="arrow" />
-            </div>
-            <div class="flex-layout-content" id="scanCell">
-                <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
-                    <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('share');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/jiejing.png">
-                            <div class="weui-cell_app_bd">
-                                共享服务
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('property');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/pay.png">
-                            <div class="weui-cell_app_bd">
-                                资产盘点
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('visitors');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
-                            <div class="weui-cell_app_bd">
-                                来访管理
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('visitor');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
-                            <div class="weui-cell_app_bd">
-                                访客管理(旧)
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="cooperate('auth');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/game_00.png">
-                            <div class="weui-cell_app_bd">
-                                权限配置
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false ">
-                        <div class="weui-cell_app_hd" @click="cooperate('employee');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_12.png">
-                            <div class="weui-cell_app_bd">
-                                员工管理
                             </div>
                         </div>
                     </van-col>
@@ -360,7 +70,7 @@ export default {
     mixins: [window.mixin],
     data() {
         return {
-            pageName: "智慧行政",
+            pageName: "来访管理",
             momentNewMsg: true,
             userinfo: {
                 grouplimits: {
@@ -381,6 +91,7 @@ export default {
             images: Betools.storage.getStore('system_app_image'),
             showNotice: false,
             role: 'view',
+            back:'/app',
         }
     },
     activated() {
@@ -668,8 +379,6 @@ export default {
                 this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/authmanage?back=/app&type=${name}`)) : (vant.Toast('您没有权限配置的权限！'));
             } else if (name == 'employee') { // 进行员工管理
                 this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/employeemanage?back=/app&type=${name}`)) : (vant.Toast('您没有员工管理的权限！'));
-             } else if (name == 'visitors') { // 进行来访管理
-                this.$router.push(`/app/app_subvisitor?back=/app&type=${name}`);
             } else if (name == 'visitor') { // 来访登记
                 const userinfo = await Betools.storage.getStore('system_userinfo');
                 if (userinfo) {
@@ -684,13 +393,13 @@ export default {
         // 来访管理
         visitmanage(name) {
             if (name == 'apply') {
-                this.$router.push(`/app/visitorreceive?back=/app&type=${name}`);
+                this.$router.push(`/app/visitorreceive?back=/app/app_subvisitor&type=${name}`);
             } else if (name == 'approve') {
-                this.$router.push(`/app/visitorlist?back=/app&type=${name}`);
+                this.$router.push(`/app/visitorlist?back=/app/app_subvisitor&type=${name}`);
             } else if (name == 'manage') {
-                this.$router.push(`/app/visitormanage?back=/app&type=${name}`);
+                this.$router.push(`/app/visitormanage?back=/app/app_subvisitor&type=${name}`);
             } else if (name == 'history') {
-                this.$router.push(`/app/visitormylist?back=/app&type=${name}`);
+                this.$router.push(`/app/visitormylist?back=/app/app_subvisitor&type=${name}`);
             }
         },
         // 电子印章

@@ -52,6 +52,13 @@ const routes = [{
             "subPage": resolve => require(["../components/contact/add-friend.vue"], resolve)
         }
     }, {
+        path: '/app/app_subvisitor',
+        name: "",
+        components: {
+            "default": resolve => require(["../components/app/app.vue"], resolve),
+            "subPage": resolve => require(["../components/app/app_subvisitor.vue"], resolve)
+        }
+    }, {
         path: '/contact/search',
         name: "",
         components: {
