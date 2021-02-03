@@ -140,3 +140,13 @@
     font-size: 12px;
     height: 27px;
 }
+
+#van_visit_group .van-address-list {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 10px 12px 10px 0px;
+}
+
+#van_visit_group .van-address-list__bottom {
+    display: none;
+}

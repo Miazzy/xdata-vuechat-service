@@ -17,7 +17,7 @@
             </div>
         </header>
 
-        <section v-if="iswechat">
+        <section>
 
             <div class="weui-cells" style="margin-top:0px;">
 
@@ -236,9 +236,10 @@
                                 <span class="van-goods-span-number">#20</span>
                             </van-cell-group>
 
-                            <van-cell-group style="margin-top:10px;">
+                            <van-cell-group id="van_visit_group" style="margin-top:10px;">
                                 <van-cell value="被访人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                                <van-field :readonly="readonly" required clearable label="被访人员" v-model="item.create_by" placeholder="请填写被访人员的姓名！" @blur="validField('create_by')" :error-message="message.create_by" />
+                                <van-field :readonly="readonly" required clearable label="被访人员" v-model="item.create_by" placeholder="请填写被访人员的姓名！" @blur="validField('create_by');queryCUserName();" :error-message="message.create_by" @click="queryCUserName();" />
+                                <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCUserName()" />
                                 <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写被访人员的职务名称！" @blur="validField('position')" :error-message="message.position" />
                                 <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写被访人员的联系电话！" @blur="validField('mobile');" :error-message="message.mobile" />
                             </van-cell-group>
@@ -285,12 +286,6 @@
 
         </section>
 
-        <setion v-if="!iswechat">
-            <div class="section-nowechat">
-                请使用微信客户端打开
-            </div>
-        </setion>
-
     </div>
 </keep-alive>
 </template>
@@ -324,6 +319,8 @@ export default {
             sealuserid: '',
             userid: '',
             userList: [],
+            cuserid: '',
+            cuserList: [],
             huserid: '',
             huserList: [],
             auserid: '',
@@ -651,6 +648,48 @@ export default {
             await this.queryUserName();
         },
         // 用户选择接待人员
+        async queryCUserName() {
+            const user_admin_name = this.item.create_by; //获取接待人员信息
+            if(!user_admin_name || user_admin_name.length <= 1){
+              return;
+            }
+            if (!!user_admin_name) {
+                let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim()); //从用户表数据中获取填报人资料
+                if (!!user && Array.isArray(user)) {
+                    this.cuserList = [];
+                    try {
+                        user.map((elem, index) => {
+                            let company = elem.textfield1.split('||')[0];
+                            company = company.slice(company.lastIndexOf('>') + 1);
+                            let department = elem.textfield1.split('||')[1];
+                            department = department.slice(department.lastIndexOf('>') + 1);
+                            this.cuserList.push({
+                                id: elem.loginid,
+                                name: elem.lastname,
+                                tel: '',
+                                address: company + "||" + elem.textfield1.split('||')[1],
+                                company: company,
+                                department: department,
+                                mail: elem.email,
+                                isDefault: !index
+                            });
+                        });
+                        this.item.create_by = user[0].lastname; //获取盖印人姓名
+                        this.item.cuserid = this.cuserid = user[0].loginid; //当前盖印人编号
+                        this.cuserList = this.cuserList.filter((item, index) => {
+                            item.isDefault = index == 0 ? true : false;
+                            let findex = this.cuserList.findIndex((subitem, index) => {
+                                return subitem.id == item.id
+                            });
+                            return index == findex;
+                        });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+        },
+        // 用户选择接待人员
         async queryUserName() {
             const user_admin_name = this.item.user_admin_name; //获取接待人员信息
             if (!!user_admin_name) {
@@ -688,6 +727,14 @@ export default {
                     }
                 }
             }
+        },
+        // 选中当前接待人员
+        async selectCUserName(value) {
+            const id = this.cuserid;
+            const user = this.cuserList.find((item, index) => {
+                return id == item.id
+            }); //获取接待人员姓名
+            this.item.create_by = user.name;
         },
         // 选中当前接待人员
         async selectUserName(value) {
