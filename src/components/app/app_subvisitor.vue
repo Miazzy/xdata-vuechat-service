@@ -12,7 +12,7 @@
 
     <section style="margin-top:0px;">
 
-        <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " style="display:block; position:relative;margin-top:0px;">
+        <div id="weui-cells-flex" class="weui-cells"  style="display:block; position:relative;margin-top:0px;">
             <div class="weui-cell-title">来访管理</div>
             <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
                 <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
