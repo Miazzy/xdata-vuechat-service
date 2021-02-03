@@ -539,11 +539,17 @@ export default {
     },
     methods: {
         async fileConfirm(value, index, resp) {
-            const item = this.fileColumns.find( item => {
-              return item.name == value;
-            })
-            this.item.user_admin_name = item.username;
-            this.item.user_group_ids = item.userlist;
+            try {
+                const item = this.fileColumns.find(item => {
+                    return item.name == value;
+                })
+                this.item.userid = item.userid;
+                this.item.user_admin_name = item.username;
+                this.item.user_group_ids = item.userlist;
+                this.item.user_group_names = item.realname;
+            } catch (error) {
+                console.log(error);
+            }
         },
         async typedTimeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
@@ -1001,7 +1007,7 @@ export default {
                     item.title = item.name.slice(0, 16);
                     item.code = item.id;
                     item.tel = '';
-                    item.name = item.name + ' 客户接待:' + item.realname;
+                    item.name = item.name + ' 客户接待:' + item.username;
                     item.isDefault = true;
                 });
                 this.fileColumns = clist;
@@ -1161,8 +1167,8 @@ export default {
             /************************  工作流程日志(开始)  ************************/
 
             //获取后端配置前端管理员组
-            const front = user_group_ids;
-            const front_name = user_group_names;
+            const front = this.item.userid;
+            const front_name = this.item.username;
 
             //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
             const prLogHisNode = {
