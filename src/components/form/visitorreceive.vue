@@ -1056,6 +1056,78 @@ export default {
                 });
             }
 
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.visitor_company)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入访客单位！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.visitor_name)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入访客姓名！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.visitor_position)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入访客职务！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.visitor_mobile)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入访客电话！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.create_by)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入被访人员！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.position)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入被访人员职务名称！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.mobile)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入被访人员联系电话！',
+                });
+            }
+
+            //未获取到来访单位数据
+            if(Betools.tools.isNull(this.item.address)){
+              //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请选择来访地址！',
+                });
+            }
+
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
 
