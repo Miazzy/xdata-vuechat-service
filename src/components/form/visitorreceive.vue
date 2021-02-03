@@ -1057,7 +1057,7 @@ export default {
             }
 
             //查询直接所在工作组
-            const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW', this.item.userid);
+            const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
 
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
