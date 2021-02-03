@@ -6,7 +6,7 @@
 
         <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;">
             <div class="center">
-                <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+                <router-link v-show="back!='common'" :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                     <span>返回</span>
                 </router-link>
                 <span>访客登记</span>
@@ -1152,17 +1152,23 @@ export default {
             }
 
             //发送自动设置排序号请求
-            const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
-
-            //查询数据
-            const value = await Betools.query.queryTableData(this.tablename, id);
-
-            //显示序列号
-            this.item.serialid = value.serialid;
+            try {
+                const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+            } catch (error) {
+                console.log(error);
+            }
 
             //第三步 向物品管理员推送通知，已准备办公用品等
-            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+            try {
+                //查询数据
+                const value = await Betools.query.queryTableData(this.tablename, id);
+                //显示序列号
+                this.item.serialid = value.serialid;
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
+                    .set('accept', 'json');
+            } catch (error) {
+                console.log(error);
+            }
 
             /************************  工作流程日志(开始)  ************************/
 
