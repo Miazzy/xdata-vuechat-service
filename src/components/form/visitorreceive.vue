@@ -239,17 +239,16 @@
                             <van-cell-group id="van_visit_group" style="margin-top:10px;">
                                 <van-cell value="被访人员" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field :readonly="readonly" required clearable label="被访人员" v-model="item.create_by" placeholder="请填写被访人员的姓名！" @blur="validField('create_by');queryCUserName();" :error-message="message.create_by" @click="queryCUserName();" />
-                                <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCUserName()" />
+                                <van-address-list v-show="cuserList.length > 0" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCUserName" />
                                 <van-field :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写被访人员的职务名称！" @blur="validField('position')" :error-message="message.position" />
                                 <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写被访人员的联系电话！" @blur="validField('mobile');" :error-message="message.mobile" />
                             </van-cell-group>
 
                             <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
                                 <van-cell value="接待管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                                <van-field required clearable label="来访地址" v-model="item.address" placeholder="请输入来访地址!" @blur="validField('address');queryAddress();" :error-message="message.address" @click="queryAddress();" />
-                                <van-address-list id="van-visit-address" v-show="addressList.length > 0" v-model="addressId" :list="addressList" default-tag-text="默认" edit-disabled @select="selectAddress" />
+                                <check-select required label="来访地址" placeholder="请选择来访地址" v-model="item.address" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
                                 <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();" />
-                                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName()" />
+                                <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName" />
                             </van-cell-group>
 
                             <van-cell-group style="margin-top:10px;">
@@ -344,6 +343,7 @@ export default {
                     code: '下午',
                 },
             ],
+            fileColumns: [],
             showTypePicker: false,
             uploadURL: 'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: Betools.workconfig.compValidation.visitorapply.message,
@@ -538,6 +538,13 @@ export default {
         this.queryInfo();
     },
     methods: {
+        async fileConfirm(value, index, resp) {
+            const item = this.fileColumns.find( item => {
+              return item.name == value;
+            })
+            this.item.user_admin_name = item.username;
+            this.item.user_group_ids = item.userlist;
+        },
         async typedTimeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
             const transfer_type = resp == '上午' ? '上午' : '下午';
@@ -659,23 +666,22 @@ export default {
                     this.cuserList = [];
                     try {
                         user.map((elem, index) => {
-                            let company = elem.textfield1.split('||')[0];
+                            let company = elem.company.split('||')[0];
                             company = company.slice(company.lastIndexOf('>') + 1);
-                            let department = elem.textfield1.split('||')[1];
-                            department = department.slice(department.lastIndexOf('>') + 1);
                             this.cuserList.push({
-                                id: elem.loginid,
-                                name: elem.lastname,
+                                id: elem.userid,
+                                name: elem.name,
                                 tel: '',
-                                address: company + "||" + elem.textfield1.split('||')[1],
-                                company: company,
-                                department: department,
+                                address: company + '||' + elem.departname,
+                                company: elem.company,
+                                department: elem.departname,
                                 mail: elem.email,
+                                position: elem.position,
                                 isDefault: !index
                             });
                         });
-                        this.item.create_by = user[0].lastname; //获取盖印人姓名
-                        this.item.cuserid = this.cuserid = user[0].loginid; //当前盖印人编号
+                        this.item.create_by = user[0].name; //获取盖印人姓名
+                        this.item.cuserid = this.cuserid = user[0].userid; //当前盖印人编号
                         this.item.position = user[0].position;
                         this.cuserList = this.cuserList.filter((item, index) => {
                             item.isDefault = index == 0 ? true : false;
@@ -730,13 +736,10 @@ export default {
             }
         },
         // 选中当前接待人员
-        async selectCUserName(value) {
-            const id = this.cuserid;
-            const user = this.cuserList.find((item, index) => {
-                return id == item.id
-            }); //获取接待人员姓名
-            this.item.create_by = user.name;
-            this.item.position = user.position;
+        async selectCUserName(key, value, index) {
+            this.item.create_by = key.name;
+            this.item.position = key.position;
+            console.log('key:' + JSON.stringify(key) + " value:" + value);
         },
         // 选中当前接待人员
         async selectUserName(value) {
@@ -992,6 +995,16 @@ export default {
                 this.item.mobile = userinfo.mobile;
                 this.item.position = userinfo.position;
                 this.item.create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+                const clist = await Betools.manage.queryTableData('bs_admin_address', `_where=(status,in,100)&_sort=-id&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+                clist.map((item, index) => {
+                    item.title = item.name.slice(0, 16);
+                    item.code = item.id;
+                    item.tel = '';
+                    item.name = item.name + ' 客户接待:' + item.realname;
+                    item.isDefault = true;
+                });
+                this.fileColumns = clist;
 
             } catch (error) {
                 console.log(error);
