@@ -60,9 +60,9 @@
                                 <van-field :readonly="readonly" required clearable label="访客职务" v-model="item.visitor_position" placeholder="请填写访客职务！" @blur="validField('visitor_position')" :error-message="message.visitor_position" />
                                 <van-field :readonly="readonly" required clearable label="访客电话" v-model="item.visitor_mobile" placeholder="请填写访客电话！" @blur="validField('visitor_mobile')" :error-message="message.visitor_mobile" />
 
-                                <van-icon name="add-o" style="position:absolute;top:115px;right:0px;" @click="size <= 20 ? size++ : size;" />
-                                <van-icon name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;" />
-                                <span class="van-goods-span-number" style="top:130px;">#1</span>
+                                <van-icon v-show="!item.serialid"  name="add-o" style="position:absolute;top:125px;right:0px;" @click="size <= 20 ? size++ : size;" />
+                                <van-icon v-show="!item.serialid" name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;" />
+                                <span v-show="!item.serialid" class="van-goods-span-number" style="top:130px;">#1</span>
 
                             </van-cell-group>
 
@@ -245,9 +245,9 @@
                             </van-cell-group>
 
                             <van-cell-group id="van-user-list" class="van-user-list" style="margin-top:10px;">
-                                <van-cell value="接待管理" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
+                                <van-cell value="来访地址" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <check-select required label="来访地址" placeholder="请选择来访地址" v-model="item.address" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
-                                <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();" />
+                                <van-field v-show="false" required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();" />
                                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName" />
                             </van-cell-group>
 
@@ -1047,15 +1047,6 @@ export default {
                 return false;
             }
 
-            //未获取到选择的客户接待人员
-            if (Betools.tools.isNull(this.item.userid)) {
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入客户接待并点击人员列表，选择客户接待员！',
-                });
-            }
-
             //未获取到来访单位数据
             if(Betools.tools.isNull(this.item.visitor_company)){
               //弹出确认提示
@@ -1127,6 +1118,15 @@ export default {
                     message: '请选择来访地址！',
                 });
             }
+
+            //未获取到选择的客户接待人员
+            // if (Betools.tools.isNull(this.item.userid)) {
+            //     //弹出确认提示
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: '请输入客户接待并点击人员列表，选择客户接待员！',
+            //     });
+            // }
 
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
