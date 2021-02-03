@@ -650,11 +650,11 @@ export default {
         // 用户选择接待人员
         async queryCUserName() {
             const user_admin_name = this.item.create_by; //获取接待人员信息
-            if(!user_admin_name || user_admin_name.length <= 1){
-              return;
+            if (!user_admin_name || user_admin_name.length <= 1) {
+                return;
             }
             if (!!user_admin_name) {
-                let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim()); //从用户表数据中获取填报人资料
+                let user = await Betools.manage.queryUserByNameVHRM(user_admin_name.trim()); //从用户表数据中获取填报人资料
                 if (!!user && Array.isArray(user)) {
                     this.cuserList = [];
                     try {
@@ -676,6 +676,7 @@ export default {
                         });
                         this.item.create_by = user[0].lastname; //获取盖印人姓名
                         this.item.cuserid = this.cuserid = user[0].loginid; //当前盖印人编号
+                        this.item.position = user[0].position;
                         this.cuserList = this.cuserList.filter((item, index) => {
                             item.isDefault = index == 0 ? true : false;
                             let findex = this.cuserList.findIndex((subitem, index) => {
@@ -735,6 +736,7 @@ export default {
                 return id == item.id
             }); //获取接待人员姓名
             this.item.create_by = user.name;
+            this.item.position = user.position;
         },
         // 选中当前接待人员
         async selectUserName(value) {
