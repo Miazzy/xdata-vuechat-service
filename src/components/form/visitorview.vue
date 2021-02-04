@@ -1051,6 +1051,7 @@ export default {
 
             //显示加载状态
             this.loading = true;
+            const status = visitType == '已到访' ? 'visit':'confirm'; 
 
             //获取用户基础信息
             const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -1098,7 +1099,7 @@ export default {
                 user_admin_name: this.item.username,
                 user_group_ids: this.item.userlist,
                 user_group_names: this.item.user_group_names,
-                status: 'visit',
+                status: status,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
@@ -1118,7 +1119,7 @@ export default {
                     user_admin_name: this.item.username,
                     user_group_ids: this.item.userlist,
                     user_group_names: this.item.user_group_names,
-                    status: 'visit',
+                    status: status,
                 }; // 待处理元素
 
                 //第二步，向表单提交form对象数据
@@ -1179,32 +1180,6 @@ export default {
 
             //同时推送一条待办记录给印章管理员
 
-            //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-            const prLogNode = {
-                id: Betools.tools.queryUniqueID(),
-                table_name: this.tablename,
-                main_value: id,
-                proponents: this.item.create_by,
-                business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-                business_code: '000000000', //varchar(100)  null comment '业务编号',
-                process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-                employee: this.item.receive_name, //varchar(1000) null comment '操作职员',
-                approve_user: this.item.create_by, //varchar(100)  null comment '审批人员',
-                action: '', //varchar(100)  null comment '操作动作',
-                action_opinion: '审批领用申请', //text          null comment '操作意见',
-                operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-                functions_station: '经办人', //varchar(100)  null comment '职能岗位',
-                process_station: '领用审批[物品领用]', //varchar(100)  null comment '流程岗位',
-                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `物品领用(${this.item.type}) ` + this.item.name + '#已领取 #经办人: ' + this.item.create_by, //text          null comment '业务内容',
-                process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
-                create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-                relate_data: '', //text          null comment '关联数据',
-                origin_data: '',
-            }
-
-            await Betools.workflow.taskViewProcessLog(prLogNode);
-
             /************************  工作流程日志(结束)  ************************/
 
             //设置状态
@@ -1217,7 +1192,7 @@ export default {
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
-                message: '预约人员已经到访！',
+                message: '预约人员已经'+ (visitType == '已到访' ? '到访' : '确认' )+'！',
             });
 
         },
