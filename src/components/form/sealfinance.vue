@@ -36,7 +36,7 @@
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
-                        <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled />
+                        <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled @select="selectHContract" />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;">
@@ -139,7 +139,19 @@ export default {
         this.queryInfo();
     },
     methods: {
-        async typeConfirm(value , index , resp) {
+        async selectHContract(value, index, key) {
+            console.log('value:' + JSON.stringify(value));
+            console.log('index:' + (index));
+            await vant.Dialog.confirm({ //提示确认用印操作
+                title: '温馨提示',
+                message: `确认移除合同编号为${value.contract_id}的合同文件吗？`,
+            });
+            if (this.flist && this.flist.length > 0) {
+                this.flist.splice(index, 1);
+                this.item.flist = this.flist;
+            }
+        },
+        async typeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
@@ -157,9 +169,9 @@ export default {
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
             console.log(data, value, index);
-            if(Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0){
+            if (Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0) {
                 this.flist = this.item.flist = value;
-            } else if(this.flist && this.flist.length>0){
+            } else if (this.flist && this.flist.length > 0) {
                 this.flist = this.item.flist = this.flist.concat(value);
             }
         },
