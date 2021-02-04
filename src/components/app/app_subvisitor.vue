@@ -28,7 +28,7 @@
                         <div class="weui-cell_app_hd" @click="visitmanage('apply');">
                             <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
                             <div class="weui-cell_app_bd">
-                                来访预约
+                                来访登记
                             </div>
                         </div>
                     </van-col>
@@ -36,7 +36,7 @@
                         <div class="weui-cell_app_hd" @click="visitmanage('approve');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
                             <div class="weui-cell_app_bd">
-                                来访审批
+                                来访确认
                             </div>
                         </div>
                     </van-col>
@@ -44,7 +44,7 @@
                         <div class="weui-cell_app_hd" @click="visitmanage('manage');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png">
                             <div class="weui-cell_app_bd">
-                                来访管理
+                                来访记录
                             </div>
                         </div>
                     </van-col>
@@ -52,7 +52,7 @@
                         <div class="weui-cell_app_hd" @click="visitmanage('history');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
                             <div class="weui-cell_app_bd">
-                                来访历史
+                                我的历史
                             </div>
                         </div>
                     </van-col>
