@@ -58,12 +58,9 @@
 
                             <van-cell-group id="van-visit-group" style="margin-top:10px;position:relative;">
 
-                                <van-cell value="访客信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
+                                <van-cell value="来访信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-
                                 <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time" placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time" />
-
                                 <single-select required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
 
                                 <van-field :readonly="readonly" required clearable label="访客姓名" v-model="item.visitor_name" placeholder="请填写访客姓名！" @blur="validField('visitor_name')" :error-message="message.visitor_name" />
