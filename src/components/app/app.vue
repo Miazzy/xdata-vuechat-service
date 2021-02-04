@@ -338,6 +338,14 @@
                             </div>
                         </div>
                     </van-col>
+                    <van-col span="6" style="display:block;">
+                        <div class="weui-cell_app_hd" @click="cooperate('visitors');" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false ">
+                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
+                            <div class="weui-cell_app_bd">
+                                访客管理(内测)
+                            </div>
+                        </div>
+                    </van-col>
                 </van-row>
             </div>
         </div>
