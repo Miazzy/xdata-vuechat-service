@@ -238,9 +238,9 @@ export default {
 
                 // 根据移交类型不同，选择不同的移交接收人员
                 if (this.item.type == '财务移交') {
-                    userinfo.receive_name = 'zhaozy1028';
+                    userinfo.receive_name = 'zhaozy1028,liguo';
                 } else if (this.item.type == '档案移交') {
-                    userinfo.receive_name = 'zhaozy1028';
+                    userinfo.receive_name = 'zhaozy1028,chenyl0929';
                 }
 
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
