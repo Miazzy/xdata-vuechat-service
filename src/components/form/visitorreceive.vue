@@ -1097,6 +1097,15 @@ export default {
                 });
             }
 
+            const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by,this.item.mobile)
+            if(!ulist || ulist.length == 0){
+                //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！',
+                });
+            }
+
             //未获取到选择的客户接待人员
             // if (Betools.tools.isNull(this.item.userid)) {
             //     //弹出确认提示
@@ -1214,7 +1223,7 @@ export default {
                 const value = await Betools.query.queryTableData(this.tablename, id);
                 //显示序列号
                 this.item.serialid = value.serialid;
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.create_by}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
                     .set('accept', 'json');
             } catch (error) {
                 console.log(error);
