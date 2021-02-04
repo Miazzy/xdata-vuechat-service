@@ -228,7 +228,7 @@ export default {
           })
           this.confirmList = this.confirmList.filter(item => {  return item.id == item.pid; });
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,devisit)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,devisit,invalid)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.doneList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
             item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,

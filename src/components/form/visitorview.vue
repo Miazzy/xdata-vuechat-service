@@ -283,18 +283,14 @@
 
                     </van-cell-group>
 
-                    <div v-show="item.status ==='待处理' && role == 'front' &&  userinfo.realname !== item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  userinfo.realname !== item.create_by) || (item.status ==='已确认' && role == 'front' )" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="未到访" @click="handleDisagree('未到访');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('已到访');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">已到访</van-button>
                     </div>
 
-                    <div v-show=" userinfo.realname == item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show=" item.status ==='待处理' && userinfo.realname == item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废" @click="handleDisagree('已作废');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('确认');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">确认</van-button>
-                    </div>
-
-                    <div v-show="item.status ==='已领取' && (role == 'receive' || role == 'front') " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
-                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleFinaly();" style="border-radius: 10px 10px 10px 10px; text-align: center;">完成</van-button>
                     </div>
 
                     <div style="height:500px;"></div>
@@ -342,8 +338,10 @@ export default {
             fuserList: [],
             vstatus: {
                 init: '待处理',
+                confirm:'已确认',
                 visit: '已到访',
-                devisit: '未到访'
+                devisit: '未到访',
+                invalid:'已作废',
             },
             muserid: '',
             muserList: [],
