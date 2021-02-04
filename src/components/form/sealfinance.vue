@@ -157,7 +157,11 @@ export default {
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
             console.log(data, value, index);
-            this.flist = this.item.flist = value;
+            if(Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0){
+                this.flist = this.item.flist = value;
+            } else if(this.flist && this.flist.length>0){
+                this.flist = this.item.flist = this.flist.concat(value);
+            }
         },
         /** 查询初始化信息 */
         async queryInfo() {
