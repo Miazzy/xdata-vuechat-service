@@ -4,7 +4,7 @@
     <!--首页组件-->
     <div id="content" style="margin-top: 0px;">
 
-        <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;">
+        <header id="wx-header" style="overflow-x: hidden;">
             <div class="center">
                 <router-link :to="back" tag="div" class="iconfont icon-left">
                     <span>返回</span>
@@ -64,7 +64,7 @@
                                 <van-field :readonly="false" required clearable label="访客姓名" v-model="item.visitor_name" placeholder="请填写访客姓名！" @blur="validField('visitor_name')" :error-message="message.visitor_name" />
                                 <van-field :readonly="false" required clearable label="访客电话" v-model="item.visitor_mobile" placeholder="请填写访客电话！" @blur="validField('visitor_mobile')" :error-message="message.visitor_mobile" />
                                 <van-field :readonly="false" required clearable label="访客单位" v-model="item.visitor_company" placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company" />
-                                <van-field :readonly="false" required clearable label="来访人数" v-model="item.visitor_count" placeholder="请填写来访人数！" @blur="validField('visitor_count')" :error-message="message.visitor_count" />
+                                <van-field :readonly="false" required clearable label="来访人数" type="number" v-model="item.visitor_count" placeholder="请填写来访人数！" @blur="validField('visitor_count')" :error-message="message.visitor_count" />
 
                                 <van-icon name="add-o" style="position:absolute;top:115px;right:0px;display:none;" @click="size <= 20 ? size++ : size;" />
                                 <van-icon name="circle" style="position:absolute;top:155px;right:0px;display:none;" @click="size > 1 ? size-- : size;" />
@@ -284,13 +284,13 @@
                     </van-cell-group>
 
                     <div v-show="item.status ==='待处理' && role == 'front' &&  userinfo.realname !== item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
-                        <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="未到访" @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
-                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">已到访</van-button>
+                        <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="未到访" @click="handleDisagree('未到访');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
+                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('已到访');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">已到访</van-button>
                     </div>
 
                     <div v-show=" userinfo.realname == item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
-                        <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废" @click="handleDisagree();" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
-                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">确认</van-button>
+                        <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废" @click="handleDisagree('已作废');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
+                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('确认');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">确认</van-button>
                     </div>
 
                     <div v-show="item.status ==='已领取' && (role == 'receive' || role == 'front') " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
@@ -484,7 +484,7 @@ export default {
                 status: '',
             },
             tlist: [],
-            back: '/app',
+            back: '/app/app_subvisitor',
             workflowlist: [],
             announces: [],
             informList: [],
@@ -918,7 +918,7 @@ export default {
 
         },
         // 物品领用驳回
-        async handleDisagree() {
+        async handleDisagree(visitType) {
             //显示加载状态
             this.loading = true;
 
@@ -931,10 +931,11 @@ export default {
             const pid = Betools.tools.getUrlParam('pid');
 
             //检查用户是否具有权限进行审批
-            const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW', userinfo.username);
+            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
 
             //获取到印章管理员组信息
-            const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            user_group_ids = user_group_ids + ',' + this.item.create_by;
 
             //获取到用户列表数据
             if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
@@ -948,7 +949,7 @@ export default {
             if (!this.item.disagree_remark) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
-                    message: '请输入未到访原因！',
+                    message: '请输入' + (visitType == '未到访' ? visitType : '作废') + '原因！',
                 });
             }
 
@@ -1013,13 +1014,13 @@ export default {
                 process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
                 employee: userinfo.realname, //varchar(1000) null comment '操作职员',
                 approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
-                action: '确认', //varchar(100)  null comment '操作动作',
-                action_opinion: '审批领用申请[未到访]', //text          null comment '操作意见',
+                action: (visitType == '未到访' ? visitType : '作废'), //varchar(100)  null comment '操作动作',
+                action_opinion: '来访申请审批[' + visitType + ']', //text          null comment '操作意见',
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
-                process_station: '领用审批[物品领用]', //varchar(100)  null comment '流程岗位',
+                process_station: '来访审批[' + (visitType == '未到访' ? visitType : '作废') + ']', //varchar(100)  null comment '流程岗位',
                 business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by, //text          null comment '业务内容',
+                content: `来访确认(${this.item.type}) ` + this.item.name + ' #被访人员: ' + this.item.create_by, //text          null comment '业务内容',
                 process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
                 relate_data: '', //text          null comment '关联数据',
@@ -1040,13 +1041,13 @@ export default {
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
-                message: '来访预约已设置为未到访！',
+                message: '来访预约已设置为' + (visitType == '未到访' ? visitType : '已作废') + '！',
             });
 
         },
 
         // 用户提交入职登记表函数
-        async handleConfirm() {
+        async handleConfirm(visitType) {
 
             //显示加载状态
             this.loading = true;
@@ -1060,10 +1061,11 @@ export default {
             const pid = Betools.tools.getUrlParam('pid');
 
             //检查用户是否具有权限进行审批
-            const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW', userinfo.username);
+            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
 
             //获取到印章管理员组信息
-            const user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            user_group_ids = user_group_ids + ',' + this.item.create_by;
 
             //获取到用户列表数据
             if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
@@ -1079,6 +1081,23 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
+                create_by: this.item.create_by,
+                mobile: this.item.mobile,
+
+                visitor_name: this.item.visitor_name,
+                visitor_company: this.item.visitor_company,
+                visitor_mobile: this.item.visitor_mobile,
+                visitor_position: this.item.visitor_position,
+                visitor_count: this.item.visitor_count,
+
+                time: this.item.time,
+                dtime: this.item.dtime,
+                address: this.item.address,
+
+                userid: this.item.userid,
+                user_admin_name: this.item.username,
+                user_group_ids: this.item.userlist,
+                user_group_names: this.item.user_group_names,
                 status: 'visit',
             }; // 待处理元素
 
@@ -1090,6 +1109,15 @@ export default {
 
                 //第一步 保存用户数据到数据库中
                 let element = {
+                    create_by: this.item.create_by,
+                    mobile: this.item.mobile,
+                    time: this.item.time,
+                    dtime: this.item.dtime,
+                    address: this.item.address,
+                    userid: this.item.userid,
+                    user_admin_name: this.item.username,
+                    user_group_ids: this.item.userlist,
+                    user_group_names: this.item.user_group_names,
                     status: 'visit',
                 }; // 待处理元素
 
@@ -1134,13 +1162,13 @@ export default {
                 process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
                 employee: userinfo.realname, //varchar(1000) null comment '操作职员',
                 approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
-                action: '确认', //varchar(100)  null comment '操作动作',
-                action_opinion: '审批领用申请[已领用]', //text          null comment '操作意见',
+                action: visitType == '已到访' ? '已到访' : '预约确认', //varchar(100)  null comment '操作动作',
+                action_opinion: '来访申请审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //text          null comment '操作意见',
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
-                process_station: '领用审批[物品领用]', //varchar(100)  null comment '流程岗位',
+                process_station: '来访审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //varchar(100)  null comment '流程岗位',
                 business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by, //text          null comment '业务内容',
+                content: `来访申请(${this.item.type}) ` + this.item.name + ' #被访人员: ' + this.item.create_by, //text          null comment '业务内容',
                 process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
                 relate_data: '', //text          null comment '关联数据',

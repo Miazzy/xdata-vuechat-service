@@ -94,7 +94,7 @@ export default {
               '3': 'doneList',
               '4': 'rejectList',
             },
-            back:'/app',
+            back:'/app/app_subvisitor',
             searchWord:'',
             searchFlag: false,
             dropMenuOldValue:'',
@@ -225,7 +225,7 @@ export default {
           this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,init)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.initList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
+            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
             item.tel = '';
             item.isDefault = true;
           })
@@ -234,7 +234,7 @@ export default {
           this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,visit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.confirmList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
+            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
             item.tel = '';
             item.isDefault = true;
           })
@@ -243,7 +243,7 @@ export default {
           this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,devisit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.doneList.map((item , index) => {
             item.name = item.address + ` 接待(${item.user_admin_name})` ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `(${item.visitor_position})预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
+            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')}${item.dtime}到访。`,
             item.tel = '';
             item.isDefault = true;
           })
