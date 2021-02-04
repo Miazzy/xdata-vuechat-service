@@ -1145,6 +1145,7 @@ export default {
                 visitor_company: this.item.visitor_company,
                 visitor_mobile: this.item.visitor_mobile,
                 visitor_position: this.item.visitor_position,
+                visitor_count: this.item.visitor_count,
 
                 time: this.item.time,
                 dtime: this.item.dtime,
