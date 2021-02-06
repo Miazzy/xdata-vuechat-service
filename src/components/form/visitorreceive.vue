@@ -1094,6 +1094,15 @@ export default {
                 });
             }
 
+            //验证访客电话号码是否正确
+            if(!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.item.visitor_mobile)){
+                //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '尊敬的用户您好，您输入的访客联系电话格式有误，请重新输入！',
+                });
+            }
+
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by,this.item.mobile)
             if(!ulist || ulist.length == 0){
                 //弹出确认提示
