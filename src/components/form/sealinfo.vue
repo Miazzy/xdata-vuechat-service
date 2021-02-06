@@ -1376,9 +1376,6 @@ export default {
         }
 
         // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-        var maxinfo = await superagent.get(`${window.BECONFIG['restAPI']}/apis/v_seal_max`).set('accept', 'json');
-        maxinfo = maxinfo.body[0];
-        var maxno = '';
         this.noname = '合同编号';
 
         //根据用户选择的印章实体公司来设置印章编码
@@ -1417,7 +1414,7 @@ export default {
 
         //第一步，构造form对象
         const item = this.item;
-        const no = maxinfo.maxno + 1;
+        const no = 1;
         const id = Betools.tools.queryUniqueID();
         const create_by = item.dealManager;
         const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
