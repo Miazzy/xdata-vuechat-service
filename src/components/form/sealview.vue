@@ -1175,10 +1175,10 @@ export default {
           this.item.archive_name == this.item.sealman;
         }
 
-        //先验证是否合法
+        //先验证是否合法，用印审批不需要进行太多验证
         const keys = this.item.sealtype == '合同类' ?
-          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:'' , front:'' , finnace:'' , record:'', front_name:'' , finnace_name:'' , record_name:'',}) :
-          Object.keys({sealtype:'', ordertype:'', filename:'', count:'', dealDepart:'', dealManager:'', username , dealMail:'', approveType:'',  signman:'', workno:'', company:'', seal:''})
+          Object.keys({filename:'', count:'', signman:'',  seal:'' }) :
+          Object.keys({filename:'', count:'', signman:'',  seal:''})
 
         const invalidKey =  keys.find(key => {
           this.validField();
