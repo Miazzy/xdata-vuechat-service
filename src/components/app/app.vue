@@ -124,7 +124,7 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') : false ">
+                    <van-col span="6" v-if="role ? role.includes('SEAL_ADMIN') || role.includes('SEAL_ARCHIVE_ADMIN') : false ">
                         <div class="weui-cell_app_hd" @click="sealManage();">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/worktile.png">
                             <div class="weui-cell_app_bd">
