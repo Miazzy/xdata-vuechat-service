@@ -36,7 +36,7 @@
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
-                        <check-select required label="归档人员" placeholder="请选择归档人员" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+                        <check-select required label="归档人员" placeholder="请选择归档人员" v-model="item.receive_name" :columns="vlist" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="vuserConfirm" />
                         <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled @select="selectHContract" />
                     </van-cell-group>
 
@@ -112,11 +112,13 @@ export default {
                 remark: '',
                 message: '',
                 status: 100,
+                receive_name:[],
             },
             backPath: '/app',
             loading: false,
             hContractList: [],
             processLogList: [],
+            vlist:[],
             typeColumns: [{
                     name: '档案移交',
                     code: '1',
@@ -176,12 +178,20 @@ export default {
                 this.flist = this.item.flist = this.flist.concat(value);
             }
         },
+        /** 确认选择合同文件 */
+        async vuserConfirm(data, value, index) {
+            console.log(this.item.receive_name);
+            console.log(data, value, index);
+            debugger;
+        },
         /** 查询初始化信息 */
         async queryInfo() {
             try {
                 const transfer_type = Betools.tools.queryUrlString('transfer_type');
                 const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
+
+                // 查询待移交合同记录
                 const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.filename.slice(0, 16);
@@ -192,6 +202,29 @@ export default {
                 });
                 this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
                 this.fileColumns = clist;
+
+                // 查询归档人员
+                let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=20`);
+                userlist = userlist.map(item => { return item.userlist }).toString();
+                let vlist = await Betools.manage.queryTableData('v_hrmresource', `_where=(loginid,in,${userlist})&_fields=userid,loginid,mobile,name,position,departname,topname,cert&_sort=-id&_p=0&_size=100`);
+                
+                vlist.map((item, index) => {
+                    item.code = item.id;
+                    item.tel = '';
+                    item.title = item.name + ' ' + item.departname + ' ' + item.position;
+                    item.isDefault = true;
+                });
+
+                vlist = vlist.filter((item,index)=>{
+                    const findex = vlist.findIndex(elem => {
+                        return elem.name == item.name
+                    })
+                    return index == findex;
+                })
+
+                this.vlist = vlist;
+                
+
             } catch (error) {
                 console.log(error);
             }
