@@ -58,8 +58,8 @@
                     </van-cell-group>
 
                     <div v-show=" view != 'view' && (item.status != 200 && item.status != 99) " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
-                        <van-goods-action-button type="danger" text="驳回" @click="handleDisagree();" style="width:44%;" />
-                        <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:44%;float:right;" />
+                        <van-goods-action-button type="danger" text="驳回" @click="handleDisagree();" style="width:42%;background: linear-gradient(to right,#ffd01e,#ff8917);" />
+                        <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:42%;float:right;" />
                     </div>
 
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
