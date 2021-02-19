@@ -113,6 +113,7 @@ export default {
                 message: '',
                 status: 100,
                 receive_name:[],
+                receive_ids:[],
             },
             backPath: '/app',
             loading: false,
@@ -182,7 +183,7 @@ export default {
         async vuserConfirm(data, value, index) {
             console.log(this.item.receive_name);
             console.log(data, value, index);
-            debugger;
+            this.item.receive_ids = value.map(item=>{return item.loginid});
         },
         /** 查询初始化信息 */
         async queryInfo() {
@@ -267,14 +268,16 @@ export default {
                     filenamelist,
                     pid: id,
                     status: 100,
+                    receive_ids: this.item.receive_ids.toString(),
+                    receive_name: this.item.receive_name.toString(),
                     message: this.item.message,
                 };
 
                 // 根据移交类型不同，选择不同的移交接收人员
                 if (this.item.type == '财务移交') {
-                    userinfo.receive_name = 'zhaozy1028,liguo,jiangj';
+                    userinfo.receive_name = `zhaozy1028,${this.item.receive_ids.toString()}`;
                 } else if (this.item.type == '档案移交') {
-                    userinfo.receive_name = 'zhaozy1028,chenyl0929,jiangj';
+                    userinfo.receive_name = `zhaozy1028,${this.item.receive_ids.toString()}`;
                 }
 
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
