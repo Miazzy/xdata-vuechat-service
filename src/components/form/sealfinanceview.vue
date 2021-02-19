@@ -35,7 +35,7 @@
                         <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
-                        <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已移交" edit-disabled />
+                        <van-address-list v-show="flist.length > 0" :list="flist" :default-tag-text="statusName[item.status]" edit-disabled />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;">
@@ -61,7 +61,7 @@
                         <van-goods-action-button type="danger" text="驳回" @click="handleDisagree();" style="width:44%;" />
                         <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:44%;float:right;" />
                     </div>
-                    
+
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
                     <div style="height:100px;"></div>
                 </div>
@@ -127,6 +127,11 @@ export default {
                     code: '2',
                 },
             ],
+            statusName:{
+                '100':'待归档',
+                '200':'已归档',
+                '99':'已驳回',
+            },
             fileColumns: [],
             flist: [],
             view: '',

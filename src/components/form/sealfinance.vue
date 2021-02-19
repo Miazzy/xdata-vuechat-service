@@ -36,6 +36,7 @@
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+                        <check-select required label="归档人员" placeholder="请选择归档人员" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
                         <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled @select="selectHContract" />
                     </van-cell-group>
 
@@ -156,7 +157,7 @@ export default {
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
             const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             clist.map((item, index) => {
                 item.title = item.filename.slice(0, 16);
                 item.code = item.id;
@@ -181,7 +182,7 @@ export default {
                 const transfer_type = Betools.tools.queryUrlString('transfer_type');
                 const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.filename.slice(0, 16);
                     item.code = item.id;
