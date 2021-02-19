@@ -57,10 +57,11 @@
                         </div>
                     </van-cell-group>
 
-                    <div v-show=" view != 'view' && item.status < 200 " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
+                    <div v-show=" view != 'view' && (item.status != 200 && item.status != 99) " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
                         <van-goods-action-button type="danger" text="驳回" @click="handleDisagree();" style="width:44%;" />
                         <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:44%;float:right;" />
                     </div>
+                    
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
                     <div style="height:100px;"></div>
                 </div>
