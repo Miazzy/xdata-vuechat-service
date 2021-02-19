@@ -35,12 +35,15 @@
                         <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
+                        <van-field required readonly clearable label="归档人员" v-model="item.receive_name" placeholder="请输入归档人员" />
+                        <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" @search="fileSearch" />
                         <van-address-list v-show="flist.length > 0" :list="flist" :default-tag-text="statusName[item.status]" edit-disabled />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;">
                         <van-cell value="移交说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                        <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="500" placeholder="请输入移交备注说明事项！" show-word-limit />
+                        <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="1000" placeholder="请输入移交备注说明事项！" show-word-limit />
+                        <van-field required label="审批意见" v-model="item.remark" rows="2" autosize clickable clearable type="textarea" maxlength="1000" placeholder="请输入审批意见或备注说明！" show-word-limit />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
@@ -95,7 +98,7 @@ export default {
             tableInfo: '',
             orderInfo: '',
             status: '',
-            status_name : '已移交',
+            status_name: '已移交',
             status_type: '',
             fields: [],
             sealuserid: '',
@@ -113,6 +116,8 @@ export default {
                 remark: '',
                 message: '',
                 status: 100,
+                remark: '',
+                receive_name: '',
             },
             backPath: '/app/sealfinancevlist',
             loading: false,
@@ -127,10 +132,10 @@ export default {
                     code: '2',
                 },
             ],
-            statusName:{
-                '100':'待归档',
-                '200':'已归档',
-                '99':'已驳回',
+            statusName: {
+                '100': '待归档',
+                '200': '已归档',
+                '99': '已驳回',
             },
             fileColumns: [],
             flist: [],
@@ -162,11 +167,32 @@ export default {
             });
             this.fileColumns = clist;
         },
+        async fileSearch(data, key) {
+            const transfer_type = Betools.tools.queryUrlString('transfer_type');
+            const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
+            const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
+            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            data.map((item, index) => {
+                item.title = item.filename.slice(0, 16);
+                item.code = item.id;
+                item.tel = '';
+                item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                item.isDefault = true;
+            });
+            this.fileColumns = data;
+        },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
             console.log(data, value, index);
+
             this.flist = this.item.flist = value;
+
         },
+        /** 确认选择合同文件 */
+        // async fileConfirm(data, value, index) {
+        //console.log(data, value, index);
+        //this.flist = this.item.flist = value;
+        // },
         /** 查询初始化信息 */
         async queryInfo() {
             try {
@@ -183,6 +209,7 @@ export default {
                 this.item.message = item.message;
                 this.item.status = item.status;
                 this.item.pid = item.pid;
+                this.item.receive_name = item.receive_name;
                 const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
                 this.fileColumns = flist;
                 this.flist = flist;
@@ -196,14 +223,22 @@ export default {
         /**
          * @function 获取处理日志
          */
-        async queryProcessLog(){
+        async queryProcessLog() {
             const id = Betools.tools.getUrlParam('id');
             try {
                 this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
                 //如果查询出出来记录，则将处理记录排序
-                if(this.processLogList && this.processLogList.length > 0){
-                    this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
-                    this.processLogList = this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
+                if (this.processLogList && this.processLogList.length > 0) {
+                    this.processLogList.map(item => {
+                        item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm');
+                        item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} `;
+                    });
+                    this.processLogList = this.processLogList.filter((item, index) => {
+                        const findex = this.processLogList.findIndex(elem => {
+                            return item.unique == elem.unique
+                        });
+                        return findex == index;
+                    });
                     this.processLogList.sort();
                 }
             } catch (error) {
@@ -211,7 +246,7 @@ export default {
             }
         },
         /** 处理驳回/提交操作 */
-        async handleDisagree(){
+        async handleDisagree() {
 
             try {
                 const id = Betools.tools.queryUrlString('id');
@@ -224,8 +259,16 @@ export default {
                     table_type = 'archive';
                 }
 
+                if (Betools.tools.isNull(this.item.remark)) {
+                    return await vant.Dialog.alert({
+                        title: '温馨提示',
+                        message: '请输入审批意见！',
+                    });
+                }
+
                 const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
-                    status: 99
+                    status: 99,
+                    remark: this.item.remark,
                 });
 
                 if (resp.protocol41 == true && resp.affectedRows > 0) {
@@ -234,11 +277,11 @@ export default {
 
                     for (const elem of this.flist) {
                         let node = {
-                                id: elem.id,
-                                status: '已用印',
-                                archive_status: 0,
-                                finance_status: 0,
-                            };
+                            id: elem.id,
+                            status: '已用印',
+                            archive_status: 0,
+                            finance_status: 0,
+                        };
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
 
@@ -253,22 +296,22 @@ export default {
                         table_name: 'bs_contract_transfer_apply',
                         main_value: id,
                         proponents: userinfo.username,
-                        business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-                        business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-                        process_name   : '归档移交流程审批',//varchar(100)  null comment '流程名称',
-                        employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-                        approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-                        action         : '驳回'    ,//varchar(100)  null comment '操作动作',
-                        action_opinion : '审批移交申请[已驳回]',//text          null comment '操作意见',
-                        operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-                        functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-                        process_station   : '移交审批审批[印章管理]',//varchar(100)  null comment '流程岗位',
-                        business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-                        content           : this.item.filename + ' #经办人: ' + this.item.create_name ,//text          null comment '业务内容',
-                        process_audit     : this.item.pid + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-                        create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-                        relate_data       : '',//text          null comment '关联数据',
-                        origin_data       : '',
+                        business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+                        business_code: '000000000', //varchar(100)  null comment '业务编号',
+                        process_name: '归档移交流程审批', //varchar(100)  null comment '流程名称',
+                        employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+                        approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                        action: '驳回', //varchar(100)  null comment '操作动作',
+                        action_opinion: '审批移交申请[已驳回]', //text          null comment '操作意见',
+                        operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+                        functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                        process_station: '移交审批审批[印章管理]', //varchar(100)  null comment '流程岗位',
+                        business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+                        content: this.item.filename + ' #经办人: ' + this.item.create_name, //text          null comment '业务内容',
+                        process_audit: this.item.pid + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                        create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+                        relate_data: '', //text          null comment '关联数据',
+                        origin_data: '',
                     }
 
                     await Betools.workflow.approveViewProcessLog(prLogHisNode);
@@ -292,6 +335,13 @@ export default {
                     table_type = 'archive';
                 }
 
+                if (Betools.tools.isNull(this.item.remark)) {
+                    return await vant.Dialog.alert({
+                        title: '温馨提示',
+                        message: '请输入审批意见！',
+                    });
+                }
+
                 for (const node of this.flist) {
                     delete node.tel;
                     delete node.title;
@@ -301,20 +351,22 @@ export default {
                 }
 
                 const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
-                    status: 200
+                    status: 200,
+                    remark: this.item.remark,
+                    flist: this.item.flist.toString(),
                 });
 
                 if (resp.protocol41 == true && resp.affectedRows > 0) {
                     this.view = 'view';
                     for (const elem of this.flist) {
                         let node = null;
-                        if ((elem.type == '移交前台'||elem.type=='已领取'||elem.type == '已用印') && this.item.type == '财务移交') {
+                        if ((elem.type == '移交前台' || elem.type == '已领取' || elem.type == '已用印') && this.item.type == '财务移交') {
                             node = {
                                 id: elem.id,
                                 status: '财务归档',
                                 finance_status: 200,
                             };
-                        } else if ((elem.type == '移交前台'||elem.type=='已领取'||elem.type == '已用印') && this.item.type == '档案移交') {
+                        } else if ((elem.type == '移交前台' || elem.type == '已领取' || elem.type == '已用印') && this.item.type == '档案移交') {
                             node = {
                                 id: elem.id,
                                 status: '档案归档',
@@ -349,22 +401,22 @@ export default {
                         table_name: 'bs_contract_transfer_apply',
                         main_value: id,
                         proponents: userinfo.username,
-                        business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-                        business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-                        process_name   : '归档移交流程审批',//varchar(100)  null comment '流程名称',
-                        employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-                        approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-                        action         : '同意'    ,//varchar(100)  null comment '操作动作',
-                        action_opinion : '审批移交申请[已同意]',//text          null comment '操作意见',
-                        operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-                        functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-                        process_station   : '移交审批审批[印章管理]',//varchar(100)  null comment '流程岗位',
-                        business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-                        content           : this.item.filename + ' #经办人: ' + this.item.create_name ,//text          null comment '业务内容',
-                        process_audit     : this.item.pid + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-                        create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-                        relate_data       : '',//text          null comment '关联数据',
-                        origin_data       : '',
+                        business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+                        business_code: '000000000', //varchar(100)  null comment '业务编号',
+                        process_name: '归档移交流程审批', //varchar(100)  null comment '流程名称',
+                        employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+                        approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                        action: '同意', //varchar(100)  null comment '操作动作',
+                        action_opinion: '审批移交申请[已同意]', //text          null comment '操作意见',
+                        operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+                        functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                        process_station: '移交审批审批[印章管理]', //varchar(100)  null comment '流程岗位',
+                        business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+                        content: this.item.filename + ' #经办人: ' + this.item.create_name, //text          null comment '业务内容',
+                        process_audit: this.item.pid + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                        create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+                        relate_data: '', //text          null comment '关联数据',
+                        origin_data: '',
                     }
 
                     await Betools.workflow.approveViewProcessLog(prLogHisNode);

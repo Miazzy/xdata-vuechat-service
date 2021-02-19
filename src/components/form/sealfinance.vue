@@ -42,7 +42,7 @@
 
                     <van-cell-group style="margin-top:10px;">
                         <van-cell value="移交说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                        <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="500" placeholder="请输入移交备注说明事项！" show-word-limit />
+                        <van-field required label="备注信息" v-model="item.message" rows="2" autosize clickable clearable type="textarea" maxlength="1000" placeholder="请输入移交备注说明事项！" show-word-limit />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;" v-show="processLogList.length > 0">
