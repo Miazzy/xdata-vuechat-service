@@ -176,6 +176,7 @@ export default {
                 this.item.remark = item.remark;
                 this.item.message = item.message;
                 this.item.status = item.status;
+                this.item.pid = item.pid;
                 const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
                 this.fileColumns = flist;
                 this.flist = flist;
@@ -189,6 +190,8 @@ export default {
         async handleDisagree(){
 
             try {
+                const id = Betools.tools.queryUrlString('id');
+                const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 let table_type = null;
 
                 if (this.item.type == '财务移交') {
@@ -202,7 +205,9 @@ export default {
                 });
 
                 if (resp.protocol41 == true && resp.affectedRows > 0) {
+
                     this.view = 'view';
+
                     for (const elem of this.flist) {
                         let node = {
                                 id: elem.id,
@@ -212,10 +217,37 @@ export default {
                             };
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
+
                     await vant.Dialog.alert({
                         title: '温馨提示',
                         message: '已驳回，请联系移交申请人重新发起申请！',
                     });
+
+                    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+                    const prLogHisNode = {
+                        id: Betools.tools.queryUniqueID(),
+                        table_name: 'bs_contract_transfer_apply',
+                        main_value: id,
+                        proponents: userinfo.username,
+                        business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+                        business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+                        process_name   : '归档移交流程审批',//varchar(100)  null comment '流程名称',
+                        employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+                        approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+                        action         : '驳回'    ,//varchar(100)  null comment '操作动作',
+                        action_opinion : '审批移交申请[已驳回]',//text          null comment '操作意见',
+                        operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+                        functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+                        process_station   : '移交审批审批[印章管理]',//varchar(100)  null comment '流程岗位',
+                        business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+                        content           : this.item.filename + ' #经办人: ' + this.item.create_name ,//text          null comment '业务内容',
+                        process_audit     : this.item.pid + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+                        create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+                        relate_data       : '',//text          null comment '关联数据',
+                        origin_data       : '',
+                    }
+
+                    await Betools.workflow.approveViewProcessLog(prLogHisNode);
                 }
 
             } catch (error) {
@@ -226,6 +258,8 @@ export default {
         /** 处理同意/提交操作 */
         async handleAgree() {
             try {
+                const id = Betools.tools.queryUrlString('id');
+                const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 let table_type = null;
 
                 if (this.item.type == '财务移交') {
@@ -284,6 +318,32 @@ export default {
                         title: '温馨提示',
                         message: '文件已完成归档操作！',
                     });
+
+                    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+                    const prLogHisNode = {
+                        id: Betools.tools.queryUniqueID(),
+                        table_name: 'bs_contract_transfer_apply',
+                        main_value: id,
+                        proponents: userinfo.username,
+                        business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+                        business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+                        process_name   : '归档移交流程审批',//varchar(100)  null comment '流程名称',
+                        employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+                        approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+                        action         : '同意'    ,//varchar(100)  null comment '操作动作',
+                        action_opinion : '审批移交申请[已同意]',//text          null comment '操作意见',
+                        operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+                        functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+                        process_station   : '移交审批审批[印章管理]',//varchar(100)  null comment '流程岗位',
+                        business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+                        content           : this.item.filename + ' #经办人: ' + this.item.create_name ,//text          null comment '业务内容',
+                        process_audit     : this.item.pid + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+                        create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+                        relate_data       : '',//text          null comment '关联数据',
+                        origin_data       : '',
+                    }
+
+                    await Betools.workflow.approveViewProcessLog(prLogHisNode);
                 }
 
             } catch (error) {
