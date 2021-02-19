@@ -157,7 +157,6 @@ export default {
 }
 </script>
 <style scoped>
-
 #van-field-check-select .van-cell__title{
   text-align: left;
   margin: 30px 5px 0px 0px;
