@@ -53,7 +53,7 @@
 
             <div class="wechat-list">
                 <van-pull-refresh v-model="isLoading" @refresh="queryFresh()">
-                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已移交" edit-disabled @select="selectHContract" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待归档" edit-disabled @select="selectHContract" />
                     <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract" />
                     <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已驳回" edit-disabled @select="selectHContract" />
                 </van-pull-refresh>
