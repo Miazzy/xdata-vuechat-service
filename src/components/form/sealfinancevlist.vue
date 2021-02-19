@@ -243,7 +243,7 @@ export default {
                 searchSql = `~and((create_time,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(fileidlist,like,~${this.searchWord}~)~or(filenamelist,like,~${this.searchWord}~)~or(remark,like,~${this.searchWord}~)~or(status,like,~${this.searchWord}~)~or(flist,like,~${this.searchWord}~)~or(create_name,like,~${this.searchWord}~)~or(message,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~))`;
             }
             const status = tabname == 2 || tabname == '2' ? '100' : (tabname == 3 || tabname == '3' ? '99':'200');
-            this.initContractList = await Betools.manage.queryTableData('bs_contract_transfer_apply', `_where=(status,eq,${status})~and(create_time,gt,${month})~and(type,like,~财务移交~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
+            this.initContractList = await Betools.manage.queryTableData('bs_contract_transfer_apply', `_where=(status,eq,${status})~and(create_time,gt,${month})~and(type,like,~财务移交~)~and(receive_ids,in,${userinfo.username})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
             this.initContractList.map((item, index) => {
                 item.name = item.filenamelist.slice(0, 16) + '...';
                 item.tel = '';
