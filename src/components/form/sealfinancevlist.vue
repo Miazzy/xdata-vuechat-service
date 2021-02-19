@@ -247,7 +247,7 @@ export default {
             this.initContractList.map((item, index) => {
                 item.name = item.filenamelist.slice(0, 16) + '...';
                 item.tel = '';
-                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist + ' 序号:' + item.serialid;
+                item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist.slice(0, 64) + '...' + ' 序号:' + item.serialid;
                 item.isDefault = true;
             });
         },
