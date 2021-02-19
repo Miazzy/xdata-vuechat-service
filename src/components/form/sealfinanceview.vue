@@ -184,15 +184,8 @@ export default {
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
             console.log(data, value, index);
-
             this.flist = this.item.flist = value;
-
         },
-        /** 确认选择合同文件 */
-        // async fileConfirm(data, value, index) {
-        //console.log(data, value, index);
-        //this.flist = this.item.flist = value;
-        // },
         /** 查询初始化信息 */
         async queryInfo() {
             try {
