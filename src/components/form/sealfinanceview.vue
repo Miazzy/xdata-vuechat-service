@@ -118,6 +118,7 @@ export default {
                 status: 100,
                 remark: '',
                 receive_name: '',
+                receive_ids:'',
             },
             backPath: '/app/sealfinancevlist',
             loading: false,
@@ -203,6 +204,7 @@ export default {
                 this.item.status = item.status;
                 this.item.pid = item.pid;
                 this.item.receive_name = item.receive_name;
+                this.item.receive_ids = item.receive_ids;
                 const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
                 this.fileColumns = flist;
                 this.flist = flist;
@@ -340,6 +342,7 @@ export default {
                     delete node.title;
                     delete node.code;
                     delete node.isDefault;
+                    node.seal_group_ids = this.item.receive_ids;
                     await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
                 }
 
