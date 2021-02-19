@@ -182,6 +182,24 @@ export default {
                 this.flist = flist;
                 const back = Betools.tools.queryUrlString('back');
                 this.back = back;
+                await this.queryProcessLog();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        /**
+         * @function 获取处理日志
+         */
+        async queryProcessLog(){
+            const id = Betools.tools.getUrlParam('id');
+            try {
+                this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
+                //如果查询出出来记录，则将处理记录排序
+                if(this.processLogList && this.processLogList.length > 0){
+                    this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
+                    this.processLogList = this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
+                    this.processLogList.sort();
+                }
             } catch (error) {
                 console.log(error);
             }
