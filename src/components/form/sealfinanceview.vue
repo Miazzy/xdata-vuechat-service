@@ -58,7 +58,8 @@
                     </van-cell-group>
 
                     <div v-show=" view != 'view' && item.status < 200 " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
-                        <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="" />
+                        <van-goods-action-button type="danger" text="驳回" @click="handleDisagree();" style="width:44%;" />
+                        <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:44%;float:right;" />
                     </div>
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
                     <div style="height:100px;"></div>
@@ -184,6 +185,44 @@ export default {
                 console.log(error);
             }
         },
+        /** 处理驳回/提交操作 */
+        async handleDisagree(){
+
+            try {
+                let table_type = null;
+
+                if (this.item.type == '财务移交') {
+                    table_type = 'finance';
+                } else if (this.item.type == '档案移交') {
+                    table_type = 'archive';
+                }
+
+                const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
+                    status: 99
+                });
+
+                if (resp.protocol41 == true && resp.affectedRows > 0) {
+                    this.view = 'view';
+                    for (const elem of this.flist) {
+                        let node = {
+                                id: elem.id,
+                                status: '已用印',
+                                archive_status: 0,
+                                finance_status: 0,
+                            };
+                        await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
+                    }
+                    await vant.Dialog.alert({
+                        title: '温馨提示',
+                        message: '已驳回，请联系移交申请人重新发起申请！',
+                    });
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
         /** 处理同意/提交操作 */
         async handleAgree() {
             try {
@@ -211,13 +250,13 @@ export default {
                     this.view = 'view';
                     for (const elem of this.flist) {
                         let node = null;
-                        if (elem.type == '移交前台' && this.item.type == '财务移交') {
+                        if ((elem.type == '移交前台'||elem.type=='已领取'||elem.type == '已用印') && this.item.type == '财务移交') {
                             node = {
                                 id: elem.id,
                                 status: '财务归档',
                                 finance_status: 200,
                             };
-                        } else if (elem.type == '移交前台' && this.item.type == '档案移交') {
+                        } else if ((elem.type == '移交前台'||elem.type=='已领取'||elem.type == '已用印') && this.item.type == '档案移交') {
                             node = {
                                 id: elem.id,
                                 status: '档案归档',
