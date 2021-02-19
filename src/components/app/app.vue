@@ -239,53 +239,6 @@
                 </van-row>
             </div>
         </div>
-        <!-- <div id="weui-cells-flex" class="weui-cells" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " style="display:block; position:relative;">
-            <div class="weui-cell-title">来访管理</div>
-            <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
-                <span style="font-family: sans-serif; font-size: 0.7rem; top: 0px;  vertical-align: top; margin-top: 10px;  padding-top: 10px;">
-                    更多
-                </span>
-            </div>
-            <div style="position:absolute; top: 0.57rem; right:10px;display:none;">
-                <van-icon name="arrow" />
-            </div>
-            <div class="flex-layout-content" id="scanCell">
-                <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
-                    <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="visitmanage('apply');">
-                            <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
-                            <div class="weui-cell_app_bd">
-                                来访预约
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="visitmanage('approve');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
-                            <div class="weui-cell_app_bd">
-                                来访审批
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" style="display:block;" v-show="role ? role.includes('COMMON_RECEIVE_BORROW') : false ">
-                        <div class="weui-cell_app_hd" @click="visitmanage('manage');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png">
-                            <div class="weui-cell_app_bd">
-                                来访管理
-                            </div>
-                        </div>
-                    </van-col>
-                    <van-col span="6" v-if="role ? true : false ">
-                        <div class="weui-cell_app_hd" @click="visitmanage('history');">
-                            <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/leave.png">
-                            <div class="weui-cell_app_bd">
-                                来访历史
-                            </div>
-                        </div>
-                    </van-col>
-                </van-row>
-            </div>
-        </div> -->
         <div id="weui-cells-flex" class="weui-cells" style="display: block;position:relative;">
             <div class="weui-cell-title">协同办公</div>
             <div style="position:absolute; top: 0.6rem; right:25px;display:none;">
