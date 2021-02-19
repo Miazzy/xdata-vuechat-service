@@ -117,6 +117,8 @@ export default {
             dropMenuOption: [
               { text: '合同类', value: 0 , icon: 'records' },
               { text: '非合同', value: 1 , icon: 'description' },
+              { text: '财务台账', value: 20 , icon: 'records' },
+              { text: '档案台账', value: 21 , icon: 'description' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
@@ -254,6 +256,14 @@ export default {
             this.dropMenuOldValue = this.sealType = val;
             //await this.queryFresh();
             await this.queryTabList('非合同类',0);
+            break;
+          case 20: //只显示财务归档类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryTabList('财务归档',0);
+            break;
+          case 21: //只显示档案归档类信息
+            this.dropMenuOldValue = this.sealType = val;
+            await this.queryTabList('档案归档',0);
             break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
@@ -411,6 +421,37 @@ export default {
           const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           //获取最近6个月的已归档记录
           this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          this.json_data.map((item , index) => {
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            console.log(JSON.stringify(this.statusType));
+            item.status_w = this.statusType_w[item.status];
+            item.status = this.statusType[item.status];
+          });
+          this.json_data.sort();
+        } else if(tabname == '财务归档') {
+          // 获取最近6个月对应的日期
+          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+          sealTypeSql = `~and(seal_type,like,合同类)`;
+          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          //获取最近6个月的已归档记录
+          this.json_data = await Betools.manage.queryTableData('bs_seal_regist_finance' , whereSQL);
+          this.json_data.map((item , index) => {
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+            console.log(JSON.stringify(this.statusType));
+            item.status_w = this.statusType_w[item.status];
+            item.status = this.statusType[item.status];
+          });
+          this.json_data.sort();
+        } else if(tabname == '档案归档') {
+          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+          sealTypeSql = `~and(seal_type,like,合同类)`;
+          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          //获取最近6个月的已归档记录
+          this.json_data = await Betools.manage.queryTableData('bs_seal_regist_archive' , whereSQL);
           this.json_data.map((item , index) => {
             item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
             item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
