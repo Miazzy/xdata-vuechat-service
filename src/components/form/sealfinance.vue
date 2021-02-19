@@ -35,8 +35,8 @@
                         <van-field v-show="item.serialid" clearable label="申请序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
-                        <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
                         <check-select required label="归档人员" placeholder="请选择归档人员" v-model="item.receive_name" :columns="vlist" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="vuserConfirm" />
+                        <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" @search="fileSearch" />
                         <van-address-list v-show="flist.length > 0" :list="flist" default-tag-text="已用印" edit-disabled @select="selectHContract" />
                     </van-cell-group>
 
@@ -112,14 +112,14 @@ export default {
                 remark: '',
                 message: '',
                 status: 100,
-                receive_name:[],
-                receive_ids:[],
+                receive_name: [],
+                receive_ids: [],
             },
             backPath: '/app',
             loading: false,
             hContractList: [],
             processLogList: [],
-            vlist:[],
+            vlist: [],
             typeColumns: [{
                     name: '档案移交',
                     code: '1',
@@ -160,7 +160,7 @@ export default {
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
             const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             clist.map((item, index) => {
                 item.title = item.filename.slice(0, 16);
                 item.code = item.id;
@@ -169,6 +169,20 @@ export default {
                 item.isDefault = true;
             });
             this.fileColumns = clist;
+        },
+        async fileSearch(data, key) {
+            const transfer_type = Betools.tools.queryUrlString('transfer_type');
+            const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
+            const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
+            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            data.map((item, index) => {
+                item.title = item.filename.slice(0, 16);
+                item.code = item.id;
+                item.tel = '';
+                item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                item.isDefault = true;
+            });
+            this.fileColumns = data;
         },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
@@ -183,7 +197,9 @@ export default {
         async vuserConfirm(data, value, index) {
             console.log(this.item.receive_name);
             console.log(data, value, index);
-            this.item.receive_ids = value.map(item=>{return item.loginid});
+            this.item.receive_ids = value.map(item => {
+                return item.loginid
+            });
         },
         /** 查询初始化信息 */
         async queryInfo() {
@@ -193,7 +209,7 @@ export default {
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
 
                 // 查询待移交合同记录
-                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.filename.slice(0, 16);
                     item.code = item.id;
@@ -206,9 +222,11 @@ export default {
 
                 // 查询归档人员
                 let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=20`);
-                userlist = userlist.map(item => { return item.userlist }).toString();
+                userlist = userlist.map(item => {
+                    return item.userlist
+                }).toString();
                 let vlist = await Betools.manage.queryTableData('v_hrmresource', `_where=(loginid,in,${userlist})&_fields=userid,loginid,mobile,name,position,departname,topname,cert&_sort=-id&_p=0&_size=100`);
-                
+
                 vlist.map((item, index) => {
                     item.code = item.id;
                     item.tel = '';
@@ -216,7 +234,7 @@ export default {
                     item.isDefault = true;
                 });
 
-                vlist = vlist.filter((item,index)=>{
+                vlist = vlist.filter((item, index) => {
                     const findex = vlist.findIndex(elem => {
                         return elem.name == item.name
                     })
@@ -224,7 +242,6 @@ export default {
                 })
 
                 this.vlist = vlist;
-                
 
             } catch (error) {
                 console.log(error);
