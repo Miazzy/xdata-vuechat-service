@@ -344,6 +344,10 @@ export default {
                     delete node.isDefault;
                     node.seal_group_ids = this.item.receive_ids;
                     await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
+                    node.isDefault = false;
+                    node.code = '';
+                    node.title = '';
+                    node.tel = '';
                 }
 
                 const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
