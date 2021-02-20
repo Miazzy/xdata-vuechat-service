@@ -160,7 +160,7 @@ export default {
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
             const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             clist.map((item, index) => {
                 item.title = item.filename.slice(0, 16);
                 item.code = item.id;
@@ -174,7 +174,7 @@ export default {
             const transfer_type = Betools.tools.queryUrlString('transfer_type');
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
             const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
                 item.title = item.filename.slice(0, 16);
                 item.code = item.id;
@@ -209,7 +209,7 @@ export default {
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
 
                 // 查询待移交合同记录
-                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.filename.slice(0, 16);
                     item.code = item.id;
