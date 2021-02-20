@@ -77,7 +77,8 @@
                 <van-field required clearable :label="noname" v-model="item.contractId" placeholder="请根据最新已有合同编号填写编号" v-show="item.sealtype == '合同类' " />
                 <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类'" v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
-                <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" />
+                <!-- <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" /> -->
+                <check-select required :readonly="readonly" clearable label="用印公司" placeholder="请选择用印公司" v-model="item.company" :columns="companyColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:false , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="companyConfirm" />
                 <van-field required :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
               </van-cell-group>
@@ -225,6 +226,7 @@ export default {
             financeuserList:[],
             recordUserid:'',
             recorduserList:[],
+            companyColumns:[],
             agroup:[],
             noname:'合同编号',
             item:{
@@ -261,7 +263,7 @@ export default {
               prefix: 'LD',  //编号前缀
               name: '',    //流程组名，即Group_XX
               confirmStatus: '',//财务确认/档案确认
-              company:'',
+              company:[],
               partner:'',
               status: '',
             },
@@ -329,6 +331,9 @@ export default {
       }
     },
     methods: {
+      companyConfirm(data , key , value){
+
+      },
       confirmCategory (data1, index, data2) { // checkbox确定,
         console.log(data1, data2, index)
       },
@@ -510,9 +515,7 @@ export default {
         } catch (error) {
           console.log(error);
         }
-
       },
-
       //查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
@@ -1183,6 +1186,17 @@ export default {
           that.item.front = Betools.tools.getUrlParam('front');  //用印前台接受组
           that.item.archive = Betools.tools.getUrlParam('archive'); //用印归档组(财务/档案)
 
+          // 查询公司名称记录
+          const clist = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)&_sort=id&_p=0&_size=1000`); // 获取最近12个月的已用印记录
+          clist.map((item, index) => {
+              item.title = item.name.slice(0, 24);
+              item.code = item.id;
+              item.tel = '';
+              item.name = item.name;
+              item.isDefault = false;
+          });
+          this.companyColumns = clist;
+
           //如果盖印人填写为英文，则查询中文名称
           if(/^[a-zA-Z_0-9]+$/.test(that.item.sealman)){
             //获取盖印人姓名
@@ -1354,14 +1368,14 @@ export default {
           return !this.validFieldConfirm(key);
         });
 
-        if(!this.item.company || this.item.company.length < 6){
+        if(!this.item.company || (Array.isArray(this.item.company) && this.item.company.length > 1)){
           return await vant.Dialog.alert({
             title: '温馨提示',
-            message: '请检查表单填写内容，公司名称要求输入全称！',
+            message: '请检查表单填写内容，用印公司只能选择一个！',
           });
         }
 
-        if( (!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类' ){
+        if((!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类' ){
           return await vant.Dialog.alert({
             title: '温馨提示',
             message: '请检查表单填写内容，并确认合作方是否填写！',
@@ -1449,7 +1463,7 @@ export default {
         const archive_name = item.archive_name;
         const send_location = item && item.send_location ? item.send_location.trim() : item.send_location ;
         const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile ;
-        const company = item && item.company ? item.company.trim() : item.company ;
+        const company = item && item.company ? item.company.toString() : '' ;
         const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
         const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
 
