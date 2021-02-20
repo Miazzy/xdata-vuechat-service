@@ -354,8 +354,8 @@ export default {
         companyConfirm(data, key, value) {
 
         },
-        companySearch(data , key) {
-            data = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)~and(name,like,~${key}~)&_sort=id&_p=0&_size=20`); // 获取最近12个月的已用印记录
+        async companySearch(data , key) {
+            data = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)~and(name,like,~${key}~)&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
                 item.title = item.name.slice(0, 24);
                 item.code = item.id;
@@ -1395,7 +1395,7 @@ export default {
                 that.item.archive = Betools.tools.getUrlParam('archive'); //用印归档组(财务/档案)
 
                 // 查询公司名称记录
-                const clist = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)&_sort=id&_p=0&_size=20`); // 获取最近12个月的已用印记录
+                const clist = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.name.slice(0, 24);
                     item.code = item.id;
