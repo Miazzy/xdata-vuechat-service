@@ -353,7 +353,7 @@ export default {
                 const resp = await Betools.manage.patchTableData(`bs_contract_transfer_apply`, this.item.id, {
                     status: 200,
                     remark: this.item.remark,
-                    flist: this.item.flist.toString(),
+                    flist: JSON.stringify(this.item.flist),
                 });
 
                 if (resp.protocol41 == true && resp.affectedRows > 0) {

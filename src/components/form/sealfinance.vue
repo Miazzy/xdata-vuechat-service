@@ -235,12 +235,17 @@ export default {
                 userlist = userlist.map(item => {
                     return item.userlist
                 }).toString();
-                vlist = await Betools.manage.queryTableData('v_hrmresource', `_where=(loginid,in,${userlist})&_fields=userid,loginid,mobile,name,position,departname,topname,cert&_sort=-id&_p=0&_size=30`);
+                vlist = await Betools.manage.queryTableData('bs_hrmresource', `_where=(loginid,in,${userlist})&_fields=id,lastname,company,loginid,mobile,textfield1&_sort=-id&_p=0&_size=30`);
                 vlist.map((item, index) => {
                     item.code = item.id;
                     item.tel = '';
-                    item.title = item.name + ' ' + item.departname + ' ' + item.position;
+                    item.name = item.lastname;
                     item.isDefault = true;
+                    try {
+                        item.title = item.lastname + ' ' + item.textfield1.split('||')[1];
+                    } catch (error) {
+                        console.log(error);
+                    }
                 });
                 vlist = vlist.filter((item, index) => {
                     const findex = vlist.findIndex(elem => {
@@ -248,7 +253,7 @@ export default {
                     })
                     return index == findex;
                 })
-                Betools.storage.setStore(`system_seal_finance_vlist`,JSON.stringify(vlist), 600);
+                Betools.storage.setStore(`system_seal_finance_vlist`,JSON.stringify(vlist), 100);
             }
             this.vlist = vlist;
         },
@@ -309,8 +314,7 @@ export default {
 
                     this.view = 'view';
                     const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
-
+                    
                     for (const elem of this.flist) {
                         let node = null;
                         if (this.item.type == '财务移交') {
@@ -330,6 +334,8 @@ export default {
                         }
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
+
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
 
                     await vant.Dialog.alert({
                         title: '温馨提示',
