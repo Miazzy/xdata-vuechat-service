@@ -23,7 +23,7 @@
                     <van-cell :style="option.margin" v-for="(item, index) in columns" clickable :key="item[option.value]" :title="item[option.label]" @click="toggle(index)">
                         <div v-if="item[option.title]">{{item[option.title]}}</div>
                         <template #right-icon>
-                            <van-checkbox :name="item[option.value]" ref="checkboxes" />
+                            <van-checkbox :name="item[option.value]" ref="checkboxes" @click="checkboxClick(item,index);"/>
                         </template>
                     </van-cell>
                 </van-cell-group>
@@ -102,6 +102,10 @@ export default {
             })
             return res
         },
+        checkboxClick(item , index){
+            item.timestamp = new Date().getTime();
+            console.log(JSON.stringify(item));
+        },
         onConfirm() { //确定
             this.resultValue = this.checkboxValue
             this.show = !this.show
@@ -136,6 +140,7 @@ export default {
     watch: {
         selectValue: function (newVal) {
             this.resultValue = newVal
+            debugger;
         },
         resultValue(val) {
             this.$emit('input', val)

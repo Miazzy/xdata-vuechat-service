@@ -186,12 +186,25 @@ export default {
         },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
+
             console.log(data, value, index);
+
             if (Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0) {
                 this.flist = this.item.flist = value;
             } else if (this.flist && this.flist.length > 0) {
                 this.flist = this.item.flist = this.flist.concat(value);
             }
+
+            this.flist = this.flist.filter((item , index) => {
+                let findex = this.flist.findIndex(elem => {
+                    return elem.serialid == item.serialid;
+                });
+                return findex == index;
+            });
+
+            this.flist.sort((a,b)=>{
+                return a.timestamp - b.timestamp;
+            })
         },
         /** 确认选择合同文件 */
         async vuserConfirm(data, value, index) {
