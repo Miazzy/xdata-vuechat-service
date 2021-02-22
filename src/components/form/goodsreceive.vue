@@ -980,10 +980,6 @@ export default {
         //显示序列号
         this.item.serialid = value.serialid;
 
-        //第三步 向物品管理员推送通知，已准备办公用品等
-        superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
-
         /************************  工作流程日志(开始)  ************************/
 
         //获取后端配置前端管理员组
@@ -1050,6 +1046,10 @@ export default {
         this.loading = false;
         this.status = elem.status;
         this.readonly = true;
+
+        //第三步 向物品管理员推送通知，已准备办公用品等
+        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
+                .set('accept', 'json');
 
         //弹出确认提示
         await vant.Dialog.alert({

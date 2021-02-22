@@ -220,32 +220,37 @@ export default {
                 this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
                 this.fileColumns = clist;
 
+                //查询归档人员（档案管理员）
+                this.queryUserList();
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async queryUserList() {
+            let vlist = await Betools.storage.getStore(`system_seal_finance_vlist`);
+            if(Betools.tools.isNull(vlist) || vlist.length == 0){
                 // 查询归档人员
                 let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=20`);
                 userlist = userlist.map(item => {
                     return item.userlist
                 }).toString();
-                let vlist = await Betools.manage.queryTableData('v_hrmresource', `_where=(loginid,in,${userlist})&_fields=userid,loginid,mobile,name,position,departname,topname,cert&_sort=-id&_p=0&_size=100`);
-
+                vlist = await Betools.manage.queryTableData('v_hrmresource', `_where=(loginid,in,${userlist})&_fields=userid,loginid,mobile,name,position,departname,topname,cert&_sort=-id&_p=0&_size=30`);
                 vlist.map((item, index) => {
                     item.code = item.id;
                     item.tel = '';
                     item.title = item.name + ' ' + item.departname + ' ' + item.position;
                     item.isDefault = true;
                 });
-
                 vlist = vlist.filter((item, index) => {
                     const findex = vlist.findIndex(elem => {
                         return elem.name == item.name
                     })
                     return index == findex;
                 })
-
-                this.vlist = vlist;
-
-            } catch (error) {
-                console.log(error);
+                Betools.storage.setStore(`system_seal_finance_vlist`,JSON.stringify(vlist), 600);
             }
+            this.vlist = vlist;
         },
         /** 处理同意/提交操作 */
         async handleAgree() {
