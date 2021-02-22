@@ -60,7 +60,12 @@
                     </van-cell-group>
 
                     <div v-show=" view != 'view' " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
-                        <van-goods-action-button type="danger" text="提交" @click="handleAgree();" style="" />
+
+                        <download-excel :data="flist" :fields="json_fields" worksheet="移交台账" name="移交台账.xls" style="width:42%;font-size:14px;margin-left:10px;margin:0px 0px 0px 10px; height:42px; text-align: center; border-radius:10px;color:#fefefe;float:left;background: linear-gradient(to right,#ffd01e,#ff8917);">
+                            <div style="margin-top:12px;">导出</div>
+                        </download-excel>
+
+                        <van-goods-action-button type="danger" text="提交" @click="handleAgree();" style="width:42%;float:right;height:42px;font-size:14px;border-radius:10px;" />
                     </div>
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
                     <div style="height:100px;"></div>
@@ -134,6 +139,26 @@ export default {
             view: '',
             readonly: true,
             zonename: '',
+            json_fields: {
+                '序号': 'serialid',
+                '登记时间': 'create_time',
+                '文件名称': 'filename',
+                '数量': 'count',
+                '经办部门': 'deal_depart',
+                '经办人员': 'deal_manager',
+                '用印公司':'company',
+                '合同编号': 'contract_id',
+                '签收人员': 'sign_man',
+                '审批类型': 'approve_type',
+                '关联流程': 'workno',
+                '用印类型': 'seal_type',
+                '印章类型': 'seal_category',
+                '排序类型': 'order_type',
+                '盖章人员': 'seal_man',
+                '用印状态': 'status',
+                '合作方':'partner',
+                '备注信息':'message',
+            },
         }
     },
     activated() {
@@ -195,14 +220,14 @@ export default {
                 this.flist = this.item.flist = this.flist.concat(value);
             }
 
-            this.flist = this.flist.filter((item , index) => {
+            this.flist = this.flist.filter((item, index) => {
                 let findex = this.flist.findIndex(elem => {
                     return elem.serialid == item.serialid;
                 });
                 return findex == index;
             });
 
-            this.flist.sort((a,b)=>{
+            this.flist.sort((a, b) => {
                 return a.timestamp - b.timestamp;
             })
         },
@@ -242,7 +267,7 @@ export default {
         },
         async queryUserList() {
             let vlist = await Betools.storage.getStore(`system_seal_finance_vlist`);
-            if(Betools.tools.isNull(vlist) || vlist.length == 0){
+            if (Betools.tools.isNull(vlist) || vlist.length == 0) {
                 // 查询归档人员
                 let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=20`);
                 userlist = userlist.map(item => {
@@ -266,7 +291,7 @@ export default {
                     })
                     return index == findex;
                 })
-                Betools.storage.setStore(`system_seal_finance_vlist`,JSON.stringify(vlist), 100);
+                Betools.storage.setStore(`system_seal_finance_vlist`, JSON.stringify(vlist), 100);
             }
             this.vlist = vlist;
         },
@@ -327,7 +352,7 @@ export default {
 
                     this.view = 'view';
                     const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealfinanceview?id=${elem.id}&statustype=none`);
-                    
+
                     for (const elem of this.flist) {
                         let node = null;
                         if (this.item.type == '财务移交') {

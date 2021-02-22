@@ -139,8 +139,7 @@ export default {
     },
     watch: {
         selectValue: function (newVal) {
-            this.resultValue = newVal
-            debugger;
+            this.resultValue = newVal;
         },
         resultValue(val) {
             this.$emit('input', val)
