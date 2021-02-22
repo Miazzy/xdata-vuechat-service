@@ -36,7 +36,7 @@
                         <van-field required readonly clearable label="填报日期" v-model="item.createtime" placeholder="请输入登记日期" />
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <van-field required readonly clearable label="归档人员" v-model="item.receive_name" placeholder="请输入归档人员" />
-                        <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" @search="fileSearch" />
+                        <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:false , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" @search="fileSearch" />
                         <van-address-list v-show="flist.length > 0" :list="flist" :default-tag-text="statusName[item.status]" edit-disabled />
                     </van-cell-group>
 
