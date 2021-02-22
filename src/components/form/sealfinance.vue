@@ -67,7 +67,7 @@
                     </div>
 
                     <div v-show=" view == 'view' " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
-                        <download-excel :data="flist" :fields="json_fields" worksheet="移交台账" name="移交台账.xls" style="width:92%;font-size:14px;margin:0px 0px 0px 15px; height:42px; text-align: center; border-radius:10px;color:#fefefe;float:left;background: linear-gradient(to right,#ffd01e,#ff8917);">
+                        <download-excel :data="flist" :fields="json_fields" worksheet="移交台账" name="移交台账.xls" style="width:94.25%;font-size:14px;margin:0px 0px 0px 12px; height:42px; text-align: center; border-radius:10px;color:#fefefe;float:left;background: linear-gradient(to right,#ffd01e,#ff8917);">
                             <div style="margin-top:12px;">导出</div>
                         </download-excel>
                     </div>
