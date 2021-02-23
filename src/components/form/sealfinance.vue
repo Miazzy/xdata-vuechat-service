@@ -244,21 +244,22 @@ export default {
         /** 查询初始化信息 */
         async queryInfo() {
             try {
-                const transfer_type = Betools.tools.queryUrlString('transfer_type');
+                console.log('seal queryinfo');
+                const transferType = await Betools.tools.queryUrlString('transfer_type');
                 const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-                this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
+                this.item.type = transferType == 'archive' ? '档案移交' : transferType == 'finance' ? '财务移交' : '';
                 // 查询待移交合同记录
-                this.fileColumns = await this.queryContractList('已用印,已领取,移交前台' , '合同类' , month , 0 , 20);
+                this.fileColumns = await this.queryContractList('已用印,已领取,移交前台' , '合同类' , month , transferType , 0 , 20);
                 //查询归档人员（档案管理员）
-                this.queryUserList();
+                await this.queryUserList();
 
             } catch (error) {
                 console.log(error);
             }
         },
         /** 查询合同列表 */
-        async queryContractList( status = '已用印,已领取,移交前台', type = '合同类' , month , page = 0 , size = 20) {
+        async queryContractList( status = '已用印,已领取,移交前台', type = '合同类' , month , transfer_type , page = 0 , size = 20) {
             let clist = await Betools.storage.getStore(`system_seal_finance_contract_clist`);
             if (Betools.tools.isNull(clist) || clist.length == 0) {
                 clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_type,like,${type})~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=${page}&_size=${size}`); // 获取最近12个月的已用印记录
@@ -269,7 +270,7 @@ export default {
                     item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                     item.isDefault = true;
                 });
-                Betools.storage.setStore(`system_seal_finance_contract_clist`, JSON.stringify(vlist), 100);
+                Betools.storage.setStore(`system_seal_finance_contract_clist`, JSON.stringify(clist), 100);
             }
             return clist;
         },

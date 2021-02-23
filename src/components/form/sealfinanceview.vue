@@ -37,7 +37,7 @@
                         <single-select required label="申请类型" placeholder="请选择申请类型" v-model="item.type" @confirm="typeConfirm" :columns="typeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                         <van-field required readonly clearable label="归档人员" v-model="item.receive_name" placeholder="请输入归档人员" />
                         <check-select required label="移交文件" placeholder="请选择移交文件" v-model="item.filenamelist" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:false , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" @search="fileSearch" />
-                        <van-address-list v-show="flist.length > 0" :list="flist" :default-tag-text="statusName[item.status]" edit-disabled />
+                        <van-address-list v-show="flist.length > 0" :list="flist" :default-tag-text="statusName[item.status]" edit-disabled @select="selectHContract" />
                     </van-cell-group>
 
                     <van-cell-group style="margin-top:10px;">
@@ -153,6 +153,18 @@ export default {
         this.queryInfo();
     },
     methods: {
+        async selectHContract(value, index, key){
+            console.log('value:' + JSON.stringify(value));
+            console.log('index:' + (index));
+            await vant.Dialog.confirm({ //提示确认用印操作
+                title: '温馨提示',
+                message: `确认移除合同编号为${value.contract_id}的合同文件吗？`,
+            });
+            if (this.flist && this.flist.length > 0) {
+                this.flist.splice(index, 1);
+                this.item.flist = this.flist;
+            }
+        },
         async typeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
             const transfer_type = resp == '档案移交' ? 'archive' : 'finance';
@@ -184,8 +196,21 @@ export default {
         },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
-            console.log(data, value, index);
-            this.flist = this.item.flist = value;
+            if (Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0) {
+                this.flist = this.item.flist = value;
+            } else if (this.flist && this.flist.length > 0) {
+                this.flist = this.item.flist = this.flist.concat(value);
+            }
+
+            this.flist = this.flist.filter((item, index) => {
+                let findex = this.flist.findIndex(elem => {
+                    return elem.serialid == item.serialid;
+                });
+                return findex == index;
+            });
+            this.flist.sort((a, b) => {
+                return a.timestamp - b.timestamp;
+            })
         },
         /** 查询初始化信息 */
         async queryInfo() {
@@ -206,8 +231,8 @@ export default {
                 this.item.receive_name = item.receive_name;
                 this.item.receive_ids = item.receive_ids;
                 const flist = clist && clist.length > 0 ? JSON.parse(clist[0].flist) : null;
-                this.fileColumns = flist;
-                this.flist = flist;
+                this.fileColumns = JSON.parse(JSON.stringify(flist));
+                this.flist = item.status == 200 || item.status == 99 ? this.flist = flist : [];
                 const back = Betools.tools.queryUrlString('back');
                 this.back = back;
                 await this.queryProcessLog();
@@ -342,6 +367,7 @@ export default {
                     delete node.title;
                     delete node.code;
                     delete node.isDefault;
+                    delete node.timestamp;
                     node.seal_group_ids = this.item.receive_ids;
                     await Betools.manage.postTableData(`bs_seal_regist_${table_type}`, node);
                     node.isDefault = false;

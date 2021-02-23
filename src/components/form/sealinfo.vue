@@ -1849,7 +1849,8 @@ export default {
             await Betools.tools.sleep(0);
 
             //发送自动设置排序号请求
-            const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI).set('accept', 'json');
+            const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI+`?value=${id}`).set('accept', 'json');
+            console.log('auto serialid : ' + JSON.stringify(patchResp));
 
             //第三步，回显当前用印登记信息，并向印章管理员推送消息
             this.loading = false;
