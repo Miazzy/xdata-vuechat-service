@@ -151,7 +151,7 @@ export default {
                 '数量': 'count',
                 '经办部门': 'deal_depart',
                 '经办人员': 'deal_manager',
-                '用印公司':'company',
+                '用印公司': 'company',
                 '合同编号': 'contract_id',
                 '签收人员': 'sign_man',
                 '审批类型': 'approve_type',
@@ -161,8 +161,8 @@ export default {
                 '排序类型': 'order_type',
                 '盖章人员': 'seal_man',
                 '用印状态': 'status',
-                '合作方':'partner',
-                '备注信息':'message',
+                '合作方': 'partner',
+                '备注信息': 'message',
             },
         }
     },
@@ -200,6 +200,7 @@ export default {
             });
             this.fileColumns = clist;
         },
+        /** 合同文件搜索 */
         async fileSearch(data, key) {
             const transfer_type = Betools.tools.queryUrlString('transfer_type');
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
@@ -216,9 +217,6 @@ export default {
         },
         /** 确认选择合同文件 */
         async fileConfirm(data, value, index) {
-
-            console.log(data, value, index);
-
             if (Betools.tools.isNull(this.flist) || !this.flist || this.flist.length == 0) {
                 this.flist = this.item.flist = value;
             } else if (this.flist && this.flist.length > 0) {
@@ -231,7 +229,6 @@ export default {
                 });
                 return findex == index;
             });
-
             this.flist.sort((a, b) => {
                 return a.timestamp - b.timestamp;
             })
@@ -250,9 +247,21 @@ export default {
                 const transfer_type = Betools.tools.queryUrlString('transfer_type');
                 const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
                 const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-
+                this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
                 // 查询待移交合同记录
-                const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+                this.fileColumns = await this.queryContractList('已用印,已领取,移交前台' , '合同类' , month , 0 , 20);
+                //查询归档人员（档案管理员）
+                this.queryUserList();
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        /** 查询合同列表 */
+        async queryContractList( status = '已用印,已领取,移交前台', type = '合同类' , month , page = 0 , size = 20) {
+            let clist = await Betools.storage.getStore(`system_seal_finance_contract_clist`);
+            if (Betools.tools.isNull(clist) || clist.length == 0) {
+                clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_type,like,${type})~and(${transfer_type}_status,in,0,99)&_sort=-create_time&_p=${page}&_size=${size}`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
                     item.title = item.filename.slice(0, 16);
                     item.code = item.id;
@@ -260,15 +269,9 @@ export default {
                     item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                     item.isDefault = true;
                 });
-                this.item.type = transfer_type == 'archive' ? '档案移交' : transfer_type == 'finance' ? '财务移交' : '';
-                this.fileColumns = clist;
-
-                //查询归档人员（档案管理员）
-                this.queryUserList();
-
-            } catch (error) {
-                console.log(error);
+                Betools.storage.setStore(`system_seal_finance_contract_clist`, JSON.stringify(vlist), 100);
             }
+            return clist;
         },
         /** 查询归档人员列表 */
         async queryUserList() {
@@ -307,6 +310,7 @@ export default {
                 const id = Betools.tools.queryUniqueID();
                 const userinfo = await Betools.storage.getStore('system_userinfo');
                 const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+                
                 if (!this.flist || this.flist.length <= 0) {
                     return await vant.Dialog.confirm({ //提示确认用印操作
                         title: '温馨提示',
