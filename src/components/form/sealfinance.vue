@@ -270,15 +270,16 @@ export default {
                 console.log(error);
             }
         },
+        /** 查询归档人员列表 */
         async queryUserList() {
             let vlist = await Betools.storage.getStore(`system_seal_finance_vlist`);
             if (Betools.tools.isNull(vlist) || vlist.length == 0) {
                 // 查询归档人员
-                let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=20`);
+                let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=1000`);
                 userlist = userlist.map(item => {
                     return item.userlist
                 }).toString();
-                vlist = await Betools.manage.queryTableData('bs_hrmresource', `_where=(loginid,in,${userlist})&_fields=id,lastname,company,loginid,mobile,textfield1&_sort=-id&_p=0&_size=30`);
+                vlist = await Betools.manage.queryTableData('bs_hrmresource', `_where=(loginid,in,${userlist})&_fields=id,lastname,company,loginid,mobile,textfield1&_sort=-id&_p=0&_size=1000`);
                 vlist.map((item, index) => {
                     item.code = item.id;
                     item.tel = '';
@@ -296,7 +297,7 @@ export default {
                     })
                     return index == findex;
                 })
-                Betools.storage.setStore(`system_seal_finance_vlist`, JSON.stringify(vlist), 100);
+                Betools.storage.setStore(`system_seal_finance_vlist`, JSON.stringify(vlist), 3600);
             }
             this.vlist = vlist;
         },
