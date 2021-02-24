@@ -205,7 +205,7 @@ export default {
             const transfer_type = Betools.tools.queryUrlString('transfer_type');
             const userinfo = await Betools.storage.getStore('system_userinfo'); // 获取当前用户信息
             const month = dayjs().subtract(36, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
-            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99,100,200,300,1000)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
+            data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99,100,200,300,1000)~and((company,like,~${key}~)~or(deal_mail,like,~${key}~)~or(mobile,like,~${key}~)~or(sign_man,like,~${key}~)~or(seal_category,like,~${key}~)~or(seal_man,like,~${key}~)~or(deal_manager,like,~${key}~)~or(deal_depart,like,~${key}~)~or(id,like,~${key}~)~or(contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
                 item.title = item.filename.slice(0, 16);
                 item.code = item.id;
@@ -275,18 +275,17 @@ export default {
         async queryUserList() {
             let vlist = await Betools.storage.getStore(`system_seal_finance_vlist`);
             if (Betools.tools.isNull(vlist) || vlist.length == 0) {
-                // 查询归档人员
-                let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=1000`);
+                let userlist = await Betools.manage.queryTableData('bs_admin_group', `_where=(groupname,eq,SEAL_ARCHIVE_ADMIN)&_fields=userlist&_sort=-create_time&_p=0&_size=1000`); // 查询归档人员
                 userlist = userlist.map(item => {
                     return item.userlist
                 }).toString();
                 vlist = await Betools.manage.queryTableData('bs_hrmresource', `_where=(loginid,in,${userlist})&_fields=id,lastname,company,loginid,mobile,textfield1&_sort=-id&_p=0&_size=1000`);
                 vlist.map((item, index) => {
-                    item.code = item.id;
-                    item.tel = '';
-                    item.name = item.lastname;
-                    item.isDefault = true;
                     try {
+                        item.code = item.id;
+                        item.tel = '';
+                        item.name = item.lastname;
+                        item.isDefault = true;
                         item.title = item.lastname + ' ' + item.textfield1.split('||')[1];
                     } catch (error) {
                         console.log(error);
