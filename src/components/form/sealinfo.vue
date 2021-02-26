@@ -50,6 +50,13 @@
                                 <van-field required readonly clickable clearable label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @blur="validField('sealtype')" :error-message="message.sealtype" @click="tag.showPickerSealType = true" />
                                 <van-field required readonly clickable clearable label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
                                 <check-select required label="印章类型" placeholder="请选择" v-model="item.seal_category" :columns="categoryColumns" :option="{label:'name',value:'name'}" @confirm="confirmCategory" />
+                                <template v-show="Array.isArray(item.seal_category)" v-for="(seal_category_item,index) of item.seal_category ">
+                                    <div :key="seal_category_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;"  >
+                                        <van-icon name="close" @click="deleteCategoryList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                                        <span> {{ index }}.</span>
+                                        <span style="width:100%;"> {{ seal_category_item}} </span>
+                                    </div>
+                                </template>
                                 <van-field required :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" @blur="validField('filename')" :error-message="message.filename" />
                                 <van-field required :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" type="digit" @blur="validField('count')" :error-message="message.count" />
                             </van-cell-group>
@@ -73,8 +80,10 @@
                                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                                 <!-- <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" /> -->
                                 <check-select required :readonly="readonly" clearable label="用印公司" placeholder="请选择用印公司" v-model="item.company" :columns="companyColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="companyConfirm" @search="companySearch" />
-                                <template v-show="Array.isArray(this.item.company)" v-for="company_item of item.company ">
-                                    <div :key="company_item" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-bottom: 0.05rem;" >
+                                <template v-show="Array.isArray(item.company)" v-for="(company_item,index) of item.company ">
+                                    <div :key="company_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;"  >
+                                        <van-icon name="close" @click="deleteCompanyList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                                        <span> {{ index }}.</span>
                                         <span style="width:100%;"> {{ company_item}} </span>
                                     </div>
                                 </template>
@@ -356,6 +365,22 @@ export default {
         item(to, from) {}
     },
     methods: {
+        deleteCategoryList(index){
+            try {
+                this.item.seal_category.splice(index,1);
+                console.log(index);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        deleteCompanyList(index){
+            try {
+                this.item.company.splice(index,1);
+                console.log(index);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         companyConfirm(data, key, value) {
 
         },

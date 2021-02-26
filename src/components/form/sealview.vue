@@ -49,6 +49,13 @@
               <van-field readonly clearable  label="用印类型" v-model="item.sealtype" placeholder="选择用印类型" @click="tag.showPickerSealType = true" />
               <van-field readonly clearable  label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序"  />
               <van-field readonly clearable  label="印章类型" v-model="item.seal_category" placeholder="选择印章类型" />
+              <template v-show="Array.isArray(categoryList)" v-for="(seal_category_item,index) of categoryList ">
+                  <div :key="seal_category_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;"  >
+                      <van-icon name="todo-list-o" @click="deleteCategoryList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                      <span> {{ index }}.</span>
+                      <span style="width:100%;"> {{ seal_category_item}} </span>
+                  </div>
+              </template>
               <van-field :readonly="readonly" clearable label="名称" v-model="item.filename" placeholder="请输入文件名称" />
               <van-field :readonly="readonly" clearable label="份数" v-model="item.count" placeholder="请输入文件份数" />
             </van-cell-group>
@@ -70,8 +77,10 @@
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类' && item.status =='待用印' " v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
               <van-field required clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" />
-              <template v-show="Array.isArray(companyList)" v-for="company_item of companyList ">
+              <template v-show="Array.isArray(companyList)" v-for="(company_item,index) of companyList ">
                   <div :key="company_item" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-bottom: 0.05rem;" >
+                      <van-icon name="balance-list-o" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                      <span> {{ index }}.</span>
                       <span style="width:100%;"> {{ company_item}} </span>
                   </div>
               </template>
@@ -295,6 +304,7 @@ export default {
               message: '同意' , //用印说明
             },
             companyList:[],
+            categoryList:[],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
             config: Betools.workconfig.config,
@@ -1063,7 +1073,7 @@ export default {
           await this.queryProcessLog();
 
           this.companyList = value.company.split(',');
-          debugger;
+          this.categoryList = value.seal_category.split(',');
 
         } catch (error) {
           console.log(error);
