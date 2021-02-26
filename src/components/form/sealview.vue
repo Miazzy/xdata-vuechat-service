@@ -70,6 +70,11 @@
               <van-address-list v-show="hContractList.length > 0 && item.sealtype == '合同类' && item.status =='待用印' " v-model="hContractID" :list="hContractList" default-tag-text="默认" edit-disabled @select="selectHContract()" />
               <van-field :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" />
               <van-field required clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" />
+              <template v-show="Array.isArray(companyList)" v-for="company_item of companyList ">
+                  <div :key="company_item" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-bottom: 0.05rem;" >
+                      <span style="width:100%;"> {{ company_item}} </span>
+                  </div>
+              </template>
               <van-field required clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
               <van-field clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" />
             </van-cell-group>
@@ -285,10 +290,11 @@ export default {
               confirmStatus: '',//财务确认/档案确认
               prefix: '',
               status: '',
-              company:'',
+              company:[],
               partner:'',
               message: '同意' , //用印说明
             },
+            companyList:[],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
             config: Betools.workconfig.config,
@@ -1055,6 +1061,9 @@ export default {
           await this.queryFinanceArchiveMan();
           await this.queryRecordArchiveMan();
           await this.queryProcessLog();
+
+          this.companyList = value.company.split(',');
+          debugger;
 
         } catch (error) {
           console.log(error);

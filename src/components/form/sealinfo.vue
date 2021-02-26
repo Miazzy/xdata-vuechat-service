@@ -73,6 +73,11 @@
                                 <van-field required :readonly="readonly" clearable label="签收人" v-model="item.signman" placeholder="请输入文件签收人" @blur="validField('signman')" :error-message="message.signman" />
                                 <!-- <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" /> -->
                                 <check-select required :readonly="readonly" clearable label="用印公司" placeholder="请选择用印公司" v-model="item.company" :columns="companyColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="companyConfirm" @search="companySearch" />
+                                <template v-show="Array.isArray(this.item.company)" v-for="company_item of item.company ">
+                                    <div :key="company_item" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-bottom: 0.05rem;" >
+                                        <span style="width:100%;"> {{ company_item}} </span>
+                                    </div>
+                                </template>
                                 <van-field required :readonly="readonly" clearable label="合作方" v-model="item.partner" placeholder="请输入合作方名称" v-show="item.sealtype == '合同类' " @blur="validField('partner')" :error-message="message.partner" />
                                 <van-field required :readonly="readonly" clearable label="流程编号" v-model="item.workno" placeholder="请输入流程编号" @blur="validField('workno')" :error-message="message.workno" />
                             </van-cell-group>
@@ -1531,7 +1536,7 @@ export default {
                 if (Betools.tools.isNull(this.item.dealMail) || Betools.tools.isNull(this.item.company)) {
                     const tmp = await Betools.query.queryMailBySealData(this.item.signman);
                     this.item.dealMail = tmp.deal_mail;
-                    this.item.company = tmp.company;
+                    // this.item.company = tmp.company;
                     this.item.dealDepart = tmp.deal_depart;
                     this.item.sealman = tmp.seal_man;
                     this.item.seal = tmp.seal;
@@ -1648,10 +1653,10 @@ export default {
                 return !this.validFieldConfirm(key);
             });
 
-            if (!this.item.company || (Array.isArray(this.item.company) && this.item.company.length > 1)) {
+            if (!this.item.company || (Array.isArray(this.item.company) && this.item.company.length <= 0)) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
-                    message: '请检查表单填写内容，用印公司只能选择一个！',
+                    message: '请检查表单填写内容，请选择用印公司！',
                 });
             }
 
