@@ -22,7 +22,7 @@ const queryBlogArticleInfo = async(
     result = {};
 
     try {
-        var res = await superagent.get(queryURL).set('accept', 'json');
+        var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
         console.log(res);
         result = res.body;
 

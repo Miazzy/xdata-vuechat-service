@@ -881,7 +881,7 @@ export default {
         }
 
         //发送自动设置排序号请求
-        const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+        const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
          //查询数据
         const value = await Betools.query.queryTableData(this.tablename , id);
@@ -891,7 +891,7 @@ export default {
 
         //第三步 向物品管理员推送通知，已准备办公用品等
         await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 

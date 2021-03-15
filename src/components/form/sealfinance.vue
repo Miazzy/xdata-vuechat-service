@@ -353,7 +353,7 @@ export default {
                 }
 
                 const result = await Betools.manage.postTableData('bs_contract_transfer_apply', elem);
-                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_contract_transfer_apply')).set('accept', 'json'); //发送自动设置排序号请求
+                await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI.replace('bs_seal_regist', 'bs_contract_transfer_apply')).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
 
                 if (result.protocol41 == true && result.affectedRows > 0) {
 
@@ -380,7 +380,7 @@ export default {
                         await Betools.manage.patchTableData(`bs_seal_regist`, elem.id, node);
                     }
 
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('accept', 'json');
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${userinfo.receive_name}/亲爱的同事,您已收到合同资料移交申请，请及时处理?rurl=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
                     await vant.Dialog.alert({
                         title: '温馨提示',

@@ -519,7 +519,7 @@ export default {
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.claim_id}/亲爱的同事，您的失物招领认领申请已被驳回，请到失物招领处进行线下沟通，驳回原因：${this.item.reason}！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 
@@ -616,7 +616,7 @@ export default {
 
         //第三步 向物品管理员推送消息确认，物品管理员确认后，将遗失物品递交给认领人员
         await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.user_group_ids},${this.item.create_by}/亲爱的同事，员工‘${userinfo.realname}(${userinfo.department.name})’在失物招领处认领了‘${this.item.lost_name}’，请及时审核确认！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 
@@ -713,7 +713,7 @@ export default {
 
         //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
         await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.claim_id}/亲爱的同事，您的失物招领认领申请已被确认，请到失物招领处领取遗失物品！?rurl=${receiveURL}`)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
         /************************  工作流程日志(开始)  ************************/
 

@@ -51,8 +51,8 @@
                                 <van-field required readonly clickable clearable label="用印顺序" v-model="item.ordertype" placeholder="选择用印顺序" @blur="validField('ordertype')" :error-message="message.ordertype" @click="tag.showPickerOrderType = true" />
                                 <check-select required label="印章类型" placeholder="请选择" v-model="item.seal_category" :columns="categoryColumns" :option="{label:'name',value:'name'}" @confirm="confirmCategory" />
                                 <template v-show="Array.isArray(item.seal_category)" v-for="(seal_category_item,index) of item.seal_category ">
-                                    <div :key="seal_category_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;"  >
-                                        <van-icon name="close" @click="deleteCategoryList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                                    <div :key="seal_category_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;">
+                                        <van-icon name="close" @click="deleteCategoryList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;" />
                                         <span> {{ index }}.</span>
                                         <span style="width:100%;"> {{ seal_category_item}} </span>
                                     </div>
@@ -81,8 +81,8 @@
                                 <!-- <van-field required :readonly="readonly" clearable label="用印公司" v-model="item.company" placeholder="请输入用印公司" @blur="validField('company')" :error-message="message.company" /> -->
                                 <check-select required :readonly="readonly" clearable label="用印公司" placeholder="请选择用印公司" v-model="item.company" :columns="companyColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true , search_emit:true , margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="companyConfirm" @search="companySearch" />
                                 <template v-show="Array.isArray(item.company)" v-for="(company_item,index) of item.company ">
-                                    <div :key="company_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;"  >
-                                        <van-icon name="close" @click="deleteCompanyList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;"/>
+                                    <div :key="company_item" :index="index" width="100%" style="width:100%;color: #a0a0a0;margin-left: 1.25rem;margin-top:0.35rem;margin-bottom: 0.35rem;">
+                                        <van-icon name="close" @click="deleteCompanyList(index);" style="margin-top:0.15rem;margin-right:0.15rem;padding-top:0.15rem;top:0.125rem;" />
                                         <span> {{ index }}.</span>
                                         <span style="width:100%;"> {{ company_item}} </span>
                                     </div>
@@ -365,17 +365,17 @@ export default {
         item(to, from) {}
     },
     methods: {
-        deleteCategoryList(index){
+        deleteCategoryList(index) {
             try {
-                this.item.seal_category.splice(index,1);
+                this.item.seal_category.splice(index, 1);
                 console.log(index);
             } catch (error) {
                 console.log(error);
             }
         },
-        deleteCompanyList(index){
+        deleteCompanyList(index) {
             try {
-                this.item.company.splice(index,1);
+                this.item.company.splice(index, 1);
                 console.log(index);
             } catch (error) {
                 console.log(error);
@@ -384,7 +384,7 @@ export default {
         companyConfirm(data, key, value) {
 
         },
-        async companySearch(data , key) {
+        async companySearch(data, key) {
             data = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)~and(name,like,~${key}~)&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
                 item.title = item.name.slice(0, 24);
@@ -1879,7 +1879,7 @@ export default {
             await Betools.tools.sleep(0);
 
             //发送自动设置排序号请求
-            const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI+`?value=${id}`).set('accept', 'json');
+            const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI + `?value=${id}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log('auto serialid : ' + JSON.stringify(patchResp));
 
             //第三步，回显当前用印登记信息，并向印章管理员推送消息
@@ -1905,7 +1905,7 @@ export default {
                 try {
                     //通知签收人领取资料(企业微信发送)
                     await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
-                        .set('accept', 'json');
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 } catch (error) {
                     console.log(error);
                 }
@@ -1914,12 +1914,10 @@ export default {
                     const message = `亲爱的用印管理员，您有一份新的用印申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
                     if (this.item.seal_mobile) {
                         //通知印章人领取资料(企业微信发送)
-                        await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`)
-                            .set('accept', 'json');
+                        await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                     } else {
                         //通知印章人领取资料(企业微信发送)
-                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`)
-                            .set('accept', 'json');
+                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                     }
                 } catch (error) {
                     console.log(error);

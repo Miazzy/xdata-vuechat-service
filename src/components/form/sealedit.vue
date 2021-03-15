@@ -1121,7 +1121,7 @@ export default {
           try {
             //通知签收人领取资料(企业微信发送)
             await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
-                         .set('accept', 'json');
+                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
           } catch (error) {
             console.log(error);
           }
@@ -1129,7 +1129,7 @@ export default {
           try {
             //通知印章人领取资料(企业微信发送)
             await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
-                         .set('accept', 'json');
+                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
           } catch (error) {
             console.log(error);
           }
@@ -1137,7 +1137,7 @@ export default {
           try {
             //推送群消息，告知印章管理员进行用印处理(企业微信群)
             await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/wework/${title}/${description}?type=manage&rurl=${url}&id=${id}&userid=${create_by}`)
-                        .set('accept', 'json');
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
           } catch (error) {
             console.log(error);
           }

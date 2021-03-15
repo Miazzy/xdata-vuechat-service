@@ -144,7 +144,7 @@ export default {
           zonename: '',
         };
         await Betools.manage.postTableData(this.tableName , item);
-        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
+        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
         await this.queryTabList(0,0);
       },
       async onDelete(records){
@@ -262,7 +262,7 @@ export default {
         if(this.searchWord) {
           searchSql = `~and((serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(platename,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(groupname,like,~${this.searchWord}~)~or(zonename,like,~${this.searchWord}~)~or(teamname,like,~${this.searchWord}~)~or(userlist,like,~${this.searchWord}~)~or(enuserlist,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~))`;
         }
-        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('accept', 'json'); //发送自动设置排序号请求
+        await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
         const whereSQL = `_where=(status,eq,valid)~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
         this.initContractList = await Betools.manage.queryTableData(this.tableName , whereSQL);
         this.totalpages = await Betools.manage.queryTableDataCount(this.tableName , whereSQL);

@@ -676,7 +676,7 @@ export default {
         try {
           //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
           await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.create_by}/亲爱的${this.item.receive_name}同事，您的办公用品预约申请已被驳回，驳回原因是${this.item.disagree_remark}！?rurl=${receiveURL}`)
-                  .set('accept', 'json');
+                  .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
         } catch (error) {
           console.log(error);
         }
@@ -800,7 +800,7 @@ export default {
         try {
           //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
           await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.create_by}/亲爱的${this.item.receive_name}同事，您预约的办公用品已准备就绪，预约号为${this.item.serialid}，请于上午11:00-12:00或下午17:00-18:00到办公用品管理员处，凭预约号领取！?rurl=${receiveURL}`)
-                  .set('accept', 'json');
+                  .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
         } catch (error) {
           console.log(error);
         }

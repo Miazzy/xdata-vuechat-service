@@ -1219,7 +1219,7 @@ export default {
 
             //发送自动设置排序号请求
             try {
-                const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('accept', 'json');
+                const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log(error);
             }
@@ -1231,7 +1231,7 @@ export default {
                 //显示序列号
                 this.item.serialid = value.serialid;
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.create_by}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
-                    .set('accept', 'json');
+                    .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log(error);
             }

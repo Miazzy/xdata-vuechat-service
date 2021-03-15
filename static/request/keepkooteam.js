@@ -19,7 +19,7 @@ var postTableData = async(tableName, node) => {
         var res = await superagent
             .post(insertURL)
             .send(node)
-            .set('accept', 'json');
+            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
         return res.body[0];
     } catch (err) {
         console.log(err);
@@ -39,7 +39,7 @@ var queryTableData = async(tableName, whereSQL) => {
 
     try {
 
-        var res = await superagent.get(queryURL).set('accept', 'json');
+        var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
         return res.body;
 
     } catch (err) {

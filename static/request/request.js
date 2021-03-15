@@ -1086,7 +1086,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历所有数据，设置日期格式
@@ -1139,7 +1139,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历所有数据，设置日期格式
@@ -1192,7 +1192,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历所有数据，设置日期格式
@@ -1295,7 +1295,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历所有数据，设置日期格式
@@ -1402,7 +1402,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历所有数据，设置日期格式
@@ -1448,7 +1448,7 @@ try {
 
         try {
             //发送HTTP请求，获取博文数量
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //查找作者的原创博文数量
@@ -2318,7 +2318,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/sys_depart?_where=(org_code,eq,${code})`;
         //根据部门编号，查询部门信息
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body[0];
         } catch (err) {
@@ -2556,7 +2556,7 @@ try {
         }
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //如果只有一条数据，则返回[]；如果有多条数据，则返回多个数据
@@ -2638,7 +2638,7 @@ try {
         var wflow = [];
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //如果只有一条数据，则返回[]；如果有多条数据，则返回多个数据
@@ -2676,7 +2676,7 @@ try {
         var wflist = [];
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //如果只有一条数据，则返回[]；如果有多条数据，则返回多个数据
@@ -3086,7 +3086,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_notice?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             var result = res.body;
 
             //遍历并格式化日期
@@ -3123,7 +3123,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_market_info?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             var result = res.body;
 
             //遍历并格式化日期
@@ -3272,7 +3272,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -3295,7 +3295,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log_informed?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -3327,13 +3327,13 @@ try {
         try {
             //统计知会总数
             try {
-                count = await superagent.get(queryURL).set('accept', 'json');
+                count = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log('query total loginfo error :' + error);
             }
             //统计当天知会次数
             try {
-                today = await superagent.get(queryTodayURL).set('accept', 'json');
+                today = await superagent.get(queryTodayURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log('query today loginfo error :' + error);
             }
@@ -3360,7 +3360,7 @@ try {
         var queryURL = `${window.requestAPIConfig.domain}/jeecg-boot/api/login/user`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -3488,7 +3488,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/onl_cgform_head/${tableID}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res.body);
 
             if (
@@ -3529,7 +3529,7 @@ try {
         var vflag = false;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             vflag = res.body.length > 0 ? true : false;
 
@@ -3562,7 +3562,7 @@ try {
         var vflag = false;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             vflag = res.body.length;
 
@@ -3601,7 +3601,7 @@ try {
             var res = await superagent
                 .post(insertURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body[0];
         } catch (err) {
             console.log(err);
@@ -3635,7 +3635,7 @@ try {
             var res = await superagent
                 .post(insertURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body[0];
         } catch (err) {
             console.log(err);
@@ -3661,7 +3661,7 @@ try {
         var deleteURL = `${window.BECONFIG['restAPI']}/api/${tableName}/${id}`;
 
         try {
-            var res = await superagent.delete(deleteURL).set('accept', 'json');
+            var res = await superagent.delete(deleteURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body;
         } catch (err) {
             console.log(err);
@@ -3697,7 +3697,7 @@ try {
             var res = await superagent
                 .patch(patchURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             return res.body;
         } catch (err) {
@@ -3756,7 +3756,7 @@ try {
                 return cache;
             }
 
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             if (res.body != null && res.body.length > 0) {
                 Betools.Betools.storage.setStore(`sys_user_cache@${tableName}&id${id}`, res.body[0], 2);
@@ -3803,7 +3803,7 @@ try {
             queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}?_where=(create_by,like,~${username}~)~or(create_by,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
 
             try {
-                res = await superagent.get(queryURL).set('accept', 'json');
+                res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 data = [...data, ...res.body];
             } catch (err) {
                 console.log(...arguments.args, ...[err]);
@@ -3819,7 +3819,7 @@ try {
                 queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}?_where=(create_by,like,~${username}~)~or(create_by,like,~${realname}~)&_p=${page + i++}&_size=${page_size}&_sort=-create_time`;
                 res = null;
                 try {
-                    res = await superagent.get(queryURL).set('accept', 'json');
+                    res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                     data = [...data, ...res.body];
                 } catch (err) {
                     console.log(...arguments.args, ...[err]);
@@ -3865,7 +3865,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 result = res.body;
 
                 //遍历并格式化日期
@@ -3916,7 +3916,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
                 //获取返回结果
                 result = res.body[0];
@@ -3954,7 +3954,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 result = res.body;
 
                 //遍历并格式化日期
@@ -4003,7 +4003,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 result = res.body;
 
                 //遍历并格式化日期
@@ -4056,7 +4056,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}?_where=(${field},eq,${value})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body;
         } catch (err) {
             console.log(err);
@@ -4086,7 +4086,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 //设置返回结果
                 result = res.body;
 
@@ -4124,7 +4124,7 @@ try {
 
             if (!(typeof result != 'undefined' && result != null && result != '')) {
                 //发送HTTP请求，获取返回值后，设置数据
-                var res = await superagent.get(queryURL).set('accept', 'json');
+                var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 //设置返回结果
                 result = res.body;
 
@@ -4163,7 +4163,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body;
         } catch (err) {
             console.log(err);
@@ -4190,7 +4190,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/${tableName}?_where=(name,eq,${field})~and(field,eq,${value})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             return res.body[0];
         } catch (err) {
             console.log(err);
@@ -4214,7 +4214,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_rights?_where=(business,like,~${tableName}~)`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res.body);
 
             if (
@@ -4247,7 +4247,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_approve_node?_where=(name,eq,${node})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res.body);
 
             if (
@@ -4280,7 +4280,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/sys_dict_item?_where=(dict_id,eq,${window.requestAPIConfig.PROCESS_NODE_DICT_ID})~and(item_value,eq,${node})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             if (
@@ -4326,8 +4326,8 @@ try {
         var queryCountURL = `${window.BECONFIG['restAPI']}/api/v_user/count?${whereFlag}`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
-            var count = await superagent.get(queryCountURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            var count = await superagent.get(queryCountURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             //遍历并设置属性
@@ -4379,8 +4379,8 @@ try {
         var queryCountURL = `${window.BECONFIG['restAPI']}/api/pr_log/count?_where=(employee,like,~${username}~)~or(employee,like,~${realname}~)`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
-            var count = await superagent.get(queryCountURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            var count = await superagent.get(queryCountURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result.records = res.body;
             result.total =
@@ -4414,8 +4414,8 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
-            var count = await superagent.get(queryCountURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            var count = await superagent.get(queryCountURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result.records = res.body;
 
@@ -4462,7 +4462,7 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
             result = window.__.filter(result, function(item) {
@@ -4524,7 +4524,7 @@ try {
             ) {
                 while (index < 10000) {
                     queryURL = `${window.BECONFIG['restAPI']}/api/v_uname?_p=${index++}&_size=95`;
-                    var res = await superagent.get(queryURL).set('accept', 'json');
+                    var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                     result = result.concat(res.body);
                     //如果返回结果数据小于size，则表示查询到末页，不在查询
                     if (res.body.length < 50) {
@@ -4574,7 +4574,7 @@ try {
             ) {
                 while (index < 10000) {
                     queryURL = `${window.BECONFIG['restAPI']}/api/v_uname?_p=${index++}&_size=50`;
-                    var res = await superagent.get(queryURL).set('accept', 'json');
+                    var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                     result = result.concat(res.body);
                     //如果返回结果数据小于size，则表示查询到末页，不在查询
                     if (res.body.length < 50) {
@@ -4648,7 +4648,7 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             if (
                 typeof res.body != 'undefined' &&
@@ -4681,7 +4681,7 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             if (
                 typeof res.body != 'undefined' &&
@@ -4726,7 +4726,7 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             if (
                 typeof res.body != 'undefined' &&
@@ -4802,7 +4802,7 @@ try {
         var result = {};
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -4858,7 +4858,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/v_handled_events_unq?_where=(username,like,~${username}~)~and(create_time,gte,${time})&_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -4913,7 +4913,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_blog?_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -4968,7 +4968,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_blog?_where=(create_by,eq,${username})&_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -5028,7 +5028,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_blog?_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -5087,7 +5087,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/v_handled_events_unq?_where=(username,like,~${username}~)~or(username,like,~${realname}~)&_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -5455,7 +5455,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/v_handled_events_unq?_where=(username,like,~${username}~)${whereSQL}&_p=${page}&_size=${size}&_sort=-create_time`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             result = res.body;
 
@@ -5509,8 +5509,8 @@ try {
         var queryCountURL = `${window.BECONFIG['restAPI']}/api/pr_log_informed/count?_where=((employee,like,~${username}~)~or(employee,like,~${realname}~))`;
         var result = {};
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
-            var count = await superagent.get(queryCountURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            var count = await superagent.get(queryCountURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             console.log('query url : ' + queryURL);
 
@@ -5545,7 +5545,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log_informed?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body[0];
         } catch (err) {
@@ -5571,7 +5571,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log_informed?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${business_data_id})&_sort=operate_time`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -5596,7 +5596,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log?_where=(table_name,eq,${tableName})~and(business_data_id,eq,${businessID})&_sort=operate_time`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5623,7 +5623,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log?_where=(table_name,eq,${tableName})~and(id,eq,${id})`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body[0];
         } catch (err) {
@@ -5673,7 +5673,7 @@ try {
         }
 
         try {
-            var res = await superagent.delete(deleteURL).set('accept', 'json');
+            var res = await superagent.delete(deleteURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5723,7 +5723,7 @@ try {
         }
 
         try {
-            var res = await superagent.delete(deleteURL).set('accept', 'json');
+            var res = await superagent.delete(deleteURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5774,7 +5774,7 @@ try {
         }
 
         try {
-            var res = await superagent.delete(deleteURL).set('accept', 'json');
+            var res = await superagent.delete(deleteURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5824,7 +5824,7 @@ try {
             var res = await superagent
                 .post(postURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -5851,7 +5851,7 @@ try {
             var res = await superagent
                 .post(postURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5880,7 +5880,7 @@ try {
             var res = await superagent
                 .post(postURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5927,7 +5927,7 @@ try {
             var res = await superagent
                 .post(postURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -5973,7 +5973,7 @@ try {
             var res = await superagent
                 .post(postURL)
                 .send(node)
-                .set('accept', 'json');
+                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
 
             return res.body;
@@ -5998,7 +5998,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/pr_log_history?_where=(business_data_id,eq,${business_data_id})&_sort=operate_time&_p=0&_size=1000`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             console.log(res);
             return res.body;
         } catch (err) {
@@ -6022,7 +6022,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_announce?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             var result = res.body;
 
@@ -6061,7 +6061,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_redhead?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             var result = res.body;
 
@@ -6100,7 +6100,7 @@ try {
         var queryURL = `${window.BECONFIG['restAPI']}/api/bs_news?_where=(bpm_status,in,4,5)&_sort=-create_time&_p=${page}&_size=${size}`;
 
         try {
-            var res = await superagent.get(queryURL).set('accept', 'json');
+            var res = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
 
             var result = res.body;
 
