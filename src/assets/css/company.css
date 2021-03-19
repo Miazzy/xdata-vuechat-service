@@ -1,0 +1,28 @@
+@media (min-width:960px) {
+    .modal-dialog {
+        width: 960px;
+        margin: 30px auto;
+    }
+
+    #feedModal .modal-dialog,
+    #shareModal .modal-dialog {
+        width: 560px;
+        margin: 30px auto;
+    }
+}
+
+#fapiao-title {
+    display: none;
+}
+
+.zhuxiao {
+    color: #FD485E;
+    text-align: center;
+    background: #fff;
+    padding: 10px;
+    margin-top: -
+}
+
+.zhuxiao span {
+    cursor: pointer;
+}
