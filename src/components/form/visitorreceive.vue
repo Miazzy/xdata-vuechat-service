@@ -61,7 +61,8 @@
                                 <van-cell value="来访信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                                 <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time" placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time" />
-                                <single-select required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
+                                <single-select v-show="false" required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
+                                <van-field :readonly="readonly" required clickable clearable label="来访时间" v-model="item.dtime" placeholder="选择来访时间" @blur="validField('')" @click="tag.showPickerDTime = true" />
 
                                 <van-field :readonly="readonly" required clearable label="访客姓名" v-model="item.visitor_name" placeholder="请填写访客姓名！" @blur="validField('visitor_name')" :error-message="message.visitor_name" />
                                 <van-field :readonly="readonly" :required="true" clearable label="访客单位" v-model="item.visitor_company" placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company" />
@@ -252,6 +253,10 @@
                                 </div>
                             </van-cell-group>
 
+                            <van-popup v-model="tag.showPickerDTime" round position="bottom">
+                                <van-datetime-picker v-model="item.dtime" type="time" title="选择时间" :min-hour="8" :max-hour="20" @confirm="tag.showPickerDTime = false;" @cancel="tag.showPickerDTime = false;"/>
+                            </van-popup>
+
                         </van-form>
 
                     </van-cell-group>
@@ -333,90 +338,73 @@ export default {
                 id: '',
                 serialid: '',
                 time: dayjs().format('YYYY-MM-DD'),
-                dtime: '上午',
+                dtime: '09:00',
                 create_by: '',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-
                 visitor_name: '', //访客姓名
                 visitor_company: '', //访客单位
                 visitor_mobile: '', //访客电话
                 visitor_position: '', //访客职务
-
                 visitor_name1: '',
                 visitor_company1: '',
                 visitor_mobile1: '',
                 visitor_position1: '',
-
                 visitor_name2: '',
                 visitor_company2: '',
                 visitor_mobile2: '',
                 visitor_position2: '',
-
                 visitor_name3: '',
                 visitor_company3: '',
                 visitor_mobile3: '',
                 visitor_position3: '',
-
                 visitor_name4: '',
                 visitor_company4: '',
                 visitor_mobile4: '',
                 visitor_position4: '',
-
                 visitor_name5: '',
                 visitor_company5: '',
                 visitor_mobile5: '',
                 visitor_position5: '',
-
                 visitor_name6: '',
                 visitor_company6: '',
                 visitor_mobile6: '',
                 visitor_position6: '',
-
                 visitor_name7: '',
                 visitor_company7: '',
                 visitor_mobile7: '',
                 visitor_position7: '',
-
                 visitor_name8: '',
                 visitor_company8: '',
                 visitor_mobile8: '',
                 visitor_position8: '',
-
                 visitor_name9: '',
                 visitor_company9: '',
                 visitor_mobile9: '',
                 visitor_position9: '',
-
                 visitor_name10: '',
                 visitor_company10: '',
                 visitor_mobile10: '',
                 visitor_position10: '',
-
                 visitor_name11: '',
                 visitor_company11: '',
                 visitor_mobile11: '',
                 visitor_position11: '',
-
                 visitor_name12: '',
                 visitor_company12: '',
                 visitor_mobile12: '',
                 visitor_position12: '',
-
                 visitor_name13: '',
                 visitor_company13: '',
                 visitor_mobile13: '',
                 visitor_position13: '',
-
                 visitor_name14: '',
                 visitor_company14: '',
                 visitor_mobile14: '',
                 visitor_position14: '',
-
                 visitor_name15: '',
                 visitor_company15: '',
                 visitor_mobile15: '',
                 visitor_position15: '',
-
                 visitor_name16: '',
                 visitor_company16: '',
                 visitor_mobile16: '',
@@ -467,7 +455,7 @@ export default {
             officeList: [],
             addressList: [],
             tag: {
-                showPicker: false,
+                showPickerDTime: false,
                 showPickerCommon: false,
                 showPickerSealType: false,
                 showPickerOrderType: false,
@@ -1097,7 +1085,7 @@ export default {
             }
 
             //验证访客电话号码是否正确
-            if(!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.item.visitor_mobile)){
+            if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.item.visitor_mobile)) {
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -1105,8 +1093,8 @@ export default {
                 });
             }
 
-            const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by,this.item.mobile)
-            if(!ulist || ulist.length == 0){
+            const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
+            if (!ulist || ulist.length == 0) {
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
