@@ -1159,7 +1159,7 @@ export default {
                 status: 'init',
             }; // 待处理元素
 
-            visitors = `${elem.visitor_name}(${elem.visitor_company} 电话:${elem.visitor_mobile.slice(0,3) + '****' + elem.visitor_mobile.slice(-4)})`;
+            visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}的拜访预约，联系电话:${elem.visitor_mobile}`;
 
             //第二步，向表单提交form对象数据
             const result = await Betools.manage.postTableData(this.tablename, elem);
@@ -1220,7 +1220,7 @@ export default {
                 const value = await Betools.query.queryTableData(this.tablename, id);
                 //显示序列号
                 this.item.serialid = value.serialid;
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.create_by}/访客预约通知：${visitors}等人，将于${elem.time}到访，请知悉！?rurl=${receiveURL}`)
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.create_by}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
                     .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log(error);
