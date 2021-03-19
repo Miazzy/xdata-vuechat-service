@@ -60,7 +60,7 @@
 
                                 <van-cell value="来访信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                                <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time" placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time" />
+                                <van-field :readonly="readonly" :required="false" clearable label="预约日期" v-model="item.time" placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time" @click="tag.showPickerTime = true"  />
                                 <single-select v-show="false" required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                                 <van-field :readonly="readonly" required clickable clearable label="来访时间" v-model="item.dtime" placeholder="选择来访时间" @blur="validField('')" @click="tag.showPickerDTime = true" />
 
@@ -253,8 +253,12 @@
                                 </div>
                             </van-cell-group>
 
+                            <van-popup v-model="tag.showPickerTime" round position="bottom">
+                                <van-datetime-picker v-model="datetime" type="date" title="选择日期" :min-date="new Date()" @confirm="dateConfirm" @cancel="dateConfirm" />
+                            </van-popup>
+
                             <van-popup v-model="tag.showPickerDTime" round position="bottom">
-                                <van-datetime-picker v-model="item.dtime" type="time" title="选择时间" :min-hour="8" :max-hour="20" @confirm="tag.showPickerDTime = false;" @cancel="tag.showPickerDTime = false;"/>
+                                <van-datetime-picker v-model="item.dtime" type="time" title="选择时间" :min-hour="8" :max-hour="20" @confirm="tag.showPickerDTime = false;" @cancel="tag.showPickerDTime = false;" />
                             </van-popup>
 
                         </van-form>
@@ -334,6 +338,7 @@ export default {
             uploadURL: 'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: Betools.workconfig.compValidation.visitorapply.message,
             valid: Betools.workconfig.compValidation.visitorapply.valid,
+            datetime:null,
             item: {
                 id: '',
                 serialid: '',
@@ -455,10 +460,9 @@ export default {
             officeList: [],
             addressList: [],
             tag: {
+                showPickerTime:false,
                 showPickerDTime: false,
                 showPickerCommon: false,
-                showPickerSealType: false,
-                showPickerOrderType: false,
                 showPickerJoinTime: false,
                 showPickerDiploma: false,
             },
@@ -507,6 +511,10 @@ export default {
         this.queryInfo();
     },
     methods: {
+        async dateConfirm() {
+            this.item.time = dayjs(this.datetime).format('YYYY-MM-DD'); 
+            this.tag.showPickerTime = false;
+        },
         async fileConfirm(value, index, resp) {
             try {
                 if (this.back == 'common') {
@@ -911,7 +919,7 @@ export default {
 
             if (userinfo) {
                 //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
-                let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username, userinfo.realname, 0, 1000);
+                let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo && userinfo.username !== 'commmon' ? userinfo.username : '', userinfo && userinfo.username !== 'commmon' ? userinfo.realname : '', 0, 1000);
 
                 //过滤出只关联当前流程的待办数据
                 tlist = tlist.filter(item => {
@@ -954,7 +962,7 @@ export default {
             }
 
             this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-            Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`, JSON.stringify(this.item), 3600 * 2);
+            Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo && userinfo.username !== 'commmon' ? userinfo.realname : '' }`, JSON.stringify(this.item), 3600 * 2);
 
             return Betools.tools.isNull(this.message[fieldName]);
         },
@@ -971,12 +979,12 @@ export default {
                 const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
                 //自动回显刚才填写的用户基础信息
-                this.item.create_by = userinfo.realname;
+                this.item.create_by = userinfo && userinfo.username !== 'commmon' ? userinfo.realname : '';
                 this.item.employee = userinfo.username || userinfo.userid;
-                this.item.department = userinfo.department.name;
-                this.item.company = userinfo.parent_company.name;
-                this.item.mobile = userinfo.mobile;
-                this.item.position = userinfo.position;
+                this.item.department = userinfo && userinfo.username !== 'commmon' ? userinfo.department.name : '';
+                this.item.company = userinfo && userinfo.username !== 'commmon' ? userinfo.parent_company.name : '';
+                this.item.mobile = userinfo && userinfo.username !== 'commmon' ? userinfo.mobile : '';
+                this.item.position = userinfo && userinfo.username !== 'commmon' ? userinfo.position : '';
                 this.item.create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
                 const clist = await Betools.manage.queryTableData('bs_admin_address', `_where=(status,in,100)&_sort=-id&_p=0&_size=1000`); // 获取最近12个月的已用印记录
@@ -1102,15 +1110,6 @@ export default {
                 });
             }
 
-            //未获取到选择的客户接待人员
-            // if (Betools.tools.isNull(this.item.userid)) {
-            //     //弹出确认提示
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: '请输入客户接待并点击人员列表，选择客户接待员！',
-            //     });
-            // }
-
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
 
@@ -1156,7 +1155,7 @@ export default {
                 user_group_ids,
                 user_group_names,
                 pid: id,
-                status: 'init',
+                status: userinfo.username == 'commmon' || !userinfo ? 'init' : 'confirm',
             }; // 待处理元素
 
             visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}的拜访预约，联系电话:${elem.visitor_mobile}`;
@@ -1197,7 +1196,7 @@ export default {
                         user_group_names,
 
                         pid: id,
-                        status: 'init',
+                        status: userinfo.username == 'commmon' || !userinfo ? 'init' : 'confirm',
                     };
 
                     //向表单提交form对象数据
@@ -1237,19 +1236,19 @@ export default {
                 id: Betools.tools.queryUniqueID(),
                 table_name: this.tablename,
                 main_value: id,
-                proponents: userinfo.username,
+                proponents: userinfo && userinfo.username !== 'commmon' ? userinfo.username : '访客',
                 business_data_id: id, //varchar(100)  null comment '业务数据主键值',
                 business_code: '000000000', //varchar(100)  null comment '业务编号',
                 process_name: '预约流程审批', //varchar(100)  null comment '流程名称',
-                employee: userinfo.realname, //varchar(1000) null comment '操作职员',
-                approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                employee: userinfo && userinfo.username !== 'commmon' ? userinfo.realname : '访客', //varchar(1000) null comment '操作职员',
+                approve_user: userinfo && userinfo.username !== 'commmon' ? userinfo.username : '访客', //varchar(100)  null comment '审批人员',
                 action: '发起', //varchar(100)  null comment '操作动作',
                 action_opinion: '发起预约申请[待处理]', //text          null comment '操作意见',
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-                functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                functions_station: userinfo && userinfo.username !== 'commmon' ? userinfo.position : '', //varchar(100)  null comment '职能岗位',
                 process_station: '预约审批[访客预约]', //varchar(100)  null comment '流程岗位',
                 business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `访客预约(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username, //text          null comment '业务内容',
+                content: `访客预约(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo && userinfo.username !== 'commmon' ? userinfo.username : '', //text          null comment '业务内容',
                 process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
                 relate_data: '', //text          null comment '关联数据',

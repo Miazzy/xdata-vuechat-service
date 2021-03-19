@@ -955,10 +955,6 @@ export default {
                     //从用户表数据中获取填报人资料
                     let user = await Betools.manage.queryUserByNameHRM(sealman.trim());
 
-                    if (sealman.startsWith('陈')) {
-                        debugger;
-                    }
-
                     if (!!user) {
 
                         //如果是用户数组列表，则展示列表，让用户自己选择
