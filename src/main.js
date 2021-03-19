@@ -26,18 +26,18 @@ try {
     }
 
     try {
-        Vue.component("SeeksRelationGraph", relationGraph || null);
         Vue.component("downloadExcel", JsonExcel || null);
     } catch (error) {
         console.log(error);
     }
 
     try {
-        Vue.component(VueWordCloud.name, VueWordCloud);
-        Vue.component("vueD3Cloud", vueD3Cloud.default);
-        Vue.component(WordCloud.default.name, WordCloud.default);
-        Vue.component(mindmap, mindmap);
-        Vue.component("orgchart", orgchart.default);
+        // Vue.component("SeeksRelationGraph", relationGraph || null);
+        // Vue.component(VueWordCloud.name, VueWordCloud);
+        // Vue.component("vueD3Cloud", vueD3Cloud.default);
+        // Vue.component(WordCloud.default.name, WordCloud.default);
+        // Vue.component(mindmap, mindmap);
+        // Vue.component("orgchart", orgchart.default);
     } catch (error) {
         console.log(error);
     }
