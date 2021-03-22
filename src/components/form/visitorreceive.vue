@@ -247,6 +247,7 @@ export default {
             currentKey: '',
             tablename: 'bs_visit_apply',
             readonly: false,
+            goodstype: Betools.workconfig.goodstype,
         }
     },
     async activated() {
