@@ -621,7 +621,7 @@ export default {
                 this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/authmanage?back=/app&type=${name}`)) : (vant.Toast('您没有权限配置的权限！'));
             } else if (name == 'employee') { // 进行员工管理
                 this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/employeemanage?back=/app&type=${name}`)) : (vant.Toast('您没有员工管理的权限！'));
-             } else if (name == 'visitors') { // 进行来访管理
+            } else if (name == 'visitors') { // 进行来访管理
                 this.$router.push(`/app/app_subvisitor?back=/app&type=${name}`);
             } else if (name == 'visitor') { // 来访登记
                 const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -690,10 +690,29 @@ export default {
 
             try {
                 const nowtime = dayjs().format('HH:mm');
+                const nowdate = dayjs().format('YYYYMMDD');
+
+                //查询当日尚未到访的预约申请信息，并发送知会通知
+                try {
+                    if (nowtime.includes('14:3') || nowtime.includes('14:2') || nowtime.includes('14:0')) {
+                        const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
+                        for (const item of vlist) {
+                            if (item.id == item.pid) {
+                                const date = dayjs(item.create_time).format('YYYY-MM-DD'); // console.log(`visit apply: ${JSON.stringify(item)}`);
+                                const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
+                                const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
+                                const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                                console.log(`response :`, JSON.stringify(resp),`\n\r query url:`,queryURL);
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
                 const lockFlag = await Betools.manage.lock('crontab_task', 3600 * 1000);
                 if (!!lockFlag) {
-                    /** 推送设备借用归还消息 */
                     /** 推送设备借用归还消息 */
                     try {
                         if (nowtime.includes('17:00') || nowtime.includes('17:1') || nowtime.includes('17:20')) { // 如果当前时间为17:00点左右，则执行推送消息操作
@@ -746,6 +765,7 @@ export default {
                                     }
                                 }
                             }
+
                         }
                     } catch (e) {
                         console.log(e)
