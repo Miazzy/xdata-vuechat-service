@@ -822,13 +822,11 @@ export default {
                 mobile: this.item.mobile,
                 position: this.item.position,
                 create_time: this.item.create_time,
-
                 visitor_name: this.item.visitor_name,
                 visitor_company: this.item.visitor_company,
                 visitor_mobile: this.item.visitor_mobile,
                 visitor_position: this.item.visitor_position,
                 visitor_count: this.item.visitor_count,
-
                 time: this.item.time,
                 dtime: this.item.dtime,
                 address: this.item.address,
