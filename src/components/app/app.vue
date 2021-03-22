@@ -694,7 +694,7 @@ export default {
 
                 //查询当日尚未到访的预约申请信息，并发送知会通知
                 try {
-                    if (nowtime.includes('15:2') || nowtime.includes('15:1') || nowtime.includes('15:0')) {
+                    if (nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
                         const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                         for (const item of vlist) {
                             const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
