@@ -70,11 +70,6 @@
                                 <van-field :readonly="readonly" required clearable label="访客电话" type="number" v-model="item.visitor_mobile" placeholder="请填写访客电话！" @blur="validField('visitor_mobile')" :error-message="message.visitor_mobile" />
                                 <van-field :readonly="readonly" required clearable label="来访人数" type="number" v-model="item.visitor_count" placeholder="请填写来访人数！" @blur="validField('visitor_count')" :error-message="message.visitor_count" />
 
-                                <!--
-                                <van-icon v-show="false && !item.serialid" name="add-o" style="position:absolute;top:125px;right:0px;" @click="size <= 20 ? size++ : size;" />
-                                <van-icon v-show="false && !item.serialid" name="circle" style="position:absolute;top:155px;right:0px;" @click="size > 1 ? size-- : size;" />
-                                <span v-show="!item.serialid" class="van-goods-span-number" style="top:130px;">#1</span>
-                                -->
                             </van-cell-group>
 
                             <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
