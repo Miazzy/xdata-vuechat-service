@@ -337,7 +337,7 @@ export default {
         }
     },
     activated() {
-        //this.queryInfo();
+
     },
     mounted() {
         this.queryInfo();
@@ -701,7 +701,7 @@ export default {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
+                        if (nowtime.includes('17:3') || nowtime.includes('17:4') || nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                             for (const item of vlist) {
                                 const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
@@ -720,7 +720,7 @@ export default {
 
                     /** 推送设备借用归还消息 */
                     try {
-                        if (nowtime.includes('17:00') || nowtime.includes('17:05') || nowtime.includes('17:1') || nowtime.includes('17:20') || nowtime.includes('17:25')) { // 如果当前时间为17:00点左右，则执行推送消息操作
+                        if (nowtime.includes('17:0') || nowtime.includes('17:1') || nowtime.includes('17:2') || nowtime.includes('17:3') || nowtime.includes('17:4') || nowtime.includes('17:5')) { // 如果当前时间为17:00点左右，则执行推送消息操作
                             //查询当日尚未归还信息设备的申请信息 ***** //检查已推送消息表，如果消息尚未被推送，则将归还信息推送给用户，提醒用户归还设备
                             const blist = await Betools.query.queryTableDataByWhereSQL('bs_goods_borrow', `_where=(status,in,已借用)&_sort=-id`);
                             for (const item of blist) {
