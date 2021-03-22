@@ -839,7 +839,7 @@ export default {
                 user_group_ids,
                 user_group_names,
                 pid: id,
-                status: userinfo.username == 'commmon' || !userinfo ? 'init' : 'confirm',
+                status: (userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by)) ? 'init' : 'confirm',
             }; // 待处理元素
 
             visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}的拜访预约，联系电话:${elem.visitor_mobile}`;
@@ -863,12 +863,10 @@ export default {
                         mobile: this.item.mobile,
                         position: this.item.position,
                         create_time: this.item.create_time,
-
                         visitor_name: this.item['visitor_name' + i],
                         visitor_company: this.item['visitor_company'],
                         visitor_mobile: this.item['visitor_mobile' + i],
                         visitor_position: this.item['visitor_position' + i],
-
                         time: this.item.time,
                         dtime: this.item.dtime,
                         address: this.item.address,
@@ -878,9 +876,8 @@ export default {
                         user_admin_name: this.item.user_admin_name,
                         user_group_ids,
                         user_group_names,
-
                         pid: id,
-                        status: userinfo.username == 'commmon' || !userinfo ? 'init' : 'confirm',
+                        status: (userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by)) ? 'init' : 'confirm',
                     };
 
                     //向表单提交form对象数据
