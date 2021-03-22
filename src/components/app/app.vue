@@ -695,13 +695,13 @@ export default {
 
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
                 const lockFlag = await Betools.manage.lock('crontab_task', 100000, username);
-                console.log(`lock flag : `, lockFlag);
+                console.log(`lock flag : `, lockFlag , ` nowtime: `, nowtime);
 
                 if (!!lockFlag) {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('17:') || nowtime.includes('17:4') || nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3')) {
+                        if (nowtime.includes('17:3') || nowtime.includes('17:4') || nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                             debugger
                             for (const item of vlist) {
