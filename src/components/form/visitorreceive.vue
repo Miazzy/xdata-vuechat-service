@@ -60,9 +60,9 @@
 
                                 <van-cell value="来访信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
-                                <van-field :readonly="readonly" required clearable label="预约日期" v-model="item.time" placeholder="请填写预约时间！" @blur="validField('time')" :error-message="message.time" @click="tag.showPickerTime = true"  />
+                                <van-field :readonly="readonly" required clickable clearable label="预约日期" v-model="item.time" placeholder="请选择预约时间！" @blur="validField('')" @click="tag.showPickerTime = true" />
                                 <single-select v-show="false" required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
-                                <van-field :readonly="readonly" required clickable clearable label="来访时间" v-model="item.dtime" placeholder="选择来访时间" @blur="validField('')" @click="tag.showPickerDTime = true" />
+                                <van-field :readonly="readonly" required clickable clearable label="来访时间" v-model="item.dtime" placeholder="请选择来访时间!" @blur="validField('')" @click="tag.showPickerDTime = true" />
 
                                 <van-field :readonly="readonly" required clearable label="访客姓名" v-model="item.visitor_name" placeholder="请填写访客姓名！" @blur="validField('visitor_name')" :error-message="message.visitor_name" />
                                 <van-field :readonly="readonly" :required="true" clearable label="访客单位" v-model="item.visitor_company" placeholder="请填写来访单位！" @blur="validField('visitor_company')" :error-message="message.visitor_company" />
@@ -105,7 +105,7 @@
                             </van-cell-group>
 
                             <van-popup v-model="tag.showPickerTime" round position="bottom">
-                                <van-datetime-picker v-model="datetime" type="date" title="选择日期" :min-date="new Date()" @confirm="dateConfirm" @cancel="dateConfirm" />
+                                <van-datetime-picker v-model="datetime" type="date" title="选择日期" :min-date="minDate" @confirm="dateConfirm" @cancel="tag.showPickerTime = false;" />
                             </van-popup>
 
                             <van-popup v-model="tag.showPickerDTime" round position="bottom">
@@ -189,7 +189,8 @@ export default {
             uploadURL: 'https://upload.yunwisdom.club:30443/sys/common/upload',
             message: Betools.workconfig.compValidation.visitorapply.message,
             valid: Betools.workconfig.compValidation.visitorapply.valid,
-            datetime:null,
+            minDate: new Date(dayjs().format('YYYY'), 0, 1),
+            datetime: '',
             item: {
                 id: '',
                 serialid: '',
@@ -311,7 +312,7 @@ export default {
             officeList: [],
             addressList: [],
             tag: {
-                showPickerTime:false,
+                showPickerTime: false,
                 showPickerDTime: false,
             },
             searchFlag: false,
@@ -361,7 +362,7 @@ export default {
     methods: {
         async dateConfirm() {
             try {
-                this.item.time = dayjs(this.datetime).format('YYYY-MM-DD'); 
+                this.item.time = dayjs(this.datetime).format('YYYY-MM-DD');
                 this.tag.showPickerTime = false;
             } catch (error) {
                 console.log(error);
