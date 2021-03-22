@@ -701,9 +701,11 @@ export default {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('17:3') || nowtime.includes('17:4') || nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3')) {
+                        if (nowtime.includes('17:') || nowtime.includes('17:4') || nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
+                            debugger
                             for (const item of vlist) {
+                                debugger
                                 const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
                                 const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
                                 const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
