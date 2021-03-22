@@ -116,8 +116,13 @@
 
                     </van-cell-group>
 
-                    <div v-show="!item.serialid" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
+                    <div v-show=" !item.serialid " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;">提交</van-button>
+                    </div>
+
+                    <div v-show=" role == 'edit' && userinfo.realname == item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                        <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废预约" @click="handleDisagree('已作废');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
+                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('确认');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">修改预约</van-button>
                     </div>
 
                     <div style="height:500px;"></div>
@@ -500,125 +505,20 @@ export default {
                 dtime: '上午',
                 create_by: '',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-
                 visitor_name: '', //访客姓名
                 visitor_company: '', //访客单位
                 visitor_mobile: '', //访客电话
                 visitor_position: '', //访客职务
-
-                visitor_name1: '',
-                visitor_company1: '',
-                visitor_mobile1: '',
-                visitor_position1: '',
-
-                visitor_name2: '',
-                visitor_company2: '',
-                visitor_mobile2: '',
-                visitor_position2: '',
-
-                visitor_name3: '',
-                visitor_company3: '',
-                visitor_mobile3: '',
-                visitor_position3: '',
-
-                visitor_name4: '',
-                visitor_company4: '',
-                visitor_mobile4: '',
-                visitor_position4: '',
-
-                visitor_name5: '',
-                visitor_company5: '',
-                visitor_mobile5: '',
-                visitor_position5: '',
-
-                visitor_name6: '',
-                visitor_company6: '',
-                visitor_mobile6: '',
-                visitor_position6: '',
-
-                visitor_name7: '',
-                visitor_company7: '',
-                visitor_mobile7: '',
-                visitor_position7: '',
-
-                visitor_name8: '',
-                visitor_company8: '',
-                visitor_mobile8: '',
-                visitor_position8: '',
-
-                visitor_name9: '',
-                visitor_company9: '',
-                visitor_mobile9: '',
-                visitor_position9: '',
-
-                visitor_name10: '',
-                visitor_company10: '',
-                visitor_mobile10: '',
-                visitor_position10: '',
-
-                visitor_name11: '',
-                visitor_company11: '',
-                visitor_mobile11: '',
-                visitor_position11: '',
-
-                visitor_name12: '',
-                visitor_company12: '',
-                visitor_mobile12: '',
-                visitor_position12: '',
-
-                visitor_name13: '',
-                visitor_company13: '',
-                visitor_mobile13: '',
-                visitor_position13: '',
-
-                visitor_name14: '',
-                visitor_company14: '',
-                visitor_mobile14: '',
-                visitor_position14: '',
-
-                visitor_name15: '',
-                visitor_company15: '',
-                visitor_mobile15: '',
-                visitor_position15: '',
-
-                visitor_name16: '',
-                visitor_company16: '',
-                visitor_mobile16: '',
-                visitor_position16: '',
-
-                visitor_name17: '',
-                visitor_company17: '',
-                visitor_mobile17: '',
-                visitor_position17: '',
-
-                visitor_name18: '',
-                visitor_company18: '',
-                visitor_mobile18: '',
-                visitor_position18: '',
-
-                visitor_name19: '',
-                visitor_company19: '',
-                visitor_mobile19: '',
-                visitor_position19: '',
-
-                visitor_name20: '',
-                visitor_company20: '',
-                visitor_mobile20: '',
-                visitor_position20: '',
-
                 employee: '', //填报人名称
                 mobile: '', //填报人电话
                 department: '', //填报人部门名称
                 company: '', //填报人单位名称
                 position: '', //填报人岗位
-
                 remark: '', //备注说明
-
                 userid: '',
                 user_group_ids: '',
                 user_group_names: '',
                 user_admin_name: '',
-
                 status: '',
             };
         },
@@ -724,6 +624,7 @@ export default {
                 this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
                 this.userinfo = await this.weworkLogin(); //查询当前登录用户
                 this.back = Betools.tools.getUrlParam('back') || '/app'; //查询上一页
+                this.role = Betools.tools.getUrlParam('role');
 
                 //获取用户基础信息
                 const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
@@ -752,6 +653,39 @@ export default {
                 this.item.user_admin_name = clist[0].username;
                 this.item.user_group_ids = clist[0].userlist;
                 this.item.user_group_names = clist[0].realname;
+
+                //查询编号
+                const id = Betools.tools.getUrlParam('id');
+
+                //查询领用数据
+                let tlist = await Betools.query.queryTableDataByPid(this.tablename, id);
+                const item = tlist[0];
+                //自动回显刚才填写的用户基础信息
+                if (item) {
+                    this.item.id = item.id;
+                    this.item.serialid = item.serialid || this.item.serialid
+                    this.item.time = dayjs(item.time).format('YYYY-MM-DD') || this.item.time
+                    this.item.dtime = item.dtime;
+                    this.item.create_by = item.create_by || this.item.create_by;
+                    this.item.create_time = item.create_time || this.item.create_time;
+                    this.item.visitor_name = item.visitor_name || this.item.visitor_name;
+                    this.item.visitor_company = item.visitor_company || this.item.visitor_company;
+                    this.item.visitor_mobile = item.visitor_mobile || this.item.visitor_mobile;
+                    this.item.visitor_position = item.visitor_position || this.item.visitor_position;
+                    this.item.employee = item.employee || this.item.employee;
+                    this.item.mobile = item.mobile || this.item.mobile;
+                    this.item.department = item.department || this.item.department;
+                    this.item.company = item.company || this.item.company;
+                    this.item.position = item.position || this.item.position;
+                    this.item.remark = item.remark || this.item.remark;
+                    this.item.userid = item.userid || this.item.userid;
+                    this.item.address = item.address;
+                    this.item.visitor_count = item.visitor_count;
+                    this.item.user_group_ids = item.user_group_ids || this.item.user_group_ids;
+                    this.item.user_group_names = item.user_group_names || this.item.user_group_names;
+                    this.item.user_admin_name = item.user_admin_name || this.item.user_admin_name;
+                    this.item.status = this.vstatus[item.status] || this.item.status;
+                }
 
             } catch (error) {
                 console.log(error);
@@ -1048,7 +982,281 @@ export default {
                 message: '已提交访客预约申请！',
             });
 
-        }
+        },
+
+        // 物品领用驳回
+        async handleDisagree(visitType) {
+            //显示加载状态
+            this.loading = true;
+
+            //获取用户基础信息
+            const userinfo = await Betools.storage.getStore('system_userinfo');
+
+            //表单ID
+            const id = this.item.id;
+            const type = Betools.tools.getUrlParam('statustype');
+            const pid = Betools.tools.getUrlParam('pid');
+
+            //检查用户是否具有权限进行审批
+            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
+
+            //获取到印章管理员组信息
+            let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            user_group_ids = user_group_ids + ',' + this.item.create_by;
+
+            //获取到用户列表数据
+            if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '您没有物品领用的审批权限，请联系管理员进行处理！',
+                });
+            }
+
+            //返回驳回理由
+            if (!this.item.disagree_remark) {
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '请输入' + (visitType == '未到访' ? visitType : '作废') + '原因！',
+                });
+            }
+
+            // 返回预览URL
+            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+
+            //第一步 保存用户数据到数据库中
+            const elem = {
+                status: 'devisit',
+                disagree_remark: this.item.disagree_remark,
+            }; // 待处理元素
+
+            //第二步，向表单提交form对象数据
+            const result = await Betools.manage.patchTableData(this.tablename, id, elem);
+
+            //批量领取物品修改状态
+            for (let i = 0; i < this.tlist.length; i++) {
+
+                //第一步 保存用户数据到数据库中
+                let element = {
+                    status: 'devisit',
+                }; // 待处理元素
+
+                //第二步，向表单提交form对象数据
+                const result = await Betools.manage.patchTableData(this.tablename, this.tlist[i].id, element);
+
+            }
+
+            /************************  工作流程日志(开始)  ************************/
+
+            //获取后端配置前端管理员组
+            const front = user_group_ids;
+            const front_name = user_group_ids;
+
+            //查询当前所有待办记录
+            let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username, userinfo.realname, 0, 1000);
+
+            //过滤出只关联当前流程的待办数据
+            tlist = tlist.filter(item => {
+                return item.id == id && item.pid == pid;
+            });
+
+            //同时删除本条待办记录当前(印章管理员)
+            await Betools.workflow.deleteViewProcessLog(tlist);
+
+            //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+            const prLogHisNode = {
+                id: Betools.tools.queryUniqueID(),
+                table_name: this.tablename,
+                main_value: id,
+                proponents: userinfo.username,
+                business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+                business_code: '000000000', //varchar(100)  null comment '业务编号',
+                process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
+                employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+                approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                action: (visitType == '未到访' ? visitType : '作废'), //varchar(100)  null comment '操作动作',
+                action_opinion: '来访申请审批[' + visitType + ']', //text          null comment '操作意见',
+                operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+                functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                process_station: '来访审批[' + (visitType == '未到访' ? visitType : '作废') + ']', //varchar(100)  null comment '流程岗位',
+                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+                content: `来访确认(${this.item.type}) ` + this.item.name + ' #被访人员: ' + this.item.create_by, //text          null comment '业务内容',
+                process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+                relate_data: '', //text          null comment '关联数据',
+                origin_data: '',
+            }
+
+            await Betools.workflow.approveViewProcessLog(prLogHisNode);
+
+            /************************  工作流程日志(结束)  ************************/
+
+            //设置状态
+            this.loading = false;
+            this.status = elem.status;
+            this.readonly = true;
+            this.item.status = elem.status;
+            this.role = 'view';
+
+            //弹出确认提示
+            await vant.Dialog.alert({
+                title: '温馨提示',
+                message: '来访预约已设置为' + (visitType == '未到访' ? visitType : '已作废') + '！',
+            });
+
+        },
+
+        // 用户提交入职登记表函数
+        async handleConfirm(visitType = '确认') {
+
+            //显示加载状态
+            this.loading = true;
+            const status = visitType == '已到访' ? 'visit':'confirm'; 
+
+            //获取用户基础信息
+            const userinfo = await Betools.storage.getStore('system_userinfo');
+
+            //表单ID
+            const id = this.item.id;
+            const type = Betools.tools.getUrlParam('statustype');
+            const pid = Betools.tools.getUrlParam('pid');
+
+            //检查用户是否具有权限进行审批
+            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
+
+            //获取到印章管理员组信息
+            let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
+            user_group_ids = user_group_ids + ',' + this.item.create_by;
+
+            //获取到用户列表数据
+            if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
+                await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '您没有物品领用的审批权限，请联系管理员进行处理！',
+                });
+                return;
+            }
+
+            // 返回预览URL
+            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+
+            //第一步 保存用户数据到数据库中
+            const elem = {
+                create_by: this.item.create_by,
+                mobile: this.item.mobile,
+
+                visitor_name: this.item.visitor_name,
+                visitor_company: this.item.visitor_company,
+                visitor_mobile: this.item.visitor_mobile,
+                visitor_position: this.item.visitor_position,
+                visitor_count: this.item.visitor_count,
+
+                time: this.item.time,
+                dtime: this.item.dtime,
+                address: this.item.address,
+
+                userid: this.item.userid,
+                user_admin_name: this.item.username,
+                user_group_ids: this.item.userlist,
+                user_group_names: this.item.user_group_names,
+                status: status,
+            }; // 待处理元素
+
+            //第二步，向表单提交form对象数据
+            const result = await Betools.manage.patchTableData(this.tablename, id, elem);
+
+            //批量领取物品修改状态
+            for (let i = 0; i < this.tlist.length; i++) {
+
+                //第一步 保存用户数据到数据库中
+                let element = {
+                    create_by: this.item.create_by,
+                    mobile: this.item.mobile,
+                    time: this.item.time,
+                    dtime: this.item.dtime,
+                    address: this.item.address,
+                    userid: this.item.userid,
+                    user_admin_name: this.item.username,
+                    user_group_ids: this.item.userlist,
+                    user_group_names: this.item.user_group_names,
+                    status: status,
+                }; // 待处理元素
+
+                //第二步，向表单提交form对象数据
+                const result = await Betools.manage.patchTableData(this.tablename, this.tlist[i].id, element);
+
+            }
+
+            try {
+                //第三步 向被拜访人员推送已到访到访通知
+                if(status == 'visit'){
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.mobile}/亲爱的同事，${this.item.visitor_company}的${this.item.visitor_name}等已到访，联系电话：${this.item.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+            /************************  工作流程日志(开始)  ************************/
+
+            //获取后端配置前端管理员组
+            const front = user_group_ids;
+            const front_name = user_group_ids;
+
+            //查询当前所有待办记录
+            let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username, userinfo.realname, 0, 1000);
+
+            //过滤出只关联当前流程的待办数据
+            tlist = tlist.filter(item => {
+                return item.id == id && item.pid == pid;
+            });
+
+            //同时删除本条待办记录当前(印章管理员)
+            await Betools.workflow.deleteViewProcessLog(tlist);
+
+            //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+            const prLogHisNode = {
+                id: Betools.tools.queryUniqueID(),
+                table_name: this.tablename,
+                main_value: id,
+                proponents: userinfo.username,
+                business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+                business_code: '000000000', //varchar(100)  null comment '业务编号',
+                process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
+                employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+                approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                action: visitType == '已到访' ? '已到访' : '预约确认', //varchar(100)  null comment '操作动作',
+                action_opinion: '来访申请审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //text          null comment '操作意见',
+                operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+                functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                process_station: '来访审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //varchar(100)  null comment '流程岗位',
+                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+                content: `来访申请(${this.item.type}) ` + this.item.name + ' #被访人员: ' + this.item.create_by, //text          null comment '业务内容',
+                process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+                relate_data: '', //text          null comment '关联数据',
+                origin_data: '',
+            }
+
+            await Betools.workflow.approveViewProcessLog(prLogHisNode);
+
+            //同时推送一条待办记录给印章管理员
+
+            /************************  工作流程日志(结束)  ************************/
+
+            //设置状态
+            this.loading = false;
+            this.status = elem.status;
+            this.readonly = true;
+            this.item.status = elem.status;
+            this.role = 'view';
+
+            //弹出确认提示
+            await vant.Dialog.alert({
+                title: '温馨提示',
+                message: '预约人员已经'+ (visitType == '已到访' ? '到访' : '确认' )+'！',
+            });
+
+        },
     }
 }
 </script>

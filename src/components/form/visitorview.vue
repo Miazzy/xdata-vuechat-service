@@ -113,7 +113,7 @@
 
                     </van-cell-group>
 
-                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  userinfo.realname !== item.create_by) || (item.status ==='已确认' && role == 'front' )" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  userinfo.realname != item.create_by) || (item.status ==='已确认' && role == 'front' && userinfo.realname != item.create_by )" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('已到访');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:97.5%;">确认到访</van-button>
                     </div>
 
@@ -441,10 +441,11 @@ export default {
 
             try {
                 this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
-                this.userinfo = await this.weworkLogin(); //查询当前登录用户
+                await this.weworkLogin(); //查询当前登录用户
 
                 //获取用户基础信息
                 const userinfo = this.userinfo = await Betools.storage.getStore('system_userinfo');
+                this.userinfo = userinfo;
 
                 //查询编号
                 const id = Betools.tools.getUrlParam('id');
@@ -516,6 +517,8 @@ export default {
                     this.item['visitor_mobile' + i] = tlist[i].visitor_mobile;
                 }
 
+                console.log(`realname: ${this.userinfo.realname} , create_by: ${this.item.create_by} , eq:${this.userinfo.realname == this.item.create_by}`);
+
                 await this.queryProcessLog();
 
             } catch (error) {
@@ -582,14 +585,6 @@ export default {
                 //第二步，向表单提交form对象数据
                 const result = await Betools.manage.patchTableData(this.tablename, this.tlist[i].id, element);
 
-            }
-
-            try {
-                //第三步 向HR推送入职引导通知，HR确认后，继续推送通知给行政、前台、食堂
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.create_by}/亲爱的${this.item.receive_name}同事，您的办公用品预约申请已被驳回，驳回原因是${this.item.disagree_remark}！?rurl=${receiveURL}`)
-                    .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            } catch (error) {
-                console.log(error);
             }
 
             /************************  工作流程日志(开始)  ************************/
