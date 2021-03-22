@@ -364,9 +364,7 @@ export default {
                 this.userinfo = await this.weworkLogin();
                 this.images = await this.queryImagesUrl();
                 this.commonIconLength = await this.changeStyle();
-                setTimeout(()=>{
-                    this.queryCrontab();
-                },3000);
+                setTimeout(()=>{ this.queryCrontab(); }, 100);
             } catch (error) {
                 console.log(error);
             }
@@ -715,7 +713,7 @@ export default {
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
                 const lockFlag = await Betools.manage.lock('crontab_task', 100000 , username);
                 console.log(`lock flag : `, lockFlag);
-                
+
                 if (!!lockFlag) {
                     /** 推送设备借用归还消息 */
                     try {
