@@ -77,16 +77,16 @@
                                 <van-field required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" />
                             </van-cell-group>
 
-                            <van-cell-group style="margin-top:10px;">
+                            <van-cell-group v-show="!((item.status == '待处理' || item.status == '未到访' ) && !item.remark)" style="margin-top:10px;">
 
                                 <van-cell value="备注说明" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field :readonly="false" :required="false" clearable label="备注说明" v-model="item.remark" rows="2" autosize type="textarea" maxlength="256" placeholder="请填写备注说明信息，如相关流程，特殊事项及情况！" />
 
                             </van-cell-group>
 
-                            <van-cell-group v-show="((item.status == '待处理' || item.status == '未到访' ) && !item.disagree_remark) || item.disagree_remark" style="margin-top:10px;">
+                            <van-cell-group v-show="((item.status == '待处理' || item.status == '未到访' ) && !item.remark)" style="margin-top:10px;">
                                 <van-cell value="作废原因" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                                <van-field :readonly="false" :required="false" clearable label="作废原因" v-model="item.disagree_remark" rows="2" autosize type="textarea" maxlength="256" placeholder="作废申请时，请填写未到访原因！" />
+                                <van-field :readonly="false" :required="false" clearable label="作废原因" v-model="item.remark" rows="2" autosize type="textarea" maxlength="256" placeholder="作废申请时，请填写未到访原因！" />
                             </van-cell-group>
 
                             <van-cell-group style="margin-top:10px;" v-show="!!item.status">
@@ -555,7 +555,7 @@ export default {
             }
 
             //返回驳回理由
-            if (!this.item.disagree_remark) {
+            if (!this.item.remark) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '请输入' + (visitType == '未到访' ? visitType : '作废') + '原因！',
@@ -568,7 +568,7 @@ export default {
             //第一步 保存用户数据到数据库中
             const elem = {
                 status: 'devisit',
-                disagree_remark: this.item.disagree_remark,
+                remark: this.item.remark,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
@@ -616,7 +616,7 @@ export default {
                 employee: userinfo.realname, //varchar(1000) null comment '操作职员',
                 approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
                 action: (visitType == '未到访' ? visitType : '作废'), //varchar(100)  null comment '操作动作',
-                action_opinion: '来访申请审批[' + visitType + ']', //text          null comment '操作意见',
+                action_opinion: `来访申请审批[${visitType}]原因:${this.item.remark}`, //text          null comment '操作意见',
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
                 process_station: '来访审批[' + (visitType == '未到访' ? visitType : '作废') + ']', //varchar(100)  null comment '流程岗位',

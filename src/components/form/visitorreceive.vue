@@ -50,8 +50,8 @@
                                 <van-address-list v-show="cuserList.length > 0 && false" v-model="cuserid" :list="cuserList" default-tag-text="默认" edit-disabled @select="selectCUserName" />
                                 <van-field v-show="false" :readonly="readonly" required clearable label="职务名称" v-model="item.position" placeholder="请填写被访人员的职务名称！" @blur="validField('position')" :error-message="message.position" />
                                 <van-field :readonly="readonly" required clearable label="联系电话" v-model="item.mobile" placeholder="请填写被访人员的联系电话！" @blur="validField('mobile');" :error-message="message.mobile" />
-                                <van-field v-show=" back == 'common' " :readonly="true" required clearable label="到访地址" v-model="item.address" placeholder="请选择到访地址" />
-                                <check-select v-show="back != 'common' " required label="到访地址" placeholder="请选择到访地址" v-model="item.address" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
+                                <van-field v-show=" !(back != 'common' && role !='visitor') " :readonly="true" required clearable label="到访地址" v-model="item.address" placeholder="请选择到访地址" />
+                                <check-select v-show="back != 'common' && role !='visitor' " required label="到访地址" placeholder="请选择到访地址" v-model="item.address" :columns="fileColumns" :option="{ label:'name',value:'name',title:'title',all:false, search:true, margin:'35px 3px 0px 0px' , classID:'van-field-check-select'}" @confirm="fileConfirm" />
                                 <van-field v-show="false" required clearable label="客户接待" v-model="item.user_admin_name" placeholder="请输入客服接待员!" @blur="validField('user_admin_name');queryUserName();" :error-message="message.user_admin_name" @click="queryUserName();" />
                                 <van-address-list v-show="userList.length > 0" v-model="userid" :list="userList" default-tag-text="默认" edit-disabled @select="selectUserName" />
                             </van-cell-group>
@@ -176,10 +176,10 @@ export default {
             muserList: [],
             vstatus: {
                 init: '待处理',
-                confirm:'已确认',
+                confirm: '已确认',
                 visit: '已到访',
                 devisit: '未到访',
-                invalid:'已作废',
+                invalid: '已作废',
             },
             size: 1,
             processLogList: [],
@@ -217,6 +217,7 @@ export default {
                 status: '',
             },
             back: '/app',
+            role: '',
             workflowlist: [],
             announces: [],
             informList: [],
@@ -279,7 +280,7 @@ export default {
         },
         async fileConfirm(value, index, resp) {
             try {
-                if (this.back == 'common') {
+                if (this.back == 'common' || this.role == 'visitor') {
                     //弹出确认提示
                     await vant.Dialog.alert({
                         title: '温馨提示',
@@ -844,8 +845,13 @@ export default {
                 user_group_ids,
                 user_group_names,
                 pid: id,
-                status: (userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common' ) ? 'init' : 'confirm',
+                status: (this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common') ? 'init' : 'confirm',
             }; // 待处理元素
+
+            debugger;
+            if ((this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common')) {
+                elem.status = 'init';
+            }
 
             visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}的拜访预约，联系电话:${elem.visitor_mobile}`;
 
@@ -882,8 +888,12 @@ export default {
                         user_group_ids,
                         user_group_names,
                         pid: id,
-                        status: (userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common' ) ? 'init' : 'confirm',
+                        status: (this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common') ? 'init' : 'confirm',
                     };
+
+                    if ((this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common')) {
+                        element.status = 'init';
+                    }
 
                     //向表单提交form对象数据
                     await Betools.manage.postTableData(this.tablename, element);
@@ -1015,7 +1025,7 @@ export default {
             }
 
             //返回驳回理由
-            if (!this.item.disagree_remark) {
+            if (!this.item.remark) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '请输入' + (visitType == '未到访' ? visitType : '作废') + '原因！',
@@ -1028,7 +1038,7 @@ export default {
             //第一步 保存用户数据到数据库中
             const elem = {
                 status: 'devisit',
-                disagree_remark: this.item.disagree_remark,
+                remark: this.item.remark,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
@@ -1076,7 +1086,7 @@ export default {
                 employee: userinfo.realname, //varchar(1000) null comment '操作职员',
                 approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
                 action: (visitType == '未到访' ? visitType : '作废'), //varchar(100)  null comment '操作动作',
-                action_opinion: '来访申请审批[' + visitType + ']', //text          null comment '操作意见',
+                action_opinion: `来访申请审批[${visitType}]原因:${this.item.remark}`, //text          null comment '操作意见',
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
                 process_station: '来访审批[' + (visitType == '未到访' ? visitType : '作废') + ']', //varchar(100)  null comment '流程岗位',
@@ -1084,7 +1094,7 @@ export default {
                 content: `来访确认(${this.item.type}) ` + this.item.name + ' #被访人员: ' + this.item.create_by, //text          null comment '业务内容',
                 process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-                relate_data: '', //text          null comment '关联数据',
+                relate_data: '', //text null comment '关联数据',
                 origin_data: '',
             }
 
@@ -1112,7 +1122,7 @@ export default {
 
             //显示加载状态
             this.loading = true;
-            const status = visitType == '已到访' ? 'visit':'confirm'; 
+            const status = visitType == '已到访' ? 'visit' : 'confirm';
 
             //获取用户基础信息
             const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -1190,7 +1200,7 @@ export default {
 
             try {
                 //第三步 向被拜访人员推送已到访到访通知
-                if(status == 'visit'){
+                if (status == 'visit') {
                     await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.mobile}/亲爱的同事，${this.item.visitor_company}的${this.item.visitor_name}等已到访，联系电话：${this.item.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 }
@@ -1255,7 +1265,7 @@ export default {
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
-                message: '预约人员已经'+ (visitType == '已到访' ? '到访' : '确认' )+'！',
+                message: '预约人员已经' + (visitType == '已到访' ? '到访' : '确认') + '！',
             });
 
         },
