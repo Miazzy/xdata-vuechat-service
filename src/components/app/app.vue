@@ -688,6 +688,8 @@ export default {
         // 查询定时任务，推送定时消息
         async queryCrontab() {
 
+            const userinfo = await Betools.storage.getStore('system_userinfo');
+
             try {
                 const nowtime = dayjs().format('HH:mm');
                 const nowdate = dayjs().format('YYYYMMDD');
@@ -710,7 +712,8 @@ export default {
                 }
 
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
-                const lockFlag = await Betools.manage.lock('crontab_task', 3600 * 1000);
+                const lockFlag = await Betools.manage.lock('crontab_task', 100000 , userinfo.username);
+                
                 if (!!lockFlag) {
                     /** 推送设备借用归还消息 */
                     try {
