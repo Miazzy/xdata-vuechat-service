@@ -694,16 +694,15 @@ export default {
 
                 //查询当日尚未到访的预约申请信息，并发送知会通知
                 try {
-                    if (nowtime.includes('14:3') || nowtime.includes('14:2') || nowtime.includes('14:0')) {
+                    if (nowtime.includes('15:2') || nowtime.includes('15:1') || nowtime.includes('15:0')) {
                         const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                         for (const item of vlist) {
-                            if (item.id == item.pid) {
-                                const date = dayjs(item.create_time).format('YYYY-MM-DD'); // console.log(`visit apply: ${JSON.stringify(item)}`);
-                                const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
-                                const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
-                                const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                                console.log(`response :`, JSON.stringify(resp),`\n\r query url:`,queryURL);
-                            }
+                            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
+                            const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
+                            const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                            const element = { status: 'devisit',}; // 待处理元素 未到访
+                            const result = await Betools.manage.patchTableData('bs_visit_apply', item.id, element); //第二步，向表单提交form对象数据
+                            console.log(`response :`, JSON.stringify(resp), `\n\r query url:`, queryURL,`\n\r result:`,result);
                         }
                     }
                 } catch (error) {
