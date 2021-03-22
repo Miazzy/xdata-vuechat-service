@@ -6,7 +6,7 @@
 
         <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;">
             <div class="center">
-                <router-link v-show="back!='common'" :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
+                <router-link v-show="back!='common' && role != 'visitor' " :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                     <span>返回</span>
                 </router-link>
                 <span>访客登记</span>
