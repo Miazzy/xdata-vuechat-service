@@ -969,7 +969,7 @@ export default {
                 const value = await Betools.query.queryTableData(this.tablename, id);
                 //显示序列号
                 this.item.serialid = value.serialid;
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.create_by}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.employee},${this.item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
                     .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log(error);

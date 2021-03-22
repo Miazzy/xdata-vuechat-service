@@ -337,7 +337,7 @@ export default {
         }
     },
     activated() {
-
+        this.queryCrontab();
     },
     mounted() {
         this.queryInfo();
