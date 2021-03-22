@@ -364,7 +364,7 @@ export default {
                 this.userinfo = await this.weworkLogin();
                 this.images = await this.queryImagesUrl();
                 this.commonIconLength = await this.changeStyle();
-                setTimeout(()=>{ this.queryCrontab(); }, 100);
+                this.queryCrontab();
             } catch (error) {
                 console.log(error);
             }
@@ -693,28 +693,31 @@ export default {
                 const nowtime = dayjs().format('HH:mm');
                 const nowdate = dayjs().format('YYYYMMDD');
 
-                //查询当日尚未到访的预约申请信息，并发送知会通知
-                try {
-                    if (nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
-                        const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
-                        for (const item of vlist) {
-                            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
-                            const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
-                            const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                            const element = { status: 'devisit',}; // 待处理元素 未到访
-                            const result = await Betools.manage.patchTableData('bs_visit_apply', item.id, element); //第二步，向表单提交form对象数据
-                            console.log(`response :`, JSON.stringify(resp), `\n\r query url:`, queryURL,`\n\r result:`,result);
-                        }
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
-                const lockFlag = await Betools.manage.lock('crontab_task', 100000 , username);
+                const lockFlag = await Betools.manage.lock('crontab_task', 100000, username);
                 console.log(`lock flag : `, lockFlag);
 
                 if (!!lockFlag) {
+
+                    //查询当日尚未到访的预约申请信息，并发送知会通知
+                    try {
+                        if (nowtime.includes('17:5') || nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
+                            const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
+                            for (const item of vlist) {
+                                const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);
+                                const queryURL = `${window.BECONFIG['restAPI']}/api/v1/weappms/${item.mobile}/亲爱的同事，访客：${item.visitor_name} 预约于${dayjs(item.create_time).format('YYYY-MM-DD')}的拜访申请尚未到访，您可以作废或调整拜访预约时间?rurl=${receiveURL}`;
+                                const resp = await superagent.get(queryURL).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                                const element = {
+                                    status: 'devisit',
+                                }; // 待处理元素 未到访
+                                const result = await Betools.manage.patchTableData('bs_visit_apply', item.id, element); //第二步，向表单提交form对象数据
+                                console.log(`response :`, JSON.stringify(resp), `\n\r query url:`, queryURL, `\n\r result:`, result);
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+
                     /** 推送设备借用归还消息 */
                     try {
                         if (nowtime.includes('17:00') || nowtime.includes('17:1') || nowtime.includes('17:20')) { // 如果当前时间为17:00点左右，则执行推送消息操作
