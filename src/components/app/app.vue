@@ -720,7 +720,7 @@ export default {
 
                     /** 推送设备借用归还消息 */
                     try {
-                        if (nowtime.includes('17:00') || nowtime.includes('17:1') || nowtime.includes('17:20')) { // 如果当前时间为17:00点左右，则执行推送消息操作
+                        if (nowtime.includes('17:00') || nowtime.includes('17:05') || nowtime.includes('17:1') || nowtime.includes('17:20') || nowtime.includes('17:25')) { // 如果当前时间为17:00点左右，则执行推送消息操作
                             //查询当日尚未归还信息设备的申请信息 ***** //检查已推送消息表，如果消息尚未被推送，则将归还信息推送给用户，提醒用户归还设备
                             const blist = await Betools.query.queryTableDataByWhereSQL('bs_goods_borrow', `_where=(status,in,已借用)&_sort=-id`);
                             for (const item of blist) {
