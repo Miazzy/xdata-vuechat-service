@@ -174,6 +174,13 @@ export default {
             fuserList: [],
             muserid: '',
             muserList: [],
+            vstatus: {
+                init: '待处理',
+                confirm:'已确认',
+                visit: '已到访',
+                devisit: '未到访',
+                invalid:'已作废',
+            },
             size: 1,
             processLogList: [],
             iswechat: false,
