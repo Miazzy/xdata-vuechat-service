@@ -687,7 +687,6 @@ export default {
             //第一步 保存用户数据到数据库中
             const elem = {
                 status: status,
-                remark: element.address,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
@@ -699,7 +698,6 @@ export default {
                 //第一步 保存用户数据到数据库中
                 let element = {
                     status: status,
-                    remark: element.address,
                 }; // 待处理元素
 
                 //第二步，向表单提交form对象数据
