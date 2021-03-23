@@ -55,17 +55,13 @@
             <div class="wechat-list">
                 <template v-show="tabname == 1 && !loading && !isLoading">
                     <div id="van-visitor-list">
-                        <!--
-                        <van-address-list v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled >
-                        </van-address-list>
-                        -->
                         <template v-show="tabname == 1 && !loading && !isLoading"  v-for="(item, index) in initList" >
                             <div v-show="tabname == 1 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
                                 <div class="van-cell van-cell--borderless">
                                     <div class="van-cell__value van-cell__value--alone van-address-item__value" @click="selectHContract(item , index);" >
                                         <div role="radio" tabindex="-1" aria-checked="false" class="van-radio">
                                             <span class="van-radio__label">
-                                                <div class="van-address-item__name">{{ item.name }} 拜访 {{ item.create_by }} <span class="van-tag van-tag--round van-tag--danger van-address-item__tag">{{ vstatus[item.status] }}</span></div>
+                                                <div class="van-address-item__name">{{ item.create_by }} {{ item.department }} <span class="van-tag van-tag--round van-tag--danger van-address-item__tag">{{ vstatus[item.status] }}</span></div>
                                                 <div class="van-address-item__address">{{ item.address }}</div>
                                             </span>
                                         </div>
@@ -318,7 +314,7 @@ export default {
                 //跳转到相应的用印界面
                 this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
             }
-            
+
         },
         async handleConfirm(element, key, value, visitType = '已到访') {
 

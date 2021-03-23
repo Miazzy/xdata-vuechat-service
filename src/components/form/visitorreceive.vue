@@ -196,7 +196,7 @@ export default {
                 id: '',
                 serialid: '',
                 time: dayjs().format('YYYY-MM-DD'),
-                dtime: '09:00',
+                dtime: dayjs().format('HH:mm'),
                 create_by: '',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                 visitor_name: '', //访客姓名
@@ -510,7 +510,7 @@ export default {
                 id: '',
                 serialid: '',
                 time: dayjs().format('YYYY-MM-DD'),
-                dtime: '上午',
+                dtime: dayjs().format('HH:mm'),
                 create_by: '',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
                 visitor_name: '', //访客姓名
@@ -707,6 +707,10 @@ export default {
             //显示加载状态
             this.loading = true;
 
+            const curdate = dayjs().format('YYYYMMDDHHmm');
+            const applydate = dayjs(`${this.item.time} ${this.item.dtime}:00`).format('YYYYMMDDHHmm');
+            console.log(`curdate: ${curdate} , applydate: ${applydate}`);
+
             //获取用户基础信息
             const userinfo = await Betools.storage.getStore('system_userinfo') || Betools.workconfig.commonUserInfo;
 
@@ -794,6 +798,13 @@ export default {
             }
 
             //预约时间必须大于当前时间
+            if(curdate >= applydate){
+                //弹出确认提示
+                return await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '尊敬的用户您好，您输入的预约时间不能小于当前时间！',
+                });
+            }
             
 
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
@@ -803,6 +814,8 @@ export default {
                     title: '温馨提示',
                     message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！',
                 });
+            } else {
+                this.item.department = ulist[0].topname + '>' + ulist[0].department;
             }
 
             //查询直接所在工作组
