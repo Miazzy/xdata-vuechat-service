@@ -299,10 +299,17 @@ export default {
         },
         async handleConfirm(element, key, value , visitType = '已到访') {
 
-            await vant.Dialog.confirm({
-              title: '到访确认',
-              message: `您好，请确认进行${element.visitor_name}的到访确认操作？`,
-            })
+            if(element.status == 'init' ){
+              await vant.Dialog.confirm({
+                title: '到访确认',
+                message: `您好，被访人${element.create_by}尚未进行预约确认，您确定进行${element.visitor_name}的到访确认操作？`,
+              })
+            } else {
+              await vant.Dialog.confirm({
+                title: '到访确认',
+                message: `您好，请确认进行${element.visitor_name}的到访确认操作？`,
+              })
+            }
 
             console.log(`key:`, key, ` value:`, value, ` element:`, element);
             const status = visitType == '已到访' ? 'visit':'confirm'; 
