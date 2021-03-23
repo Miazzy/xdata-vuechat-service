@@ -1,7 +1,7 @@
 #van-visitor-list .van-address-item__edit {
     position: absolute;
-    top: 50%;
-    right: 16px;
+    top: 49.5%;
+    right: 0px;
     color: #969799;
     font-size: 20px;
     -webkit-transform: translate(0, -50%);
@@ -12,7 +12,7 @@
 #van-visitor-list .van-address-list {
     box-sizing: border-box;
     height: 100%;
-    padding: 12px 12px 12px 12px;
+    padding: 0px 0px 0px 0px;
 }
 
 #van-visitor-list .van-address-list__bottom {
@@ -26,7 +26,7 @@
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
     background-color: #fff;
-    display: block;
+    display: none;
 }
 
 #van-visitor-list .van-radio__icon {
@@ -37,4 +37,8 @@
     font-size: 20px;
     line-height: 1em;
     cursor: pointer;
+}
+
+#van-visitor-list .van-icon-edit::before {
+    content: '\F0C8';
 }

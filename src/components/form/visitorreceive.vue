@@ -1010,7 +1010,7 @@ export default {
             const pid = Betools.tools.getUrlParam('pid');
 
             //检查用户是否具有权限进行审批
-            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
+            const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', userinfo.username);
 
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
@@ -1020,7 +1020,7 @@ export default {
             if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
-                    message: '您没有物品领用的审批权限，请联系管理员进行处理！',
+                    message: '您没有访客管理的审批权限，请联系管理员进行处理！',
                 });
             }
 
@@ -1033,7 +1033,7 @@ export default {
             }
 
             // 返回预览URL
-            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
 
             //第一步 保存用户数据到数据库中
             const elem = {
@@ -1134,7 +1134,7 @@ export default {
             const pid = Betools.tools.getUrlParam('pid');
 
             //检查用户是否具有权限进行审批
-            const response = await Betools.query.queryRoleGroupList('COMMON_AUTH_ADMIN', userinfo.username);
+            const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', userinfo.username);
 
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
@@ -1144,13 +1144,13 @@ export default {
             if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
                 await vant.Dialog.alert({
                     title: '温馨提示',
-                    message: '您没有物品领用的审批权限，请联系管理员进行处理！',
+                    message: '您没有访客管理的审批权限，请联系管理员进行处理！',
                 });
                 return;
             }
 
             // 返回预览URL
-            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/goodsview?id=${id}&statustype=office&role=receive`);
+            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
 
             //第一步 保存用户数据到数据库中
             const elem = {
