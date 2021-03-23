@@ -74,10 +74,36 @@
                     </div>
                 </template>
                 <template v-show="tabname == 2 && !loading && !isLoading">
-                    <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已到访" edit-disabled @select="selectHContract()" />
+                    <template v-show="tabname == 2 && !loading && !isLoading"  v-for="(item, index) in confirmList" >
+                        <div v-show="tabname == 2 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
+                            <div class="van-cell van-cell--borderless">
+                                <div class="van-cell__value van-cell__value--alone van-address-item__value" @click="selectHContract(item , index);" >
+                                    <div role="radio" tabindex="-1" aria-checked="false" class="van-radio">
+                                        <span class="van-radio__label">
+                                            <div class="van-address-item__name">{{ item.create_by }} {{ item.department }} <span class="van-tag van-tag--round van-tag--danger van-address-item__tag">{{ vstatus[item.status] }}</span></div>
+                                            <div class="van-address-item__address">{{ item.address }}</div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </template>
                 <template v-show="tabname == 3 && !loading && !isLoading">
-                    <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
+                    <template v-show="tabname == 3 && !loading && !isLoading"  v-for="(item, index) in doneList" >
+                        <div v-show="tabname == 3 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
+                            <div class="van-cell van-cell--borderless">
+                                <div class="van-cell__value van-cell__value--alone van-address-item__value" @click="selectHContract(item , index);" >
+                                    <div role="radio" tabindex="-1" aria-checked="false" class="van-radio">
+                                        <span class="van-radio__label">
+                                            <div class="van-address-item__name">{{ item.create_by }} {{ item.department }} <span class="van-tag van-tag--round van-tag--danger van-address-item__tag">{{ vstatus[item.status] }}</span></div>
+                                            <div class="van-address-item__address">{{ item.address }}</div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </template>
             </div>
         </section>
