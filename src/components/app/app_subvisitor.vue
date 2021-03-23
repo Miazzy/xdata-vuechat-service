@@ -24,7 +24,7 @@
             </div>
             <div class="flex-layout-content" id="scanCell">
                 <van-row class="flex-layout-van" id="flex-layout-van" type="flex" justify="left">
-                    <van-col span="6" style="display:block;">
+                    <van-col span="6" >
                         <div class="weui-cell_app_hd" @click="visitmanage('apply');">
                             <img src="https://cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
                             <div class="weui-cell_app_bd">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" style="display:block;" >
+                    <van-col span="6" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " >
                         <div class="weui-cell_app_hd" @click="visitmanage('approve');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/shenpi.png">
                             <div class="weui-cell_app_bd">
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </van-col>
-                    <van-col span="6" style="display:block;" >
+                    <van-col span="6" v-show="role ? role.includes('COMMON_VISIT_AUTH') : false " >
                         <div class="weui-cell_app_hd" @click="visitmanage('manage');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.8/images/worktile_1.png">
                             <div class="weui-cell_app_bd">
@@ -95,7 +95,7 @@ export default {
         }
     },
     activated() {
-        //this.queryInfo();
+
     },
     mounted() {
         this.queryInfo();
@@ -122,7 +122,9 @@ export default {
                 this.userinfo = await this.weworkLogin();
                 this.images = await this.queryImagesUrl();
                 this.commonIconLength = await this.changeStyle();
+                const userinfo = await Betools.storage.getStore('system_userinfo');
                 this.queryCrontab();
+                this.queryRoleInfo(userinfo,null,'view');
             } catch (error) {
                 console.log(error);
             }
@@ -178,6 +180,7 @@ export default {
                 };
                 Betools.storage.setStore('system_role_rights_v1', role, 3600 * 24 * 31);
                 this.role = role;
+                console.log(`role:${role}, visit auth: ${role.includes('COMMON_VISIT_AUTH')}`);
                 return role;
             } catch (error) {
                 console.log(error);
