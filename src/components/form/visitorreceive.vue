@@ -1140,6 +1140,13 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
+                visitor_name: this.item.visitor_name,
+                visitor_company: this.item.visitor_company,
+                visitor_mobile: this.item.visitor_mobile,
+                visitor_position: this.item.visitor_position,
+                visitor_count: this.item.visitor_count,
+                time: this.item.time,
+                dtime: this.item.dtime,
                 status: status,
             }; // 待处理元素
 
