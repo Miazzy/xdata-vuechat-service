@@ -209,7 +209,7 @@ export default {
         if(this.searchWord) { //如果存在搜索关键字,则执行搜索功能
           searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
         }
-        const whereSQL = `_where=(status,in,init,visit,devisit)~and(create_time,gt,${month})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+        const whereSQL = `_where=(status,in,init,confirm,visit,devisit,invalid)~and(create_time,gt,${month})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-serialid&_p=0&_size=10000`;
         this.json_data = await Betools.manage.queryTableData('bs_visit_apply' , whereSQL);
         this.json_data.map((item , index) => {
           item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
