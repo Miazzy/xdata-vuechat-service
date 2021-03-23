@@ -815,7 +815,7 @@ export default {
                     message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！',
                 });
             } else {
-                this.item.department = ulist[0].topname + !Betools.tools.isNull(ulist[0].departname) ? '>' : '' + Betools.tools.deNull(ulist[0].departname);
+                this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
 
             //查询直接所在工作组
