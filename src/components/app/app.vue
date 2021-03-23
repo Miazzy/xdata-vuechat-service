@@ -701,7 +701,7 @@ export default {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3') || nowtime.includes('18:4') || nowtime.includes('18:5')) {
+                        if (nowtime.includes('14:4') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3') || nowtime.includes('18:4') || nowtime.includes('18:5')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                             for (const item of vlist) {
                                 const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);

@@ -120,7 +120,7 @@
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;">提交</van-button>
                     </div>
 
-                    <div v-show=" role == 'edit' && userinfo.realname == item.create_by " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show=" role == 'edit' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废预约" @click="handleDisagree('已作废');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('确认');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">修改预约</van-button>
                     </div>
@@ -1044,20 +1044,6 @@ export default {
             //第二步，向表单提交form对象数据
             const result = await Betools.manage.patchTableData(this.tablename, id, elem);
 
-            //批量领取物品修改状态
-            for (let i = 0; i < this.tlist.length; i++) {
-
-                //第一步 保存用户数据到数据库中
-                let element = {
-                    status: visitType == '未到访' ? 'devisit' : 'invalid',
-                    remark: this.item.remark,
-                }; // 待处理元素
-
-                //第二步，向表单提交form对象数据
-                const result = await Betools.manage.patchTableData(this.tablename, this.tlist[i].id, element);
-
-            }
-
             /************************  工作流程日志(开始)  ************************/
 
             //获取后端配置前端管理员组
@@ -1159,19 +1145,6 @@ export default {
 
             //第二步，向表单提交form对象数据
             const result = await Betools.manage.patchTableData(this.tablename, id, elem);
-
-            //批量领取物品修改状态
-            for (let i = 0; i < this.tlist.length; i++) {
-
-                //第一步 保存用户数据到数据库中
-                let element = {
-                    status: status,
-                }; // 待处理元素
-
-                //第二步，向表单提交form对象数据
-                const result = await Betools.manage.patchTableData(this.tablename, this.tlist[i].id, element);
-
-            }
 
             try {
                 //第三步 向被拜访人员推送已到访到访通知
