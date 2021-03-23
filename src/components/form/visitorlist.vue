@@ -55,7 +55,26 @@
             <div class="wechat-list">
                 <template v-show="tabname == 1 && !loading && !isLoading">
                     <div id="van-visitor-list">
-                        <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" @edit="handleConfirm" />
+                        <!--
+                        <van-address-list v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled >
+                        </van-address-list>
+                        -->
+                        <template v-show="tabname == 1 && !loading && !isLoading"  v-for="(item, index) in initList" >
+                            <div v-show="tabname == 1 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
+                                <div class="van-cell van-cell--borderless">
+                                    <div class="van-cell__value van-cell__value--alone van-address-item__value" @click="selectHContract(item , index);" >
+                                        <div role="radio" tabindex="-1" aria-checked="false" class="van-radio">
+                                            <span class="van-radio__label">
+                                                <div class="van-address-item__name">{{ item.name }} 拜访 {{ item.create_by }} <span class="van-tag van-tag--round van-tag--danger van-address-item__tag">{{ vstatus[item.status] }}</span></div>
+                                                <div class="van-address-item__address">{{ item.address }}</div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <i class="van-icon van-icon-edit van-address-item__edit" @click="handleConfirm(item);">
+                                    </i>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </template>
                 <template v-show="tabname == 2 && !loading && !isLoading">
@@ -122,6 +141,13 @@ export default {
                     icon: 'wap-home-o'
                 },
             ],
+            vstatus: {
+                init: '待处理',
+                confirm: '未到访',
+                visit: '已到访',
+                devisit: '已作废',
+                invalid: '已作废',
+            },
             isLoading: false,
             loading: false,
             json_fields: {
@@ -273,14 +299,10 @@ export default {
                 });
             }
         },
-        async selectHContract() {
+        async selectHContract(item) {
 
             //查询当前用印信息
-            const id = this.hContractID;
-            const list = this[this.tabmap[this.tabname]];
-            const item = list.find((item, index) => {
-                return id == item.id
-            });
+            const id = item.id;
 
             //根据当前状态，跳转到不同页面
             if (this.tabname == '1') {
@@ -296,23 +318,24 @@ export default {
                 //跳转到相应的用印界面
                 this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
             }
+            
         },
-        async handleConfirm(element, key, value , visitType = '已到访') {
+        async handleConfirm(element, key, value, visitType = '已到访') {
 
-            if(element.status == 'init' ){
-              await vant.Dialog.confirm({
-                title: '到访确认',
-                message: `您好，被访人${element.create_by}尚未进行预约确认，您确定进行${element.visitor_name}的到访确认操作？`,
-              });
+            if (element.status == 'init') {
+                await vant.Dialog.confirm({
+                    title: '到访确认',
+                    message: `您好，被访人${element.create_by}尚未进行预约确认，您确定进行${element.visitor_name}的到访确认操作？`,
+                });
             } else {
-              await vant.Dialog.confirm({
-                title: '到访确认',
-                message: `您好，请确认进行${element.visitor_name}的到访确认操作？`,
-              });
+                await vant.Dialog.confirm({
+                    title: '到访确认',
+                    message: `您好，请确认进行${element.visitor_name}的到访确认操作？`,
+                });
             }
 
             console.log(`key:`, key, ` value:`, value, ` element:`, element);
-            const status = visitType == '已到访' ? 'visit':'confirm'; 
+            const status = visitType == '已到访' ? 'visit' : 'confirm';
 
             //获取用户基础信息
             const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -350,7 +373,7 @@ export default {
 
             try {
                 //第三步 向被拜访人员推送已到访到访通知
-                if(status == 'visit'){
+                if (status == 'visit') {
                     await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${element.mobile}/亲爱的同事，${element.visitor_company}的${element.visitor_name}等已到访，联系电话：${element.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 }
@@ -414,10 +437,10 @@ export default {
 
             //弹出确认提示
             await vant.Dialog.alert({
-              title: '温馨提示',
-                message: `预约人员:${element.visitor_name}，已经`+ (visitType == '已到访' ? '到访' : '确认' )+'！',
+                title: '温馨提示',
+                message: `预约人员:${element.visitor_name}，已经` + (visitType == '已到访' ? '到访' : '确认') + '！',
             });
-            
+
             //查询页面数据
             await this.queryTabList(this.tabname, 0);
 

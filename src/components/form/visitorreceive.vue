@@ -793,6 +793,9 @@ export default {
                 });
             }
 
+            //预约时间必须大于当前时间
+            
+
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
             if (!ulist || ulist.length == 0) {
                 //弹出确认提示

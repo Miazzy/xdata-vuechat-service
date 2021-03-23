@@ -42,3 +42,12 @@
 #van-visitor-list .van-icon-edit::before {
     content: '\F0C8';
 }
+
+#van-visitor-list .van-address-item__address {
+    color: #323233;
+    font-size: 13px;
+    line-height: 18px;
+    width: 99.5%;
+    margin-right: 10px;
+    padding-right: 30px;
+}
