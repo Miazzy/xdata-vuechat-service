@@ -113,7 +113,7 @@
 
                     </van-cell-group>
 
-                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  userinfo.realname != item.create_by) || (item.status ==='已确认' && role == 'front' && userinfo.realname != item.create_by )" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  userinfo.realname != item.create_by) || (item.status ==='已确认' && role == 'front' && (userinfo.realname != item.create_by || confirm=='confirm'))" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('已到访');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:97.5%;">确认到访</van-button>
                     </div>
 
@@ -179,6 +179,7 @@ export default {
             isfirst: true,
             dockFlag: false,
             role: 'front',
+            confirm:'',
             size: 15,
             message: Betools.workconfig.compValidation.entryjob.message,
             valid: Betools.workconfig.compValidation.entryjob.valid,
@@ -450,6 +451,7 @@ export default {
                 //查询编号
                 const id = Betools.tools.getUrlParam('id');
                 this.role = Betools.tools.getUrlParam('role');
+                this.confirm = Betools.tools.getUrlParam('confirm');
                 this.back = Betools.tools.getUrlParam('back') || '/app';
                 this.readonly = true;
 
@@ -567,7 +569,7 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
-                status: 'devisit',
+                status: visitType == '未到访' ? 'devisit' : 'invalid',
                 remark: this.item.remark,
             }; // 待处理元素
 
@@ -579,7 +581,8 @@ export default {
 
                 //第一步 保存用户数据到数据库中
                 let element = {
-                    status: 'devisit',
+                    status: visitType == '未到访' ? 'devisit' : 'invalid',
+                    remark: this.item.remark,
                 }; // 待处理元素
 
                 //第二步，向表单提交form对象数据

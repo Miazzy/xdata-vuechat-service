@@ -57,7 +57,7 @@
         </div>
       </div>
 
-      <div class="wechat-list">
+      <div id="van-visitor-list" class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
         </template>
@@ -261,15 +261,15 @@ export default {
         if(this.tabname == '1'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
           //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&back=visitorlist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
          }
       },
     }

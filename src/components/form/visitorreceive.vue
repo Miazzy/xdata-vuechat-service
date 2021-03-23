@@ -1037,7 +1037,7 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
-                status: 'devisit',
+                status: visitType == '未到访' ? 'devisit' : 'invalid',
                 remark: this.item.remark,
             }; // 待处理元素
 
@@ -1049,7 +1049,8 @@ export default {
 
                 //第一步 保存用户数据到数据库中
                 let element = {
-                    status: 'devisit',
+                    status: visitType == '未到访' ? 'devisit' : 'invalid',
+                    remark: this.item.remark,
                 }; // 待处理元素
 
                 //第二步，向表单提交form对象数据
