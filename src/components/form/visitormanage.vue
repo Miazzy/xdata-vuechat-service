@@ -95,7 +95,7 @@ export default {
             loading:false,
             currentPage: 1,
             back:'/app/app_subvisitor',
-            statusType:{'init':'待处理','visit':'已到访','devisit':'未到访'},
+            statusType:{'init':'待处理','confirm':'已确认','visit':'已到访','devisit':'未到访','invalid':'已作废'},
         }
     },
     activated() {
