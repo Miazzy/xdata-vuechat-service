@@ -334,24 +334,8 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
-                create_by: element.create_by,
-                mobile: element.mobile,
-
-                visitor_name: element.visitor_name,
-                visitor_company: element.visitor_company,
-                visitor_mobile: element.visitor_mobile,
-                visitor_position: element.visitor_position,
-                visitor_count: element.visitor_count,
-
-                time: element.time,
-                dtime: element.dtime,
-                address: element.address,
-
-                userid: element.userid,
-                user_admin_name: element.username,
-                user_group_ids: element.userlist,
-                user_group_names: element.user_group_names,
                 status: status,
+                remark: element.address,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据

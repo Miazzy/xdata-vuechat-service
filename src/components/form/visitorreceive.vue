@@ -1154,24 +1154,8 @@ export default {
 
             //第一步 保存用户数据到数据库中
             const elem = {
-                create_by: this.item.create_by,
-                mobile: this.item.mobile,
-
-                visitor_name: this.item.visitor_name,
-                visitor_company: this.item.visitor_company,
-                visitor_mobile: this.item.visitor_mobile,
-                visitor_position: this.item.visitor_position,
-                visitor_count: this.item.visitor_count,
-
-                time: this.item.time,
-                dtime: this.item.dtime,
-                address: this.item.address,
-
-                userid: this.item.userid,
-                user_admin_name: this.item.username,
-                user_group_ids: this.item.userlist,
-                user_group_names: this.item.user_group_names,
                 status: status,
+                remark: element.address,
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
@@ -1182,16 +1166,8 @@ export default {
 
                 //第一步 保存用户数据到数据库中
                 let element = {
-                    create_by: this.item.create_by,
-                    mobile: this.item.mobile,
-                    time: this.item.time,
-                    dtime: this.item.dtime,
-                    address: this.item.address,
-                    userid: this.item.userid,
-                    user_admin_name: this.item.username,
-                    user_group_ids: this.item.userlist,
-                    user_group_names: this.item.user_group_names,
                     status: status,
+                    remark: element.address,
                 }; // 待处理元素
 
                 //第二步，向表单提交form对象数据
