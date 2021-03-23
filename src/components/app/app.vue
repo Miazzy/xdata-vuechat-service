@@ -694,14 +694,14 @@ export default {
                 const nowdate = dayjs().format('YYYYMMDD');
 
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
-                const lockFlag = await Betools.manage.lock('crontab_task', 5000, username);
+                const lockFlag = await Betools.manage.lock('crontab_mission', 5000, username);
                 console.log(`lock flag : `, lockFlag , ` nowtime: `, nowtime);
 
                 if (!!lockFlag) {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes('18:3') || nowtime.includes('18:4') || nowtime.includes('18:5')) {
+                        if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)~and(id,like,${nowdate}~)&_sort=-id`);
                             for (const item of vlist) {
                                 const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorreceive?id=${item.id}&statustype=office&role=edit`);

@@ -170,6 +170,13 @@ export default {
                 devisit: '已作废',
                 invalid: '已作废',
             },
+            cstatus: {
+                init: 5,
+                confirm: 6,
+                visit: 7,
+                devisit: 8,
+                invalid: 9,
+            },
             isLoading: false,
             loading: false,
             json_fields: {
@@ -280,6 +287,7 @@ export default {
             const userinfo = await Betools.storage.getStore('system_userinfo');
             //获取最近12个月对应的日期
             var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+            const cstatus = this.cstatus;
             //设置查询语句
             var searchSql = '';
             //如果存在搜索关键字
@@ -287,18 +295,24 @@ export default {
                 searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))`;
             }
             if (tabname == 1) {
-                this.initList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,init,confirm)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+                this.initList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,init,confirm)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
                 this.initList.map((item, index) => {
                     item.name = item.address;
                     item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
                         item.tel = '';
                     item.isDefault = true;
                 })
+                this.initList = this.initList.sort(function(a, b) { //callback
+                    const value = cstatus[a.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(a.create_time).format('YYYYMMDDHHmmss')));
+                    const value_ = cstatus[b.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(b.create_time).format('YYYYMMDDHHmmss')));
+                    console.log(`value:${value},value_:${value_}`);
+                    return value - value_;  //返回正数 ，b排列在a之前
+                });
                 this.initList = this.initList.filter(item => {
                     return item.id == item.pid;
                 });
             } else if (tabname == 2) {
-                this.confirmList = await Betools.manage.queryTableData(this.tname, `_where=(status,eq,visit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+                this.confirmList = await Betools.manage.queryTableData(this.tname, `_where=(status,eq,visit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
                 this.confirmList.map((item, index) => {
                     item.name = item.address;
                     item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
@@ -309,7 +323,7 @@ export default {
                     return item.id == item.pid;
                 });
             } else if (tabname == 3) {
-                this.doneList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,devisit,invalid)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+                this.doneList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,devisit,invalid)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
                 this.doneList.map((item, index) => {
                     item.name = item.address;
                     item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
