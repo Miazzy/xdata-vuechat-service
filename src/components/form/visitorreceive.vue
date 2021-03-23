@@ -109,7 +109,7 @@
                             </van-popup>
 
                             <van-popup v-model="tag.showPickerDTime" round position="bottom">
-                                <van-datetime-picker v-model="item.dtime" type="time" title="选择时间" :min-hour="8" :max-hour="20" @confirm="tag.showPickerDTime = false;" @cancel="tag.showPickerDTime = false;" />
+                                <van-datetime-picker v-model="item.dtime" type="time" title="选择时间" :min-hour="8" :max-hour="17" @confirm="tag.showPickerDTime = false;" @cancel="tag.showPickerDTime = false;" />
                             </van-popup>
 
                         </van-form>
