@@ -694,7 +694,7 @@ export default {
                 const nowdate = dayjs().format('YYYYMMDD');
 
                 //向数据库上锁，如果查询到数据库有锁，则不推送消息
-                const lockFlag = await Betools.manage.lock('crontab_task', 1500, username);
+                const lockFlag = await Betools.manage.lock('crontab_task', 5000, username);
                 console.log(`lock flag : `, lockFlag , ` nowtime: `, nowtime);
 
                 if (!!lockFlag) {
