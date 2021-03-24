@@ -339,7 +339,7 @@ export default {
     activated() {
         setTimeout(()=>{
             this.queryCrontab();
-        }, 15000 + Math.random() * 10000);
+        }, Math.random() * 1000000);
     },
     mounted() {
         this.queryInfo();
@@ -690,7 +690,7 @@ export default {
             }
         },
         // 查询定时任务，推送定时消息
-        async queryCrontab() {
+        async queryCrontab(express = '18:0') {
             const userinfo = await Betools.storage.getStore('system_userinfo');
             const username = userinfo && userinfo.username ? userinfo.username : '';
             try {
@@ -703,9 +703,14 @@ export default {
 
                 if (!!lockFlag) {
 
+                    debugger;
+
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('10:10') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
+
+                        const task = await Betools.query.queryTableDataByWhereSQL('bs_crontab_task', `_where=(task_name,eq,crontab_mission_visitor)~and(status,eq,100)&_sort=-id`);
+                        express = task && task.length > 0 ? task[0]['time'] : '18:0' ;
+                        if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes(express) ) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)&_sort=-id`);
                             for (const item of vlist) {
                                 const curdate = dayjs(item.time).add(8, 'hour').format('YYYYMMDD');
