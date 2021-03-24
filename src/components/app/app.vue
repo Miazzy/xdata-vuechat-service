@@ -702,12 +702,8 @@ export default {
                 console.log(`lock flag : `, lockFlag , ` nowtime: `, nowtime);
 
                 if (!!lockFlag) {
-
-                    debugger;
-
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-
                         const task = await Betools.query.queryTableDataByWhereSQL('bs_crontab_task', `_where=(task_name,eq,crontab_mission_visitor)~and(status,eq,100)&_sort=-id`);
                         express = task && task.length > 0 ? task[0]['time'] : '18:0' ;
                         if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2') || nowtime.includes(express) ) {
