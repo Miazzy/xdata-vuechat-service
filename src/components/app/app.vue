@@ -337,7 +337,9 @@ export default {
         }
     },
     activated() {
-        this.queryCrontab();
+        setTimeout(()=>{
+            this.queryCrontab();
+        }, 15000 + Math.random() * 10000);
     },
     mounted() {
         this.queryInfo();
@@ -364,7 +366,9 @@ export default {
                 this.userinfo = await this.weworkLogin();
                 this.images = await this.queryImagesUrl();
                 this.commonIconLength = await this.changeStyle();
-                this.queryCrontab();
+                setTimeout(()=>{
+                    this.queryCrontab();
+                }, Math.random() * 1000);
             } catch (error) {
                 console.log(error);
             }
@@ -701,7 +705,7 @@ export default {
 
                     //查询当日尚未到访的预约申请信息，并发送知会通知
                     try {
-                        if (nowtime.includes('18:0') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
+                        if (nowtime.includes('10:10') || nowtime.includes('18:1') || nowtime.includes('18:2')) {
                             const vlist = await Betools.query.queryTableDataByWhereSQL('bs_visit_apply', `_where=(status,in,init,confirm)&_sort=-id`);
                             for (const item of vlist) {
                                 const curdate = dayjs(item.time).add(8, 'hour').format('YYYYMMDD');
