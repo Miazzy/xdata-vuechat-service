@@ -1638,18 +1638,11 @@ export default {
                     dealDepart: '',
                     dealManager: '',
                     username,
-                    dealMail: '',
                     approveType: '',
                     signman: '',
                     workno: '',
                     company: '',
                     seal: '',
-                    front: '',
-                    finnace: '',
-                    record: '',
-                    front_name: '',
-                    finnace_name: '',
-                    record_name: '',
                     partner: '',
                 }) :
                 Object.keys({
@@ -1661,7 +1654,6 @@ export default {
                     dealDepart: '',
                     dealManager: '',
                     username,
-                    dealMail: '',
                     approveType: '',
                     signman: '',
                     workno: '',
@@ -1691,7 +1683,7 @@ export default {
             if (invalidKey != '' && invalidKey != null) {
                 return await vant.Dialog.alert({
                     title: '温馨提示',
-                    message: '请检查表单填写内容，确认内容是否填写完整无误！',
+                    message: `请检查表单填写内容，确认内容是否填写完整无误！[Error:${invalidKey}]`,
                 });
             }
 
