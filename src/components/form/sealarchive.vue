@@ -1252,7 +1252,7 @@ export default {
         //前缀编号
         const prefix = this.item.prefix;
         //提示信息
-        const message = `已向用印申请人@${this.item.dealManager}推送邮件通知！`;
+        const message = `已向用印登记申请人@${this.item.dealManager}推送邮件通知！`;
         //操作时间
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         //回调地址
@@ -1346,7 +1346,7 @@ export default {
           employee       : this.item.front_name ,//varchar(1000) null comment '操作职员',
           approve_user   : this.item.front ,//varchar(100)  null comment '审批人员',
           action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '用印申请[待移交]',//text          null comment '操作意见',
+          action_opinion : '用印登记申请[待移交]',//text          null comment '操作意见',
           operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
           functions_station : '印章管理',//varchar(100)  null comment '职能岗位',
           process_station   : '用印审批[印章管理]',//varchar(100)  null comment '流程岗位',
@@ -1415,7 +1415,7 @@ export default {
           return;
         }
 
-        //作废用印申请时，必须填写备注信息，以便用印经办人知晓错误原因！
+        //作废用印登记申请时，必须填写备注信息，以便用印经办人知晓错误原因！
         if(!this.item.message || this.item.message == '同意'){
             //提示确认用印操作
             await vant.Dialog.confirm({
@@ -1488,7 +1488,7 @@ export default {
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
-          message: `已向用印申请人@${this.item.dealManager}推送通知！`,
+          message: `已向用印登记申请人@${this.item.dealManager}推送通知！`,
         });
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据

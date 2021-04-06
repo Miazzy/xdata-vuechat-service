@@ -1040,8 +1040,8 @@ export default {
 
         //提示确认用印操作
         await vant.Dialog.confirm({
-          title: '用印申请',
-          message: '请确认修改用印申请无误，将提交用印登记申请？',
+          title: '用印登记申请',
+          message: '请确认修改用印登记申请无误，将提交用印登记申请？',
         })
 
         //如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
@@ -1110,7 +1110,7 @@ export default {
           this.readonly = true;
 
           const title = '用印登记申请(已修改)';
-          const description = `@印章管理员 @${seal_man} ，${create_by}已修改用印登记信息，请及时处理修改后的用印申请！流程编号：${workno}`;
+          const description = `@印章管理员 @${seal_man} ，${create_by}已修改用印登记信息，请及时处理修改后的用印登记申请！流程编号：${workno}`;
 
           const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealview?id=${id}&statustype=none`);
           const signmail = this.mailconfig[seal_man];
@@ -1120,7 +1120,7 @@ export default {
 
           try {
             //通知签收人领取资料(企业微信发送)
-            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/文件:‘${this.item.filename}’已修改用印登记申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${receiveURL}`)
                          .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
           } catch (error) {
             console.log(error);
@@ -1128,7 +1128,7 @@ export default {
 
           try {
             //通知印章人领取资料(企业微信发送)
-            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
+            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${seal}/文件:‘${this.item.filename}’已修改用印登记申请! 日期：${this.item.createtime},用印类型：${this.item.sealtype},文件：${this.item.filename},${noname}：${this.item.contractId}，流程编号：${workno}?rurl=${url}`)
                          .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
           } catch (error) {
             console.log(error);

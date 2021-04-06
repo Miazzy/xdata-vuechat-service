@@ -80,7 +80,7 @@
                         <div class="weui-cell_app_hd" @click="sealApply();">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/seal.png">
                             <div class="weui-cell_app_bd">
-                                用印申请
+                                用印登记
                             </div>
                         </div>
                     </van-col>

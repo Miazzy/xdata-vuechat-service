@@ -500,7 +500,7 @@ export default {
         async deleteForm() {
             await vant.Dialog.confirm({ //提示确认用印操作
                 title: '清空表单',
-                message: '将进行‘清空表单’处理，清空后请重新填写用印申请！',
+                message: '将进行‘清空表单’处理，清空后请重新填写用印登记申请！',
             })
             this.item.filename = '';
             this.item.count = '';
@@ -1808,14 +1808,14 @@ export default {
             if ((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)) {
                 //提示确认用印操作
                 return await vant.Dialog.confirm({
-                    title: '用印申请',
+                    title: '用印登记申请',
                     message: '请输入并选择财务/档案归档人员！',
                 });
             }
 
             //提示确认用印操作
             await vant.Dialog.confirm({
-                title: '用印申请',
+                title: '用印登记申请',
                 message: '确认提交用印登记申请？',
             })
 
@@ -1882,7 +1882,7 @@ export default {
                 this.readonly = true;
 
                 const title = '用印登记申请';
-                const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印申请！`;
+                const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印登记申请！`;
 
                 const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealview?id=${id}&statustype=none`);
                 const signmail = this.mailconfig[seal_man];
@@ -1892,14 +1892,14 @@ export default {
 
                 try {
                     //通知签收人领取资料(企业微信发送)
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印登记申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 } catch (error) {
                     console.log(error);
                 }
 
                 try {
-                    const message = `亲爱的用印管理员，您有一份新的用印申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
+                    const message = `亲爱的用印管理员，您有一份新的用印登记申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
                     if (this.item.seal_mobile) {
                         //通知印章人领取资料(企业微信发送)
                         await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
@@ -1931,7 +1931,7 @@ export default {
                     employee: userinfo.realname, //varchar(1000) null comment '操作职员',
                     approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
                     action: '发起', //varchar(100)  null comment '操作动作',
-                    action_opinion: '发起用印申请[待用印]', //text          null comment '操作意见',
+                    action_opinion: '发起用印登记申请[待用印]', //text          null comment '操作意见',
                     operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                     functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
                     process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
@@ -1959,7 +1959,7 @@ export default {
                     employee: seal_man, //varchar(1000) null comment '操作职员',
                     approve_user: seal, //varchar(100)  null comment '审批人员',
                     action: '', //varchar(100)  null comment '操作动作',
-                    action_opinion: '用印申请[待用印]', //text          null comment '操作意见',
+                    action_opinion: '用印登记申请[待用印]', //text          null comment '操作意见',
                     operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                     functions_station: '印章管理', //varchar(100)  null comment '职能岗位',
                     process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
