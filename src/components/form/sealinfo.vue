@@ -151,9 +151,9 @@
             </div>
         </section>
 
-        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});" >
+        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});">
             <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
-                <div :class="block.showOverlay" >
+                <div :class="block.showOverlay">
                     <van-loading size="2.5rem" style="margin:2.35rem 2.35rem;" type="spinner" color="#1989fa" />
                 </div>
             </div>
@@ -258,10 +258,10 @@ export default {
                 showPickerSealType: false,
                 showPickerOrderType: false,
                 showPickerSealCategory: false,
-                showOverlay:false,
+                showOverlay: false,
             },
-            block:{
-                showOverlay:'',
+            block: {
+                showOverlay: '',
             },
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -1341,8 +1341,8 @@ export default {
             await Betools.manage.querySealApplyInfo(this);
         },
         //显示遮罩
-        async showOverlayConfirm(action = 'cancel', done){
-            console.log(`action:`,action,` done:`,done);
+        async showOverlayConfirm(action = 'cancel', done) {
+            console.log(`action:`, action, ` done:`, done);
             await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
         },
         //提交用印登记申请
