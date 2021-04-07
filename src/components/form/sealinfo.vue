@@ -1,9 +1,8 @@
 <template>
 <keep-alive>
-    <!--首页组件-->
     <div id="content" style="margin-top: 0px; overflow-x: hidden;">
 
-        <header id="wx-header" v-if="iswechat" style="overflow-x:hidden;">
+        <header id="wx-header" style="overflow-x:hidden;">
             <div class="center">
                 <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
                     <span>返回</span>
@@ -16,24 +15,20 @@
             </div>
         </header>
 
-        <section v-if="iswechat">
-
+        <section>
             <div class="weui-cells" style="margin-top:0px;">
-
                 <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
                     <van-notice-bar v-show=" title!='' && title != null && typeof title != 'undefined' " left-icon="volume-o" color="#1989fa" background="#ecf9ff" :text="title" />
                 </div>
-
                 <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
                     <van-row>
                         <van-col span="8"></van-col>
                         <van-col span="8" style="text-align: center;font-size:1.15rem;">用印登记表</van-col>
-                        <van-col span="8">
+                        <van-col span="8" style="display:none;">
                             <van-icon style="float:right;cursor:pointer;" name="delete" color="#1989fa" @click="deleteForm()" />
                         </van-col>
                     </van-row>
                 </div>
-
             </div>
 
             <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;overflow-x:hidden;">
@@ -42,7 +37,6 @@
 
                     <van-cell-group>
                         <van-form>
-
                             <van-cell-group style="margin-top:10px;">
                                 <van-cell value="基本信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                                 <van-field v-show="item.serialid" clearable label="用印序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
@@ -149,22 +143,13 @@
                     </div>
 
                     <div style="height:100px;">
-
                     </div>
 
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
-
                     <div style="height:100px;"></div>
                 </div>
             </div>
-
         </section>
-
-        <setion v-if="!iswechat">
-            <div class="section-nowechat">
-                请使用微信客户端打开
-            </div>
-        </setion>
 
         <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});" >
             <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
@@ -290,78 +275,14 @@ export default {
             isGroupHeader: false,
             dropMenuOldValue: '',
             dropMenuValue: '',
-            dropMenuOption: [{
-                    text: '刷新',
-                    value: 2,
-                    icon: 'replay'
-                },
-                {
-                    text: '重置',
-                    value: 4,
-                    icon: 'aim'
-                },
-                {
-                    text: '应用',
-                    value: 5,
-                    icon: 'apps-o'
-                },
-                {
-                    text: '首页',
-                    value: 6,
-                    icon: 'wap-home-o'
-                },
-            ],
+            dropMenuOption: JSON.parse(`[{"text":"刷新","value":2,"icon":"replay"},{"text":"重置","value":4,"icon":"aim"}]`),
             archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
             sealTypeColumns: Betools.workconfig.compcolumns.sealTypeColumns,
             sealCategoryColumns: Betools.workconfig.compcolumns.sealCategoryColumns,
             approveColumns: Betools.workconfig.compcolumns.approveColumns,
+            categoryColumns: JSON.parse(`[{"name":"公章","code":"1"},{"name":"法人章","code":"2"},{"name":"法人私章","code":"3"},{"name":"合同专用章","code":"4"},{"name":"财务专用章","code":"5"},{"name":"发票专用章","code":"6"},{"name":"物业服务章","code":"7"},{"name":"工会公章","code":"8"},{"name":"党支部章","code":"9"},{"name":"工会法人章","code":"10"},{"name":"工会财务章","code":"11"}]`),
             zonename: '',
-            categoryColumns: [{
-                    name: '公章',
-                    code: '1',
-                },
-                {
-                    name: '法人章',
-                    code: '2',
-                },
-                {
-                    name: '法人私章',
-                    code: '3',
-                },
-                {
-                    name: '合同专用章',
-                    code: '4',
-                },
-                {
-                    name: '财务专用章',
-                    code: '5',
-                },
-                {
-                    name: '发票专用章',
-                    code: '6',
-                },
-                {
-                    name: '物业服务章',
-                    code: '7',
-                },
-                {
-                    name: '工会公章',
-                    code: '8',
-                },
-                {
-                    name: '党支部章',
-                    code: '9',
-                },
-                {
-                    name: '工会法人章',
-                    code: '10',
-                },
-                {
-                    name: '工会财务章',
-                    code: '11',
-                },
-            ],
         }
     },
     async activated() {
@@ -1609,426 +1530,423 @@ export default {
                 console.log(error);
             }
         },
-        //保存文件
-        async saveAsFile(file, name) {
-            try {
-                window.saveAs(file, name);
-            } catch (error) {
-                console.log(error);
-            }
-        },
         //显示遮罩
         async showOverlayConfirm(action = 'cancel', done){
             console.log(`action:`,action,` done:`,done);
-            if(action == 'cancel'){
-                setTimeout(() => {
-                    this.tag.showOverlay = false;
-                    this.block.showOverlay = '';
-                }, 300);
-            }
-            if(done){
-                done();
-            }
+            // if(action == 'cancel'){
+            //     setTimeout(() => {
+            //         this.tag.showOverlay = false;
+            //         this.block.showOverlay = '';
+            //     }, 300);
+            // } else if(action == 'confirm'){
+            //     this.tag.showOverlay = true;
+            //     this.block.showOverlay = 'block';
+            // }
+            // if(done){
+            //     done();
+            // }
+            await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
         },
         //提交用印登记申请
         async handleConfirm() {
 
-            //显示遮罩
-            this.tag.showOverlay = true;
+            // //显示遮罩
+            // this.tag.showOverlay = true;
 
-            // TODO 此处可以加分布式锁，防止高并发合同编号相同
+            // // TODO 此处可以加分布式锁，防止高并发合同编号相同
 
-            // 可能盖印人没有被选中，此处在选择一次
-            if (!this.item.seal || !this.item.sealman) {
-                await this.querySealMan();
-            }
+            // // 可能盖印人没有被选中，此处在选择一次
+            // if (!this.item.seal || !this.item.sealman) {
+            //     await this.querySealMan();
+            // }
 
-            if (!this.item.seal || !this.item.sealman) {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.confirm({ //提示确认用印操作
-                    title: '用印确认',
-                    message: '请输入盖印人，并在下拉框中选择盖印人后，进行提交操作！',
-                });
-            }
+            // if (!this.item.seal || !this.item.sealman) {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.confirm({ //提示确认用印操作
+            //         title: '用印确认',
+            //         message: '请输入盖印人，并在下拉框中选择盖印人后，进行提交操作！',
+            //     });
+            // }
 
-            // 获取用户信息
-            let userinfo = await Betools.storage.getStore('system_userinfo');
+            // // 获取用户信息
+            // let userinfo = await Betools.storage.getStore('system_userinfo');
 
-            // 缓存填报人信息
-            this.cacheUserInfo();
+            // // 缓存填报人信息
+            // this.cacheUserInfo();
 
-            // 先验证是否合法
-            const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
-                Object.keys({
-                    sealtype: '',
-                    seal_category: '',
-                    ordertype: '',
-                    filename: '',
-                    count: '',
-                    dealDepart: '',
-                    dealManager: '',
-                    username,
-                    approveType: '',
-                    signman: '',
-                    workno: '',
-                    company: '',
-                    seal: '',
-                    partner: '',
-                }) :
-                Object.keys({
-                    sealtype: '',
-                    seal_category: '',
-                    ordertype: '',
-                    filename: '',
-                    count: '',
-                    dealDepart: '',
-                    dealManager: '',
-                    username,
-                    approveType: '',
-                    signman: '',
-                    workno: '',
-                    company: '',
-                    seal: ''
-                })
+            // // 先验证是否合法
+            // const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
+            //     Object.keys({
+            //         sealtype: '',
+            //         seal_category: '',
+            //         ordertype: '',
+            //         filename: '',
+            //         count: '',
+            //         dealDepart: '',
+            //         dealManager: '',
+            //         username,
+            //         approveType: '',
+            //         signman: '',
+            //         workno: '',
+            //         company: '',
+            //         seal: '',
+            //         partner: '',
+            //     }) :
+            //     Object.keys({
+            //         sealtype: '',
+            //         seal_category: '',
+            //         ordertype: '',
+            //         filename: '',
+            //         count: '',
+            //         dealDepart: '',
+            //         dealManager: '',
+            //         username,
+            //         approveType: '',
+            //         signman: '',
+            //         workno: '',
+            //         company: '',
+            //         seal: ''
+            //     })
 
-            const invalidKey = keys.find(key => {
-                this.validField();
-                return !this.validFieldConfirm(key);
-            });
+            // const invalidKey = keys.find(key => {
+            //     this.validField();
+            //     return !this.validFieldConfirm(key);
+            // });
 
-            if (!this.item.company || (Array.isArray(this.item.company) && this.item.company.length <= 0)) {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请检查表单填写内容，请选择用印公司！',
-                });
-            }
+            // if (!this.item.company || (Array.isArray(this.item.company) && this.item.company.length <= 0)) {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: '请检查表单填写内容，请选择用印公司！',
+            //     });
+            // }
 
-            if ((!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类') {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请检查表单填写内容，并确认合作方是否填写！',
-                });
-            }
+            // if ((!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类') {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: '请检查表单填写内容，并确认合作方是否填写！',
+            //     });
+            // }
 
-            if (invalidKey != '' && invalidKey != null) {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: `请检查表单填写内容，确认内容是否填写完整无误！[Error:${invalidKey}]`,
-                });
-            }
+            // if (invalidKey != '' && invalidKey != null) {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: `请检查表单填写内容，确认内容是否填写完整无误！[Error:${invalidKey}]`,
+            //     });
+            // }
 
-            // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-            this.noname = '合同编号';
+            // // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
+            // this.noname = '合同编号';
 
-            //根据用户选择的印章实体公司来设置印章编码
+            // //根据用户选择的印章实体公司来设置印章编码
 
-            //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
-            if (this.item.sealtype === '合同类') {
-                this.noname = '合同编号';
-            } else {
-                this.noname = '流水编号';
-                this.item.prefix = 'COMMON'; //设置非合同类前缀编号
-                await this.queryHContract(); //加载最近的同类型合同编号
-            }
+            // //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
+            // if (this.item.sealtype === '合同类') {
+            //     this.noname = '合同编号';
+            // } else {
+            //     this.noname = '流水编号';
+            //     this.item.prefix = 'COMMON'; //设置非合同类前缀编号
+            //     await this.queryHContract(); //加载最近的同类型合同编号
+            // }
 
-            //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
-            if (!(await Betools.manage.queryUserByNameFindOne(this.item.sealman, this.item.seal))) {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请在盖印人下拉列表，点击选择盖印人后在进行提交，或认真检查盖印人名字是否拼写错误！',
-                });
-            }
+            // //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
+            // if (!(await Betools.manage.queryUserByNameFindOne(this.item.sealman, this.item.seal))) {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: '请在盖印人下拉列表，点击选择盖印人后在进行提交，或认真检查盖印人名字是否拼写错误！',
+            //     });
+            // }
 
-            //如果不是总部员工，则前台移交人员、财务人员、档案人员都设置为印章管理员
-            if (!!this.item.seal && (!this.item.front || !this.item.finance || !this.item.record || !this.item.archive)) {
-                this.item.front == this.item.seal;
-                this.item.finance == this.item.seal;
-                this.item.record == this.item.seal;
-                this.item.archive == this.item.seal;
-                this.item.front_name == this.item.sealman;
-                this.item.finance_name == this.item.sealman;
-                this.item.record_name == this.item.sealman;
-                this.item.archive_name == this.item.sealman;
-            }
+            // //如果不是总部员工，则前台移交人员、财务人员、档案人员都设置为印章管理员
+            // if (!!this.item.seal && (!this.item.front || !this.item.finance || !this.item.record || !this.item.archive)) {
+            //     this.item.front == this.item.seal;
+            //     this.item.finance == this.item.seal;
+            //     this.item.record == this.item.seal;
+            //     this.item.archive == this.item.seal;
+            //     this.item.front_name == this.item.sealman;
+            //     this.item.finance_name == this.item.sealman;
+            //     this.item.record_name == this.item.sealman;
+            //     this.item.archive_name == this.item.sealman;
+            // }
 
-            //公司工作组
-            const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
+            // //公司工作组
+            // const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
-            //第一步，构造form对象
-            const item = this.item;
-            const no = 1;
-            const id = Betools.tools.queryUniqueID();
-            const create_by = item.dealManager;
-            const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-            const filename = item && item.filename ? item.filename.trim() : item.filename;
-            const count = item && item.count ? item.count.trim() : 0;
-            const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
-            const seal_category = item && item.seal_category ? Array.isArray(item.seal_category) ? item.seal_category.toString() : item.seal_category.trim() : '';
-            const order_type = item && item.ordertype ? item.ordertype.trim() : '';
-            const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart;
-            const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
-            const deal_mail = item && item.dealMail ? item.dealMail.trim() : item.dealMail;
-            const username = item && item.username ? item.username.trim() : '';
-            const approve_type = item && item.approveType ? item.approveType.trim() : '';
-            const seal_time = item && item.sealtime ? item.sealtime.trim() : '';
-            const prefix = item && item.prefix ? item.prefix.trim() : '';
-            const sign_man = item && item.signman ? item.signman.trim() : '';
-            const workno = item && item.workno ? item.workno.trim() : '';
-            const mobile = item && item.mobile ? item.mobile.trim() : '';
-            const partner = item && item.partner ? item.partner.trim() : '';
-            let contract_id = item && item.contractId ? item.contractId.trim() : '';
+            // //第一步，构造form对象
+            // const item = this.item;
+            // const no = 1;
+            // const id = Betools.tools.queryUniqueID();
+            // const create_by = item.dealManager;
+            // const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            // const filename = item && item.filename ? item.filename.trim() : item.filename;
+            // const count = item && item.count ? item.count.trim() : 0;
+            // const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
+            // const seal_category = item && item.seal_category ? Array.isArray(item.seal_category) ? item.seal_category.toString() : item.seal_category.trim() : '';
+            // const order_type = item && item.ordertype ? item.ordertype.trim() : '';
+            // const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart;
+            // const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
+            // const deal_mail = item && item.dealMail ? item.dealMail.trim() : item.dealMail;
+            // const username = item && item.username ? item.username.trim() : '';
+            // const approve_type = item && item.approveType ? item.approveType.trim() : '';
+            // const seal_time = item && item.sealtime ? item.sealtime.trim() : '';
+            // const prefix = item && item.prefix ? item.prefix.trim() : '';
+            // const sign_man = item && item.signman ? item.signman.trim() : '';
+            // const workno = item && item.workno ? item.workno.trim() : '';
+            // const mobile = item && item.mobile ? item.mobile.trim() : '';
+            // const partner = item && item.partner ? item.partner.trim() : '';
+            // let contract_id = item && item.contractId ? item.contractId.trim() : '';
 
-            //用印注意，此处需要找到用印人的同组用户，写入数据库
-            const seal = item.seal;
-            const seal_man = item.sealman;
-            const front = item.front;
-            const front_name = item.front_name;
-            const finance = item.finance;
-            const finance_name = item.finance_name;
-            const record = item.record;
-            const record_name = item.record_name;
-            const archive = item.archive;
-            const archive_name = item.archive_name;
-            const send_location = item && item.send_location ? item.send_location.trim() : item.send_location;
-            const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile;
-            const company = item && item.company ? item.company.toString() : '';
-            const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
-            const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
+            // //用印注意，此处需要找到用印人的同组用户，写入数据库
+            // const seal = item.seal;
+            // const seal_man = item.sealman;
+            // const front = item.front;
+            // const front_name = item.front_name;
+            // const finance = item.finance;
+            // const finance_name = item.finance_name;
+            // const record = item.record;
+            // const record_name = item.record_name;
+            // const archive = item.archive;
+            // const archive_name = item.archive_name;
+            // const send_location = item && item.send_location ? item.send_location.trim() : item.send_location;
+            // const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile;
+            // const company = item && item.company ? item.company.toString() : '';
+            // const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
+            // const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
 
-            //验证合同编号是否含有特殊字符串
-            if (contract_id.includes('【') || contract_id.includes('】') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')) {
-                this.tag.showOverlay = false;
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号！',
-                });
-            }
+            // //验证合同编号是否含有特殊字符串
+            // if (contract_id.includes('【') || contract_id.includes('】') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')) {
+            //     this.tag.showOverlay = false;
+            //     return await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号！',
+            //     });
+            // }
 
-            if (contract_id && contract_id.includes('NaN') && this.item.sealtype == '合同类') {
-                this.tag.showOverlay = false;
-                //提示确认用印操作
-                return await vant.Dialog.confirm({
-                    title: '用印确认',
-                    message: '此合同编号有误，请检查是否符合编码规则，注不能出现NaN！',
-                });
-            }
+            // if (contract_id && contract_id.includes('NaN') && this.item.sealtype == '合同类') {
+            //     this.tag.showOverlay = false;
+            //     //提示确认用印操作
+            //     return await vant.Dialog.confirm({
+            //         title: '用印确认',
+            //         message: '此合同编号有误，请检查是否符合编码规则，注不能出现NaN！',
+            //     });
+            // }
 
-            contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN', '0000') : contract_id; //如果非合同类出现NaN，则修改为0000
-            contract_id = contract_id.includes(']') ? contract_id.replace(contract_id.split(']')[1], '0000') : (contract_id.includes(')') ? contract_id.replace(contract_id.split(')')[1], '0000') : contract_id);
+            // contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN', '0000') : contract_id; //如果非合同类出现NaN，则修改为0000
+            // contract_id = contract_id.includes(']') ? contract_id.replace(contract_id.split(']')[1], '0000') : (contract_id.includes(')') ? contract_id.replace(contract_id.split(')')[1], '0000') : contract_id);
 
-            //查询直接所在工作组
-            const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN', seal);
+            // //查询直接所在工作组
+            // const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN', seal);
 
-            //获取到印章管理员组信息
-            let seal_group_ids = resp && resp.length > 0 ? resp[0].userlist : '';
-            let seal_group_names = resp && resp.length > 0 ? resp[0].enuserlist : '';
+            // //获取到印章管理员组信息
+            // let seal_group_ids = resp && resp.length > 0 ? resp[0].userlist : '';
+            // let seal_group_names = resp && resp.length > 0 ? resp[0].enuserlist : '';
 
-            //如果未获取用户名称，则直接设置用印人为分组成员
-            if (Betools.tools.isNull(seal_group_ids)) {
-                seal_group_ids = seal;
-                seal_group_names = seal_man;
-            }
+            // //如果未获取用户名称，则直接设置用印人为分组成员
+            // if (Betools.tools.isNull(seal_group_ids)) {
+            //     seal_group_ids = seal;
+            //     seal_group_names = seal_man;
+            // }
 
-            if (!seal_group_ids.includes(seal) && !seal_group_names.includes(seal_man)) {
-                this.tag.showOverlay = false;
-                //提示确认用印操作
-                return await vant.Dialog.confirm({
-                    title: '用印确认',
-                    message: '请在下拉列表中，选择印章管理员后在提交！',
-                });
-            }
+            // if (!seal_group_ids.includes(seal) && !seal_group_names.includes(seal_man)) {
+            //     this.tag.showOverlay = false;
+            //     //提示确认用印操作
+            //     return await vant.Dialog.confirm({
+            //         title: '用印确认',
+            //         message: '请在下拉列表中，选择印章管理员后在提交！',
+            //     });
+            // }
 
-            if ((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)) {
-                this.tag.showOverlay = false;
-                //提示确认用印操作
-                return await vant.Dialog.confirm({
-                    title: '用印登记申请',
-                    message: '请输入并选择财务/档案归档人员！',
-                });
-            }
+            // if ((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)) {
+            //     this.tag.showOverlay = false;
+            //     //提示确认用印操作
+            //     return await vant.Dialog.confirm({
+            //         title: '用印登记申请',
+            //         message: '请输入并选择财务/档案归档人员！',
+            //     });
+            // }
 
-            //提示确认用印操作
-            await vant.Dialog.confirm({
-                title: '用印登记申请',
-                message: '确认提交用印登记申请？',
-                beforeClose: this.showOverlayConfirm,
-            });
+            // //提示确认用印操作
+            // await vant.Dialog.confirm({
+            //     title: '用印登记申请',
+            //     message: '确认提交用印登记申请？',
+            //     beforeClose: this.showOverlayConfirm,
+            // });
 
-            //message消息
-            let message = null;
-            this.block.showOverlay = 'block';
+            // //message消息
+            // let message = null;
+            // this.block.showOverlay = 'block';
 
-            try {
-                const elem = {
-                    id,
-                    no,
-                    create_by,
-                    create_time,
-                    filename,
-                    count,
-                    deal_depart,
-                    deal_manager,
-                    username,
-                    deal_mail,
-                    mobile,
-                    approve_type,
-                    seal_type,
-                    seal_category,
-                    order_type,
-                    seal_man,
-                    contract_id,
-                    sign_man,
-                    company,
-                    workno,
-                    seal_wflow,
-                    prefix,
-                    status,
-                    send_location,
-                    send_mobile,
-                    partner,
-                    seal,
-                    front,
-                    archive,
-                    front_name,
-                    archive_name,
-                    finance,
-                    finance_name,
-                    record,
-                    record_name,
-                    seal_group_ids,
-                    seal_group_names
-                }; // 待提交元素
+            // try {
+            //     const elem = {
+            //         id,
+            //         no,
+            //         create_by,
+            //         create_time,
+            //         filename,
+            //         count,
+            //         deal_depart,
+            //         deal_manager,
+            //         username,
+            //         deal_mail,
+            //         mobile,
+            //         approve_type,
+            //         seal_type,
+            //         seal_category,
+            //         order_type,
+            //         seal_man,
+            //         contract_id,
+            //         sign_man,
+            //         company,
+            //         workno,
+            //         seal_wflow,
+            //         prefix,
+            //         status,
+            //         send_location,
+            //         send_mobile,
+            //         partner,
+            //         seal,
+            //         front,
+            //         archive,
+            //         front_name,
+            //         archive_name,
+            //         finance,
+            //         finance_name,
+            //         record,
+            //         record_name,
+            //         seal_group_ids,
+            //         seal_group_names
+            //     }; // 待提交元素
     
-                //第二步，向表单提交form对象数据
-                this.loading = true;
-                const result = await Betools.manage.postTableData('bs_seal_regist', elem);
+            //     //第二步，向表单提交form对象数据
+            //     this.loading = true;
+            //     const result = await Betools.manage.postTableData('bs_seal_regist', elem);
     
-                //sleep一下
-                await Betools.tools.sleep(0);
+            //     //sleep一下
+            //     await Betools.tools.sleep(0);
     
-                //发送自动设置排序号请求
-                const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI + `?value=${id}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                console.log('auto serialid : ' + JSON.stringify(patchResp));
+            //     //发送自动设置排序号请求
+            //     const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI + `?value=${id}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            //     console.log('auto serialid : ' + JSON.stringify(patchResp));
     
-                //第三步，回显当前用印登记信息，并向印章管理员推送消息
-                this.loading = false;
+            //     //第三步，回显当前用印登记信息，并向印章管理员推送消息
+            //     this.loading = false;
     
-                if (result.protocol41 == true && result.affectedRows > 0) {
+            //     if (result.protocol41 == true && result.affectedRows > 0) {
     
-                    message = '已成功提交用印登记信息！';
+            //         message = '已成功提交用印登记信息！';
     
-                    this.status = 'none';
-                    this.readonly = true;
+            //         this.status = 'none';
+            //         this.readonly = true;
     
-                    const title = '用印登记申请';
-                    const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印登记申请！`;
+            //         const title = '用印登记申请';
+            //         const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印登记申请！`;
     
-                    const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealview?id=${id}&statustype=none`);
-                    const signmail = this.mailconfig[seal_man];
+            //         const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealview?id=${id}&statustype=none`);
+            //         const signmail = this.mailconfig[seal_man];
     
-                    //领取地址
-                    const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealreceive?id=${id}&type=receive`);
+            //         //领取地址
+            //         const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealreceive?id=${id}&type=receive`);
     
-                    try {
-                        //通知签收人领取资料(企业微信发送)
-                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印登记申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
-                            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                    } catch (error) {
-                        console.log(error);
-                    }
+            //         try {
+            //             //通知签收人领取资料(企业微信发送)
+            //             await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印登记申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
+            //                 .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            //         } catch (error) {
+            //             console.log(error);
+            //         }
     
-                    try {
-                        const message = `亲爱的用印管理员，您有一份新的用印登记申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
-                        if (this.item.seal_mobile) {
-                            //通知印章人领取资料(企业微信发送)
-                            await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                        } else {
-                            //通知印章人领取资料(企业微信发送)
-                            await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
+            //         try {
+            //             const message = `亲爱的用印管理员，您有一份新的用印登记申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
+            //             if (this.item.seal_mobile) {
+            //                 //通知印章人领取资料(企业微信发送)
+            //                 await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            //             } else {
+            //                 //通知印章人领取资料(企业微信发送)
+            //                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+            //             }
+            //         } catch (error) {
+            //             console.log(error);
+            //         }
     
-                    //查询数据
-                    const value = await Betools.query.queryTableData(`bs_seal_regist`, id);
+            //         //查询数据
+            //         const value = await Betools.query.queryTableData(`bs_seal_regist`, id);
     
-                    //显示序列号
-                    this.item.serialid = value.serialid;
+            //         //显示序列号
+            //         this.item.serialid = value.serialid;
     
-                    message = `${message} 排序号为:${value.serialid},请将序号书写在用印文件上！`
+            //         message = `${message} 排序号为:${value.serialid},请将序号书写在用印文件上！`
     
-                    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-                    const prLogHisNode = {
-                        id: Betools.tools.queryUniqueID(),
-                        table_name: 'bs_seal_regist',
-                        main_value: id,
-                        proponents: username,
-                        business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-                        business_code: '000000000', //varchar(100)  null comment '业务编号',
-                        process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-                        employee: userinfo.realname, //varchar(1000) null comment '操作职员',
-                        approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
-                        action: '发起', //varchar(100)  null comment '操作动作',
-                        action_opinion: '发起用印登记申请[待用印]', //text          null comment '操作意见',
-                        operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-                        functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
-                        process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
-                        business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                        content: this.item.filename + ' #经办人: ' + this.item.username, //text          null comment '业务内容',
-                        process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
-                        create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-                        relate_data: '', //text          null comment '关联数据',
-                        origin_data: '',
-                    }
+            //         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+            //         const prLogHisNode = {
+            //             id: Betools.tools.queryUniqueID(),
+            //             table_name: 'bs_seal_regist',
+            //             main_value: id,
+            //             proponents: username,
+            //             business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+            //             business_code: '000000000', //varchar(100)  null comment '业务编号',
+            //             process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
+            //             employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+            //             approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+            //             action: '发起', //varchar(100)  null comment '操作动作',
+            //             action_opinion: '发起用印登记申请[待用印]', //text          null comment '操作意见',
+            //             operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+            //             functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+            //             process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
+            //             business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+            //             content: this.item.filename + ' #经办人: ' + this.item.username, //text          null comment '业务内容',
+            //             process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+            //             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+            //             relate_data: '', //text          null comment '关联数据',
+            //             origin_data: '',
+            //         }
     
-                    await Betools.workflow.approveViewProcessLog(prLogHisNode);
+            //         await Betools.workflow.approveViewProcessLog(prLogHisNode);
     
-                    //同时推送一条待办记录给印章管理员
+            //         //同时推送一条待办记录给印章管理员
     
-                    //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-                    const prLogNode = {
-                        id: Betools.tools.queryUniqueID(),
-                        table_name: 'bs_seal_regist',
-                        main_value: id,
-                        proponents: seal,
-                        business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-                        business_code: '000000000', //varchar(100)  null comment '业务编号',
-                        process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-                        employee: seal_man, //varchar(1000) null comment '操作职员',
-                        approve_user: seal, //varchar(100)  null comment '审批人员',
-                        action: '', //varchar(100)  null comment '操作动作',
-                        action_opinion: '用印登记申请[待用印]', //text          null comment '操作意见',
-                        operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-                        functions_station: '印章管理', //varchar(100)  null comment '职能岗位',
-                        process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
-                        business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                        content: this.item.filename + ' #待用印 #经办人: ' + this.item.username, //text          null comment '业务内容',
-                        process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
-                        create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-                        relate_data: '', //text          null comment '关联数据',
-                        origin_data: '',
-                    }
+            //         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+            //         const prLogNode = {
+            //             id: Betools.tools.queryUniqueID(),
+            //             table_name: 'bs_seal_regist',
+            //             main_value: id,
+            //             proponents: seal,
+            //             business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+            //             business_code: '000000000', //varchar(100)  null comment '业务编号',
+            //             process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
+            //             employee: seal_man, //varchar(1000) null comment '操作职员',
+            //             approve_user: seal, //varchar(100)  null comment '审批人员',
+            //             action: '', //varchar(100)  null comment '操作动作',
+            //             action_opinion: '用印登记申请[待用印]', //text          null comment '操作意见',
+            //             operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+            //             functions_station: '印章管理', //varchar(100)  null comment '职能岗位',
+            //             process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
+            //             business_data: JSON.stringify(this.item), //text          null comment '业务数据',
+            //             content: this.item.filename + ' #待用印 #经办人: ' + this.item.username, //text          null comment '业务内容',
+            //             process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+            //             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+            //             relate_data: '', //text          null comment '关联数据',
+            //             origin_data: '',
+            //         }
     
-                    await Betools.workflow.taskViewProcessLog(prLogNode);
+            //         await Betools.workflow.taskViewProcessLog(prLogNode);
     
-                } else {
-                    message = '提交用印登记信息失败，请稍后再试！';
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {            
-                this.tag.showOverlay = false;
-                this.block.showOverlay = '';
-                await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: message,
-                });
-            }
+            //     } else {
+            //         message = '提交用印登记信息失败，请稍后再试！';
+            //     }
+            // } catch (error) {
+            //     console.log(error);
+            // } finally {            
+            //     this.tag.showOverlay = false;
+            //     this.block.showOverlay = '';
+            //     await vant.Dialog.alert({
+            //         title: '温馨提示',
+            //         message: message,
+            //     });
+            // }
+            await Betools.manage.handleSealApplyConfirm(this);
         },
     }
 }
