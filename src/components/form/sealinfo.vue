@@ -1339,613 +1339,209 @@ export default {
         //查询消息
         async queryInfo() {
 
-            try {
-                this.iswechat = Betools.tools.isWechat();
-                this.userinfo = await this.weworkLogin(); //查询当前登录用户
+            // var that = this;
 
-                var that = this;
+            // try {
+            //     that.iswechat = Betools.tools.isWechat();
+            //     that.userinfo = await this.weworkLogin(); //查询当前登录用户
+            // } catch (error) {
+            //     console.log(error);
+            // }
 
-                that.item.sealman = Betools.tools.getUrlParam('sealman');
-                that.item.status = this.statusType[Betools.tools.getUrlParam('statustype')];
-                that.sealuserid = Betools.tools.getUrlParam('sealuserid');
-                that.groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
+            // try {
+            //     that.item.sealman = Betools.tools.getUrlParam('sealman');
+            //     that.item.status = this.statusType[Betools.tools.getUrlParam('statustype')];
+            //     that.sealuserid = Betools.tools.getUrlParam('sealuserid');
+            //     that.groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
 
-                that.item.seal = Betools.tools.getUrlParam('seal'); //用印管理员成员组
-                that.item.front = Betools.tools.getUrlParam('front'); //用印前台接受组
-                that.item.archive = Betools.tools.getUrlParam('archive'); //用印归档组(财务/档案)
+            //     that.item.seal = Betools.tools.getUrlParam('seal'); //用印管理员成员组
+            //     that.item.front = Betools.tools.getUrlParam('front'); //用印前台接受组
+            //     that.item.archive = Betools.tools.getUrlParam('archive'); //用印归档组(财务/档案)
 
-                // 查询公司名称记录
-                const clist = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
-                clist.map((item, index) => {
-                    item.title = item.name.slice(0, 24);
-                    item.code = item.id;
-                    item.tel = '';
-                    item.name = item.name;
-                    item.isDefault = false;
-                });
-                this.companyColumns = clist;
+            //     // 查询公司名称记录
+            //     const clist = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
+            //     clist.map((item, index) => {
+            //         item.title = item.name.slice(0, 24);
+            //         item.code = item.id;
+            //         item.tel = '';
+            //         item.name = item.name;
+            //         item.isDefault = false;
+            //     });
+            //     this.companyColumns = clist;
 
-                //如果盖印人填写为英文，则查询中文名称
-                if (/^[a-zA-Z_0-9]+$/.test(that.item.sealman)) {
-                    //获取盖印人姓名
-                    that.item.sealman = await Betools.manage.queryUsernameByID(that.item.sealman);
-                }
+            //     //如果盖印人填写为英文，则查询中文名称
+            //     if (/^[a-zA-Z_0-9]+$/.test(that.item.sealman)) {
+            //         //获取盖印人姓名
+            //         that.item.sealman = await Betools.manage.queryUsernameByID(that.item.sealman);
+            //     }
 
-                //如果前台人员填写为英文，则查询中文名称
-                if (/^[a-zA-Z_0-9]+$/.test(that.item.front)) {
-                    //获取盖印人姓名
-                    that.item.front_name = await Betools.manage.queryUsernameByID(that.item.front);
-                }
+            //     //如果前台人员填写为英文，则查询中文名称
+            //     if (/^[a-zA-Z_0-9]+$/.test(that.item.front)) {
+            //         //获取盖印人姓名
+            //         that.item.front_name = await Betools.manage.queryUsernameByID(that.item.front);
+            //     }
 
-                //如果盖印人候选列表存在
-                if (that.item.seal) {
-                    //获取可选填报人列表
-                    let slist = await Betools.manage.queryUsernameByIDs(that.item.seal.split(',').map(item => {
-                        return `'${item}'`;
-                    }).join(','));
-                    //遍历填报人列表
-                    slist.map((elem, index) => {
-                        let company = elem.textfield1.split('||')[0];
-                        company = company.slice(company.lastIndexOf('>') + 1);
-                        let department = elem.textfield1.split('||')[1];
-                        department = department.slice(department.lastIndexOf('>') + 1);
-                        this.sealuserid = elem.loginid;
-                        this.suserList.push({
-                            id: elem.loginid,
-                            name: elem.lastname,
-                            tel: '',
-                            address: company + "||" + elem.textfield1.split('||')[1],
-                            company: company,
-                            department: department,
-                            mail: elem.email,
-                            isDefault: !this.suserList.length
-                        });
-                    })
-                }
+            //     //如果盖印人候选列表存在
+            //     if (that.item.seal) {
+            //         //获取可选填报人列表
+            //         let slist = await Betools.manage.queryUsernameByIDs(that.item.seal.split(',').map(item => {
+            //             return `'${item}'`;
+            //         }).join(','));
+            //         //遍历填报人列表
+            //         slist.map((elem, index) => {
+            //             let company = elem.textfield1.split('||')[0];
+            //             company = company.slice(company.lastIndexOf('>') + 1);
+            //             let department = elem.textfield1.split('||')[1];
+            //             department = department.slice(department.lastIndexOf('>') + 1);
+            //             this.sealuserid = elem.loginid;
+            //             this.suserList.push({
+            //                 id: elem.loginid,
+            //                 name: elem.lastname,
+            //                 tel: '',
+            //                 address: company + "||" + elem.textfield1.split('||')[1],
+            //                 company: company,
+            //                 department: department,
+            //                 mail: elem.email,
+            //                 isDefault: !this.suserList.length
+            //             });
+            //         })
+            //     }
 
-                //如果前台人候选列表存在
-                if (that.item.front) {
-                    //获取可选填报人列表
-                    let flist = await Betools.manage.queryUsernameByIDs(that.item.front.split(',').map(item => {
-                        return `'${item}'`;
-                    }).join(','));
-                    //遍历填报人列表
-                    flist.map((elem, index) => {
-                        let company = elem.textfield1.split('||')[0];
-                        company = company.slice(company.lastIndexOf('>') + 1);
-                        let department = elem.textfield1.split('||')[1];
-                        department = department.slice(department.lastIndexOf('>') + 1);
-                        this.fuserList.push({
-                            id: elem.loginid,
-                            name: elem.lastname,
-                            tel: '',
-                            address: company + "||" + elem.textfield1.split('||')[1],
-                            company: company,
-                            department: department,
-                            mail: elem.email,
-                            isDefault: !this.suserList.length
-                        });
-                    })
-                }
+            //     //如果前台人候选列表存在
+            //     if (that.item.front) {
+            //         //获取可选填报人列表
+            //         let flist = await Betools.manage.queryUsernameByIDs(that.item.front.split(',').map(item => {
+            //             return `'${item}'`;
+            //         }).join(','));
+            //         //遍历填报人列表
+            //         flist.map((elem, index) => {
+            //             let company = elem.textfield1.split('||')[0];
+            //             company = company.slice(company.lastIndexOf('>') + 1);
+            //             let department = elem.textfield1.split('||')[1];
+            //             department = department.slice(department.lastIndexOf('>') + 1);
+            //             this.fuserList.push({
+            //                 id: elem.loginid,
+            //                 name: elem.lastname,
+            //                 tel: '',
+            //                 address: company + "||" + elem.textfield1.split('||')[1],
+            //                 company: company,
+            //                 department: department,
+            //                 mail: elem.email,
+            //                 isDefault: !this.suserList.length
+            //             });
+            //         })
+            //     }
 
-                //如果前台人候选列表存在
-                if (that.item.archive) {
-                    let names = [];
-                    let ids = [];
-                    //获取可选填报人列表
-                    let alist = await Betools.manage.queryUsernameByIDs(that.item.archive.split(',').map(item => {
-                        return `'${item}'`;
-                    }).join(','));
-                    //遍历填报人列表
-                    alist.map((elem, index) => {
-                        let company = elem.textfield1.split('||')[0];
-                        company = company.slice(company.lastIndexOf('>') + 1);
-                        let department = elem.textfield1.split('||')[1];
-                        department = department.slice(department.lastIndexOf('>') + 1);
-                        names.push(elem.lastname);
-                        ids.push(elem.loginid);
-                        this.auserList.push({
-                            id: elem.loginid,
-                            value: `${elem.lastname},`,
-                            label: elem.lastname + ' ' + elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心', ''),
-                            name: elem.lastname,
-                            tel: '',
-                            address: company + "||" + elem.textfield1.split('||')[1],
-                            company: company,
-                            department: department,
-                            mail: elem.email,
-                            isDefault: !this.auserList.length
-                        });
-                    })
-                    this.item.archive = ids.join(',');
-                    this.item.archive_name = names.join(',');
-                }
+            //     //如果前台人候选列表存在
+            //     if (that.item.archive) {
+            //         let names = [];
+            //         let ids = [];
+            //         //获取可选填报人列表
+            //         let alist = await Betools.manage.queryUsernameByIDs(that.item.archive.split(',').map(item => {
+            //             return `'${item}'`;
+            //         }).join(','));
+            //         //遍历填报人列表
+            //         alist.map((elem, index) => {
+            //             let company = elem.textfield1.split('||')[0];
+            //             company = company.slice(company.lastIndexOf('>') + 1);
+            //             let department = elem.textfield1.split('||')[1];
+            //             department = department.slice(department.lastIndexOf('>') + 1);
+            //             names.push(elem.lastname);
+            //             ids.push(elem.loginid);
+            //             this.auserList.push({
+            //                 id: elem.loginid,
+            //                 value: `${elem.lastname},`,
+            //                 label: elem.lastname + ' ' + elem.mobile + " " + elem.textfield1.split('||')[1].replace('中心', ''),
+            //                 name: elem.lastname,
+            //                 tel: '',
+            //                 address: company + "||" + elem.textfield1.split('||')[1],
+            //                 company: company,
+            //                 department: department,
+            //                 mail: elem.email,
+            //                 isDefault: !this.auserList.length
+            //             });
+            //         })
+            //         this.item.archive = ids.join(',');
+            //         this.item.archive_name = names.join(',');
+            //     }
 
-                //获取缓存的用户数据
-                const temp = Betools.storage.getStore('system_user_sealinfo');
+            //     //获取缓存的用户数据
+            //     const temp = Betools.storage.getStore('system_user_sealinfo');
 
-                if (!!temp) {
-                    this.item.dealManager = temp.dealManager;
-                    this.item.mobile = temp.mobile;
-                    this.item.username = temp.username;
-                    this.item.dealMail = temp.dealMail;
-                    this.item.signman = temp.signman;
-                    this.item.dealDepart = temp.dealDepart;
-                }
+            //     if (!!temp) {
+            //         this.item.dealManager = temp.dealManager;
+            //         this.item.mobile = temp.mobile;
+            //         this.item.username = temp.username;
+            //         this.item.dealMail = temp.dealMail;
+            //         this.item.signman = temp.signman;
+            //         this.item.dealDepart = temp.dealDepart;
+            //     }
 
-                //获取用户信息
-                let userinfo = await Betools.storage.getStore('system_userinfo');
+            //     //获取用户信息
+            //     let userinfo = await Betools.storage.getStore('system_userinfo');
 
-                if (!Betools.tools.isNull(userinfo)) {
-                    this.item.dealManager = userinfo.systemuserinfo.realname;
-                    this.item.mobile = userinfo.systemuserinfo.mobile;
-                    this.item.username = userinfo.systemuserinfo.username;
-                    this.item.signman = userinfo.systemuserinfo.realname;
-                    this.item.dealDepart = userinfo.systemuserinfo.textfield1.split('||')[1];
-                    if (this.item.dealDepart.includes('>')) {
-                        this.item.dealDepart = this.item.dealDepart.split('>')[1]
-                    }
-                }
+            //     if (!Betools.tools.isNull(userinfo)) {
+            //         this.item.dealManager = userinfo.systemuserinfo.realname;
+            //         this.item.mobile = userinfo.systemuserinfo.mobile;
+            //         this.item.username = userinfo.systemuserinfo.username;
+            //         this.item.signman = userinfo.systemuserinfo.realname;
+            //         this.item.dealDepart = userinfo.systemuserinfo.textfield1.split('||')[1];
+            //         if (this.item.dealDepart.includes('>')) {
+            //             this.item.dealDepart = this.item.dealDepart.split('>')[1]
+            //         }
+            //     }
 
-                //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
-                if (Betools.tools.isNull(this.item.dealMail) || Betools.tools.isNull(this.item.company)) {
-                    const tmp = await Betools.query.queryMailBySealData(this.item.signman);
-                    this.item.dealMail = tmp.deal_mail;
-                    // this.item.company = tmp.company;
-                    this.item.dealDepart = tmp.deal_depart;
-                    this.item.sealman = tmp.seal_man;
-                    this.item.seal = tmp.seal;
-                }
+            //     //如果用户邮箱为空，则从以前填写的记录中获取邮箱账号
+            //     if (Betools.tools.isNull(this.item.dealMail) || Betools.tools.isNull(this.item.company)) {
+            //         const tmp = await Betools.query.queryMailBySealData(this.item.signman);
+            //         this.item.dealMail = tmp.deal_mail;
+            //         // this.item.company = tmp.company;
+            //         this.item.dealDepart = tmp.deal_depart;
+            //         this.item.sealman = tmp.seal_man;
+            //         this.item.seal = tmp.seal;
+            //     }
 
-                //如果前台不存在，则添加
-                if (Betools.tools.isNull(this.item.front)) {
-                    const tmp = await Betools.query.queryFrontBySealData(this.item.signman);
-                    this.item.front = tmp.front;
-                    this.item.front_name = tmp.front_name;
-                    this.item.archive = tmp.archive;
-                    this.item.archive_name = tmp.archive_name;
-                    this.item.record = tmp.record;
-                    this.item.record_name = tmp.record_name;
-                    this.item.finance = tmp.finance;
-                    this.item.finance_name = tmp.finance_name;
-                }
+            //     //如果前台不存在，则添加
+            //     if (Betools.tools.isNull(this.item.front)) {
+            //         const tmp = await Betools.query.queryFrontBySealData(this.item.signman);
+            //         this.item.front = tmp.front;
+            //         this.item.front_name = tmp.front_name;
+            //         this.item.archive = tmp.archive;
+            //         this.item.archive_name = tmp.archive_name;
+            //         this.item.record = tmp.record;
+            //         this.item.record_name = tmp.record_name;
+            //         this.item.finance = tmp.finance;
+            //         this.item.finance_name = tmp.finance_name;
+            //     }
 
-                //是否有最近缓存数据
-                const tempitem = Betools.storage.getStore('system_seal_item');
+            //     //是否有最近缓存数据
+            //     const tempitem = Betools.storage.getStore('system_seal_item');
 
-                if (!!tempitem) {
-                    this.item.filename = tempitem.filename;
-                    this.item.count = tempitem.count;
-                    this.item.prefix = tempitem.prefix;
-                }
+            //     if (!!tempitem) {
+            //         this.item.filename = tempitem.filename;
+            //         this.item.count = tempitem.count;
+            //         this.item.prefix = tempitem.prefix;
+            //     }
 
-                if (!that.sealuserid) {
-                    that.sealuserid = this.config[that.item.sealman];
-                }
+            //     if (!that.sealuserid) {
+            //         that.sealuserid = this.config[that.item.sealman];
+            //     }
 
-                //加载最近的同类型合同编号
-                await this.queryHContract();
+            //     //加载最近的同类型合同编号
+            //     await this.queryHContract();
 
-            } catch (error) {
-                console.log(error);
-            }
+            // } catch (error) {
+            //     console.log(error);
+            // }
+            await Betools.manage.querySealApplyInfo(this);
         },
         //显示遮罩
         async showOverlayConfirm(action = 'cancel', done){
             console.log(`action:`,action,` done:`,done);
-            // if(action == 'cancel'){
-            //     setTimeout(() => {
-            //         this.tag.showOverlay = false;
-            //         this.block.showOverlay = '';
-            //     }, 300);
-            // } else if(action == 'confirm'){
-            //     this.tag.showOverlay = true;
-            //     this.block.showOverlay = 'block';
-            // }
-            // if(done){
-            //     done();
-            // }
             await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
         },
         //提交用印登记申请
         async handleConfirm() {
-
-            // //显示遮罩
-            // this.tag.showOverlay = true;
-
-            // // TODO 此处可以加分布式锁，防止高并发合同编号相同
-
-            // // 可能盖印人没有被选中，此处在选择一次
-            // if (!this.item.seal || !this.item.sealman) {
-            //     await this.querySealMan();
-            // }
-
-            // if (!this.item.seal || !this.item.sealman) {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.confirm({ //提示确认用印操作
-            //         title: '用印确认',
-            //         message: '请输入盖印人，并在下拉框中选择盖印人后，进行提交操作！',
-            //     });
-            // }
-
-            // // 获取用户信息
-            // let userinfo = await Betools.storage.getStore('system_userinfo');
-
-            // // 缓存填报人信息
-            // this.cacheUserInfo();
-
-            // // 先验证是否合法
-            // const keys = (this.item.sealtype == '合同类' && this.isGroupHeader) ?
-            //     Object.keys({
-            //         sealtype: '',
-            //         seal_category: '',
-            //         ordertype: '',
-            //         filename: '',
-            //         count: '',
-            //         dealDepart: '',
-            //         dealManager: '',
-            //         username,
-            //         approveType: '',
-            //         signman: '',
-            //         workno: '',
-            //         company: '',
-            //         seal: '',
-            //         partner: '',
-            //     }) :
-            //     Object.keys({
-            //         sealtype: '',
-            //         seal_category: '',
-            //         ordertype: '',
-            //         filename: '',
-            //         count: '',
-            //         dealDepart: '',
-            //         dealManager: '',
-            //         username,
-            //         approveType: '',
-            //         signman: '',
-            //         workno: '',
-            //         company: '',
-            //         seal: ''
-            //     })
-
-            // const invalidKey = keys.find(key => {
-            //     this.validField();
-            //     return !this.validFieldConfirm(key);
-            // });
-
-            // if (!this.item.company || (Array.isArray(this.item.company) && this.item.company.length <= 0)) {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: '请检查表单填写内容，请选择用印公司！',
-            //     });
-            // }
-
-            // if ((!this.item.partner || Betools.tools.isNull(this.item.partner)) && this.item.sealtype == '合同类') {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: '请检查表单填写内容，并确认合作方是否填写！',
-            //     });
-            // }
-
-            // if (invalidKey != '' && invalidKey != null) {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: `请检查表单填写内容，确认内容是否填写完整无误！[Error:${invalidKey}]`,
-            //     });
-            // }
-
-            // // 如果用印登记类型为合同类，则查询最大印章编号，然后按序使用更大的印章编号
-            // this.noname = '合同编号';
-
-            // //根据用户选择的印章实体公司来设置印章编码
-
-            // //如果是合同类，则设置合同编号，如果是非合同类，则设置流水编号
-            // if (this.item.sealtype === '合同类') {
-            //     this.noname = '合同编号';
-            // } else {
-            //     this.noname = '流水编号';
-            //     this.item.prefix = 'COMMON'; //设置非合同类前缀编号
-            //     await this.queryHContract(); //加载最近的同类型合同编号
-            // }
-
-            // //检查盖章人员 RealName 是否存在 ，以及是否和 seal 匹配，即中文名和英文名是否匹配
-            // if (!(await Betools.manage.queryUserByNameFindOne(this.item.sealman, this.item.seal))) {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: '请在盖印人下拉列表，点击选择盖印人后在进行提交，或认真检查盖印人名字是否拼写错误！',
-            //     });
-            // }
-
-            // //如果不是总部员工，则前台移交人员、财务人员、档案人员都设置为印章管理员
-            // if (!!this.item.seal && (!this.item.front || !this.item.finance || !this.item.record || !this.item.archive)) {
-            //     this.item.front == this.item.seal;
-            //     this.item.finance == this.item.seal;
-            //     this.item.record == this.item.seal;
-            //     this.item.archive == this.item.seal;
-            //     this.item.front_name == this.item.sealman;
-            //     this.item.finance_name == this.item.sealman;
-            //     this.item.record_name == this.item.sealman;
-            //     this.item.archive_name == this.item.sealman;
-            // }
-
-            // //公司工作组
-            // const groupid = Betools.tools.getUrlParam('groupid') || 'Group_LD';
-
-            // //第一步，构造form对象
-            // const item = this.item;
-            // const no = 1;
-            // const id = Betools.tools.queryUniqueID();
-            // const create_by = item.dealManager;
-            // const create_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-            // const filename = item && item.filename ? item.filename.trim() : item.filename;
-            // const count = item && item.count ? item.count.trim() : 0;
-            // const seal_type = item && item.sealtype ? item.sealtype.trim() : '';
-            // const seal_category = item && item.seal_category ? Array.isArray(item.seal_category) ? item.seal_category.toString() : item.seal_category.trim() : '';
-            // const order_type = item && item.ordertype ? item.ordertype.trim() : '';
-            // const deal_depart = item && item.dealDepart ? item.dealDepart.trim() : item.dealDepart;
-            // const deal_manager = item && item.dealManager ? item.dealManager.trim() : item.dealManager;
-            // const deal_mail = item && item.dealMail ? item.dealMail.trim() : item.dealMail;
-            // const username = item && item.username ? item.username.trim() : '';
-            // const approve_type = item && item.approveType ? item.approveType.trim() : '';
-            // const seal_time = item && item.sealtime ? item.sealtime.trim() : '';
-            // const prefix = item && item.prefix ? item.prefix.trim() : '';
-            // const sign_man = item && item.signman ? item.signman.trim() : '';
-            // const workno = item && item.workno ? item.workno.trim() : '';
-            // const mobile = item && item.mobile ? item.mobile.trim() : '';
-            // const partner = item && item.partner ? item.partner.trim() : '';
-            // let contract_id = item && item.contractId ? item.contractId.trim() : '';
-
-            // //用印注意，此处需要找到用印人的同组用户，写入数据库
-            // const seal = item.seal;
-            // const seal_man = item.sealman;
-            // const front = item.front;
-            // const front_name = item.front_name;
-            // const finance = item.finance;
-            // const finance_name = item.finance_name;
-            // const record = item.record;
-            // const record_name = item.record_name;
-            // const archive = item.archive;
-            // const archive_name = item.archive_name;
-            // const send_location = item && item.send_location ? item.send_location.trim() : item.send_location;
-            // const send_mobile = item && item.send_mobile ? item.send_mobile.trim() : item.send_mobile;
-            // const company = item && item.company ? item.company.toString() : '';
-            // const seal_wflow = Betools.tools.getUrlParam('statustype') || 'none';
-            // const status = this.statusType[Betools.tools.getUrlParam('statustype')] || '待用印';
-
-            // //验证合同编号是否含有特殊字符串
-            // if (contract_id.includes('【') || contract_id.includes('】') || contract_id.includes(' ') || contract_id.includes('，') || contract_id.includes(',')) {
-            //     this.tag.showOverlay = false;
-            //     return await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: '合同编号，请使用英文中括号“[]”且不要使用中文逗号！',
-            //     });
-            // }
-
-            // if (contract_id && contract_id.includes('NaN') && this.item.sealtype == '合同类') {
-            //     this.tag.showOverlay = false;
-            //     //提示确认用印操作
-            //     return await vant.Dialog.confirm({
-            //         title: '用印确认',
-            //         message: '此合同编号有误，请检查是否符合编码规则，注不能出现NaN！',
-            //     });
-            // }
-
-            // contract_id = contract_id.includes('NaN') ? contract_id.replace('NaN', '0000') : contract_id; //如果非合同类出现NaN，则修改为0000
-            // contract_id = contract_id.includes(']') ? contract_id.replace(contract_id.split(']')[1], '0000') : (contract_id.includes(')') ? contract_id.replace(contract_id.split(')')[1], '0000') : contract_id);
-
-            // //查询直接所在工作组
-            // const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN', seal);
-
-            // //获取到印章管理员组信息
-            // let seal_group_ids = resp && resp.length > 0 ? resp[0].userlist : '';
-            // let seal_group_names = resp && resp.length > 0 ? resp[0].enuserlist : '';
-
-            // //如果未获取用户名称，则直接设置用印人为分组成员
-            // if (Betools.tools.isNull(seal_group_ids)) {
-            //     seal_group_ids = seal;
-            //     seal_group_names = seal_man;
-            // }
-
-            // if (!seal_group_ids.includes(seal) && !seal_group_names.includes(seal_man)) {
-            //     this.tag.showOverlay = false;
-            //     //提示确认用印操作
-            //     return await vant.Dialog.confirm({
-            //         title: '用印确认',
-            //         message: '请在下拉列表中，选择印章管理员后在提交！',
-            //     });
-            // }
-
-            // if ((!finance || !finance_name || !record || !record_name) && (this.item.sealtype == '合同类' && this.isGroupHeader)) {
-            //     this.tag.showOverlay = false;
-            //     //提示确认用印操作
-            //     return await vant.Dialog.confirm({
-            //         title: '用印登记申请',
-            //         message: '请输入并选择财务/档案归档人员！',
-            //     });
-            // }
-
-            // //提示确认用印操作
-            // await vant.Dialog.confirm({
-            //     title: '用印登记申请',
-            //     message: '确认提交用印登记申请？',
-            //     beforeClose: this.showOverlayConfirm,
-            // });
-
-            // //message消息
-            // let message = null;
-            // this.block.showOverlay = 'block';
-
-            // try {
-            //     const elem = {
-            //         id,
-            //         no,
-            //         create_by,
-            //         create_time,
-            //         filename,
-            //         count,
-            //         deal_depart,
-            //         deal_manager,
-            //         username,
-            //         deal_mail,
-            //         mobile,
-            //         approve_type,
-            //         seal_type,
-            //         seal_category,
-            //         order_type,
-            //         seal_man,
-            //         contract_id,
-            //         sign_man,
-            //         company,
-            //         workno,
-            //         seal_wflow,
-            //         prefix,
-            //         status,
-            //         send_location,
-            //         send_mobile,
-            //         partner,
-            //         seal,
-            //         front,
-            //         archive,
-            //         front_name,
-            //         archive_name,
-            //         finance,
-            //         finance_name,
-            //         record,
-            //         record_name,
-            //         seal_group_ids,
-            //         seal_group_names
-            //     }; // 待提交元素
-    
-            //     //第二步，向表单提交form对象数据
-            //     this.loading = true;
-            //     const result = await Betools.manage.postTableData('bs_seal_regist', elem);
-    
-            //     //sleep一下
-            //     await Betools.tools.sleep(0);
-    
-            //     //发送自动设置排序号请求
-            //     const patchResp = await superagent.get(Betools.workconfig.queryAPI.autoSerialAPI + `?value=${id}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            //     console.log('auto serialid : ' + JSON.stringify(patchResp));
-    
-            //     //第三步，回显当前用印登记信息，并向印章管理员推送消息
-            //     this.loading = false;
-    
-            //     if (result.protocol41 == true && result.affectedRows > 0) {
-    
-            //         message = '已成功提交用印登记信息！';
-    
-            //         this.status = 'none';
-            //         this.readonly = true;
-    
-            //         const title = '用印登记申请';
-            //         const description = `@印章管理员 @${seal_man} ，${create_by}已提交用印登记信息，请及时处理用印登记申请！`;
-    
-            //         const url = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealview?id=${id}&statustype=none`);
-            //         const signmail = this.mailconfig[seal_man];
-    
-            //         //领取地址
-            //         const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/sealreceive?id=${id}&type=receive`);
-    
-            //         try {
-            //             //通知签收人领取资料(企业微信发送)
-            //             await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${username}/亲爱的同事，您提交的用印登记申请，文件:‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，已知会盖印人?rurl=${receiveURL}`)
-            //                 .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            //         } catch (error) {
-            //             console.log(error);
-            //         }
-    
-            //         try {
-            //             const message = `亲爱的用印管理员，您有一份新的用印登记申请，文件名‘${this.item.filename}’（${this.item.sealtype}），${this.noname}：${this.item.contractId}，请记得及时处理`;
-            //             if (this.item.seal_mobile) {
-            //                 //通知印章人领取资料(企业微信发送)
-            //                 await superagent.post(`${window.BECONFIG['restAPI']}/api/v5/wework_message/${this.item.seal_mobile}?message=${message}&url=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            //             } else {
-            //                 //通知印章人领取资料(企业微信发送)
-            //                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.seal}/${message}?rurl=${url}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            //             }
-            //         } catch (error) {
-            //             console.log(error);
-            //         }
-    
-            //         //查询数据
-            //         const value = await Betools.query.queryTableData(`bs_seal_regist`, id);
-    
-            //         //显示序列号
-            //         this.item.serialid = value.serialid;
-    
-            //         message = `${message} 排序号为:${value.serialid},请将序号书写在用印文件上！`
-    
-            //         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-            //         const prLogHisNode = {
-            //             id: Betools.tools.queryUniqueID(),
-            //             table_name: 'bs_seal_regist',
-            //             main_value: id,
-            //             proponents: username,
-            //             business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-            //             business_code: '000000000', //varchar(100)  null comment '业务编号',
-            //             process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-            //             employee: userinfo.realname, //varchar(1000) null comment '操作职员',
-            //             approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
-            //             action: '发起', //varchar(100)  null comment '操作动作',
-            //             action_opinion: '发起用印登记申请[待用印]', //text          null comment '操作意见',
-            //             operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-            //             functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
-            //             process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
-            //             business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-            //             content: this.item.filename + ' #经办人: ' + this.item.username, //text          null comment '业务内容',
-            //             process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
-            //             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-            //             relate_data: '', //text          null comment '关联数据',
-            //             origin_data: '',
-            //         }
-    
-            //         await Betools.workflow.approveViewProcessLog(prLogHisNode);
-    
-            //         //同时推送一条待办记录给印章管理员
-    
-            //         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-            //         const prLogNode = {
-            //             id: Betools.tools.queryUniqueID(),
-            //             table_name: 'bs_seal_regist',
-            //             main_value: id,
-            //             proponents: seal,
-            //             business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-            //             business_code: '000000000', //varchar(100)  null comment '业务编号',
-            //             process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-            //             employee: seal_man, //varchar(1000) null comment '操作职员',
-            //             approve_user: seal, //varchar(100)  null comment '审批人员',
-            //             action: '', //varchar(100)  null comment '操作动作',
-            //             action_opinion: '用印登记申请[待用印]', //text          null comment '操作意见',
-            //             operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-            //             functions_station: '印章管理', //varchar(100)  null comment '职能岗位',
-            //             process_station: '用印审批[印章管理]', //varchar(100)  null comment '流程岗位',
-            //             business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-            //             content: this.item.filename + ' #待用印 #经办人: ' + this.item.username, //text          null comment '业务内容',
-            //             process_audit: this.item.workno + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
-            //             create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-            //             relate_data: '', //text          null comment '关联数据',
-            //             origin_data: '',
-            //         }
-    
-            //         await Betools.workflow.taskViewProcessLog(prLogNode);
-    
-            //     } else {
-            //         message = '提交用印登记信息失败，请稍后再试！';
-            //     }
-            // } catch (error) {
-            //     console.log(error);
-            // } finally {            
-            //     this.tag.showOverlay = false;
-            //     this.block.showOverlay = '';
-            //     await vant.Dialog.alert({
-            //         title: '温馨提示',
-            //         message: message,
-            //     });
-            // }
             await Betools.manage.handleSealApplyConfirm(this);
         },
     }
