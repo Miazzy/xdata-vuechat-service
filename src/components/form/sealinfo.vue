@@ -142,7 +142,7 @@
                         </van-steps>
                     </van-cell-group>
 
-                    <div style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;">
+                    <div id="van-seal-buttons-content" style="margin-top:30px;margin-bottom:10px;border-top:0px solid #fcfcfc;">
                         <van-goods-action v-show=" tag.showPicker == false && tag.showPickerSealType == false && tag.showPickerOrderType == false && status == '' ">
                             <van-goods-action-button v-show="!tag.showOverlay" id="informed_confirm" type="danger" native-type="submit" text="提交" @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
                         </van-goods-action>
