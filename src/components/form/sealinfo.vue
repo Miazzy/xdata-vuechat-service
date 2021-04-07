@@ -166,8 +166,8 @@
             </div>
         </setion>
 
-        <van-overlay :show="tag.showOverlay" @click="showOverlayConfirm();" >
-            <div class="wrapper" @click.stop>
+        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});" >
+            <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
                 <div :class="block.showOverlay" >
                     <van-loading size="2.5rem" style="margin:2.35rem 2.35rem;" type="spinner" color="#1989fa" />
                 </div>
@@ -1618,10 +1618,17 @@ export default {
             }
         },
         //显示遮罩
-        async showOverlayConfirm(){
-            setTimeout(() => {
-                this.tag.showOverlay = false;
-            }, 300);
+        async showOverlayConfirm(action = 'cancel', done){
+            console.log(`action:`,action,` done:`,done);
+            if(action == 'cancel'){
+                setTimeout(() => {
+                    this.tag.showOverlay = false;
+                    this.block.showOverlay = '';
+                }, 300);
+            }
+            if(done){
+                done();
+            }
         },
         //提交用印登记申请
         async handleConfirm() {
@@ -1848,7 +1855,8 @@ export default {
             await vant.Dialog.confirm({
                 title: '用印登记申请',
                 message: '确认提交用印登记申请？',
-            })
+                beforeClose: this.showOverlayConfirm,
+            });
 
             //message消息
             let message = null;
@@ -2015,6 +2023,7 @@ export default {
                 console.log(error);
             } finally {            
                 this.tag.showOverlay = false;
+                this.block.showOverlay = '';
                 await vant.Dialog.alert({
                     title: '温馨提示',
                     message: message,
@@ -2031,16 +2040,4 @@ export default {
 @import "../../assets/css/explore.css";
 @import "../../assets/css/sealinfo.css";
 @import "../../assets/css/sealinfo.global.css";
-.wrapper {
-display: flex;
-align-items: center;
-justify-content: center;
-height: 100%;
-}
-.block {
-width: 7.5rem;
-height: 7.5rem;
-border-radius: 0.25rem;
-background-color: #fff;
-}
 </style>
