@@ -1415,6 +1415,7 @@ export default {
             //将用户名存放入缓存中，下次打开页面直接填入
             Betools.storage.setStore('system_user_sealinfo', temp, 3600 * 24 * 30);
         },
+        //查询消息
         async queryInfo() {
 
             try {
@@ -1608,7 +1609,7 @@ export default {
                 console.log(error);
             }
         },
-
+        //保存文件
         async saveAsFile(file, name) {
             try {
                 window.saveAs(file, name);
@@ -1616,13 +1617,13 @@ export default {
                 console.log(error);
             }
         },
-
+        //显示遮罩
         async showOverlayConfirm(){
             setTimeout(() => {
                 this.tag.showOverlay = false;
             }, 300);
         },
-
+        //提交用印登记申请
         async handleConfirm() {
 
             //显示遮罩
@@ -2019,7 +2020,7 @@ export default {
                     message: message,
                 });
             }
-        }
+        },
     }
 }
 </script>
