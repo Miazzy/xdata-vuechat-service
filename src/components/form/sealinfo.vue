@@ -438,7 +438,7 @@ export default {
         },
         //获取合同编号
         async queryHContract() {
-            await Betools.sealapply.queryHContract(this);
+            await Betools.sealapply.querySealApplyHContract(this);
         },
         //查询归档人员
         async queryArchiveMan() {
