@@ -530,6 +530,10 @@ export default {
         },
         // 物品领用驳回
         async handleDisagree(visitType) {
+
+            //设置驳回理由
+            this.item.remark = this.item.remark? this.item.remark: '不同意此申请，' + (visitType == '未到访' ? visitType : '作废') + '处理。';
+            
             //显示加载状态
             this.loading = true;
 
