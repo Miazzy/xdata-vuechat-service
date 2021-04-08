@@ -1311,7 +1311,6 @@ export default {
         },
         //显示遮罩
         async showOverlayConfirm(action = 'cancel', done) {
-            console.log(`action:`, action, ` done:`, done);
             await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
         },
         //提交用印登记申请
