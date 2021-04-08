@@ -1303,27 +1303,6 @@ export default {
         },
         //缓存填报人信息
         async cacheUserInfo() {
-            // try {
-            //     //获取特定属性
-            //     const temp = (({
-            //         dealManager,
-            //         mobile,
-            //         username,
-            //         dealMail,
-            //         signman,
-            //         dealDepart
-            //     }) => ({
-            //         dealManager,
-            //         mobile,
-            //         username,
-            //         dealMail,
-            //         signman,
-            //         dealDepart
-            //     }))(this.item);
-            //     Betools.storage.setStore('system_user_sealinfo', temp, 3600 * 24 * 30); //将用户名存放入缓存中，下次打开页面直接填入
-            // } catch (error) {
-            //     console.log(error);
-            // }
             await Betools.manage.cacheSealApplyUserInfo(this.item);
         },
         //查询消息
