@@ -128,6 +128,14 @@
 
         </section>
 
+        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});">
+            <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
+                <div :class="block.showOverlay">
+                    <van-loading size="2.5rem" style="margin:2.35rem 2.35rem;" type="spinner" color="#1989fa" />
+                </div>
+            </div>
+        </van-overlay>
+
     </div>
 </keep-alive>
 </template>
@@ -214,6 +222,10 @@ export default {
             loading: false,
             officeList: [],
             tag: {
+                showOverlay:false,
+            },
+            block: {
+                showOverlay: '',
             },
             searchFlag: false,
             dropMenuOldValue: '',
@@ -437,6 +449,12 @@ export default {
 
             return Betools.tools.isNull(this.message[fieldName]);
         },
+
+        //显示遮罩
+        async showOverlayConfirm(action = 'cancel', done) {
+            await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
+        },
+
         // 获取URL或者二维码信息
         async queryInfo() {
 
@@ -528,7 +546,8 @@ export default {
             }
 
         },
-        // 物品领用驳回
+
+        // 访客登记申请驳回函数
         async handleDisagree(visitType) {
 
             //设置驳回理由
@@ -654,7 +673,7 @@ export default {
 
         },
 
-        // 用户提交入职登记表函数
+        // 访客登记申请确认函数
         async handleConfirm(visitType) {
 
             //显示加载状态
@@ -782,7 +801,8 @@ export default {
             });
 
         },
-        // 用户提交入职登记表函数
+
+        // 访客登记最终处理函数
         async handleFinaly() {
 
             //显示加载状态

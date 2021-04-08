@@ -116,11 +116,11 @@
 
                     </van-cell-group>
 
-                    <div v-show=" !item.serialid " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
+                    <div v-show=" !item.serialid && !tag.showOverlay " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;">提交</van-button>
                     </div>
 
-                    <div v-show=" role == 'edit' " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show=" role == 'edit' && !tag.showOverlay  " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ffd01e, #ff8917)" type="warning" text="作废预约" @click="handleDisagree('已作废');" style="border-radius: 10px 10px 10px 10px;margin-right:10px;width:46.5%;float:left;" />
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('确认');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:46.5%;">修改预约</van-button>
                     </div>
@@ -130,6 +130,14 @@
             </div>
 
         </section>
+
+        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});">
+            <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
+                <div :class="block.showOverlay">
+                    <van-loading size="2.5rem" style="margin:2.35rem 2.35rem;" type="spinner" color="#1989fa" />
+                </div>
+            </div>
+        </van-overlay>
 
     </div>
 </keep-alive>
@@ -228,6 +236,10 @@ export default {
             tag: {
                 showPickerTime: false,
                 showPickerDTime: false,
+                showOverlay:false,
+            },
+            block: {
+                showOverlay: '',
             },
             searchFlag: false,
             dropMenuOldValue: '',
@@ -701,6 +713,11 @@ export default {
 
         },
 
+        //显示遮罩
+        async showOverlayConfirm(action = 'cancel', done) {
+            await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
+        },
+
         // 用户提交入职登记表函数
         async handleApply() {
 
@@ -727,6 +744,7 @@ export default {
             });
 
             if (invalidKey != '' && invalidKey != null) {
+                this.showOverlayConfirm('cancel',()=>{});
                 await vant.Dialog.alert({
                     title: '温馨提示',
                     message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
@@ -736,6 +754,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_company)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -745,6 +764,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_name)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -754,6 +774,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_mobile)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -763,6 +784,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.create_by)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -772,6 +794,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.mobile)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -781,6 +804,7 @@ export default {
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.address)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -790,6 +814,7 @@ export default {
 
             //验证访客电话号码是否正确
             if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.item.visitor_mobile)) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -799,16 +824,17 @@ export default {
 
             //预约时间必须大于当前时间
             if(curdate >= applydate){
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '尊敬的用户您好，您输入的预约时间不能小于当前时间！',
                 });
             }
-            
 
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
             if (!ulist || ulist.length == 0) {
+                this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
                     title: '温馨提示',
@@ -817,6 +843,9 @@ export default {
             } else {
                 this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
+
+            //显示加载状态
+            await this.showOverlayConfirm('confirm',()=>{});
 
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
@@ -864,7 +893,6 @@ export default {
                 status: (this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common') ? 'init' : 'confirm',
             }; // 待处理元素
 
-            debugger;
             if ((this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common')) {
                 elem.status = 'init';
             }
@@ -1004,6 +1032,8 @@ export default {
             this.status = elem.status;
             this.readonly = true;
 
+            //隐藏遮罩
+            await this.showOverlayConfirm('cancel',()=>{});
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
@@ -1012,7 +1042,7 @@ export default {
 
         },
 
-        // 物品领用驳回
+        // 来访确认作废操作函数
         async handleDisagree(visitType) {
             //显示加载状态
             this.loading = true;
@@ -1047,6 +1077,9 @@ export default {
                     message: '请输入' + (visitType == '未到访' ? visitType : '作废') + '原因！',
                 });
             }
+
+            //显示加载状态
+            await this.showOverlayConfirm('confirm',()=>{});
 
             // 返回预览URL
             const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
@@ -1112,6 +1145,9 @@ export default {
             this.item.status = elem.status;
             this.role = 'view';
 
+            //隐藏遮罩
+            await this.showOverlayConfirm('cancel',()=>{});
+
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
@@ -1120,7 +1156,7 @@ export default {
 
         },
 
-        // 用户提交入职登记表函数
+        // 来访确认确认操作函数
         async handleConfirm(visitType = '确认') {
 
             //显示加载状态
@@ -1150,6 +1186,9 @@ export default {
                 });
                 return;
             }
+
+            //显示加载状态
+            await this.showOverlayConfirm('confirm',()=>{});
 
             // 返回预览URL
             const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
@@ -1232,6 +1271,9 @@ export default {
             this.readonly = true;
             this.item.status = elem.status;
             this.role = 'view';
+
+            //隐藏遮罩
+            await this.showOverlayConfirm('cancel',()=>{});
 
             //弹出确认提示
             await vant.Dialog.alert({

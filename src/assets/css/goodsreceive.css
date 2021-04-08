@@ -150,3 +150,17 @@
 #van_visit_group .van-address-list__bottom {
     display: none;
 }
+
+#van-overlay-content .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#van-overlay-content .block {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 0.25rem;
+    background-color: #fff;
+}
