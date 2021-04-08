@@ -121,11 +121,6 @@
                         <van-field :readonly="readonly" clearable label="寄送电话" v-model="item.send_mobile" placeholder="请输入对方公司/单位/组织相关负责人联系电话" />
                     </van-cell-group>
 
-                    <van-cell-group style="margin-top:10px;display:none;">
-                        <van-cell value="上传附件" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                        <van-uploader style="margin:0px 0.0rem 0px 1.0rem;" v-model="fileList" multiple :after-read="afterRead" accept="*/*" preview-size="6.3rem" />
-                    </van-cell-group>
-
                     <van-cell-group style="margin-top:10px;" v-show=" active > 0 ">
                         <van-cell value="流程状态" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
                         <van-steps :active="active">
@@ -1010,9 +1005,7 @@ export default {
                     await this.queryHContract();
                 }
             }
-
             Betools.storage.setStore('system_seal_item', JSON.stringify(this.item), 3600 * 2);
-
             return Betools.tools.isNull(this.message[fieldName]);
         },
         validFieldConfirm(fieldName) {
@@ -1022,21 +1015,17 @@ export default {
             }
             return Betools.tools.isNull(this.message[fieldName]);
         },
-        afterRead(file) {
-            file.status = 'uploading';
-            file.message = '上传中...';
-            setTimeout(() => {
-                file.status = 'failed';
-                file.message = '上传成功';
-            }, 1000);
-        },
         // 校验是否为集团总部
         async zoneNameValid() {
-            const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN', this.item.seal); //查询直接所在工作组
-            if (resp && resp.length > 0 && resp[0].zonename) { //如果查询到管理组数据，则设置区域名称
-                this.zonename = resp[0].zonename;
-            } else {
-                this.zonename = '';
+            try {
+                const resp = await Betools.query.queryRoleGroupList('SEAL_ADMIN', this.item.seal); //查询直接所在工作组
+                if (resp && resp.length > 0 && resp[0].zonename) { //如果查询到管理组数据，则设置区域名称
+                    this.zonename = resp[0].zonename;
+                } else {
+                    this.zonename = '';
+                }
+            } catch (error) {
+                console.log(error);
             }
         },
         sealTypeConfirm(value) {
@@ -1166,7 +1155,6 @@ export default {
 
             //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
             this.zoneNameValid();
-
         },
         //选中当前归档人员
         async selectArchiveUser(values) {
@@ -1245,8 +1233,7 @@ export default {
                             }
 
                             try {
-                                //缓存特定属性
-                                this.cacheUserInfo();
+                                this.cacheUserInfo(); //缓存特定属性
                             } catch (error) {
                                 console.log(error);
                             }
@@ -1300,8 +1287,7 @@ export default {
                                 this.item.signman = manager;
                                 this.item.dealMail = info.deal_mail;
                                 this.item.dealDepart = info.deal_depart;
-                                //缓存特定属性
-                                this.cacheUserInfo();
+                                this.cacheUserInfo(); //缓存特定属性
                             }
                         } catch (error) {
                             console.log(error);
@@ -1317,24 +1303,28 @@ export default {
         },
         //缓存填报人信息
         async cacheUserInfo() {
-            //获取特定属性
-            const temp = (({
-                dealManager,
-                mobile,
-                username,
-                dealMail,
-                signman,
-                dealDepart
-            }) => ({
-                dealManager,
-                mobile,
-                username,
-                dealMail,
-                signman,
-                dealDepart
-            }))(this.item)
-            //将用户名存放入缓存中，下次打开页面直接填入
-            Betools.storage.setStore('system_user_sealinfo', temp, 3600 * 24 * 30);
+            // try {
+            //     //获取特定属性
+            //     const temp = (({
+            //         dealManager,
+            //         mobile,
+            //         username,
+            //         dealMail,
+            //         signman,
+            //         dealDepart
+            //     }) => ({
+            //         dealManager,
+            //         mobile,
+            //         username,
+            //         dealMail,
+            //         signman,
+            //         dealDepart
+            //     }))(this.item);
+            //     Betools.storage.setStore('system_user_sealinfo', temp, 3600 * 24 * 30); //将用户名存放入缓存中，下次打开页面直接填入
+            // } catch (error) {
+            //     console.log(error);
+            // }
+            await Betools.manage.cacheSealApplyUserInfo(this.item);
         },
         //查询消息
         async queryInfo() {
