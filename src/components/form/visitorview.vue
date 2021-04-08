@@ -587,6 +587,9 @@ export default {
                 });
             }
 
+            //显示遮罩
+            this.showOverlayConfirm('confirm',()=>{});
+
             // 返回预览URL
             const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
 
@@ -665,6 +668,9 @@ export default {
             this.item.status = elem.status;
             this.role = 'view';
 
+            //隐藏遮罩
+            this.showOverlayConfirm('cancel',()=>{});
+
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
@@ -703,6 +709,9 @@ export default {
                 });
                 return;
             }
+
+            //显示遮罩
+            this.showOverlayConfirm('confirm',()=>{});
 
             // 返回预览URL
             const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
@@ -794,6 +803,9 @@ export default {
             this.item.status = elem.status;
             this.role = 'view';
 
+            //隐藏遮罩
+            this.showOverlayConfirm('cancel',()=>{});
+
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
@@ -807,6 +819,7 @@ export default {
 
             //显示加载状态
             this.loading = true;
+            this.showOverlayConfirm('confirm',()=>{});
 
             //获取用户基础信息
             const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -871,6 +884,9 @@ export default {
             this.readonly = true;
             this.item.status = elem.status;
             this.role = 'view';
+
+            //隐藏遮罩
+            this.showOverlayConfirm('cancel',()=>{});
 
             //弹出确认提示
             await vant.Dialog.alert({
