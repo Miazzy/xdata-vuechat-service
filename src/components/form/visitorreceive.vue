@@ -254,16 +254,6 @@ export default {
                     value: 4,
                     icon: 'aim'
                 },
-                {
-                    text: '应用',
-                    value: 5,
-                    icon: 'apps-o'
-                },
-                {
-                    text: '首页',
-                    value: 6,
-                    icon: 'wap-home-o'
-                },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -345,10 +335,6 @@ export default {
         async headDropMenu(value) {
             const val = this.dropMenuValue;
             switch (val) {
-                case 0: //只显示合同类信息
-                    break;
-                case 1: //只显示非合同类信息
-                    break;
                 case 2: //刷新数据
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.reduction();
@@ -360,12 +346,6 @@ export default {
                 case 4: //重置数据
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.reduction();
-                    break;
-                case 5: //返回应用
-                    this.$router.push(`/app`);
-                    break;
-                case 6: //返回首页
-                    this.$router.push(`/explore`);
                     break;
                 default:
                     console.log(`no operate. out of switch. `);
