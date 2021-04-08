@@ -1089,84 +1089,25 @@ export default {
                 this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
             }
         },
-        //选中当前前台人
+        //选中当前前台人员
         async selectFrontUser(value) {
-            // await Betools.tools.sleep(0);
-            // const id = this.fuserid;
-            // const user = this.fuserList.find((item, index) => {
-            //     return id == item.id
-            // });
-            // //获取盖印人姓名
-            // this.item.front_name = user.name;
-            // //当前盖印人编号
-            // this.item.front = id;
             await Betools.manage.selectSealApplyFrontUser(value,this);
         },
-        //选中当前前台人
+        //选中当前财务人员
         async selectFinanceUser(value) {
-            // await Betools.tools.sleep(0);
-            // const id = this.financeUserid;
-            // const user = this.financeuserList.find((item, index) => {
-            //     return id == item.id
-            // });
-            // //获取盖印人姓名
-            // this.item.finance_name = user.name;
-            // //当前盖印人编号
-            // this.item.finance = id;
-            // //设置归档组
-            // this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
-            // this.item.archive = `${this.item.finance},${this.item.record}`;
             await Betools.manage.selectSealApplyFinanceUser(value,this);
         },
-        //选中当前档案人
+        //选中当前档案人员
         async selectRecordUser(value) {
-            // await Betools.tools.sleep(0);
-            // const id = this.recordUserid;
-            // const user = this.recorduserList.find((item, index) => {
-            //     return id == item.id
-            // });
-            // //获取盖印人姓名
-            // this.item.record_name = user.name;
-            // //当前盖印人编号
-            // this.item.record = id;
-            // //设置归档组
-            // this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
-            // this.item.archive = `${this.item.finance},${this.item.record}`;
             await Betools.manage.selectSealApplyRecordUser(value,this);
         },
-        //选中当前盖印人
+        //选中当前盖印人员
         async selectSealUser(value) {
-            // await Betools.tools.sleep(0);
-            // const id = this.suserid;
-            // const user = this.suserList.find((item, index) => {
-            //     return id == item.id
-            // });
-            // //获取盖印人姓名
-            // this.item.sealman = user.name;
-            // //设置盖印人电话
-            // this.item.seal_mobile = user.mobile;
-            // this.item.seal = id;
-            // //当前盖印人编号
-            // this.sealuserid = id;
-
-            // //如果盖印人是总部的，则zonename为集团总部，如果不是总部的，则zonename为空
-            // this.zoneNameValid();
             await Betools.manage.selectSealApplySealUser(value,this);
         },
         //选中当前归档人员
         async selectArchiveUser(values) {
-            // await Betools.tools.sleep(0);
-            // let ids = [];
-            // let names = [];
-            // this.$refs.checkboxGroup.$data.checkboxValues.map((value, index) => {
-            //     if (value == 1) {
-            //         ids.push(this.auserList[index].id);
-            //         names.push(this.auserList[index].name);
-            //     }
-            // })
-            // this.item.archive_name = names.join(',');
-            // this.item.archive = ids.join(',');
-            await Betools.manage.selectSealApplyArchiveUser(value,this);
+            await Betools.manage.selectSealApplyArchiveUser(values,this);
         },
         //查询经办人基本信息
         async queryManager() {
