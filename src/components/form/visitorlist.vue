@@ -106,6 +106,15 @@
                 </template>
             </div>
         </section>
+
+        <van-overlay id='van-overlay-content' :show="tag.showOverlay" @click="showOverlayConfirm('cancel',()=>{});">
+            <div class="wrapper" @click="showOverlayConfirm('cancel',()=>{});">
+                <div :class="block.showOverlay">
+                    <van-loading size="2.5rem" style="margin:2.35rem 2.35rem;" type="spinner" color="#1989fa" />
+                </div>
+            </div>
+        </van-overlay>
+
     </div>
 </keep-alive>
 </template>
@@ -193,6 +202,12 @@ export default {
             },
             json_data: [],
             tablename: 'bs_visit_apply',
+            tag: {
+                showOverlay:false,
+            },
+            block: {
+                showOverlay: '',
+            },
         }
     },
     activated() {
@@ -355,6 +370,12 @@ export default {
             }
 
         },
+
+        //显示遮罩
+        async showOverlayConfirm(action = 'cancel', done) {
+            await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
+        },
+
         async handleConfirm(element, key, value, visitType = '已到访') {
 
             if (element.status == 'init') {
@@ -368,6 +389,9 @@ export default {
                     message: `您好，请确认进行${element.visitor_name}的到访确认操作？`,
                 });
             }
+
+            //显示遮罩
+            this.showOverlayConfirm('confirm', ()=>{});
 
             console.log(`key:`, key, ` value:`, value, ` element:`, element);
             const status = visitType == '已到访' ? 'visit' : 'confirm';
@@ -387,6 +411,7 @@ export default {
 
             //获取到用户列表数据
             if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
+                this.showOverlayConfirm('cancel', ()=>{});
                 await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '您没有访客管理的审批权限，请联系管理员进行处理！',
@@ -470,7 +495,10 @@ export default {
             setTimeout(async()=>{
                 //查询页面数据
                 await this.queryTabList(this.tabname, 0);
-            },100)
+            },100);
+
+            //隐藏遮罩
+            this.showOverlayConfirm('cancel', ()=>{});
 
             //弹出确认提示
             await vant.Dialog.alert({
