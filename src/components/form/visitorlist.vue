@@ -407,62 +407,59 @@ export default {
             //第二步，向表单提交form对象数据
             const result = await Betools.manage.patchTableData(this.tablename, id, elem);
 
-            try {
-                //第三步 向被拜访人员推送已到访到访通知
-                if (status == 'visit') {
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${element.mobile}/亲爱的同事，${element.visitor_company}的${element.visitor_name}等已到访，联系电话：${element.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
-                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                }
-            } catch (error) {
-                console.log(error);
+            //第三步 向被拜访人员推送已到访到访通知
+            if (status == 'visit') {
+                (async(element,receiveURL)=>{
+                    try {
+                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${element.mobile}/亲爱的同事，${element.visitor_company}的${element.visitor_name}等已到访，联系电话：${element.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
+                            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    } catch (error) {
+                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${element.mobile}/亲爱的同事，${element.visitor_company}的${element.visitor_name}等已到访，联系电话：${element.visitor_mobile}, 请您提前做好接待准备！?rurl=${receiveURL}`)
+                            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    }
+                })(element,receiveURL);
             }
-
-            /************************  工作流程日志(开始)  ************************/
-
+            
             //获取后端配置前端管理员组
             const front = user_group_ids;
             const front_name = user_group_ids;
 
-            //查询当前所有待办记录
-            let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username, userinfo.realname, 0, 1000);
-
-            //过滤出只关联当前流程的待办数据
-            tlist = tlist.filter(item => {
-                return item.id == id && item.pid == pid;
-            });
-
-            //同时删除本条待办记录当前(印章管理员)
-            await Betools.workflow.deleteViewProcessLog(tlist);
-
-            //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-            const prLogHisNode = {
-                id: Betools.tools.queryUniqueID(),
-                table_name: this.tablename,
-                main_value: id,
-                proponents: userinfo.username,
-                business_data_id: id, //varchar(100)  null comment '业务数据主键值',
-                business_code: '000000000', //varchar(100)  null comment '业务编号',
-                process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
-                employee: userinfo.realname, //varchar(1000) null comment '操作职员',
-                approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
-                action: visitType == '已到访' ? '已到访' : '预约确认', //varchar(100)  null comment '操作动作',
-                action_opinion: '来访申请审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //text          null comment '操作意见',
-                operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
-                functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
-                process_station: '来访审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //varchar(100)  null comment '流程岗位',
-                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `来访申请(${element.type}) ` + element.name + ' #被访人员: ' + element.create_by, //text          null comment '业务内容',
-                process_audit: element.id + '##' + element.serialid, //varchar(100)  null comment '流程编码',
-                create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
-                relate_data: '', //text          null comment '关联数据',
-                origin_data: '',
-            }
-
-            await Betools.workflow.approveViewProcessLog(prLogHisNode);
-
-            //同时推送一条待办记录给印章管理员
-
-            /************************  工作流程日志(结束)  ************************/
+            /************************  工作流程日志(开始)  ************************/
+            (async (userinfo,tablename,visitType,element)=>{
+                //查询当前所有待办记录
+                let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username, userinfo.realname, 0, 1000);
+                //过滤出只关联当前流程的待办数据
+                tlist = tlist.filter(item => {
+                    return item.id == id && item.pid == pid;
+                });
+                //同时删除本条待办记录当前(印章管理员)
+                await Betools.workflow.deleteViewProcessLog(tlist);
+                //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+                const prLogHisNode = {
+                    id: Betools.tools.queryUniqueID(),
+                    table_name: tablename,
+                    main_value: id,
+                    proponents: userinfo.username,
+                    business_data_id: id, //varchar(100)  null comment '业务数据主键值',
+                    business_code: '000000000', //varchar(100)  null comment '业务编号',
+                    process_name: '用印流程审批', //varchar(100)  null comment '流程名称',
+                    employee: userinfo.realname, //varchar(1000) null comment '操作职员',
+                    approve_user: userinfo.username, //varchar(100)  null comment '审批人员',
+                    action: visitType == '已到访' ? '已到访' : '预约确认', //varchar(100)  null comment '操作动作',
+                    action_opinion: '来访申请审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //text          null comment '操作意见',
+                    operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
+                    functions_station: userinfo.position, //varchar(100)  null comment '职能岗位',
+                    process_station: '来访审批[' + (visitType == '已到访' ? '已到访' : '预约确认') + ']', //varchar(100)  null comment '流程岗位',
+                    business_data: JSON.stringify(element), //text          null comment '业务数据',
+                    content: `来访申请(${element.type}) ` + element.name + ' #被访人员: ' + element.create_by, //text          null comment '业务内容',
+                    process_audit: element.id + '##' + element.serialid, //varchar(100)  null comment '流程编码',
+                    create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
+                    relate_data: '', //text          null comment '关联数据',
+                    origin_data: '',
+                }
+                await Betools.workflow.approveViewProcessLog(prLogHisNode);
+                /************************  工作流程日志(结束)  ************************/
+            })(userinfo,this.tablename,visitType,element);
 
             //设置状态
             this.loading = false;
@@ -479,7 +476,6 @@ export default {
 
             //查询页面数据
             await this.queryTabList(this.tabname, 0);
-
         }
     }
 }
