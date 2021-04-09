@@ -512,6 +512,9 @@ export default {
                 await this.queryTabList(this.tabname, 0);
             },500);
 
+            //等待500ms
+            await Betools.tools.sleep(500);
+
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
 
