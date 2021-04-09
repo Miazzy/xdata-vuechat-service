@@ -429,7 +429,14 @@ export default {
             }; // 待处理元素
 
             //第二步，向表单提交form对象数据
-            const result = await Betools.manage.patchTableData(this.tablename, id, elem);
+            (async(tablename, id, elem)=>{
+                try {
+                    const result = await Betools.manage.patchTableData(tablename, id, elem);
+                    console.log(`visit confirm result: `,result);
+                } catch (error) {
+                    await Betools.manage.patchTableData(tablename, id, elem);
+                }
+            })(this.tablename, id, elem);
 
             //第三步 向被拜访人员推送已到访到访通知
             if (status == 'visit') {
@@ -495,8 +502,10 @@ export default {
             //查询页面数据
             setTimeout(async()=>{
                 await this.queryTabList(this.tabname, 0);
-                await Betools.tools.sleep(1000);
+                console.log(`refresh query table list one ... `);
+                await Betools.tools.sleep(1500);
                 await this.queryTabList(this.tabname, 0);
+                console.log(`refresh query table list one ... `);
             },1500);
 
             //隐藏遮罩
