@@ -877,54 +877,15 @@ export default {
                 elem.status = 'init';
             }
 
-            visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}的拜访预约，联系电话:${elem.visitor_mobile}`;
+            visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}等人的拜访预约，联系电话:${elem.visitor_mobile}`;
 
             //第二步，向表单提交form对象数据
             const result = await Betools.manage.postTableData(this.tablename, elem);
+            console.log(`visit apply result: `, result);
 
             //计算批量物品
             const tsize = this.size - 1;
-
-            if (tsize >= 1) {
-
-                for (let i = 1; i <= tsize; i++) {
-
-                    let element = {
-                        id: Betools.tools.queryUniqueID(),
-                        create_by: this.item.create_by,
-                        employee: this.item.employee,
-                        department: this.item.department,
-                        company: this.item.company,
-                        mobile: this.item.mobile,
-                        position: this.item.position,
-                        create_time: this.item.create_time,
-                        visitor_name: this.item['visitor_name' + i],
-                        visitor_company: this.item['visitor_company'],
-                        visitor_mobile: this.item['visitor_mobile' + i],
-                        visitor_position: this.item['visitor_position' + i],
-                        time: this.item.time,
-                        dtime: this.item.dtime,
-                        address: this.item.address,
-                        zone_name: this.item.zone_name,
-                        zone,
-                        userid: this.item.userid,
-                        user_admin_name: this.item.user_admin_name,
-                        user_group_ids,
-                        user_group_names,
-                        pid: id,
-                        status: (this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common') ? 'init' : 'confirm',
-                    };
-
-                    if ((this.role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(this.item.create_by) || this.item.create_by == 'common')) {
-                        element.status = 'init';
-                    }
-
-                    //向表单提交form对象数据
-                    await Betools.manage.postTableData(this.tablename, element);
-
-                    visitors += `,${element.visitor_name}(${element.visitor_company} 电话:${element.visitor_mobile.slice(0,3) + '****' + element.visitor_mobile.slice(-4)})`;
-                }
-            }
+            this.handleVisitApplyMultiApply(tsize, this.tablename, this.role, this.item);
 
             //第三步 向物品管理员推送通知，已准备办公用品等
             try {
@@ -952,6 +913,52 @@ export default {
             await this.handleVisitApplyLogInfo(this.tablename , this.item , userinfo);
         },
 
+        //处理批量申请
+        async handleVisitApplyMultiApply(tsize , tableName, role ,  item){
+
+            if (tsize >= 1) {
+
+                for (let i = 1; i <= tsize; i++) {
+
+                    let element = {
+                        id: Betools.tools.queryUniqueID(),
+                        create_by: item.create_by,
+                        employee: item.employee,
+                        department: item.department,
+                        company: item.company,
+                        mobile: item.mobile,
+                        position: item.position,
+                        create_time: item.create_time,
+                        visitor_name: item['visitor_name' + i],
+                        visitor_company: item['visitor_company'],
+                        visitor_mobile: item['visitor_mobile' + i],
+                        visitor_position: item['visitor_position' + i],
+                        time: item.time,
+                        dtime: item.dtime,
+                        address: item.address,
+                        zone_name: item.zone_name,
+                        zone,
+                        userid: item.userid,
+                        user_admin_name: item.user_admin_name,
+                        user_group_ids,
+                        user_group_names,
+                        pid: id,
+                        status: (role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(item.create_by) || item.create_by == 'common') ? 'init' : 'confirm',
+                    };
+
+                    if ((role == 'visitor' || userinfo.username == 'commmon' || !userinfo || Betools.tools.isNull(item.create_by) || item.create_by == 'common')) {
+                        element.status = 'init';
+                    }
+
+                    //向表单提交form对象数据
+                    await Betools.manage.postTableData(tableName, element);
+
+                    // visitors += `,${element.visitor_name}(${element.visitor_company} 电话:${element.visitor_mobile.slice(0,3) + '****' + element.visitor_mobile.slice(-4)})`;
+                }
+            }
+        },
+
+        //记录操作日志
         async handleVisitApplyLogInfo(tableName , item , userinfo){
 
             //发送自动设置排序号请求
