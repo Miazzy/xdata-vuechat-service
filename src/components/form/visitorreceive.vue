@@ -699,7 +699,7 @@ export default {
         },
 
         // 用户提交入职登记表函数
-        async handleApply() {
+        async handleApply(startTime = new Date().getTime() , endTime ) {
 
             //显示加载状态
             await this.showOverlayConfirm('confirm',()=>{});
@@ -909,8 +909,13 @@ export default {
                 await this.handleVisitApplyLogInfo(tablename , item , id , userinfo);
             })(this.tablename, this.item, id, userinfo);
 
-            //等待1000ms
-            await Betools.tools.sleep(1000);
+            //处理完毕，获取当前时间戳
+            endTime = new Date().getTime();
+
+            //等待执行，如果执行速度太快，则等待1500ms，避免闪烁
+            if(endTime - startTime < 1500){
+                await Betools.tools.sleep(1500);
+            }
 
             //隐藏遮罩
             await this.showOverlayConfirm('cancel',()=>{});
