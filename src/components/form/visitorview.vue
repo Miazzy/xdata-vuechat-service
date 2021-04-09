@@ -222,10 +222,10 @@ export default {
             loading: false,
             officeList: [],
             tag: {
-                showOverlay:true,
+                showOverlay:false,
             },
             block: {
-                showOverlay: 'block',
+                showOverlay: '',
             },
             searchFlag: false,
             dropMenuOldValue: '',
