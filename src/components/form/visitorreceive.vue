@@ -880,8 +880,14 @@ export default {
             visitors = `您有来自${elem.visitor_company}的${elem.visitor_name}等人的拜访预约，联系电话:${elem.visitor_mobile}`;
 
             //第二步，向表单提交form对象数据
-            const result = await Betools.manage.postTableData(this.tablename, elem);
-            console.log(`visit apply result: `, result);
+            (async (tablename, elem)=>{
+                try {
+                    const result = await Betools.manage.postTableData(tablename, elem);
+                    console.log(`visit apply result: `, result);
+                } catch (error) {
+                    await Betools.manage.postTableData(tablename, elem);
+                }
+            })(this.tablename , elem);
 
             //第三步 向物品管理员推送通知，已准备办公用品等
             (async (item , elem , visitors , user_group_ids, receiveURL) => {
@@ -914,7 +920,7 @@ export default {
 
             //等待执行，如果执行速度太快，则等待1500ms，避免闪烁
             if(endTime - startTime < 1500){
-                await Betools.tools.sleep(1500);
+                await Betools.tools.sleep(3000);
                 console.log(`execute fast ${endTime - startTime} and sleep a wheel for no twinkle ... `);
             }
 
