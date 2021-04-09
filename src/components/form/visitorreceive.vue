@@ -975,10 +975,14 @@ export default {
                 console.log(error);
             }
 
-            //查询数据
-            const value = await Betools.query.queryTableData(tableName, id);
-            //显示序列号
-            item.serialid = value.serialid;
+            //查询数据，并设置序号
+            try {
+                const value = await Betools.query.queryTableData(tableName, id);
+                //显示序列号
+                item.serialid = value.serialid;
+            } catch (error) {
+                console.log(error);
+            }
 
             /************************  工作流程日志(开始)  ************************/
 
