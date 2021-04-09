@@ -503,7 +503,7 @@ export default {
             setTimeout(async()=>{
                 await this.queryTabList(this.tabname, 0);
                 console.log(`refresh query table list one ... `);
-                await Betools.tools.sleep(1500);
+                await Betools.tools.sleep(3500);
                 await this.queryTabList(this.tabname, 0);
                 console.log(`refresh query table list two ... `);
             },1500);
