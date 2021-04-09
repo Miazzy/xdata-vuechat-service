@@ -909,11 +909,11 @@ export default {
                 await this.handleVisitApplyLogInfo(tablename , item , id , userinfo);
             })(this.tablename, this.item, id, userinfo);
 
-            //隐藏遮罩
-            await this.showOverlayConfirm('cancel',()=>{});
-
             //等待1000ms
             await Betools.tools.sleep(1000);
+
+            //隐藏遮罩
+            await this.showOverlayConfirm('cancel',()=>{});
 
             //弹出确认提示
             await vant.Dialog.alert({
