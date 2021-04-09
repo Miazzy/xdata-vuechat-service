@@ -926,35 +926,57 @@ export default {
                 }
             }
 
-            //发送自动设置排序号请求
-            try {
-                const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tablename)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-            } catch (error) {
-                console.log(error);
-            }
-
             //第三步 向物品管理员推送通知，已准备办公用品等
             try {
-                //查询数据
-                const value = await Betools.query.queryTableData(this.tablename, id);
-                //显示序列号
-                this.item.serialid = value.serialid;
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.employee},${this.item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
                     .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
             } catch (error) {
                 console.log(error);
             }
 
+            //设置状态
+            this.loading = false;
+            this.status = elem.status;
+            this.readonly = true;
+
+            //隐藏遮罩
+            await this.showOverlayConfirm('cancel',()=>{});
+
+            //弹出确认提示
+            await vant.Dialog.alert({
+                title: '温馨提示',
+                message: '已提交访客预约申请！',
+            });
+
+            //记录操作日志
+            await this.handleVisitApplyLogInfo(this.tablename , this.item , userinfo);
+        },
+
+        async handleVisitApplyLogInfo(tableName , item , userinfo){
+
+            //发送自动设置排序号请求
+            try {
+                const patchResp = await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                console.log(`patch resp: `, patchResp);
+            } catch (error) {
+                console.log(error);
+            }
+
+            //查询数据
+            const value = await Betools.query.queryTableData(tableName, id);
+            //显示序列号
+            item.serialid = value.serialid;
+
             /************************  工作流程日志(开始)  ************************/
 
             //获取后端配置前端管理员组
-            const front = this.item.userid;
-            const front_name = this.item.username;
+            const front = item.userid;
+            const front_name = item.username;
 
             //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
             const prLogHisNode = {
                 id: Betools.tools.queryUniqueID(),
-                table_name: this.tablename,
+                table_name: tableName,
                 main_value: id,
                 proponents: userinfo && userinfo.username !== 'commmon' ? userinfo.username : '访客',
                 business_data_id: id, //varchar(100)  null comment '业务数据主键值',
@@ -967,9 +989,9 @@ export default {
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: userinfo && userinfo.username !== 'commmon' ? userinfo.position : '', //varchar(100)  null comment '职能岗位',
                 process_station: '预约审批[访客预约]', //varchar(100)  null comment '流程岗位',
-                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `访客预约(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo && userinfo.username !== 'commmon' ? userinfo.username : '', //text          null comment '业务内容',
-                process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                business_data: JSON.stringify(item), //text          null comment '业务数据',
+                content: `访客预约(${item.type}) ` + item.name + ' #经办人: ' + userinfo && userinfo.username !== 'commmon' ? userinfo.username : '', //text          null comment '业务内容',
+                process_audit: item.id + '##' + item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
                 relate_data: '', //text          null comment '关联数据',
                 origin_data: '',
@@ -982,7 +1004,7 @@ export default {
             //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
             const prLogNode = {
                 id: Betools.tools.queryUniqueID(),
-                table_name: this.tablename,
+                table_name: tableName,
                 main_value: id,
                 proponents: front,
                 business_data_id: id, //varchar(100)  null comment '业务数据主键值',
@@ -995,9 +1017,9 @@ export default {
                 operate_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '操作时间',
                 functions_station: '前台', //varchar(100)  null comment '职能岗位',
                 process_station: '预约审批[预约预约]', //varchar(100)  null comment '流程岗位',
-                business_data: JSON.stringify(this.item), //text          null comment '业务数据',
-                content: `预约预约(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username, //text          null comment '业务内容',
-                process_audit: this.item.id + '##' + this.item.serialid, //varchar(100)  null comment '流程编码',
+                business_data: JSON.stringify(item), //text          null comment '业务数据',
+                content: `预约预约(${item.type}) ` + item.name + '#待处理 #经办人: ' + userinfo.username, //text          null comment '业务内容',
+                process_audit: item.id + '##' + item.serialid, //varchar(100)  null comment '流程编码',
                 create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'), //datetime      null comment '创建日期',
                 relate_data: '', //text          null comment '关联数据',
                 origin_data: '',
@@ -1006,20 +1028,6 @@ export default {
             await Betools.workflow.taskViewProcessLog(prLogNode);
 
             /************************  工作流程日志(结束)  ************************/
-
-            //设置状态
-            this.loading = false;
-            this.status = elem.status;
-            this.readonly = true;
-
-            //隐藏遮罩
-            await this.showOverlayConfirm('cancel',()=>{});
-            //弹出确认提示
-            await vant.Dialog.alert({
-                title: '温馨提示',
-                message: '已提交访客预约申请！',
-            });
-
         },
 
         // 来访确认作废操作函数
