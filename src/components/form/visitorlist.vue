@@ -501,15 +501,16 @@ export default {
 
             //查询页面数据
             setTimeout(async()=>{
-                await this.queryTabList(this.tabname, 0);
+                await Betools.manage.patchTableData(this.tablename, id, elem);
                 console.log(`refresh query table list one ... `);
-                await Betools.tools.sleep(2500);
                 await this.queryTabList(this.tabname, 0);
+                await Betools.tools.sleep(1500);
                 console.log(`refresh query table list two ... `);
-                await Betools.tools.sleep(3500);
                 await this.queryTabList(this.tabname, 0);
+                await Betools.tools.sleep(3000);
                 console.log(`refresh query table list three ... `);
-            },1500);
+                await this.queryTabList(this.tabname, 0);
+            },500);
 
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
