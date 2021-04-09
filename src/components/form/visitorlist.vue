@@ -503,10 +503,9 @@ export default {
             setTimeout(async()=>{
                 await this.queryTabList(this.tabname, 0);
                 console.log(`refresh query table list one ... `);
-                setTimeout(async()=>{
-                    await this.queryTabList(this.tabname, 0);
-                    console.log(`refresh query table list two ... `);
-                },3000);
+                await Betools.tools.sleep(1500);
+                await this.queryTabList(this.tabname, 0);
+                console.log(`refresh query table list two ... `);
             },1500);
 
             //隐藏遮罩
