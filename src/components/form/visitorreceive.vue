@@ -890,8 +890,13 @@ export default {
             //第三步 向物品管理员推送通知，已准备办公用品等
             try {
                 (async (item , elem , visitors , user_group_ids, receiveURL) => {
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
-                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    try {
+                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    } catch (error) {
+                        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                            .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    }
                 })(this.item , elem , visitors , user_group_ids,  receiveURL);
             } catch (error) {
                 console.log(error);
