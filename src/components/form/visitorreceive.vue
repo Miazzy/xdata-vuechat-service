@@ -915,6 +915,7 @@ export default {
             //等待执行，如果执行速度太快，则等待1500ms，避免闪烁
             if(endTime - startTime < 1500){
                 await Betools.tools.sleep(1500);
+                console.log(`execute fast ${endTime - startTime} and sleep a wheel for no twinkle ... `);
             }
 
             //隐藏遮罩
