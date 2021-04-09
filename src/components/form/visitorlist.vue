@@ -492,8 +492,10 @@ export default {
             element.status = elem.status;
             this.role = 'view';
 
+            //查询页面数据
             setTimeout(async()=>{
-                //查询页面数据
+                await this.queryTabList(this.tabname, 0);
+                await Betools.tools.sleep(300);
                 await this.queryTabList(this.tabname, 0);
             },100);
 
