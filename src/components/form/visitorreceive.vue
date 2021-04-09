@@ -702,6 +702,9 @@ export default {
         async handleApply() {
 
             //显示加载状态
+            await this.showOverlayConfirm('confirm',()=>{});
+
+            //显示加载状态
             this.loading = true;
 
             const curdate = dayjs().format('YYYYMMDDHHmm');
@@ -823,9 +826,6 @@ export default {
             } else {
                 this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
-
-            //显示加载状态
-            await this.showOverlayConfirm('confirm',()=>{});
 
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
