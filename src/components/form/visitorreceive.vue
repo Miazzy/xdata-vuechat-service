@@ -883,10 +883,6 @@ export default {
             const result = await Betools.manage.postTableData(this.tablename, elem);
             console.log(`visit apply result: `, result);
 
-            //计算批量物品
-            const tsize = this.size - 1;
-            this.handleVisitApplyMultiApply(tsize, this.tablename, this.role, this.item);
-
             //第三步 向物品管理员推送通知，已准备办公用品等
             (async (item , elem , visitors , user_group_ids, receiveURL) => {
                 try {
@@ -897,6 +893,10 @@ export default {
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 }
             })(this.item , elem , visitors , user_group_ids,  receiveURL);
+
+            //批量提交申请，如果来访人员填写多人信息
+            const tsize = this.size - 1;
+            this.handleVisitApplyMultiApply(tsize, this.tablename, this.role, this.item);
 
             //设置状态
             this.loading = false;
