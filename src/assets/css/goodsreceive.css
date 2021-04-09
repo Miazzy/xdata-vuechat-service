@@ -165,6 +165,7 @@
     background-color: #fff;
 }
 
+#content .van-overlay,
 #van-overlay-content .van-overlay {
     position: fixed;
     top: 0;
