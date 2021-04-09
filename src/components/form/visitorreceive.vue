@@ -699,7 +699,7 @@ export default {
         },
 
         // 用户提交入职登记表函数
-        async handleApply(startTime = new Date().getTime() , endTime ) {
+        async handleApply(startTime = new Date().getTime() , endTime , executeRsp = '') {
 
             //显示加载状态
             await this.showOverlayConfirm('confirm',()=>{});
@@ -886,6 +886,13 @@ export default {
                     console.log(`visit apply result: `, result);
                 } catch (error) {
                     await Betools.manage.postTableData(tablename, elem);
+                } finally {
+                    executeRsp = 'success';
+                    await this.showOverlayConfirm('cancel',()=>{});
+                    await vant.Dialog.alert({
+                        title: '温馨提示',
+                        message: '已提交访客预约申请！',
+                    });
                 }
             })(this.tablename , elem);
 
@@ -924,15 +931,15 @@ export default {
                 console.log(`execute fast ${endTime - startTime} and sleep a wheel for no twinkle ... `);
             }
 
-            //隐藏遮罩
-            await this.showOverlayConfirm('cancel',()=>{});
-
-            //弹出确认提示
-            await vant.Dialog.alert({
-                title: '温馨提示',
-                message: '已提交访客预约申请！',
-            });
-
+            if(executeRsp == 'success'){
+                //隐藏遮罩
+                await this.showOverlayConfirm('cancel',()=>{});
+                //弹出确认提示
+                await vant.Dialog.alert({
+                    title: '温馨提示',
+                    message: '已提交访客预约申请！',
+                });
+            }
         },
 
         //处理批量申请
