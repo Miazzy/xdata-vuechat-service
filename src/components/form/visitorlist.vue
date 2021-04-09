@@ -1,7 +1,6 @@
 <template>
 <keep-alive>
 
-    <!--首页组件-->
     <div id="visitorlist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;">
 
         <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
