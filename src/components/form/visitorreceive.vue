@@ -888,11 +888,9 @@ export default {
                     await Betools.manage.postTableData(tablename, elem);
                 } finally {
                     executeRsp = 'success';
+                    console.log(`async execute finise ... `);
                     await this.showOverlayConfirm('cancel',()=>{});
-                    await vant.Dialog.alert({
-                        title: '温馨提示',
-                        message: '已提交访客预约申请！',
-                    });
+                    await vant.Dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
                 }
             })(this.tablename , elem);
 
@@ -932,13 +930,9 @@ export default {
             }
 
             if(executeRsp == 'success'){
-                //隐藏遮罩
+                console.log(`sequence execute finise ... `);
                 await this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '已提交访客预约申请！',
-                });
+                await vant.Dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
             }
         },
 
