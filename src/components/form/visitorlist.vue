@@ -495,9 +495,9 @@ export default {
             //查询页面数据
             setTimeout(async()=>{
                 await this.queryTabList(this.tabname, 0);
-                await Betools.tools.sleep(300);
+                await Betools.tools.sleep(1000);
                 await this.queryTabList(this.tabname, 0);
-            },100);
+            },1500);
 
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
