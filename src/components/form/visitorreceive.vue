@@ -912,6 +912,9 @@ export default {
             //隐藏遮罩
             await this.showOverlayConfirm('cancel',()=>{});
 
+            //等待500ms
+            await Betools.tools.sleep(500);
+
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
