@@ -59,7 +59,6 @@
                             <van-cell-group id="van-visit-group" style="margin-top:10px;position:relative;">
 
                                 <van-cell value="来访信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-                                <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                                 <van-field :readonly="readonly" required clickable clearable label="预约日期" v-model="item.time" placeholder="请选择预约时间！" @blur="validField('')" @click="tag.showPickerTime = true" />
                                 <single-select v-show="false" required label="来访时间" placeholder="请选择来访时间" v-model="item.dtime" @confirm="typedTimeConfirm" :columns="typedTimeColumns" :option="{ label:'name',value:'name',title:'',all: false , search: false , margin:'0px 0px' , classID:'',}" />
                                 <van-field :readonly="readonly" required clickable clearable label="来访时间" v-model="item.dtime" placeholder="请选择来访时间!" @blur="validField('')" @click="tag.showPickerDTime = true" />
@@ -116,7 +115,7 @@
 
                     </van-cell-group>
 
-                    <div v-show=" !item.serialid && !tag.showOverlay " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
+                    <div v-show=" !item.serialid && !tag.showOverlay && !status " style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:1px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleApply();" style="border-radius: 10px 10px 10px 10px; text-align: center;">提交</van-button>
                     </div>
 
@@ -593,6 +592,7 @@ export default {
             this.item.front_name = user.name; //获取盖印人姓名
             this.item.front_id = id;
         },
+
         // 字段必填有效验证
         validField(fieldName) {
             //获取用户基础信息
@@ -889,8 +889,10 @@ export default {
 
             //第三步 向物品管理员推送通知，已准备办公用品等
             try {
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${this.item.employee},${this.item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
-                    .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                (async (item , elem , visitors , user_group_ids, receiveURL) => {
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                })(this.item , elem , visitors , user_group_ids,  receiveURL);
             } catch (error) {
                 console.log(error);
             }
@@ -899,6 +901,12 @@ export default {
             this.loading = false;
             this.status = elem.status;
             this.readonly = true;
+            this.item.serialid = 1000;
+
+            //记录操作日志
+            (async(tablename, item, id, userinfo) => {
+                await this.handleVisitApplyLogInfo(tablename , item , id , userinfo);
+            })(this.tablename, this.item, id, userinfo);
 
             //隐藏遮罩
             await this.showOverlayConfirm('cancel',()=>{});
@@ -909,8 +917,6 @@ export default {
                 message: '已提交访客预约申请！',
             });
 
-            //记录操作日志
-            await this.handleVisitApplyLogInfo(this.tablename , this.item , userinfo);
         },
 
         //处理批量申请
@@ -959,7 +965,7 @@ export default {
         },
 
         //记录操作日志
-        async handleVisitApplyLogInfo(tableName , item , userinfo){
+        async handleVisitApplyLogInfo(tableName , item , id , userinfo){
 
             //发送自动设置排序号请求
             try {
@@ -1035,6 +1041,8 @@ export default {
             await Betools.workflow.taskViewProcessLog(prLogNode);
 
             /************************  工作流程日志(结束)  ************************/
+
+            return item.serialid;
         },
 
         // 来访确认作废操作函数
