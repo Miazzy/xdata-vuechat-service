@@ -505,8 +505,8 @@ export default {
                 console.log(`refresh query table list one ... `);
                 setTimeout(async()=>{
                     await this.queryTabList(this.tabname, 0);
-                    console.log(`refresh query table list one ... `);
-                },1500);
+                    console.log(`refresh query table list two ... `);
+                },3000);
             },1500);
 
             //隐藏遮罩
