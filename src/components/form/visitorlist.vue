@@ -468,14 +468,17 @@ export default {
             element.status = elem.status;
             this.role = 'view';
 
+            setTimeout(async()=>{
+                //查询页面数据
+                await this.queryTabList(this.tabname, 0);
+            },100)
+
             //弹出确认提示
             await vant.Dialog.alert({
                 title: '温馨提示',
                 message: `预约人员:${element.visitor_name}，已经` + (visitType == '已到访' ? '到访' : '确认') + '！',
             });
 
-            //查询页面数据
-            await this.queryTabList(this.tabname, 0);
         }
     }
 }
