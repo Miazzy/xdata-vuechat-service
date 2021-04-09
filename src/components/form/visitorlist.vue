@@ -503,10 +503,13 @@ export default {
             setTimeout(async()=>{
                 await this.queryTabList(this.tabname, 0);
                 console.log(`refresh query table list one ... `);
-                await Betools.tools.sleep(3000);
+                await Betools.tools.sleep(2500);
                 await this.queryTabList(this.tabname, 0);
                 console.log(`refresh query table list two ... `);
-            },3000);
+                await Betools.tools.sleep(3500);
+                await this.queryTabList(this.tabname, 0);
+                console.log(`refresh query table list three ... `);
+            },1500);
 
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
