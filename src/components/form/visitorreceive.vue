@@ -699,7 +699,7 @@ export default {
         },
 
         // 用户提交入职登记表函数
-        async handleApply(startTime = new Date().getTime() , endTime , executeRsp = '') {
+        async handleApply(startTime = new Date().getTime() , endTime , executeRsp = '' , executeWsp = '') {
 
             //显示加载状态
             await this.showOverlayConfirm('confirm',()=>{});
@@ -889,8 +889,9 @@ export default {
                 } finally {
                     executeRsp = 'success';
                     console.log(`async execute finise ... `);
-                    await this.showOverlayConfirm('cancel',()=>{});
-                    await vant.Dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
+                    if(executeRsp == 'success' && executeWsp == 'success'){
+                        await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 5000);
+                    }
                 }
             })(this.tablename , elem);
 
@@ -929,11 +930,20 @@ export default {
                 console.log(`execute fast ${endTime - startTime} and sleep a wheel for no twinkle ... `);
             }
 
-            if(executeRsp == 'success'){
+            executeWsp = 'success';
+
+            if(executeRsp == 'success' && executeWsp == 'success'){
                 console.log(`sequence execute finise ... `);
-                await this.showOverlayConfirm('cancel',()=>{});
-                await vant.Dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
+                await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 5000);
             }
+            
+        },
+
+        async handleVisitApplyFinallyAlert(showOverlayConfirm, dialog = vant.Dialog,miliseconds = 3000){
+            Betools.tools.throttle(async () => {
+                await showOverlayConfirm('cancel',()=>{});
+                await dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
+            }, miliseconds);
         },
 
         //处理批量申请

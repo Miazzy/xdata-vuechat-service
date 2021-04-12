@@ -226,16 +226,16 @@ export default {
                 mobile: '',
                 send_mobile: '',
                 send_location: '',
-                seal: '', //用印管理员成员组
+                seal: 'yanggc', //用印管理员成员组
                 seal_mobile: '',
-                front: '', //用印前台接受组
-                front_name: '',
-                archive: '', //用印归档组(财务/档案)
+                front: 'yanggc', //用印前台接受组
+                front_name: 'yanggc',
+                archive: 'yanggc', //用印归档组(财务/档案)
                 archive_name: [],
-                finance: '', //用印财务接受组
-                finance_name: '',
-                record: '', //用印档案接受组
-                record_name: '',
+                finance: 'yanggc', //用印财务接受组
+                finance_name: 'yanggc',
+                record: 'yanggc', //用印档案接受组
+                record_name: 'yanggc',
                 prefix: 'LD', //编号前缀
                 name: '', //流程组名，即Group_XX
                 confirmStatus: '', //财务确认/档案确认
