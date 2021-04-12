@@ -890,7 +890,7 @@ export default {
                     executeRsp = 'success';
                     console.log(`async execute finise ... `);
                     if(executeRsp == 'success' && executeWsp == 'success'){
-                        await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 5000);
+                        await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 10000);
                     }
                 }
             })(this.tablename , elem);
@@ -926,24 +926,24 @@ export default {
 
             //等待执行，如果执行速度太快，则等待1500ms，避免闪烁
             if(endTime - startTime < 1500){
-                await Betools.tools.sleep(3000);
+                await Betools.tools.sleep(1500);
                 console.log(`execute fast ${endTime - startTime} and sleep a wheel for no twinkle ... `);
             }
-
+            
             executeWsp = 'success';
-
             if(executeRsp == 'success' && executeWsp == 'success'){
                 console.log(`sequence execute finise ... `);
-                await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 5000);
+                await this.handleVisitApplyFinallyAlert(this.showOverlayConfirm, vant.Dialog, 10000);
             }
             
         },
 
         async handleVisitApplyFinallyAlert(showOverlayConfirm, dialog = vant.Dialog,miliseconds = 3000){
             Betools.tools.throttle(async () => {
+                console.log(`throttle : 提交访客预约申请成功！`, );
                 await showOverlayConfirm('cancel',()=>{});
                 await dialog.alert({ title: '温馨提示', message: '已提交访客预约申请！', });
-            }, miliseconds);
+            }, miliseconds)();
         },
 
         //处理批量申请
