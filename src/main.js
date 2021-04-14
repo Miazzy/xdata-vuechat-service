@@ -13,12 +13,6 @@ try {
     Vue.use(xediter.default, vant.Empty, vant.Lazyload, vant.Icon, vant.Dialog, vant.AddressList); //设置VueExcel编辑组件
 
     try {
-        Vue.use(VueMindmap);
-    } catch (error) {
-        console.log(error);
-    }
-
-    try {
         Vue.component("singleSelect", singleSelect || null);
         Vue.component("checkSelect", checkSelect || null);
     } catch (error) {
@@ -32,6 +26,7 @@ try {
     }
 
     try {
+        // Vue.use(VueMindmap);
         // Vue.component("SeeksRelationGraph", relationGraph || null);
         // Vue.component(VueWordCloud.name, VueWordCloud);
         // Vue.component("vueD3Cloud", vueD3Cloud.default);

@@ -94,43 +94,62 @@ export default {
             back:'/app',
         }
     },
-    activated() {
-
-    },
+    activated() {},
     mounted() {
         this.queryInfo();
     },
     methods: {
-        /**
-         * @function 企业微信登录处理函数
-         */
+
         async weworkLogin() {
-            this.role = await Betools.storage.getStore('system_role_rights_v1');
             const userinfo_work = await Betools.query.queryWeworkUser();
-            const userinfo = await Betools.storage.getStore('system_userinfo');
-            const etimestamp = await Betools.storage.getStore('system_role_rights_v1_expire'); // 检查权限是否快要到期，如果已经缓存了一段时间，则再次查询一次
-            const ctimestamp = new Date().getTime() / 1000 + 3600 * 24 * 30.99;
-            const username = userinfo && userinfo.username ? userinfo.username : '';
-            (!this.role || this.role == 'view' || this.role == 'null' || ctimestamp >= etimestamp) ? (this.queryRoleInfo(userinfo, null, 'view')) : (null);
-            (this.role.includes('COMMON_DEBUG_ADMIN')) ? (setTimeout(() => {
-                window.vConsole = window.vConsole ? window.vConsole : new VConsole();
-            }, 300)) : (null);
             return userinfo_work;
         },
+
         async queryInfo() {
             try {
                 this.userinfo = await this.weworkLogin();
-                this.images = await this.queryImagesUrl();
-                this.commonIconLength = await this.changeStyle();
-                const userinfo = await Betools.storage.getStore('system_userinfo');
-                this.queryCrontab();
-                this.queryRoleInfo(userinfo,null,'view');
+                this.role = await this.queryRoleInfo();
+                setTimeout(()=>{
+                    this.queryCrontab();
+                }, Math.random() * 1000);
             } catch (error) {
                 console.log(error);
             }
         },
 
-        async queryRoleInfo(userinfo, resp = null, role = '') {
+        //搜索角色信息
+        async queryRoleInfo (userinfo = {}, resp = '', role = 'view', cacheKey = 'system_role_rights_v1' , time = 0, curtime = new Date().getTime()/1000) {
+            
+            userinfo = await Betools.storage.getStore('system_userinfo');
+            time = await Betools.storage.getStore(`${cacheKey}_expire`) || 0;
+            role = await Betools.storage.getStore(`${cacheKey}`);
+
+            //如果缓存中没有获取到数据，则直接查询服务器
+            if(Betools.tools.isNull(role)){
+                time = curtime +  3600 * 24 * 365 * 3;
+                role = await this.queryRoleInfoDB(userinfo, resp, role, cacheKey);
+                console.log(`storage cache : ${curtime}`);
+            }
+
+            //如果缓存时间快到期，则重新查询数据
+            if((time - 3600 * 24 * 365 * 3 + 100 ) < curtime){
+                (async(queryRoleInfoDB, userinfo, resp, role, cacheKey) => {
+                    role = await queryRoleInfoDB(userinfo, resp, role, cacheKey);
+                })(this.queryRoleInfoDB , userinfo, resp, role, cacheKey);
+                console.log(`refresh cache : ${curtime}`);
+            }
+
+            //开启debugger模式
+            if(role.includes('COMMON_DEBUG_ADMIN') || role.includes('SEAL_ADMIN')) {
+                setTimeout(() => {
+                    window.vConsole = window.vConsole ? window.vConsole : new VConsole();
+                }, 300);
+            }
+
+            return role;
+        },
+
+        async queryRoleInfoDB(userinfo, resp = '', role = 'view', cacheKey = 'system_role_rights_v1') {
             try {
                 const username = userinfo && userinfo.username ? userinfo.username : '';
                 resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW', username);
@@ -178,93 +197,13 @@ export default {
                     role += ',COMMON_DEBUG_ADMIN';
                     window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
                 };
-                Betools.storage.setStore('system_role_rights_v1', role, 3600 * 24 * 31);
-                this.role = role;
-                console.log(`role:${role}, visit auth: ${role.includes('COMMON_VISIT_AUTH')}`);
+                Betools.storage.setStore(cacheKey, role, 3600 * 24 * 365 * 3);
                 return role;
             } catch (error) {
                 console.log(error);
             }
         },
-        async userLogin() {
-
-            //检查用户是否存在
-            let vuser = await queryUserInfoByView(this.username);
-
-            //显示加载状态
-            this.loading = true;
-
-            try {
-                if (Betools.tools.isNull(this.username)) {
-                    vant.Toast('请输入账号/手机/邮箱登录！');
-                } else if (Betools.tools.isNull(this.password)) {
-                    vant.Toast('请输入密码！');
-                } else if (Betools.tools.isNull(vuser)) {
-                    vant.Toast('此账户不存在！');
-                } else {
-                    let username = this.username;
-                    let password = this.password;
-                    let response = await superagent
-                        .post(loginURL)
-                        .send({
-                            "remember_me": true,
-                            "auto_login": false,
-                            "username": username,
-                            "password": password
-                        })
-                        .set('accept', 'application/json');
-
-                    if (!Betools.tools.isNull(response) && !Betools.tools.isNull(response.body) &&
-                        response.body.code == 200 && response.body.message == "登录成功") {
-                        let userinfo = response.body.result.userInfo;
-                        let token = response.body.result.token;
-                        let department = response.body.result.departs;
-                        userinfo.password = password;
-                        Betools.storage.setStore('system_linfo', JSON.stringify({
-                            username: username,
-                            password: password
-                        }), 3600 * 24 * 30);
-                        Betools.storage.setStore('system_userinfo', JSON.stringify(userinfo), 3600 * 24 * 30);
-                        Betools.storage.setStore('system_token', JSON.stringify(token), 3600 * 24 * 30);
-                        Betools.storage.setStore('system_department', JSON.stringify(department), 3600 * 24 * 30);
-                        Betools.storage.setStore('system_login_time', dayjs().format('YYYY-MM-DD HH:mm:ss'), 3600 * 24 * 30);
-                        vant.Toast('登录成功！');
-                        this.$router.push(`/explore`);
-                        this.loading = false;
-                    } else {
-                        vant.Toast('登录失败: ' + response.body.message);
-                        this.loading = false;
-                    }
-                }
-            } catch (error) {
-                this.loading = false;
-            }
-        },
-        async clearLoginInfo() {
-            try {
-                let info = await Betools.storage.getStore('system_linfo');
-                this.username = info.username;
-                this.password = info.password;
-                Betools.storage.clearStore('system_userinfo');
-                Betools.storage.clearStore('system_token');
-                Betools.storage.clearStore('system_department');
-                Betools.storage.clearStore('system_login_time');
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async userStatus() {
-            try {
-                let info = await Betools.storage.getStore('system_userinfo');
-                if (Betools.tools.isNull(info)) {
-                    vant.Toast('尚未登录！');
-                    await this.clearLoginInfo();
-                    this.$router.push(`/login`);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
+        
         async sealApply() {
             this.$router.push(`/app/sealinfo`);
         },
@@ -292,36 +231,7 @@ export default {
         async sealExport() {
             this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/sealexport`)) : (vant.Toast('您没有用印合同资料导出的权限！'));
         },
-        async goodsReceive(type) {
-            if (type == 'approve') {
-                this.role.includes('COMMON_RECEIVE_BORROW') ? (this.$router.push(`/app/goodslist?type=${type}`)) : (vant.Toast('您没有物品管理-物品领用角色的权限！'))
-            } else {
-                this.$router.push(`/app/goodsreceive?type=${type}`);
-            }
-        },
-        async goodsBorrow(type, name) {
-            //获取当前登录用户信息
-            const userinfo = await Betools.storage.getStore('system_userinfo');
-            if (type == 'approve') {
-                this.role.includes('COMMON_RECEIVE_BORROW') ? (this.$router.push(`/app/borrowlist?type=${type}`)) : (vant.Toast('您没有物品管理-物品借用角色的权限！'));
-            } else if (type == 'lostproperty') { //失物招领都有权限
-                if (name == 'apply') {
-                    this.$router.push(`/app/lostpropertyreceive?back=/app`);
-                } else if (name == 'clist') {
-                    this.$router.push(`/app/lostpropertyclist`);
-                } else if (name == 'approve') {
-                    this.$router.push(`/app/lostpropertylist`);
-                }
-            } else if (type == 'data') {
-                this.$router.push(`/app/commonmanage?type=${type}`);
-            } else if (type == 'history') {
-                this.$router.push(`/app/goodsmylist?type=${type}`);
-            } else if (type == 'equiphistory') {
-                this.$router.push(`/app/borrowmylist?type=${type}`);
-            } else {
-                this.$router.push(`/app/borrowreceive?type=${type}`);
-            }
-        },
+        
         /**
          * @function 奖罚申请
          */
@@ -409,41 +319,7 @@ export default {
         sealElectron() {
             window.open('http://seal.leading-group.com:18071/#/login', '_blank');
         },
-        // 修改界面样式
-        async changeStyle(name) {
-            try {
-                var name = window.location.hash.slice(2);
-                name = name.includes('?') ? name.split('?')[0] : name;
-                name = name.includes('/') ? name.split('/')[0] : name;
-                $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-exact-active');
-                $(`#wx-nav dl`).not(`#wx-nav-${name}`).removeClass('router-link-active');
-                $(`#wx-nav-${name}`).addClass('router-link-exact-active');
-                $(`#wx-nav-${name}`).addClass('router-link-active');
-                $('.app-footer').css('display', 'block'); // displayFoot
-                return $('.flex-layout-van-common')[0].children.length;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        // 查询首页图片
-        async queryImagesUrl() {
-            try {
-                const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前登录用户信息
-                let whereSQL = null; //查询SQL
-                let images = await Betools.storage.getStore('system_app_image'); // 获取缓存中的图片
-                if (!images) { // 如果存在图片数据，则直接使用图片数据
-                    whereSQL = userinfo && userinfo.userid == 9058 ? '~and(create_by,eq,zhaoziyu)~and(bpm_status,in,4,5)~and(type,eq,APP)' : `~and(bpm_status,in,4,5)~and(create_by,in,admin,manager)~and(type,eq,APP)`;
-                    images = await Betools.query.queryTableDataByWhereSQL('bs_home_pictures', `_where=(status,in,3)${whereSQL}&_fields=files&_sort=-id`);
-                    images.map(item => {
-                        item.files = `https://upload.yunwisdom.club:30443/${item.files}`;
-                    });
-                    Betools.storage.setStore('system_app_image', JSON.stringify(images), 3600 * 24 * 3);
-                }
-                return images;
-            } catch (error) {
-                console.log(error);
-            }
-        },
+
         // 查询定时任务，推送定时消息
         async queryCrontab() {
 
