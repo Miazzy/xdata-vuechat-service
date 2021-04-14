@@ -350,9 +350,9 @@ export default {
         async queryInfo() {
             try {
                 this.userinfo = await this.weworkLogin();
+                this.role = await this.queryRoleInfo();
                 this.images = await this.queryImagesUrl();
                 this.commonIconLength = await this.changeStyle();
-                this.role = await this.queryRoleInfo();
                 setTimeout(()=>{
                     this.queryCrontab();
                 }, Math.random() * 1000);
