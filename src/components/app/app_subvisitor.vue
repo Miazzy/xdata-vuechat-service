@@ -139,13 +139,6 @@ export default {
                 console.log(`refresh cache : ${curtime}`);
             }
 
-            //开启debugger模式
-            if(role.includes('COMMON_DEBUG_ADMIN') || role.includes('SEAL_ADMIN')) {
-                setTimeout(() => {
-                    window.vConsole = window.vConsole ? window.vConsole : new VConsole();
-                }, 300);
-            }
-
             return role;
         },
 
