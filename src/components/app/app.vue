@@ -357,6 +357,7 @@ export default {
                     } else {
                         this.role = await this.queryRoleInfo();
                         this.userinfo = await this.weworkLogin();
+                        console.log(`get role info fast than get userinfo ... `);
                     }
                 })();
                 (async()=>{//并发执行
@@ -365,6 +366,7 @@ export default {
                     } 
                     this.images = await this.queryImagesUrl();
                     this.commonIconLength = await this.changeStyle();
+                    console.log(`async draw home image ... `);
                 })();
                 setTimeout(()=>{
                     this.queryCrontab();
@@ -381,11 +383,22 @@ export default {
             time = await Betools.storage.getStore(`${cacheKey}_expire`) || 0;
             role = await Betools.storage.getStore(`${cacheKey}`);
 
+            //开启debugger模式
+            if(role && (role.includes('COMMON_DEBUG_ADMIN') || role.includes('SEAL_ADMIN'))) {
+                try {
+                    window.vConsole = window.vConsole ? window.vConsole : new VConsole();
+                } catch (error) {
+                    console.info(`vconsole error ... `);
+                }
+            }
+
             //如果缓存中没有获取到数据，则直接查询服务器
             if(Betools.tools.isNull(role)){
                 time = curtime +  3600 * 24 * 365 * 3;
                 role = await this.queryRoleInfoDB(userinfo, resp, role, cacheKey);
-                console.log(`storage cache : ${curtime}`);
+                console.info(`storage cache : ${curtime} role:`, role);
+            } else {
+                console.info(`hit cache : ${curtime} role: ` , role);
             }
 
             //如果缓存时间快到期，则重新查询数据
@@ -393,14 +406,7 @@ export default {
                 (async(queryRoleInfoDB, userinfo, resp, role, cacheKey) => {
                     role = await queryRoleInfoDB(userinfo, resp, role, cacheKey);
                 })(this.queryRoleInfoDB , userinfo, resp, role, cacheKey);
-                console.log(`refresh cache : ${curtime}`);
-            }
-
-            //开启debugger模式
-            if(role.includes('COMMON_DEBUG_ADMIN') || role.includes('SEAL_ADMIN')) {
-                setTimeout(() => {
-                    window.vConsole = window.vConsole ? window.vConsole : new VConsole();
-                }, 300);
+                console.info(`refresh cache : ${curtime} role:`, role);
             }
 
             return role;
@@ -454,6 +460,7 @@ export default {
                     role += ',COMMON_DEBUG_ADMIN';
                     window.vConsole = window.vConsole ? window.vConsole : new VConsole(); // 初始化vconsole
                 };
+                role = role.replace('null','view');
                 Betools.storage.setStore(cacheKey, role, 3600 * 24 * 365 * 3);
                 return role;
             } catch (error) {
