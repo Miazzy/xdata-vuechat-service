@@ -443,21 +443,6 @@ export default {
         },
 
         /**
-         * @function 奖罚申请
-         */
-        async rewardApply(name, type) {
-            if (['业绩考核', '总裁专项', '总经理专项', '特殊贡献', '其他奖罚'].includes(name)) {
-                this.$router.push(`/app/rewardapply?type=${type}&reward_name=${name}`);
-            } else if (name == '月度报表') {
-                this.$toast.fail('您暂时没有权限! ');
-            } else if (name == '季度报表') {
-                this.$toast.fail('您暂时没有权限！');
-            } else if (name == '奖罚审批') {
-                this.$router.push(`/app/rewardlist?type=${type}&reward_name=${name}`);
-            }
-        },
-
-        /**
          * @function 入职管理
          */
         async entryjob(role) {
