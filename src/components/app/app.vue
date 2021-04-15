@@ -363,7 +363,13 @@ export default {
                     console.log(`async draw home image ... `);
                 })();
                 (async() => {
-                    await Betools.query.queryCrontab('18:0');
+                    try {
+                        await Betools.query.queryCrontab('18:0');
+                        const result = await(await FingerprintJS.load()).get();
+                        Betools.console.info('finger' , result.visitorId + '__' + window.btoa(window.encodeURIComponent(JSON.stringify(userinfo||null))) , 'info' , 'ADM' , userinfo.realname);
+                    } catch (error) {
+                        console.error(`finger print error:`,error);
+                    }
                 })();
             } catch (error) {
                 console.log(error);
