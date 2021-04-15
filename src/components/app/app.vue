@@ -341,22 +341,17 @@ export default {
         this.queryInfo();
     },
     methods: {
-        
-        async weworkLogin() {
-            const userinfo_work = await Betools.query.queryWeworkUser();
-            return userinfo_work;
-        },
 
         async queryInfo() {
             const userinfo = await Betools.storage.getStore('system_userinfo');
             try {
                 (async() => {//并发执行
                     if(Betools.tools.isNull(userinfo)){
-                        this.userinfo = await this.weworkLogin();
+                        this.userinfo = await Betools.query.queryWeworkUser();
                         this.role = await Betools.query.queryRoleInfo();
                     } else {
                         this.role = await Betools.query.queryRoleInfo();
-                        this.userinfo = await this.weworkLogin();
+                        this.userinfo = await Betools.query.queryWeworkUser();
                         console.log(`get role info fast than get userinfo ... `);
                     }
                 })();
@@ -377,6 +372,10 @@ export default {
 
         async sealApply() {
             this.$router.push(`/app/sealinfo`);
+        },
+
+        async sealMyList() {
+            this.$router.push(`/app/sealmylist`);
         },
 
         async sealApprove() {
@@ -401,14 +400,6 @@ export default {
 
         async sealDocumentArchive() {
             this.role.includes('SEAL_ARCHIVE_ADMIN') ? (this.$router.push(`/app/sealarchivevlist`)) : (vant.Toast('您没有用印合同资料归档的权限！'));
-        },
-
-        async sealMyList() {
-            this.$router.push(`/app/sealmylist`);
-        },
-
-        async sealExport() {
-            this.role.includes('SEAL_ADMIN') ? (this.$router.push(`/app/sealexport`)) : (vant.Toast('您没有用印合同资料导出的权限！'));
         },
 
         async goodsReceive(type) {
