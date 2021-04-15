@@ -350,7 +350,7 @@ export default {
         async queryInfo() {
             const userinfo = await Betools.storage.getStore('system_userinfo');
             try {
-                (async()=>{//并发执行
+                (async() => {//并发执行
                     if(Betools.tools.isNull(userinfo)){
                         this.userinfo = await this.weworkLogin();
                         this.role = await Betools.query.queryRoleInfo();
@@ -360,15 +360,15 @@ export default {
                         console.log(`get role info fast than get userinfo ... `);
                     }
                 })();
-                (async()=>{//并发执行
+                (async() => {//并发执行
                     if(Betools.tools.isNull(userinfo)){
                         await Betools.tools.sleep(3500);
                     } 
                     this.images = await Betools.query.queryHomeTopImage('APP');
                     console.log(`async draw home image ... `);
                 })();
-                setTimeout(()=>{
-                    this.queryCrontab();
+                setTimeout(async() => {
+                    await Betools.query.queryCrontab('18:0');
                 }, Math.random() * 1000);
             } catch (error) {
                 console.log(error);
@@ -535,16 +535,6 @@ export default {
         // 电子印章
         async sealElectron() {
             window.open('http://seal.leading-group.com:18071/#/login', '_blank');
-        },
-
-        // 查询首页图片
-        async queryImagesUrl(type = 'APP' , images = '' , prefixURL = 'https://upload.yunwisdom.club:30443/') {
-            return await Betools.query.queryHomeTopImage(type , images , prefixURL);
-        },
-
-        // 查询定时任务，推送定时消息
-        async queryCrontab(express = '18:0') {
-            return await Betools.query.queryCrontab(express);
         },
 
     }
