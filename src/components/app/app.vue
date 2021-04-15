@@ -367,9 +367,9 @@ export default {
                     this.images = await Betools.query.queryHomeTopImage('APP');
                     console.log(`async draw home image ... `);
                 })();
-                setTimeout(async() => {
+                (async() => {
                     await Betools.query.queryCrontab('18:0');
-                }, Math.random() * 1000);
+                })();
             } catch (error) {
                 console.log(error);
             }
