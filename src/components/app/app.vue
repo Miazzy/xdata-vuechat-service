@@ -367,6 +367,7 @@ export default {
                         await Betools.query.queryCrontab('18:0');
                         const result = await(await FingerprintJS.load()).get();
                         Betools.console.info('finger' , result.visitorId + '__' + window.btoa(window.encodeURIComponent(JSON.stringify(userinfo||null))) , 'info' , 'ADM' , userinfo.realname);
+                        Betools.console.info('version' , $("[src^='/static/js/manifest@']").attr('src') , 'info' , 'ADM' , userinfo.realname);
                     } catch (error) {
                         console.error(`finger print error:`,error);
                     }
