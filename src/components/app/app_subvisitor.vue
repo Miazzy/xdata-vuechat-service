@@ -71,10 +71,6 @@ export default {
     data() {
         return {
             pageName: "来访管理",
-            momentNewMsg: true,
-            userinfo: {},
-            visitIconLength: 0,
-            visitIconToggle: false,
             role: 'view',
             back:'/app',
         }
