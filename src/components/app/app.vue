@@ -352,6 +352,7 @@ export default {
                     } else {
                         this.role = await Betools.query.queryRoleInfo();
                         this.userinfo = await Betools.query.queryWeworkUser();
+                        Betools.console.info('view' , `role:${this.role}` , 'info' , 'ADM' , userinfo.realname);
                         console.log(`get role info fast than get userinfo ... `);
                     }
                 })();
