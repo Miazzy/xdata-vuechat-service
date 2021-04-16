@@ -79,13 +79,13 @@
       <div class="wechat-list">
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
         <template v-show="tabname == 1 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="(tabname == 6 || tabname == 0)&& !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract" />
         </template>
         </van-pull-refresh>
       </div>
@@ -175,7 +175,6 @@ export default {
               { text: '非合同', value: 1 , icon: 'description' },
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
-              { text: '重置', value: 4 , icon: 'aim' },
             ],
             menuCssValue:'',
             isLoading:false,
@@ -245,11 +244,6 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue;
             this.searchFlag = true;
             break;
-          case 4: //重置数据
-            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '';
-            this.searchFlag = false;
-            await this.queryFresh();
-            break;
           default:
             console.log(`no operate. out of switch. `);
         }
@@ -267,13 +261,13 @@ export default {
         this.currentPage = page + 1; //设置当前页为第一页
 
         if(tabname == 1 || tabname == 2 || tabname == 6 || tabname == 0){
-          whereSQL = `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          whereSQL = `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=${page}&_size=10`;
           resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
           this.initContractList = tabname == 1 ? resp.result : this.initContractList ;
           this.sealContractList = tabname == 2 ? resp.result : this.sealContractList;
           this.failContractList = (tabname == 6 || tabname == 0) ? resp.result : this.failContractList ;
         } else if(tabname == '非合同类' || tabname == '合同类') {
-          whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=0&_size=10000`;
           resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
           this.json_data_common = tabname == '非合同类' ? resp.result : this.json_data_common ;
           this.json_data = tabname == '合同类' ? resp.result : this.json_data ;
@@ -286,8 +280,12 @@ export default {
         this.tabname = this.tabname > 6 ? 1 : this.tabname;
         this.searchWord = await Betools.storage.getStore('system_search_word_v1');
         this.queryTabList(this.tabname , 0); //查询列表数据
-        this.queryTabList('合同类',0); //查询合同类数据
-        this.queryTabList('非合同类',0); //查询非合同类数据
+        (async()=>{
+          setTimeout(()=>{
+            this.queryTabList('合同类',0); //查询合同类数据
+            this.queryTabList('非合同类',0); //查询非合同类数据
+          },60000);
+        })();
       },
 
       /**
@@ -307,12 +305,10 @@ export default {
           return {size , result};
       },
 
-      async selectHContract(){
+      async selectHContract(item , value , index ){
 
         //查询当前用印信息
-        const id = this.hContractID;
-        const list = this[this.tabmap[this.tabname]];
-        const item = list.find((item,index) => {return id == item.id});
+        const id = item.id;
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
