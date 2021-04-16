@@ -253,6 +253,7 @@ export default {
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
 
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        Betools.storage.setStore('system_seal_list_tabname' , tabname);
 
         let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近几个月对应的日期
         let searchSql = !this.searchWord ? '':`~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
@@ -272,20 +273,28 @@ export default {
           this.json_data_common = tabname == '非合同类' ? resp.result : this.json_data_common ;
           this.json_data = tabname == '合同类' ? resp.result : this.json_data ;
         }
+
         this.totalpages = resp.size;
+
       },
 
       async queryInfo(){
+        
+        const queryTabListInfo = this.queryTabList;
+
         this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
-        this.tabname = this.tabname > 6 ? 1 : this.tabname;
+        this.tabname = this.tabname >= 3 ? 6 : this.tabname <= 1 ? 1 : 2;
         this.searchWord = await Betools.storage.getStore('system_search_word_v1');
-        this.queryTabList(this.tabname , 0); //查询列表数据
-        (async()=>{
-          setTimeout(()=>{
-            this.queryTabList('合同类',0); //查询合同类数据
-            this.queryTabList('非合同类',0); //查询非合同类数据
-          },60000);
-        })();
+
+        queryTabListInfo(this.tabname , 0); //查询列表数据
+
+        setTimeout(() => {
+          Betools.tools.throttle(async () => {
+              queryTabListInfo('合同类',0); //查询合同类数据
+              queryTabListInfo('非合同类',0); //查询非合同类数据
+          }, 1000000)();
+        },30000);
+
       },
 
       /**
