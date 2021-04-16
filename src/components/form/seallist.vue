@@ -183,9 +183,7 @@ export default {
             currentPage:1,
         }
     },
-    activated() {
-        this.queryInfo();
-    },
+    activated() { },
     mounted() {
       this.queryInfo();
     },
@@ -206,8 +204,6 @@ export default {
       async queryFresh(){
         //刷新相应表单
         this.queryTabList(this.tabname , this.currentPage - 1);
-        //等待一下
-        await Betools.tools.sleep(300);
         //显示刷新消息
         vant.Toast('刷新成功');
         //设置加载状态
@@ -225,7 +221,6 @@ export default {
           this.queryTabList(this.tabname); //刷新相应表单
           vant.Toast('搜索...'); //显示搜索状态
           await Betools.storage.setStore('system_search_word_v1', this.searchWord, 60 * 5 );
-          await Betools.tools.sleep(300); //等待一下
         }
         this.searchFlag = false; //显示刷新消息
       },
@@ -251,106 +246,39 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '';
             this.searchFlag = false;
-            this.searchWord = '';
             await this.queryFresh();
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
       //点击Tab栏
-      async queryTabList(tabname , page = 0){
+      async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
 
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
 
-        // 获取最近6个月对应的日期
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        let sealTypeSql = '';
-        let searchSql = '';
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近几个月对应的日期
+        let searchSql = !this.searchWord ? '':`~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
+        let sealTypeSql = (this.sealType === 0 || tabname == '合同类')? `~and(seal_type,like,合同类)` : ((this.sealType === 1 || tabname == '非合同类')? `~and(seal_type,like,非合同类)` : '' );
+        let status = tabname == 1 ? '待用印' : (tabname == 2 ? '已用印,已领取,移交前台,财务归档,档案归档,已完成' : ( tabname == 6 || tabname == 0 ? '已退回' : ''));
+        this.currentPage = page + 1; //设置当前页为第一页
 
-        // 设置当前页为第一页
-        this.currentPage = page + 1;
-
-        if(this.sealType === 0) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
+        if(tabname == 1 || tabname == 2 || tabname == 6 || tabname == 0){
+          whereSQL = `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
+          resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          this.initContractList = tabname == 1 ? resp.result : this.initContractList ;
+          this.sealContractList = tabname == 2 ? resp.result : this.sealContractList;
+          this.failContractList = (tabname == 6 || tabname == 0) ? resp.result : this.failContractList ;
+        } else if(tabname == '非合同类' || tabname == '合同类') {
+          whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          this.json_data_common = tabname == '非合同类' ? resp.result : this.json_data_common ;
+          this.json_data = tabname == '合同类' ? resp.result : this.json_data ;
         }
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
-        }
-
-        if(tabname == 1){
-          const whereSQL = `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的待用印记录
-          this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.initContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-          this.initContractList.sort();
-        } else if(tabname == 2){
-          const whereSQL = `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的已用印记录
-          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.sealContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-          this.sealContractList.sort();
-        } else if(tabname == 6 || tabname == 0){
-          const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的已归档记录
-          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.failContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-          this.failContractList.sort();
-        } else if(tabname == '合同类') {
-          // 获取最近6个月对应的日期
-          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          //获取最近6个月的已归档记录
-          this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.json_data.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-          this.json_data.sort();
-        } else if(tabname == '非合同类') {
-          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-          const whereSQL = `_where=(status,ne,已测试)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          //获取最近6个月的已归档记录
-          this.json_data_common = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.json_data_common.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-          this.json_data_common.sort();
-        }
+        this.totalpages = resp.size;
       },
 
       async queryInfo(){
@@ -362,10 +290,24 @@ export default {
         this.queryTabList('非合同类',0); //查询非合同类数据
       },
 
-      async selectHContract(){
+      /**
+       * @param {*} tname 表名
+       * @param {*} tcondition whereSQL 
+       */
+      async querySealListByCondition(tname = 'bs_seal_regist ', tcondition){
+          let result = await Betools.manage.queryTableData(tname , tcondition);
+          let size = await Betools.manage.queryTableDataCount(tname , tcondition);
+          result.map((item , index) => {
+            item.name = item.filename.slice(0,16) ,
+            item.tel = '';
+            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
+            item.isDefault = true;
+          });
+          result.sort();
+          return {size , result};
+      },
 
-        //等待N毫秒
-        await Betools.tools.sleep(0);
+      async selectHContract(){
 
         //查询当前用印信息
         const id = this.hContractID;
@@ -375,31 +317,20 @@ export default {
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=seallist`);
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=seallist`); //跳转到相应的用印界面
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
           Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=seallist`);
+          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=seallist`); //跳转到相应的用印界面
         } else if(this.tabname == '2' || this.tabname == '3'){
           Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=seallist`);
-        } else if(this.tabname == '4' ){
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=seallist`); //跳转到相应的用印界面
+        } else if(this.tabname == '4' || this.tabname == '5' || this.tabname == '6' || this.tabname == '0' ){
           Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
-        } else if(this.tabname == '5' ){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
-        } else if(this.tabname == '6' ){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`);
-        }
+          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`); //跳转到相应的用印界面
+        } 
 
       },
+
       async changePage(){
         const page = this.currentPage;
         await this.queryTabList( this.tabname , page - 1 );
