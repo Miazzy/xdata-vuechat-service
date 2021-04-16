@@ -70,15 +70,6 @@
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已用印
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(3);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
-            已领取
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
-            已移交
-          </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 5 ; queryTabList(5);" :style="tabname == 5 ? `border-bottom: 2px solid #fe5050;font-weight:600;display:none;` : `border-bottom: 0px solid #329ff0;display:none;` ">
-            已归档
-          </div>
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 6 ; queryTabList(6);" :style="tabname == 6 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已退回
           </div>
@@ -92,15 +83,6 @@
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 3 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="receiveContractList" default-tag-text="已领取" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 4 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
-        </template>
-        <template v-show="tabname == 5 && !loading && !isLoading">
-            <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="(tabname == 6 || tabname == 0)&& !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract()" />
@@ -194,8 +176,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             menuCssValue:'',
             isLoading:false,
@@ -221,16 +201,7 @@ export default {
       }
     },
     methods: {
-      async userStatus(){
-        try {
-          let info = await Betools.storage.getStore('system_userinfo');
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
+      
       //刷新页面
       async queryFresh(){
         //刷新相应表单
@@ -242,10 +213,12 @@ export default {
         //设置加载状态
         this.isLoading = false;
       },
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -256,6 +229,7 @@ export default {
         }
         this.searchFlag = false; //显示刷新消息
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -283,12 +257,6 @@ export default {
             this.searchFlag = false;
             this.searchWord = '';
             await this.queryFresh();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
@@ -330,7 +298,6 @@ export default {
             item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           });
-
           this.initContractList.sort();
         } else if(tabname == 2){
           const whereSQL = `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
@@ -343,47 +310,7 @@ export default {
             item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           });
-
           this.sealContractList.sort();
-        } else if(tabname == 3){
-          const whereSQL = `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的已领取记录
-          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.receiveContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-
-          this.receiveContractList.sort();
-        } else if(tabname == 4){
-          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的已移交记录
-          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.frontContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-
-          this.frontContractList.sort();
-        } else if(tabname == 5){
-          const whereSQL = `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          //获取最近6个月的已归档记录
-          this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.doneContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          });
-
-          this.doneContractList.sort();
         } else if(tabname == 6 || tabname == 0){
           const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
           //获取最近6个月的已归档记录
@@ -395,7 +322,6 @@ export default {
             item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
             item.isDefault = true;
           });
-
           this.failContractList.sort();
         } else if(tabname == '合同类') {
           // 获取最近6个月对应的日期
@@ -426,8 +352,8 @@ export default {
           this.json_data_common.sort();
         }
       },
+
       async queryInfo(){
-        this.$forceUpdate(); //强制渲染
         this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname > 6 ? 1 : this.tabname;
         this.searchWord = await Betools.storage.getStore('system_search_word_v1');
@@ -435,6 +361,7 @@ export default {
         this.queryTabList('合同类',0); //查询合同类数据
         this.queryTabList('非合同类',0); //查询非合同类数据
       },
+
       async selectHContract(){
 
         //等待N毫秒
