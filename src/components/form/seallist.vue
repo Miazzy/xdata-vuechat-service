@@ -262,20 +262,17 @@ export default {
         this.currentPage = page + 1; //设置当前页为第一页
 
         if(tabname == 1 || tabname == 2 || tabname == 6 || tabname == 0){
-          whereSQL = `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=${page}&_size=10`;
-          resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          resp = await this.querySealListByConStatus(status, month, userinfo, sealTypeSql, searchSql, page);
           this.initContractList = tabname == 1 ? resp.result : this.initContractList ;
           this.sealContractList = tabname == 2 ? resp.result : this.sealContractList;
           this.failContractList = (tabname == 6 || tabname == 0) ? resp.result : this.failContractList ;
         } else if(tabname == '非合同类' || tabname == '合同类') {
-          whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=0&_size=10000`;
-          resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          resp = await this.querySealListByConType(userinfo,sealTypeSql,searchSql);
           this.json_data_common = tabname == '非合同类' ? resp.result : this.json_data_common ;
           this.json_data = tabname == '合同类' ? resp.result : this.json_data ;
         }
 
         this.totalpages = resp.size;
-
       },
 
       async queryInfo(){
@@ -293,8 +290,55 @@ export default {
               queryTabListInfo('合同类',0); //查询合同类数据
               queryTabListInfo('非合同类',0); //查询非合同类数据
           }, 1000000)();
-        },30000);
+        },3000);
 
+      },
+
+      async querySealListByConStatus(status, month, userinfo, sealTypeSql, searchSql, page){
+          const whereSQL = `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=${page}&_size=10`;
+          const resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          return resp;
+      },
+
+      /**
+     * 查询数据(先查缓存，未命中则查询数据库)
+     * @param {*} tableName
+     * @param {*} whereSQL
+     */
+     async querySealListByConType(userinfo,sealTypeSql,searchSql) {
+
+        const storage = Betools.storage;
+        let cacheKey = 'sys_seal_cache_' + sealTypeSql + '_#' + userinfo.username + '#_' + searchSql;
+        let time = await storage.getStoreDB(`${cacheKey}_expire`) || 0;
+        let data = await storage.getStoreDB(`${cacheKey}`);
+        let curtime = new Date().getTime() / 1000;
+
+        //如果缓存中没有获取到数据，则直接查询服务器
+        if (Betools.tools.isNull(data)) {
+            time = curtime + 3600 * 24 * 365 * 3;
+            data = await this.querySealListByConTypeDB(userinfo,sealTypeSql,searchSql);
+            console.info(`query table data storage cache : ${curtime} data:`, data);
+        } else {
+            console.info(`query table data hit cache : ${curtime} data: `, data);
+        }
+
+        //如果缓存时间快到期，则重新查询数据
+        if ((time - 3600 * 24 * 365 * 3 + 10800) < curtime) {
+            (async(userinfo,sealTypeSql,searchSql) => {
+                data = await this.querySealListByConTypeDB(userinfo,sealTypeSql,searchSql);
+            })(userinfo,sealTypeSql,searchSql);
+            console.info(`query table data refresh cache : ${curtime} data:`, data);
+        }
+
+        return data;
+    },
+
+      async querySealListByConTypeDB(userinfo,sealTypeSql,searchSql){
+          const cacheKey = 'sys_seal_cache_' + sealTypeSql + '_#' + userinfo.username + '#_' + searchSql;
+          const whereSQL = `_where=(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-id&_p=0&_size=30000`;
+          const resp = await this.querySealListByCondition('bs_seal_regist' , whereSQL); //获取最近几个月的待用印记录
+          Betools.storage.setStoreDB(cacheKey, resp, 3600 * 24 * 365 * 3);
+          return resp;
       },
 
       /**
