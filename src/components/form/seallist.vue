@@ -215,24 +215,15 @@ export default {
 
       //点击Tab栏
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
-        
-        resp = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
-        
-        this.initContractList = resp.initContractList;
-        this.sealContractList = resp.sealContractList;
-        this.failContractList = resp.failContractList;
-        this.json_data = resp.json_data;
-        this.json_data_common = resp.json_data_common;
-        this.totalpages = resp.size;
+        const response = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
+        this.initContractList = response.initContractList;
+        this.sealContractList = response.sealContractList;
+        this.failContractList = response.failContractList;
+        this.json_data = response.json_data;
+        this.json_data_common = response.json_data_common;
+        this.totalpages = response.resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
-
-        setTimeout(async()=>{
-          resp = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
-          this.initContractList = resp.initContractList;
-          this.sealContractList = resp.sealContractList;
-          this.failContractList = resp.failContractList;
-        }, 1500);
       },
 
       //查询用印列表信息
