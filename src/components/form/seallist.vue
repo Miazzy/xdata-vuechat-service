@@ -215,7 +215,6 @@ export default {
 
       //点击Tab栏
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
-        this.currentPage = page + 1; //设置当前页为第一页
         
         resp = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
         
@@ -225,7 +224,7 @@ export default {
         this.json_data = resp.json_data;
         this.json_data_common = resp.json_data_common;
         this.totalpages = resp.size;
-        
+        this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
       },
 
