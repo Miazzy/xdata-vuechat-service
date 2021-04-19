@@ -123,45 +123,9 @@ export default {
             doneContractList:[],
             failContractList:[],
             hContractID:'',
-            tabmap:{
-              '1': 'initContractList',
-              '2': 'sealContractList',
-              '3': 'receiveContractList',
-              '4': 'frontContractList',
-              '5': 'doneContractList',
-              '6': 'failContractList',
-            },
-            json_fields: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '文件名称':'filename',
-              '用印数量':'count',
-              '用印部门':'deal_depart',
-              '经办人员':'deal_manager',
-              '合同编号':'contract_id',
-              '签收人员':'signman',
-              '审批类型':'approve_type',
-              '关联流程':'workno',
-              '用印类型': 'seal_type',
-              '排序类型':'order_type',
-              '盖章人员': 'seal_man',
-              '用印状态': 'status',
-            },
-            json_fields_common: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '文件名称':'filename',
-              '用印数量':'count',
-              '用印部门':'deal_depart',
-              '经办人员':'deal_manager',
-              '签收人员':'signman',
-              '审批类型':'approve_type',
-              '关联流程':'workno',
-              '用印类型': 'seal_type',
-              '排序类型':'order_type',
-              '盖章人员': 'seal_man',
-              '用印状态': 'status',
-            },
+            tabmap: Betools.sealapply.querySealExportFields().sealApplyATypeList,
+            json_fields: Betools.sealapply.querySealExportFields().json_fields,
+            json_fields_common: Betools.sealapply.querySealExportFields().json_fields_common,
             json_data: [],
             json_data_common: [],
             sealType:'',
@@ -261,15 +225,17 @@ export default {
         let status = tabname == 1 ? '待用印' : (tabname == 2 ? '已用印,已领取,移交前台,财务归档,档案归档,已完成' : ( tabname == 6 || tabname == 0 ? '已退回' : ''));
         this.currentPage = page + 1; //设置当前页为第一页
 
+        let {initContractList , sealContractList , failContractList , json_data , json_data_common } = this;
+
         if(tabname == 1 || tabname == 2 || tabname == 6 || tabname == 0){
           resp = await Betools.manage.querySealListByConStatus(status, month, userinfo, sealTypeSql, searchSql, page);
-          this.initContractList = tabname == 1 ? resp.result : this.initContractList ;
-          this.sealContractList = tabname == 2 ? resp.result : this.sealContractList;
-          this.failContractList = (tabname == 6 || tabname == 0) ? resp.result : this.failContractList ;
+          initContractList = tabname == 1 ? resp.result : initContractList ;
+          sealContractList = tabname == 2 ? resp.result : sealContractList;
+          failContractList = (tabname == 6 || tabname == 0) ? resp.result : failContractList ;
         } else if(tabname == '非合同类' || tabname == '合同类') {
           resp = await Betools.manage.querySealListByConType(userinfo,sealTypeSql,searchSql);
-          this.json_data_common = tabname == '非合同类' ? resp.result : this.json_data_common ;
-          this.json_data = tabname == '合同类' ? resp.result : this.json_data ;
+          json_data_common = tabname == '非合同类' ? resp.result : json_data_common ;
+          json_data = tabname == '合同类' ? resp.result : json_data ;
         }
 
         this.totalpages = resp.size;
@@ -288,32 +254,16 @@ export default {
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据
             queryTabListInfo('非合同类',0); //查询非合同类数据
-        }, 1000000 , 100000)();
+        }, 1000000 , 10000)();
 
       },
 
+      //跳转到用印合同详情
       async selectHContract(item , value , index ){
-
-        //查询当前用印信息
-        const id = item.id;
-
-        //根据当前状态，跳转到不同页面
-        if(this.tabname == '1'){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&back=seallist`); //跳转到相应的用印界面
-        } else if(this.tabname == '2' && item.seal_type == '非合同类'){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=seallist`); //跳转到相应的用印界面
-        } else if(this.tabname == '2' || this.tabname == '3'){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=seallist`); //跳转到相应的用印界面
-        } else if(this.tabname == '4' || this.tabname == '5' || this.tabname == '6' || this.tabname == '0' ){
-          Betools.storage.setStore('system_seal_list_tabname' , this.tabname);
-          this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=seallist`); //跳转到相应的用印界面
-        } 
-
+        Betools.sealapply.redirectSealContractInfo(item , this.tabname , this.$router);
       },
 
+      //分页查询并跳转下一页
       async changePage(){
         const page = this.currentPage;
         await this.queryTabList( this.tabname , page - 1 );
