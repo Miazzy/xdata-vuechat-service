@@ -256,8 +256,7 @@ export default {
 
       //分页查询并跳转下一页
       async changePage(){
-        const page = this.currentPage;
-        await this.queryTabList( this.tabname , page - 1 );
+        await this.queryTabList( this.tabname , this.currentPage - 1 );
       },
     }
 }
