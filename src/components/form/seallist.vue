@@ -215,35 +215,17 @@ export default {
 
       //点击Tab栏
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
-
-        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
-
-        let {initContractList , sealContractList , failContractList , json_data , json_data_common } = this;
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近几个月对应的日期
-        let searchSql = !this.searchWord ? '':`~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
-        let sealTypeSql = (this.sealType === 0 || tabname == '合同类')? `~and(seal_type,like,合同类)` : ((this.sealType === 1 || tabname == '非合同类')? `~and(seal_type,like,非合同类)` : '' );
-        let status = tabname == 1 ? '待用印' : (tabname == 2 ? '已用印,已领取,移交前台,财务归档,档案归档,已完成' : ( tabname == 6 || tabname == 0 ? '已退回' : ''));
-
-
-        if(tabname == 1 || tabname == 2 || tabname == 6 || tabname == 0){
-          resp = await Betools.manage.querySealListByConStatus(status, month, userinfo, sealTypeSql, searchSql, page);
-          initContractList = tabname == 1 ? resp.result : initContractList ;
-          sealContractList = tabname == 2 ? resp.result : sealContractList;
-          failContractList = (tabname == 6 || tabname == 0) ? resp.result : failContractList ;
-        } else if(tabname == '非合同类' || tabname == '合同类') {
-          resp = await Betools.manage.querySealListByConType(userinfo,sealTypeSql,searchSql);
-          json_data_common = tabname == '非合同类' ? resp.result : json_data_common ;
-          json_data = tabname == '合同类' ? resp.result : json_data ;
-        }
-
         this.currentPage = page + 1; //设置当前页为第一页
-        this.initContractList = initContractList;
-        this.sealContractList = sealContractList;
-        this.failContractList = failContractList;
-        this.json_data = json_data;
-        this.json_data_common = json_data_common;
+        
+        resp = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
+        
+        this.initContractList = resp.initContractList;
+        this.sealContractList = resp.sealContractList;
+        this.failContractList = resp.failContractList;
+        this.json_data = resp.json_data;
+        this.json_data_common = resp.json_data_common;
         this.totalpages = resp.size;
-
+        
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
       },
 
@@ -251,11 +233,11 @@ export default {
       async queryInfo(){
         
         const queryTabListInfo = this.queryTabList;
+        this.searchWord = await Betools.storage.getStore('system_search_word_v1');
+
         this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname >= 3 ? 6 : this.tabname <= 1 ? 1 : 2;
         const tabname = this.tabname ;
-
-        this.searchWord = await Betools.storage.getStore('system_search_word_v1');
 
         Betools.tools.throttle(async () => {
             queryTabListInfo(tabname, 0); //查询列表数据
