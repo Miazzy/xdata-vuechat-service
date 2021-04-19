@@ -232,7 +232,7 @@ export default {
           this.initContractList = resp.initContractList;
           this.sealContractList = resp.sealContractList;
           this.failContractList = resp.failContractList;
-        }, 5000);
+        }, 1500);
       },
 
       //查询用印列表信息
@@ -247,7 +247,7 @@ export default {
 
         Betools.tools.throttle(async () => {
             queryTabListInfo(tabname, 0); //查询列表数据
-        }, 10000 , 0)();
+        }, 300 , 0)();
 
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据
