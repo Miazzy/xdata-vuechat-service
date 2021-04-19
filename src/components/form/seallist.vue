@@ -245,7 +245,7 @@ export default {
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据
             queryTabListInfo('非合同类',0); //查询非合同类数据
-        }, 1000000 , 10000)();
+        }, 1000000 , 1000000)();
 
       },
 
