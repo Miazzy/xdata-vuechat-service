@@ -226,6 +226,13 @@ export default {
         this.totalpages = resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
+
+        setTimeout(async()=>{
+          resp = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
+          this.initContractList = resp.initContractList;
+          this.sealContractList = resp.sealContractList;
+          this.failContractList = resp.failContractList;
+        }, 5000);
       },
 
       //查询用印列表信息
@@ -240,7 +247,7 @@ export default {
 
         Betools.tools.throttle(async () => {
             queryTabListInfo(tabname, 0); //查询列表数据
-        }, 1000000 , 0)();
+        }, 10000 , 0)();
 
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据
