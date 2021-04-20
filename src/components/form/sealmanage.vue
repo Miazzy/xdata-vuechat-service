@@ -251,17 +251,10 @@ export default {
 
         // 获取最近数月对应的日期
         let month = dayjs().subtract(36, 'months').format('YYYY-MM-DD');
-        let sealTypeSql = '';
         let searchSql = '';
 
         // 设置当前页为第一页
         this.currentPage = page + 1;
-
-        if(this.sealType === 0) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-        }
 
         //如果存在搜索关键字
         if(this.searchWord) {
@@ -269,56 +262,12 @@ export default {
         }
 
         if(tabname == '合同类') {
-          // sealTypeSql = `~and(seal_type,like,合同类)`;
-          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          // this.json_data.map((item , index) => {
-          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.status_w = this.statusType_w[item.status];
-          //   item.status = this.statusType[item.status];
-          // });
-          // this.json_data.sort();
           this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '非合同类') {
-          // sealTypeSql = `~and(seal_type,like,非合同类)`;
-          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          // this.json_data.map((item , index) => {
-          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.status_w = this.statusType_w[item.status];
-          //   item.status = this.statusType[item.status];
-          // });
-          // this.json_data.sort();
           this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '非合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '财务归档') {
-          // sealTypeSql = `~and(seal_type,like,合同类)`;
-          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist_finance' , whereSQL);
-          // this.json_data.map((item , index) => {
-          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.status_w = this.statusType_w[item.status];
-          //   item.status = this.statusType[item.status];
-          // });
-          // this.json_data.sort();
           this.json_data = await this.querySealApplyTypeList('bs_seal_regist_finance' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '档案归档') {
-          // sealTypeSql = `~and(seal_type,like,合同类)`;
-          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist_archive' , whereSQL);
-          // this.json_data.map((item , index) => {
-          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-          //   item.status_w = this.statusType_w[item.status];
-          //   item.status = this.statusType[item.status];
-          // });
-          // this.json_data.sort();
           this.json_data = await this.querySealApplyTypeList('bs_seal_regist_archive' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         }
       },
