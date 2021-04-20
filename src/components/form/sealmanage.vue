@@ -14,6 +14,34 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
+                  <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_contract"
+                        :fields="json_fields_contract"
+                        worksheet="用印台账_全部"
+                        name="用印台账_合同类_全部.xls"
+                      >
+                        导出台账(合同)
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
+                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
+                   <template #title>
+                    <span class="custom-title">
+                      <download-excel
+                        :data="json_data_common"
+                        :fields="json_fields_common"
+                        worksheet="用印台账_全部"
+                        name="用印台账_非合同类_全部.xls"
+                      >
+                        导出台账(非合同)
+                      </download-excel>
+                    </span>
+                  </template>
+                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -84,23 +112,12 @@ export default {
               '5': 'doneContractList',
               '6': 'failContractList',
             },
-            json_fields: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '文件名称':'filename',
-              '用印数量':'count',
-              '用印部门':'deal_depart',
-              '经办人员':'deal_manager',
-              '合同编号':'contract_id',
-              '签收人员':'sign_man',
-              '审批类型':'approve_type',
-              '关联流程':'workno',
-              '用印类型': 'seal_type',
-              '排序类型':'order_type',
-              '盖章人员': 'seal_man',
-              '用印状态': 'status',
-            },
+            json_fields: Betools.sealapply.querySealExportFields().json_fields,
             json_data: [],
+            json_fields_contract: Betools.sealapply.querySealExportFields().json_fields,
+            json_data_contract:[],
+            json_fields_common: Betools.sealapply.querySealExportFields().json_fields_common,
+            json_data_common:[],
             sealType:'',
             searchWord:'',
             totalpages:5,
@@ -131,6 +148,7 @@ export default {
     activated() { },
     mounted() {
       this.queryInfo('合同类', this.searchWord , this.statusType);
+      this.queryTabList();
     },
     watch: {
       $route(to, from) {
@@ -144,7 +162,7 @@ export default {
       }
     },
     methods: {
-      
+
       exportAsExcel () {
           this.$refs.grid.exportTable('xlsx', true, '用印登记表单');
       },
@@ -244,6 +262,13 @@ export default {
 
       async queryInfo(typeName, searchWord, statusType){
         this.json_data = await Betools.sealapply.queryTabSealApplyTypeList(typeName, searchWord , statusType); //查询合同类数据
+      },
+
+      async queryTabList(page = 0 , whereSQL = '',  resp = ''){
+        const response = await Betools.sealapply.querySealApplyTabList('合同类' , page , whereSQL , resp , '' , 0 );
+        const response_ = await Betools.sealapply.querySealApplyTabList('非合同类' , page , whereSQL , resp, '' , 1);
+        this.json_data_contract = response.json_data;
+        this.json_data_common = response_.json_data_common;
       },
 
     }

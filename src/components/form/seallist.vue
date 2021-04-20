@@ -215,7 +215,7 @@ export default {
 
       //点击Tab栏
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
-        const response = await Betools.sealapply.querySealApplyTabList(tabname , page , whereSQL , resp);
+        const response = await Betools.sealapply.querySealApplyTabList(tabname, page, whereSQL, resp, this.searchWord , this.sealType);
         this.initContractList = response.initContractList;
         this.sealContractList = response.sealContractList;
         this.failContractList = response.failContractList;
@@ -243,7 +243,7 @@ export default {
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据
             queryTabListInfo('非合同类',0); //查询非合同类数据
-        }, 1000000 , 1000000)();
+        }, 1000000 , 15000)();
 
       },
 
