@@ -113,11 +113,6 @@ export default {
               { text: '非合同', value: 1 , icon: 'description' },
               { text: '财务台账', value: 20 , icon: 'records' },
               { text: '档案台账', value: 21 , icon: 'description' },
-              { text: '刷新', value: 2 , icon: 'replay' },
-              { text: '搜索', value: 3 , icon: 'search' },
-              { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
               { text: '导出', value: 7 , icon: 'description' },
             ],
             menuCssValue:'',
@@ -202,17 +197,6 @@ export default {
       encodeURI(value){
         return window.encodeURIComponent(value);
       },
-      //刷新页面
-      async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname , this.currentPage - 1);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
-      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -221,7 +205,7 @@ export default {
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
-          this.queryTabList(this.tabname);
+          this.queryTabList('合同类',0); //查询合同类数据
           //显示搜索状态
           vant.Toast('搜索...');
           //等待一下
@@ -236,12 +220,10 @@ export default {
         switch (val) {
           case 0: //只显示合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            //await this.queryFresh();
             this.queryTabList('合同类',0);
             break;
           case 1: //只显示非合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            //await this.queryFresh();
             await this.queryTabList('非合同类',0);
             break;
           case 20: //只显示财务归档类信息
@@ -251,28 +233,6 @@ export default {
           case 21: //只显示档案归档类信息
             this.dropMenuOldValue = this.sealType = val;
             await this.queryTabList('档案归档',0);
-            break;
-          case 2: //刷新数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            await this.queryFresh();
-            break;
-          case 3: //查询数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            this.searchFlag = true;
-            break;
-          case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
-            this.searchFlag = false;
-            this.searchWord = '';
-            await this.queryFresh();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           case 7: //导出表单
             this.dropMenuValue = '';
@@ -290,7 +250,7 @@ export default {
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
         // 获取最近数月对应的日期
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+        let month = dayjs().subtract(36, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
 
@@ -308,135 +268,75 @@ export default {
           searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
         }
 
-        if(tabname == 1){
-          const whereSQL = `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.initContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.initContractList.sort();
-        } else if(tabname == 2){
-          const whereSQL = `_where=(status,eq,已用印)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.sealContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.sealContractList.sort();
-        } else if(tabname == 3){
-          const whereSQL = `_where=(status,eq,已领取)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.receiveContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.receiveContractList.sort();
-        } else if(tabname == 4){
-          const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.frontContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.frontContractList.sort();
-        } else if(tabname == 5){
-          const whereSQL = `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.doneContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.doneContractList.sort();
-        } else if(tabname == 6 || tabname == 0){
-          const whereSQL = `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=10`;
-          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.totalpages = await Betools.manage.queryTableDataCount('bs_seal_regist' , whereSQL);
-          this.failContractList.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status = this.statusType[item.status];
-          });
-
-          this.failContractList.sort();
-        } else if(tabname == '合同类') {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.json_data.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status_w = this.statusType_w[item.status];
-            item.status = this.statusType[item.status];
-          });
-          this.json_data.sort();
+        if(tabname == '合同类') {
+          // sealTypeSql = `~and(seal_type,like,合同类)`;
+          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          // this.json_data.map((item , index) => {
+          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.status_w = this.statusType_w[item.status];
+          //   item.status = this.statusType[item.status];
+          // });
+          // this.json_data.sort();
+          this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '非合同类') {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-          const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
-          this.json_data.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status_w = this.statusType_w[item.status];
-            item.status = this.statusType[item.status];
-          });
-          this.json_data.sort();
+          // sealTypeSql = `~and(seal_type,like,非合同类)`;
+          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist' , whereSQL);
+          // this.json_data.map((item , index) => {
+          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.status_w = this.statusType_w[item.status];
+          //   item.status = this.statusType[item.status];
+          // });
+          // this.json_data.sort();
+          this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '非合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '财务归档') {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await Betools.manage.queryTableData('bs_seal_regist_finance' , whereSQL);
-          this.json_data.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status_w = this.statusType_w[item.status];
-            item.status = this.statusType[item.status];
-          });
-          this.json_data.sort();
+          // sealTypeSql = `~and(seal_type,like,合同类)`;
+          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist_finance' , whereSQL);
+          // this.json_data.map((item , index) => {
+          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.status_w = this.statusType_w[item.status];
+          //   item.status = this.statusType[item.status];
+          // });
+          // this.json_data.sort();
+          this.json_data = await this.querySealApplyTypeList('bs_seal_regist_finance' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         } else if(tabname == '档案归档') {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-          const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
-          this.json_data = await Betools.manage.queryTableData('bs_seal_regist_archive' , whereSQL);
-          this.json_data.map((item , index) => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-            item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
-            item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
-            item.status_w = this.statusType_w[item.status];
-            item.status = this.statusType[item.status];
-          });
-          this.json_data.sort();
+          // sealTypeSql = `~and(seal_type,like,合同类)`;
+          // const whereSQL = `_where=(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+          // this.json_data = await Betools.manage.queryTableData('bs_seal_regist_archive' , whereSQL);
+          // this.json_data.map((item , index) => {
+          //   item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+          //   item.status_w = this.statusType_w[item.status];
+          //   item.status = this.statusType[item.status];
+          // });
+          // this.json_data.sort();
+          this.json_data = await this.querySealApplyTypeList('bs_seal_regist_archive' , '合同类',  month , searchSql , userinfo , this.statusType , this.statusType_w);
         }
       },
-      async queryInfo(){
-        this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
-        this.tabname = this.tabname > 6 ? 1 : this.tabname;
-        this.queryTabList('合同类',0); //查询合同类数据
+      async querySealApplyTypeList(tableName = 'bs_seal_regist', typeName = '合同类' , month , searchSql , userinfo , statusType , statusType_w){
+        const sealTypeSql = `~and(seal_type,like,${typeName})`;
+        const whereSQL = `_where=(status,ne,已作废)~and(create_time,gt,${month})~and(seal_group_ids,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+        const tlist = await Betools.manage.queryTableData(tableName , whereSQL);
+        tlist.map((item , index) => {
+          item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
+          item.seal_time = dayjs(item.seal_time).format('YYYY-MM-DD HH:mm:ss');
+          item.receive_time = dayjs(item.receive_time).format('YYYY-MM-DD HH:mm:ss');
+          item.status_w = statusType_w[item.status];
+          item.status = statusType[item.status];
+        });
+        return tlist;
       },
-      async changePage(){
-        await this.queryTabList( this.tabname , this.currentPage - 1 );
+      async queryInfo(){
+        this.queryTabList('合同类',0); //查询合同类数据
       },
     }
 }
