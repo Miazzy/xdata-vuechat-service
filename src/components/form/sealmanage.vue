@@ -236,7 +236,7 @@ export default {
         }
       },
 
-      async queryTabList(typeName, searchWord, statusType){
+      async queryTabSealApplyTypeList(typeName, searchWord, statusType){
         let json_data = null;
         if(typeName == '合同类' || typeName == '非合同类') {
           json_data = await this.querySealApplyTypeList('bs_seal_regist' , typeName , searchWord , statusType);
@@ -265,7 +265,7 @@ export default {
       },
 
       async queryInfo(typeName, searchWord, statusType){
-        this.json_data = await this.queryTabList(typeName, searchWord , statusType); //查询合同类数据
+        this.json_data = await this.queryTabSealApplyTypeList(typeName, searchWord , statusType); //查询合同类数据
       },
     }
 }
