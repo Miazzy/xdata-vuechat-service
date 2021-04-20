@@ -165,12 +165,9 @@ export default {
       
       //刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname , this.currentPage - 1);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname , this.currentPage - 1); //刷新相应表单
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false; //设置加载状态
       },
 
       //点击显示或者隐藏菜单
@@ -180,11 +177,9 @@ export default {
 
       //点击顶部搜索
       async headMenuSearch(){
-        if(this.searchWord){
-          this.queryTabList(this.tabname); //刷新相应表单
-          vant.Toast('搜索...'); //显示搜索状态
-          await Betools.storage.setStore('system_search_word_v1', this.searchWord, 60 * 5 );
-        }
+        this.queryTabList(this.tabname); //刷新相应表单
+        vant.Toast('搜索...'); //显示搜索状态
+        await Betools.storage.setStore('system_search_word_v1', this.searchWord, 100);
         this.searchFlag = false; //显示刷新消息
       },
 
