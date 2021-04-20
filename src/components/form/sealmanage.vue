@@ -128,11 +128,9 @@ export default {
             statusType_w:{'待用印':'待用印','已用印':'已用印','已领取':'已领取','移交前台':'移交前台','财务归档':'财务归档','档案归档':'档案归档','已完成':'已完成','已退回':'已退回','已作废':'已作废','已测试':'已作废'},
         }
     },
-    activated() {
-      this.queryInfo();
-    },
+    activated() { },
     mounted() {
-      this.queryInfo();
+      this.queryInfo('合同类', this.searchWord , this.statusType);
     },
     watch: {
       $route(to, from) {
@@ -193,22 +191,17 @@ export default {
           await Betools.manage.patchTableData('bs_seal_regist' , item.id , elem);
         }
       },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
       //点击顶部搜索
       async headMenuSearch(){
-        if(this.searchWord){
+        if(searchWord){
           //刷新相应表单
-          this.queryTabList('合同类',0); //查询合同类数据
+          this.queryInfo('合同类', this.searchWord , this.statusType); //查询合同类数据
           //显示搜索状态
           vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
         }
         //显示刷新消息
         this.searchFlag = false;
@@ -219,19 +212,19 @@ export default {
         switch (val) {
           case 0: //只显示合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            this.queryTabList('合同类',0);
+            this.queryInfo('合同类', this.searchWord , this.statusType);
             break;
           case 1: //只显示非合同类信息
             this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList('非合同类',0);
+            this.queryInfo('非合同类', this.searchWord , this.statusType);
             break;
           case 20: //只显示财务归档类信息
             this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList('财务归档',0);
+            this.queryInfo('财务归档', this.searchWord , this.statusType);
             break;
           case 21: //只显示档案归档类信息
             this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList('档案归档',0);
+            this.queryInfo('档案归档', this.searchWord , this.statusType);
             break;
           case 7: //导出表单
             this.dropMenuValue = '';
@@ -242,17 +235,17 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
-      //点击Tab栏
-      async queryTabList(tabname , page = 0){
-        if(tabname == '合同类') {
-          this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '合同类' , this.searchWord  , this.statusType);
-        } else if(tabname == '非合同类') {
-          this.json_data = await this.querySealApplyTypeList('bs_seal_regist' , '非合同类' , this.searchWord , this.statusType);
-        } else if(tabname == '财务归档') {
-          this.json_data = await this.querySealApplyTypeList('bs_seal_regist_finance' , '合同类' , this.searchWord , this.statusType);
-        } else if(tabname == '档案归档') {
-          this.json_data = await this.querySealApplyTypeList('bs_seal_regist_archive' , '合同类' , this.searchWord , this.statusType);
+
+      async queryTabList(typeName, searchWord, statusType){
+        let json_data = null;
+        if(typeName == '合同类' || typeName == '非合同类') {
+          json_data = await this.querySealApplyTypeList('bs_seal_regist' , typeName , searchWord , statusType);
+        } else if(typeName == '财务归档') {
+          json_data = await this.querySealApplyTypeList('bs_seal_regist_finance' , '合同类' , searchWord , statusType);
+        } else if(typeName == '档案归档') {
+          json_data = await this.querySealApplyTypeList('bs_seal_regist_archive' , '合同类' , searchWord , statusType);
         }
+        return json_data;
       },
 
       async querySealApplyTypeList(tableName = 'bs_seal_regist', typeName = '合同类'  , searchWord , statusType ){
@@ -270,8 +263,9 @@ export default {
         });
         return tlist;
       },
-      async queryInfo(){
-        this.queryTabList('合同类',0); //查询合同类数据
+
+      async queryInfo(typeName, searchWord, statusType){
+        this.json_data = await this.queryTabList(typeName, searchWord , statusType); //查询合同类数据
       },
     }
 }
