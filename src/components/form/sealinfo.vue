@@ -344,9 +344,20 @@ export default {
             if((Betools.tools.isNull(data) || data.length == 0)){
                 //查询数据库的公司列表信息
                 data = await Betools.manage.queryTableData('bs_company_flow_base', `_where=(status,in,0)~and(level,gt,2)~and(name,like,~${key}~)&_fields=id,ename,name,xid&_sort=id&_p=0&_size=30`); // 获取最近12个月的已用印记录
-                data.map((item, index) => { item.title = item.code = item.name; });
-                return this.companyColumns = data;
+                if(!(Betools.tools.isNull(data) || data.length == 0)){
+                    data.map((item, index) => { item.title = item.code = item.name; });
+                    return this.companyColumns = data;
+                }
             }
+
+            //查询数据库未搜索到，则向数据库提交此公司名称
+            if((Betools.tools.isNull(data) || data.length == 0) && key && key.length >= 6){
+                //新增此数据库名称
+                Betools.manage.postTableData('bs_company_flow_base',{id:Betools.tools.queryUniqueID(),ename:key,name:key,level:200,xid:0});
+                //返回数据
+                return this.companyColumns = data = [{title:key,code:key,name:key}];
+            }
+
 
         },
         confirmCategory(data1, index, data2) { // checkbox确定,
