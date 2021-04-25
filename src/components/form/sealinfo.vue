@@ -358,7 +358,6 @@ export default {
                 return this.companyColumns = data = [{title:key,code:key,name:key}];
             }
 
-
         },
         confirmCategory(data1, index, data2) { // checkbox确定,
             console.log(data1, data2, index)
