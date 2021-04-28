@@ -1395,6 +1395,14 @@ export default {
           console.log(error);
         }
 
+        //事先查询一次用印审批列表
+        (async()=>{
+          Betools.tools.throttle(async () => {
+            Betools.sealapply.querySealApplyTabList(1);
+            Betools.sealapply.querySealApplyTabList(2);
+          }, 3000 , 100)();
+        })();
+
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
