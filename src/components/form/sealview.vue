@@ -1394,20 +1394,16 @@ export default {
           console.log(error);
         }
 
-        //事先查询一次用印审批列表
-        (async()=>{
-          Betools.tools.throttle(async () => {
-            Betools.sealapply.querySealApplyTabList(1, 0, '', '');
-            Betools.sealapply.querySealApplyTabList(2, 0, '', '');
-          }, 300 , 3000)();
-        })();
-
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
           message: message,
         });
 
+        Betools.tools.throttle(async () => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '');
+          Betools.sealapply.querySealApplyTabList(2, 0, '', '');
+        }, 300 , 1000)();
       },
       /**
        * @function 处理作废操作
@@ -1511,14 +1507,6 @@ export default {
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
 
-        //事先查询一次用印审批列表
-        (async()=>{
-          Betools.tools.throttle(async () => {
-            Betools.sealapply.querySealApplyTabList(1, 0, '', '');
-            Betools.sealapply.querySealApplyTabList(2, 0, '', '');
-          }, 300 , 3000)();
-        })();
-
         //弹出用印推送成功提示
         await vant.Dialog.alert({
           title: '温馨提示',
@@ -1566,6 +1554,11 @@ export default {
         } catch (error) {
           console.log(error);
         }
+
+        Betools.tools.throttle(async () => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '');
+          Betools.sealapply.querySealApplyTabList(2, 0, '', '');
+        }, 300 , 1000)();
 
       },
 
