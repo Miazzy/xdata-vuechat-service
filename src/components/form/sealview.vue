@@ -1241,7 +1241,6 @@ export default {
         }
 
         //检查合同编号是否出现跳号现象，如果存在则提示管理员，合同编号出现跳号，请编写连续的合同编号
-        debugger;
 
         // 用印前，检查合同编号是否已经存在
         const cresponse = await Betools.query.queryTableDataByWhereSQL('bs_seal_regist', `_where=(contract_id,eq,${contract_id})~and(status,in,已用印,已领取,财务归档,已寄送,档案归档,移交前台)`, );
@@ -1511,6 +1510,14 @@ export default {
         this.item.sealtime = time;
 
         //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
+
+        //事先查询一次用印审批列表
+        (async()=>{
+          Betools.tools.throttle(async () => {
+            Betools.sealapply.querySealApplyTabList(1);
+            Betools.sealapply.querySealApplyTabList(2);
+          }, 3000 , 100)();
+        })();
 
         //弹出用印推送成功提示
         await vant.Dialog.alert({
