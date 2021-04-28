@@ -1397,9 +1397,10 @@ export default {
         //事先查询一次用印审批列表
         (async()=>{
           Betools.tools.throttle(async () => {
-            Betools.sealapply.querySealApplyTabList(1);
-            Betools.sealapply.querySealApplyTabList(2);
-          }, 5000 , 1500)();
+            Betools.sealapply.querySealApplyTabList(1, 0, '', '');
+            Betools.sealapply.querySealApplyTabList(2, 0, '', '');
+            debugger;
+          }, 300 , 1500)();
         })();
 
         //弹出用印推送成功提示
@@ -1514,9 +1515,10 @@ export default {
         //事先查询一次用印审批列表
         (async()=>{
           Betools.tools.throttle(async () => {
-            Betools.sealapply.querySealApplyTabList(1);
-            Betools.sealapply.querySealApplyTabList(2);
-          }, 5000 , 1500)();
+            Betools.sealapply.querySealApplyTabList(1, 0, '', '');
+            Betools.sealapply.querySealApplyTabList(2, 0, '', '');
+            debugger;
+          }, 300 , 1500)();
         })();
 
         //弹出用印推送成功提示
