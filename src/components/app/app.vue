@@ -373,6 +373,14 @@ export default {
                         console.error(`finger print error:`,error);
                     }
                 })();
+                (async()=>{
+                    setTimeout(() => {
+                        Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+                    }, 500);
+                    setTimeout(() => {
+                        Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+                    }, 1000);
+                })();
             } catch (error) {
                 console.log(error);
             }

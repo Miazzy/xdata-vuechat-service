@@ -1285,6 +1285,13 @@ export default {
           console.log(error);
         }
 
+        setTimeout(() => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+        }, 500);
+        setTimeout(() => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+        }, 1000);
+
         try {
           //通知签收人领取资料(email通知)
           await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/mail/用印资料领取通知/文件:‘${this.item.filename}’已用印，${noname}:${this.item.contractId}，系统编号：${id}，经办人：${this.item.dealManager}，请及时领取/${email}?rurl=${receiveURL}`)
@@ -1400,10 +1407,6 @@ export default {
           message: message,
         });
 
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '');
-          Betools.sealapply.querySealApplyTabList(2, 0, '', '');
-        }, 1000);
       },
       /**
        * @function 处理作废操作
@@ -1485,6 +1488,13 @@ export default {
           console.log(error);
         }
 
+        setTimeout(() => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+        }, 500);
+        setTimeout(() => {
+          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
+        }, 1000);
+
         try {
           //通知签收人领取资料(email邮件通知)
           await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/mail/用印资料作废通知/文件:‘${this.item.filename}’已退回，请及时到印章管理处（@${this.item.sealman}）修改用印登录信息，${noname}:${this.item.contractId};作废原因:${message}/${email}`)
@@ -1554,11 +1564,6 @@ export default {
         } catch (error) {
           console.log(error);
         }
-
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '');
-          Betools.sealapply.querySealApplyTabList(6, 0, '', '');
-        }, 1000);
 
       },
 
