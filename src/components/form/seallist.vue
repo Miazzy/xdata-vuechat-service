@@ -146,7 +146,8 @@ export default {
             currentPage:1,
         }
     },
-    activated() { },
+    activated() {
+    },
     mounted() {
       this.queryInfo();
     },
@@ -219,11 +220,14 @@ export default {
         this.totalpages = response.resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
+        Betools.tools.throttle(async () => {
+          await Betools.sealapply.refreshSealApplyTabList();
+        }, 100000 , 0)();
       },
 
       //查询用印列表信息
       async queryInfo(){
-        
+
         const queryTabListInfo = this.queryTabList;
         this.searchWord = await Betools.storage.getStore('system_search_word_v1');
 
@@ -231,9 +235,7 @@ export default {
         this.tabname = this.tabname >= 3 ? 6 : this.tabname <= 1 ? 1 : 2;
         const tabname = this.tabname ;
 
-        Betools.tools.throttle(async () => {
-            queryTabListInfo(tabname, 0); //查询列表数据
-        }, 300 , 0)();
+        queryTabListInfo(tabname, 0); //查询列表数据
 
         Betools.tools.throttle(async () => {
             queryTabListInfo('合同类',0); //查询合同类数据

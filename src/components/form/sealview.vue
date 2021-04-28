@@ -1281,16 +1281,10 @@ export default {
         try {
           //修改状态为已用印，保存当前合同编号
           await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , contract_id,  status: '已用印' , seal_time: time , front: this.item.front , front_name: this.item.front_name , archive: this.item.archive , archive_name: this.item.archive_name , finance: this.item.finance , finance_name: this.item.finance_name , record: this.item.record , record_name: this.item.record_name , prefix , company , partner : this.item.partner });
+          await Betools.sealapply.refreshSealApplyTabList();
         } catch (error) {
           console.log(error);
         }
-
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
-        }, 500);
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
-        }, 1000);
 
         try {
           //通知签收人领取资料(email通知)
@@ -1484,16 +1478,10 @@ export default {
 
         try {
           await Betools.manage.patchTableData(`bs_seal_regist` , id , {id , status: '已退回' , message , company , seal_time: time , contract_id}); //修改状态为已退回
+          await Betools.sealapply.refreshSealApplyTabList();
         } catch (error) {
           console.log(error);
         }
-
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
-        }, 500);
-        setTimeout(() => {
-          Betools.sealapply.querySealApplyTabList(1, 0, '', '', '', '');
-        }, 1000);
 
         try {
           //通知签收人领取资料(email邮件通知)

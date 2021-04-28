@@ -615,6 +615,7 @@ export default {
         //提交用印登记申请
         async handleConfirm() {
             await Betools.manage.handleSealApplyConfirm(this);
+            await Betools.sealapply.refreshSealApplyTabList();
         },
     }
 }
