@@ -1400,10 +1400,10 @@ export default {
           message: message,
         });
 
-        Betools.tools.throttle(async () => {
+        setTimeout(() => {
           Betools.sealapply.querySealApplyTabList(1, 0, '', '');
           Betools.sealapply.querySealApplyTabList(2, 0, '', '');
-        }, 300 , 1000)();
+        }, 1000);
       },
       /**
        * @function 处理作废操作
@@ -1555,10 +1555,10 @@ export default {
           console.log(error);
         }
 
-        Betools.tools.throttle(async () => {
+        setTimeout(() => {
           Betools.sealapply.querySealApplyTabList(1, 0, '', '');
-          Betools.sealapply.querySealApplyTabList(2, 0, '', '');
-        }, 300 , 1000)();
+          Betools.sealapply.querySealApplyTabList(6, 0, '', '');
+        }, 1000);
 
       },
 
