@@ -1399,7 +1399,7 @@ export default {
           Betools.tools.throttle(async () => {
             Betools.sealapply.querySealApplyTabList(1);
             Betools.sealapply.querySealApplyTabList(2);
-          }, 3000 , 100)();
+          }, 5000 , 1500)();
         })();
 
         //弹出用印推送成功提示
@@ -1516,7 +1516,7 @@ export default {
           Betools.tools.throttle(async () => {
             Betools.sealapply.querySealApplyTabList(1);
             Betools.sealapply.querySealApplyTabList(2);
-          }, 3000 , 100)();
+          }, 5000 , 1500)();
         })();
 
         //弹出用印推送成功提示
