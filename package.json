@@ -22,6 +22,7 @@
         "element-ui": "^2.13.2",
         "fs": "0.0.1-security",
         "jquery": "^3.5.1",
+        "limiter": "^2.0.1",
         "localforage": "^1.7.4",
         "lru-cache": "^4.1.5",
         "node-ip2region": "^1.0.2",

@@ -108,8 +108,7 @@
 </keep-alive>
 </template>
 <script>
-import { RateLimiter } from "limiter";
-const limiter = new RateLimiter({ tokensPerInterval: 1, interval: 3000 });
+const limiter = new Betools.limiter.getLimiterInstance({ tokensPerInterval: 1, interval: 15000 , fireImmediately:true });
 
 export default {
     mixins: [window.mixin],
@@ -223,10 +222,16 @@ export default {
         this.totalpages = response.resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
+        this.refreshTabList();
+      },
+
+      async refreshTabList() {
         const remainingRequests = await limiter.removeTokens(1);
         if (remainingRequests >= 0) {
           await Betools.sealapply.refreshSealApplyTabList();
           console.log(`Betools.sealapply.refreshSealApplyTabList`);
+        } else {
+          console.log(`Block Betools.sealapply.refreshSealApplyTabList`);
         }
       },
 
