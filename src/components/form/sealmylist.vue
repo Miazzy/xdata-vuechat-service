@@ -76,10 +76,6 @@
 
 <script>
 
-
-
-
-
 export default {
     mixins: [window.mixin],
     data() {
@@ -125,13 +121,10 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
-        //this.userStatus();
     },
     mounted() {
       this.queryInfo();
-      //this.userStatus();
     },
     watch: {
       $route(to, from) {
