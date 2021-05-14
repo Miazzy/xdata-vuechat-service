@@ -286,7 +286,6 @@ export default {
         try {
           this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
-          debugger;
 
           var that = this;
           that.item.id = Betools.tools.getUrlParam('id');
