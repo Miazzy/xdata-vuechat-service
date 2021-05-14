@@ -679,9 +679,10 @@ export default {
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
             user_group_ids = user_group_ids + ',' + this.item.create_by;
+            const vflag = this.item.create_by == userinfo.realname;
 
             //获取到用户列表数据
-            if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
+            if (!(vflag || !(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)))) {
                 this.showOverlayConfirm('cancel',()=>{});
                 await vant.Dialog.alert({
                     title: '温馨提示',
