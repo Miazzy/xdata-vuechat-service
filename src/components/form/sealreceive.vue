@@ -137,7 +137,7 @@
               </van-cell-group>
             </div>
 
-            <van-goods-action  v-if=" item.status == '已用印' && item.type == 'receive' ">
+            <van-goods-action  v-if=" item.status == '已用印' && item.type == 'receive' && userinfo.username == item.username  ">
               <van-goods-action-button id="informed_confirm" type="danger" native-type="submit" text="确认领取"  @click="handleConfirm();" style="border-radius: 10px 10px 10px 10px;" />
             </van-goods-action>
 
@@ -236,6 +236,7 @@ export default {
               showPicker: false,
               showPickerSealType:false,
             },
+            userinfo:null,
             readonly: true,
             archiveTypeColumns: Betools.workconfig.compcolumns.archiveTypeColumns,
             orderTypeColumns: Betools.workconfig.compcolumns.orderTypeColumns,
@@ -285,6 +286,7 @@ export default {
         try {
           this.iswechat = Betools.tools.isWechat();
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
+          debugger;
 
           var that = this;
           that.item.id = Betools.tools.getUrlParam('id');
