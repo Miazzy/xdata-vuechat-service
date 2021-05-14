@@ -108,6 +108,9 @@
 </keep-alive>
 </template>
 <script>
+import { RateLimiter } from "limiter";
+const limiter = new RateLimiter({ tokensPerInterval: 1, interval: 3000 });
+
 export default {
     mixins: [window.mixin],
     data() {
@@ -220,7 +223,11 @@ export default {
         this.totalpages = response.resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
-        Betools.sealapply.refreshSealApplyTabList();
+        const remainingRequests = await limiter.removeTokens(1);
+        if (remainingRequests >= 0) {
+          await Betools.sealapply.refreshSealApplyTabList();
+          console.log(`Betools.sealapply.refreshSealApplyTabList`);
+        }
       },
 
       //查询用印列表信息
