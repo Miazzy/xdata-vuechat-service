@@ -268,7 +268,7 @@
                         </div>
                     </van-col>
                     <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('visitor');">
+                        <div class="weui-cell_app_hd" @click="cooperate('visitors');" >
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
                             <div class="weui-cell_app_bd">
                                 访客管理
@@ -292,10 +292,10 @@
                         </div>
                     </van-col>
                     <van-col span="6" style="display:block;">
-                        <div class="weui-cell_app_hd" @click="cooperate('visitors');" v-show="role ? role.includes('COMMON_AUTH_ADMIN') : false ">
+                        <div class="weui-cell_app_hd" @click="cooperate('visitor');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdom_cdn@v1.0.0/images/qiandao.png">
                             <div class="weui-cell_app_bd">
-                                访客管理(测)
+                                访客管理(备)
                             </div>
                         </div>
                     </van-col>

@@ -221,8 +221,10 @@ export default {
                 user_group_names: '',
                 user_admin_name: '',
                 zone_name: '',
+                address:'领地环球金融中心',
                 status: '',
             },
+            visited_user:{},
             back: '/app',
             role: '',
             workflowlist: [],
@@ -425,9 +427,20 @@ export default {
                                 isDefault: !index
                             });
                         });
-                        this.item.create_by = user[0].name; //获取盖印人姓名
-                        this.item.cuserid = this.cuserid = user[0].userid; //当前盖印人编号
-                        this.item.position = user[0].position;
+                        const fuser = user.find((tuser)=>{
+                           return tuser.name == user_admin_name;
+                        })
+                        if(typeof fuser != 'undefined' || fuser != null ){
+                            this.item.create_by = fuser.name; //获取盖印人姓名
+                            this.item.cuserid = this.cuserid = fuser.userid; //当前盖印人编号
+                            this.item.position = fuser.position;
+                            this.visited_user = fuser;
+                        } else {
+                            this.item.create_by = user[0].name; //获取盖印人姓名
+                            this.item.cuserid = this.cuserid = user[0].userid; //当前盖印人编号
+                            this.item.position = user[0].position;
+                            this.visited_user = user[0];
+                        }
                         this.cuserList = this.cuserList.filter((item, index) => {
                             item.isDefault = index == 0 ? true : false;
                             let findex = this.cuserList.findIndex((subitem, index) => {
@@ -816,7 +829,8 @@ export default {
             }
 
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
-            if (!ulist || ulist.length == 0) {
+            const visited_user = this.visited_user;
+            if ((this.item.mobile != visited_user.mobile) && (!ulist || ulist.length == 0)) {
                 this.showOverlayConfirm('cancel',()=>{});
                 //弹出确认提示
                 return await vant.Dialog.alert({
@@ -895,13 +909,18 @@ export default {
                 }
             })(this.tablename , elem);
 
-            //第三步 向物品管理员推送通知，已准备办公用品等
+            //第三步 向管理员推送通知
             (async (item , elem , visitors , user_group_ids, receiveURL) => {
+                const message = `您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！`;
                 try {
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee}/${message}?rurl=${receiveURL}`)
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.mobile}/${message}?rurl=${receiveURL}`)
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 } catch (error) {
-                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee},${item.mobile}/您好，${visitors}，将于${elem.time} ${elem.dtime}到访，请您确认！?rurl=${receiveURL}`)
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids},${item.employee}/${message}?rurl=${receiveURL}`)
+                        .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                    await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${this.item.mobile}/${message}?rurl=${receiveURL}`)
                         .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 }
             })(this.item , elem , visitors , user_group_ids,  receiveURL);
