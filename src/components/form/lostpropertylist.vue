@@ -279,32 +279,25 @@ export default {
             return item.id == item.pid;
           });
          } else if(tabname == '认领') {
-           //获取最近6个月的已领取记录
           this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
          }
 
       },
+
+
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
         //查询当前用印信息
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
         Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
-
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertylist`);
         } else if(this.tabname == '2'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
         } else if(this.tabname == '3' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
          }
 
