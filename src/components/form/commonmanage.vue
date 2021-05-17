@@ -1,9 +1,6 @@
 <template>
-
 <keep-alive>
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
-
     <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;" >
         <div class="center" style="position:relative;">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -90,7 +87,6 @@
 
   </div>
 </keep-alive>
-
 </template>
 
 <script>
@@ -224,7 +220,8 @@ export default {
       // 查询用户信息
       async userStatus(){
         try {
-          let userinfo = await Betools.storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
+          console.log(`userinfo:`,userinfo);
         } catch (error) {
           console.log(error);
         }
@@ -246,15 +243,11 @@ export default {
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
 
       // 点击右侧菜单
