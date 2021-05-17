@@ -51,12 +51,15 @@
       <div class="wechat-list">
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
         <template v-show="tabname == 1 && !loading && !isLoading">
+            <van-empty v-if="tabname == 1 && initContractList.length == 0 " description="暂无数据" />
             <van-address-list style="min-height:500px;" v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待用印" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
+            <van-empty v-if="tabname == 2 && sealContractList.length == 0 " description="暂无数据" />
             <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract" />
         </template>
-        <template v-show="(tabname == 6 || tabname == 0)&& !loading && !isLoading">
+        <template v-show="(tabname == 6 || tabname == 0) && !loading && !isLoading">
+            <van-empty v-if="(tabname == 6 || tabname == 0) && failContractList.length == 0 " description="暂无数据" />
             <van-address-list style="min-height:500px;" v-show="tabname == 6 && !loading && !isLoading" v-model="hContractID" :list="failContractList" default-tag-text="已退回" edit-disabled @select="selectHContract" />
         </template>
         </van-pull-refresh>
