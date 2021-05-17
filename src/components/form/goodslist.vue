@@ -342,7 +342,6 @@ export default {
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }
-          debugger;
           let list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
           list.map((item)=>{
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
