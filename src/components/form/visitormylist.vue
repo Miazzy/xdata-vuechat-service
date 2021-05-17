@@ -195,8 +195,8 @@ export default {
       async handleList(tableName = '', status = 'init,confirm', userinfo, searchSql = '' , page = 0 , size = 1000){
         let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(employee,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
         list.map((item , index) => {
-            item.name = item.address  ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
+            item.name = item.create_by + ' ' + item.department ;
+            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访${item.address}。`,
             item.tel = '';
             item.isDefault = true;
           });
