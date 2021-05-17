@@ -156,27 +156,23 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname);  //刷新相应表单
+          vant.Toast('搜索...');  //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false;  //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -192,51 +188,36 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '';
             this.searchFlag = false;
-            this.searchWord = '';
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询基础信息
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //获取tabname
-        this.tabname = Betools.storage.getStore('system_lost_property_list_tabname') || '1';
-
+        this.tabname = Betools.storage.getStore('system_lost_property_list_tabname') || '1'
         //查询直接所在工作组
         const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-
         //获取后端配置前端管理员组
         this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';
         //获取tabname
         this.tabname = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? this.tabname: 1;
-
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
-
         //查询台账数据
         this.queryTabList('认领' , 0);
-
         //获取返回页面
         this.back = Betools.tools.getUrlParam('back') || '/app';
-
       },
+
+      // 查询Tab栏对应的失物招领信息
       async queryTabList(tabname = 1 , page){
 
         //获取当前用户信息
