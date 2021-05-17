@@ -97,20 +97,6 @@ export default {
             ],
             isLoading:false,
             loading:false,
-            json_fields: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_data: [],
         }
     },
     activated() {
