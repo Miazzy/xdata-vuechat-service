@@ -375,8 +375,6 @@ export default {
             dropMenuValue:'',
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -399,6 +397,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -407,10 +406,12 @@ export default {
           console.log(error);
         }
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -424,6 +425,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -432,20 +434,11 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
             break;
-          case 4: //重置数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            await this.reduction();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
-            break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -467,63 +460,50 @@ export default {
               status: '',
             };
       },
+
       // 获取处理日志
       async queryProcessLog(){
-
         const id = Betools.tools.getUrlParam('id');
         const pid = Betools.tools.getUrlParam('pid');
-
         try {
           this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
-
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
-
             this.processLogList.map(item => { item.action_opinion = item.action_opinion.replace('已领取','已准备').replace('已领用','已准备'); item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm'); item.unique = `${item.employee} ${item.action} ${item.action_opinion} ${item.create_time} ` ;  });
             this.processLogList = this.processLogList.filter( (item , index) => { const findex = this.processLogList.findIndex( elem => { return item.unique == elem.unique });  return findex == index;});
             this.processLogList.sort();
-
             //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
             const temp = this.processLogList[this.processLogList.length - 1];
-
             //检查状态并删除多余记录
             if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
               await this.deleteProcessLog();
             }
-
           }
-
         } catch (error) {
           console.log(error);
         }
       },
+
       // 删除处理日志
       async deleteProcessLog(){
-
         const id = Betools.tools.getUrlParam('id');
         const pid = Betools.tools.getUrlParam('pid');
-
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
-
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
           return item.id == id && item.pid == pid;
         });
-
         if(tlist.length > 0){
           //同时删除本条待办记录当前(印章管理员)
           await Betools.workflow.deleteViewProcessLog(tlist);
         }
-
       },
 
       // 选中当前盖印人
@@ -538,47 +518,30 @@ export default {
 
       // 验证字段有效性
       async validField(fieldName){
-        //获取用户基础信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
-
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+        const regMail = Betools.workconfig.system.config.regexp.mail; // 邮箱验证正则表达式
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-
         Betools.storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
         return Betools.tools.isNull(this.message[fieldName]);
       },
-      // 获取URL或者二维码信息
+
+      // 查询基础数据
       async queryInfo() {
-
         try {
-
           this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
-
-          //获取用户基础信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-
-          //查询编号
-          const id = Betools.tools.getUrlParam('id');
+          const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+          const id = Betools.tools.getUrlParam('id'); //查询编号
           this.role = Betools.tools.getUrlParam('role');
           this.back = Betools.tools.getUrlParam('back') || '/app';
-
-          //查询借用数据
-          let tlist = await Betools.query.queryTableDataByPid(this.tablename , id);
+          let tlist = await Betools.query.queryTableDataByPid(this.tablename , id); //查询借用数据
           this.size = tlist.length;
           this.tlist = tlist;
-
           const item = tlist[0];
-
-          //自动回显刚才填写的用户基础信息
-          if(item){
+          if(item){ //自动回显刚才填写的用户基础信息
             this.item.id = id;
             this.item.serialid = item.serialid || this.item.serialid;
             this.item.create_by = item.create_by || this.item.create_by;
@@ -594,18 +557,14 @@ export default {
             this.item.approve = item.approve || this.item.approve;
             this.item.status = item.status || this.item.status;
           }
-
           for(let i = 1 ; i < tlist.length ; i++){
             this.item['name'+i] = tlist[i].name ;
             this.item['amount'+i] = tlist[i].amount ;
           }
-
           await this.queryProcessLog();
-
         } catch (error) {
           console.log(error);
         }
-
       },
 
       // 处理驳回
@@ -862,6 +821,7 @@ export default {
           });
 
       },
+
       // 处理完成
       async handleFinaly() {
 
