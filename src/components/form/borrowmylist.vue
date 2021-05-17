@@ -75,9 +75,7 @@
 
   </div>
 </keep-alive>
-
 </template>
-
 <script>
 export default {
     mixins: [window.mixin],
