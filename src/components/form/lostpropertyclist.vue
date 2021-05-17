@@ -92,8 +92,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             isLoading:false,
             loading:false,
@@ -135,27 +133,23 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -171,38 +165,26 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '';
             this.searchFlag = false;
-            this.searchWord = '';
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询基础数据
       async queryInfo(){
-        //强制渲染
-        this.$forceUpdate();
-        //获取用户基础信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-        //获取后端配置前端管理员组
-        this.role = 'common';
-        //获取tabname
-        this.tabname = 1;
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-        //查询台账数据
-        this.queryTabList('认领' , 0);
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+        this.role = 'common'; //获取后端配置前端管理员组
+        this.tabname = 1; //获取tabname
+        await this.queryTabList(this.tabname , 0); //查询页面数据
+        this.queryTabList('认领' , 0); //查询台账数据
+        this.back = Betools.tools.getUrlParam('back') || '/app'; //获取返回页面
       },
+
+      // 查询Tab栏列表数据
       async queryTabList(tabname = 1 , page){
 
         //获取当前用户信息
@@ -270,29 +252,21 @@ export default {
          }
 
       },
+
+      // 跳转失物认领详情页面
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
-        //查询当前用印信息
-        const id = this.hContractID;
+        const id = this.hContractID;  //查询当前用印信息
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
         Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
-
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertyclist`);
         } else if(this.tabname == '2'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertyclist`);
         } else if(this.tabname == '3' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertyclist`);
-         }
-
+        }
       },
     }
 }
