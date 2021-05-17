@@ -1,10 +1,7 @@
 <template>
-
   <keep-alive>
-
   <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
-
     <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center" >
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -21,13 +18,7 @@
     <section v-if="iswechat">
       <div class="weui-cells" style="margin-top:0px;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-          <van-notice-bar
-              v-show=" title!='' && title != null && typeof title != 'undefined' "
-              left-icon="volume-o"
-              color="#1989fa"
-              background="#ecf9ff"
-              :text="title"
-            />
+          <van-notice-bar v-show=" title!='' && title != null && typeof title != 'undefined' " left-icon="volume-o" color="#1989fa" background="#ecf9ff" :text="title" />
         </div>
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
@@ -44,13 +35,9 @@
         <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-
             <van-form >
-
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
@@ -60,67 +47,54 @@
                 <van-field :readonly="readonly" :required="false" clearable label="物品名称" v-model="item.name"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable label="领用数量" v-model="item.amount"  placeholder="请填写领用数量及单位！" @blur="validField('amount')" :error-message="message.amount"  />
-
-                 <span class="van-goods-span-number" style="top:180px;">#1</span>
+                <span class="van-goods-span-number" style="top:180px;">#1</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=2" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name1"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount1"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#2</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=3" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name2"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount2"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#3</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=4" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name3"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount3"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#4</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=5" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name4"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount4"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#5</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=6" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name5"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount5"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#6</span>
               </van-cell-group>
 
               <van-cell-group v-show="size>=7" style="margin-top:10px;position:relative;border-top:0px solid #fefefe;">
-
                 <!-- 物品名称（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="物品名称" v-model="item.name6"  placeholder="请填写物品名称！" @blur="validField('name')" :error-message="message.name"  />
                 <!-- 领用数量（HR需要确认/修改） -->
                 <van-field :readonly="readonly"  clearable label="领用数量" v-model="item.amount6"  placeholder="请填写领用数量！" @blur="validField('amount')" :error-message="message.amount"  />
-
                 <span class="van-goods-span-number">#7</span>
               </van-cell-group>
 
@@ -362,8 +336,6 @@ export default {
             dropMenuValue:'',
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -394,57 +366,35 @@ export default {
           console.log(error);
         }
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname);  //刷新相应表单
+          vant.Toast('搜索...');  //显示搜索状态
+          await Betools.tools.sleep(300);  //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
-            break;
-          case 3: //查询数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            await this.reduction();
-            break;
-          case 4: //重置数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            await this.reduction();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -466,6 +416,7 @@ export default {
               status: '',
             };
       },
+
       // 获取处理日志
       async queryProcessLog(){
 
@@ -496,6 +447,7 @@ export default {
           console.log(error);
         }
       },
+
       // 删除流程日志
       async deleteProcessLog(){
 
@@ -524,7 +476,8 @@ export default {
         }
 
       },
-      // 选中当前盖印人
+
+      // 选中当前前台人员
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
@@ -534,6 +487,7 @@ export default {
         this.item.front_id = id;
       },
 
+      // 校验数据有效性
       async validField(fieldName){
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
@@ -551,7 +505,8 @@ export default {
 
         return Betools.tools.isNull(this.message[fieldName]);
       },
-      // 获取URL或者二维码信息
+
+      // 查询基础数据
       async queryInfo() {
 
         try {
@@ -616,6 +571,7 @@ export default {
         }
 
       },
+
       // 物品领用驳回
       async handleDisagree(){
         //显示加载状态
@@ -748,7 +704,7 @@ export default {
 
       },
 
-      // 用户提交入职登记表函数
+      // 用户提交确认函数
       async handleConfirm() {
 
         //显示加载状态
@@ -898,7 +854,8 @@ export default {
           });
 
       },
-      // 用户提交入职登记表函数
+
+      // 用户提交确认最后处理函数
       async handleFinaly() {
 
         //显示加载状态
