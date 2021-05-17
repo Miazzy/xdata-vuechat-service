@@ -934,35 +934,19 @@ export default {
         await Betools.tools.sleep(0);
         const id = this.item.meal_id;
         const user = this.muserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.meal_name = user.name;
+        this.item.meal_name = user.name; //获取盖印人姓名
         this.item.meal_id = id;
       },
 
+      // 校验字段信息
       validField(fieldName){
-        // 邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
-
+        const regMail = Betools.workconfig.system.config.regexp.mail; // 邮箱验证正则表达式
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-
         Betools.storage.setStore('system_entry_job_item' , JSON.stringify(this.item) , 3600 * 2 );
-
         return Betools.tools.isNull(this.message[fieldName]);
-      },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
       },
 
       // 显示用户信息，如显示HR信息，显示行政人员信息
