@@ -177,66 +177,49 @@ export default {
 
       // 查询特定Tab栏信息
       async queryTabList(tabname , page){
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-        //获取最近N个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        //设置查询语句
-        var searchSql = '';
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))`;
-        }
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        const tableName = this.tname ;
+        let searchSql = ''; //设置查询语句
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))` : null ;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,init,confirm)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = item.address  ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-            item.tel = '';
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this.handleList(tableName , 'init,confirm', userinfo, searchSql);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,visit)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = item.address  ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-            item.tel = '';
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => {  return item.id == item.pid; });
+          this.confirmList = await this.handleList(tableName , 'visit', userinfo, searchSql);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,devisit,invalid)~and(employee,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = item.address ;
-            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-            item.tel = '';
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
+          this.doneList = await this.handleList(tableName , 'devisit,invalid', userinfo, searchSql);
         } 
       },
 
-      async selectHContract(){
+      //查询Tab栏列表数据
+      async handleList(tableName = '', status = 'init,confirm', userinfo, searchSql = '' , page = 0 , size = 1000){
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(employee,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+            item.name = item.address  ;
+            item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
+            item.tel = '';
+            item.isDefault = true;
+          });
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
+      },
 
+      //跳转到相应界面详情
+      async selectHContract(){
         //查询当前用印信息
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);  //跳转到相应的用印界面
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);  //跳转到相应的用印界面
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_visitorview_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);
+          this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=view&back=visitormylist`);  //跳转到相应的用印界面
          }
       },
     }
