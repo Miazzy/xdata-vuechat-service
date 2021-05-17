@@ -225,8 +225,6 @@ export default {
             dropMenuOption: [
               { text: '认领', value: 1 , icon: 'goods-collect-o' },
               { text: '刷新', value: 2 , icon: 'replay' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -249,6 +247,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+      
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -257,11 +256,13 @@ export default {
           console.log(error);
         }
       },
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           //刷新相应表单
@@ -274,7 +275,8 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -289,16 +291,11 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
             break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
-            break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -322,9 +319,8 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
+
+      // 查询流程处理日志
       async queryProcessLog(){
         const id = Betools.tools.getUrlParam('id');
         try {
@@ -336,6 +332,8 @@ export default {
           console.log(error);
         }
       },
+
+      // 删除流程处理日志
       async deleteProcessLog(){
 
         const id = Betools.tools.getUrlParam('id');
@@ -364,46 +362,28 @@ export default {
 
       },
 
-      //选中当前盖印人
+      // 选中当前前台人员
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
+        this.item.front_name = user.name;  // 获取前台人员姓名
         this.item.front_id = id;
       },
 
+      // 校验数据有效性
       async validField(fieldName){
-        //获取用户基础信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
-
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+        const regMail = Betools.workconfig.system.config.regexp.mail;  // 邮箱验证正则表达式
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-
         Betools.storage.setStore(`system_${this.tablename}_item@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
         return Betools.tools.isNull(this.message[fieldName]);
       },
 
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-
-      // 获取URL或者二维码信息
+      // 查询基础数据
       async queryInfo() {
 
         try {
@@ -466,6 +446,7 @@ export default {
 
       },
 
+      // 用户驳回处理函数
       async handleDisagree(){
 
         //获取用户基础信息
@@ -585,7 +566,7 @@ export default {
         await this.queryProcessLog();
       },
 
-      // 用户提交入职登记表函数
+      // 用户提交确认函数
       async handleConfirm() {
 
         //获取用户基础信息
@@ -665,7 +646,8 @@ export default {
         await this.queryProcessLog();
 
       },
-      // 用户提交入职登记表函数
+
+      // 用户提交确认最后处理函数
       async handleFinaly() {
 
         //获取用户基础信息
@@ -772,6 +754,7 @@ export default {
         await this.queryProcessLog();
 
       }
+
     }
 }
 </script>
