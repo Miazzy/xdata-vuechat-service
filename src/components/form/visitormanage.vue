@@ -86,8 +86,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
               { text: '导出', value: 7 , icon: 'description' },
             ],
             menuCssValue:'',
@@ -107,12 +105,18 @@ export default {
     watch: {
     },
     methods: {
+
+      // 点击导出函数
       exportAsExcel () {
           this.$refs.grid.exportTable('xlsx', true, '访客登记表单');
       },
+      
+      // 执行删除数据
       async onDelete(records){
         console.log('delete');
       },
+
+      // 更新访客登记数据
       async onUpdate(records){
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
@@ -128,45 +132,31 @@ export default {
           await Betools.manage.patchTableData('bs_visit_apply' , item.id , elem);
         }
       },
-      async userStatus(){
-        try {
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //刷新页面
+     
+      // 刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname , this.currentPage - 1);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname , this.currentPage - 1); //刷新相应表单
+        await Betools.tools.sleep(300);  //等待一下
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false; //设置加载状态
       },
-      //点击显示或者隐藏菜单
+      
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList();
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -179,37 +169,25 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '', this.searchFlag = false;
             await this.queryFresh();
             break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
-            break;
           case 7: //导出表单
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.exportAsExcel();
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询访客登记数据
       async queryTabList(tabname = '1' , page = 0){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
         let searchSql = '';
         this.currentPage = page + 1; // 设置当前页为第一页
-        if(this.searchWord) { //如果存在搜索关键字,则执行搜索功能
-          searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
-        }
-        const whereSQL = `_where=(status,in,init,confirm,visit,devisit,invalid)~and(create_time,gt,${month})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-serialid&_p=0&_size=10000`;
+        (this.searchWord) ? searchSql = `~and((filename,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`:null;
+        const whereSQL = `_where=(status,in,init,confirm,visit,devisit,invalid)~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-serialid&_p=0&_size=10000`;
         this.json_data = await Betools.manage.queryTableData('bs_visit_apply' , whereSQL);
         this.json_data.map((item , index) => {
           item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
@@ -219,6 +197,8 @@ export default {
         });
         this.json_data.sort();
       },
+
+      // 查询基础信息
       async queryInfo(){
         this.tabname = (Betools.storage.getStore('system_visit_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname > 1 ? 1 : this.tabname;
