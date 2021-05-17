@@ -157,38 +157,26 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //点击显示或者隐藏菜单
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
         //显示刷新消息
         this.searchFlag = false;
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
@@ -198,169 +186,65 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuOldValue = this.searchWord = this.dropMenuValue = '', this.searchFlag = false;
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+      // 查询基础信息
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1';
-
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
-
+        this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
+        await this.queryTabList(this.tabname , 0); //查询页面数据
+        this.back = Betools.tools.getUrlParam('back') || '/app'; //获取返回页面
       },
+
+      // 查询Tab栏数据
       async queryTabList(tabname , page){
-
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-
-        //设置查询语句
-        var searchSql = '';
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
-        }
-
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const tableName = this.tname;
+        let searchSql = '';  //设置查询语句
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.initList = await this.handleList(tableName , '待处理', userinfo , searchSql);
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,已领取,已准备)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.confirmList = await this.handleList(tableName , '已领取,已准备', userinfo , searchSql);
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.doneList = await this.handleList(tableName , '已完成', userinfo , searchSql);
         } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.rejectList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.rejectList = this.rejectList.filter(item => {
-            return item.id == item.pid;
-          });
-        } else if(tabname == '办公') {
-          //获取最近6个月的已领取记录
-          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.json_data_office.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-        } else if(tabname == '药品') {
-          //获取最近6个月的已领取记录
-          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.json_data_drug.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-        } else if(tabname == '防疫') {
-          //获取最近6个月的已领取记录
-          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.json_data_prevent.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-        }
-
+          this.rejectList = await this.handleList(tableName , '已驳回', userinfo , searchSql);
+        } 
       },
+
+      // 查询物品领用数据
+      async handleList(tableName , status = '待处理', userinfo , searchSql, page = 0 , size = 1000){
+        let list = await Betools.manage.queryTableData(this.tname , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+          item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+          item.tel = '';
+          item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+          item.isDefault = true;
+        });
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
+      },
+
+      // 执行跳转物品领用详情页面
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
         //查询当前用印信息
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-
+        Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         } else if(this.tabname == '2'){
-          Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         } else if(this.tabname == '3' ){
-          Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
          } else if(this.tabname == '4' ){
-          Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=view&back=goodsmylist`);
         }
       },
