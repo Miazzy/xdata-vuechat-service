@@ -44,19 +44,19 @@
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
           <van-empty v-if="tabname == 2 && confirmList.length == 0 " description="暂无数据" />
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已借用" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已借用" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
           <van-empty v-if="tabname == 3 && doneList.length == 0 " description="暂无数据" />
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已归还" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已归还" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
           <van-empty v-if="tabname == 4 && rejectList.length == 0 " description="暂无数据" />
-          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract" />
         </template>
       </div>
     </section>
@@ -199,12 +199,9 @@ export default {
       },
 
       // 跳转到借用详情页面
-      async selectHContract(){
-        const id = this.hContractID; //查询当前用印信息
-        const list = this[this.tabmap[this.tabname]];
-        const item = list.find((item,index) => {return id == item.id});
+      async selectHContract(elem, value, index){
+        const id = elem.id;
         Betools.storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
-        //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=view&back=borrowmylist`);
         } else if(this.tabname == '2'){
