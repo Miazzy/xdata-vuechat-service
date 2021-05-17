@@ -169,61 +169,30 @@ export default {
       async queryTabList(tabname , page){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已借用)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
+          this.confirmList = await this.handleList(tableName, '已借用', userinfo, searchSql);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已归还)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
+          this.doneList = await this.handleList(tableName, '已归还', userinfo, searchSql);
          } else if(tabname == 4) {
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.rejectList.map((item , index) => {
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
+        } 
+      },
+
+      async handleList(tableName, status = '待处理', userinfo, searchSql = ''){
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id`);
+        list.map((item) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-          this.rejectList = this.rejectList.filter(item => { return item.id == item.pid; });
-        } else if(tabname == '设备') {
-          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,信息设备)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.json_data.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
-        } else if(tabname == '传屏') {
-          this.json_data_box = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,传屏设备)~and(create_by,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.json_data_box.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
-        }
+        })
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
       },
 
       async selectHContract(){
