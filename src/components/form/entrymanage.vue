@@ -130,8 +130,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             role:'',
             isLoading:false,
@@ -213,26 +211,22 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300);  //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false;  //显示刷新消息
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -254,150 +248,80 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '', this.searchFlag = false;
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询基础数据
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
+        this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
         this.role = Betools.tools.getUrlParam('role') || 'front';
-
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1';
-
+        this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1';  //获取tabname
         //如果角色不是HR，且tabname为1，则修改为2
         if(this.role != 'hr' && (this.tabname == '1' || this.tabname == '4')){
           this.tabname = '2';
         }
-
         //如果角色不是HR，则导出功能，不能导出身份证号，银行卡号
         if(this.role !== 'hr'){
           delete this.json_fields.idcard;
           delete this.json_fields.bank_card;
         }
-
-        //查询员工信息列表
-        await this.queryTabList(this.tabname ,0);
-
-        //查询员工信息列表
-        await this.queryTabList('入职' ,0);
-
+        await this.queryTabList(this.tabname ,0); //查询员工信息列表
+        await this.queryTabList('入职' ,0); //查询员工信息列表
       },
+
+      // 查询Tab栏列表数据
       async queryTabList(tabname , page){
-
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        //设置查询语句
-        var searchSql = '';
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))`;
-        }
-
+        const tableName = this.tname;
+        let searchSql = '';  //设置查询语句
+        (this.searchWord) ? searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
-
-          this.initList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.initList = await this.handleList(tableName, '待确认', searchSql);
         } else if(tabname == 2) {
-          //获取最近6个月的已确认记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
-
-          this.confirmList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.confirmList = await this.handleList(tableName, '已确认', searchSql);
         } else if(tabname == 3) {
-          //获取最近6个月的已完成记录
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
-
-          this.doneList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.doneList = await this.handleList(tableName, '已完成', searchSql);
         } else if(tabname == 4) {
-          //获取最近6个月的已驳回记录
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
-
-          this.rejectList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.rejectList = await this.handleList(tableName, '已驳回', searchSql);
         } else if(tabname == '入职') {
-          //获取最近6个月的已驳回记录
-          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(create_time,gt,${month})${searchSql}`);
-
-          this.json_data.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.json_data = await this.handleList(tableName, '待确认,已确认,已完成,已驳回', searchSql);
         }
-
       },
+
+      // 查询入职数据
+      async handleList(tableName, status = '', searchSql = '', page = 0 , size = 1000){
+        let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})${searchSql}&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+          item.name = item.username + ' ' + item.mobile ,
+          item.tel = '';
+          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
+          item.isDefault = true;
+        });
+        return list;
+      },
+
+      // 跳转到特定页面
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
-        //查询当前用印信息
-        const id = this.hContractID;
+        const id = this.hContractID; //查询当前用印信息
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-
-        //获取角色ROLE
-        const role = Betools.tools.getUrlParam('role') || 'admin';
-
-        //根据当前状态，跳转到不同页面
-        if(this.tabname == '1'){
-          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
+        const role = Betools.tools.getUrlParam('role') || 'admin';  //获取角色ROLE
+        Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
+        if(this.tabname == '1'){  //根据当前状态，跳转到不同页面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         } else if(this.tabname == '2'){
-          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=${role}&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         } else if(this.tabname == '3' ){
-          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
          } else if(this.tabname == '4' ){
-          Betools.storage.setStore('system_entryjob_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/entryview?id=${id}&statustype=none&role=done&back=${window.encodeURIComponent(`/app/entrylist?role=${role}&back=/app`)}`);
         }
-
       },
+
     }
 }
 </script>
