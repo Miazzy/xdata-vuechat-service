@@ -309,13 +309,13 @@ export default {
         }
 
         if(tabname == 1){
-          this.initList = this.handleList(tableName, '待处理', userinfo, searchSql);
+          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
-          this.confirmList = this.handleList(tableName, '已领取,已准备', userinfo, searchSql);
+          this.confirmList = await this.handleList(tableName, '已领取,已准备', userinfo, searchSql);
         } else if(tabname == 3) {
-          this.doneList = this.handleList(tableName, '已完成', userinfo, searchSql);
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql);
         } else if(tabname == 4) {
-          this.rejectList = this.handleList(tableName, '已驳回', userinfo, searchSql);
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
         } else if(tabname == '办公') {
           //获取最近6个月的已领取记录
           this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
@@ -354,14 +354,15 @@ export default {
       },
 
       async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 100){
-          const list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
-          list.map((item , index) => {
+          if(tools.isNull(userinfo)){
+            return [];
+          }
+          let list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+          list = list.filter(item => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-          list = list.filter(item => {
             return item.id == item.pid;
           });
           return list;
