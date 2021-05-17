@@ -312,29 +312,11 @@ export default {
         } else if(tabname == 4) {
           this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
         } else if(tabname == '办公') {
-          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-          this.json_data_office.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
+          this.json_fields_office = this.handleExList(tableName, '办公用品', userinfo, searchSql);
         } else if(tabname == '药品') {
-          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-          this.json_data_drug.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
+          this.json_data_drug = this.handleExList(tableName, '药品', userinfo, searchSql);
         } else if(tabname == '防疫') {
-          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-          this.json_data_prevent.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
+          this.json_data_prevent = this.handleExList(tableName, '防疫', userinfo, searchSql);
         }
       },
 
@@ -351,6 +333,17 @@ export default {
           });
           list = list.filter(item => {
             return item.id == item.pid;
+          });
+          return list;
+      },
+
+      async handleExList(tableName, type = '办公用品', userinfo, searchSql){
+          const list = await Betools.manage.queryTableData(tableName , `_where=(type,eq,${type})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_size=3000`);
+          list.map((item) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
           });
           return list;
       },
