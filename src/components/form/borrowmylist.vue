@@ -64,6 +64,7 @@
 </keep-alive>
 </template>
 <script>
+const commonJsonFieldsConfig = JSON.parse(`{\"排序编号\":\"serialid\",\"登记时间\":\"create_time\",\"物品名称\":\"name\",\"物品数量\":\"amount\",\"借用类型\":\"type\",\"借用人员\":\"receive_name\",\"借用公司\":\"company\",\"借用部门\":\"department\",\"接待人员\":\"user_admin_name\",\"备注说明\":\"remark\",\"审批状态\":\"status\"}`);
 export default {
     mixins: [window.mixin],
     data() {
@@ -93,43 +94,16 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             isLoading:false,
             loading:false,
-            json_fields: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '借用类型':'type',
-              '借用人员':'receive_name',
-              '借用公司':'company',
-              '借用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_fields_box: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '借用类型':'type',
-              '借用人员':'receive_name',
-              '借用公司':'company',
-              '借用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
+            json_fields: commonJsonFieldsConfig,
+            json_fields_box: commonJsonFieldsConfig,
             json_data: [],
             json_data_box: [],
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
