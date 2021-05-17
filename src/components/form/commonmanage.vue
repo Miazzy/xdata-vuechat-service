@@ -173,7 +173,7 @@ export default {
           this.$refs.grid_02.exportTable('xlsx', true, '失物招领台账');
         }
       },
-      
+
       async onAdd(){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
@@ -302,6 +302,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 点击Tab栏
       async queryTabList(tabname , page = 0){
         //获取当前用户信息
@@ -324,10 +325,12 @@ export default {
         });
         this.initContractList.sort();
       },
+
       // 查询列表数据
       async queryInfo(){
         this.queryTabList(this.tabname , 0);
       },
+      
       // 改变页码
       async changePage(){
         const page = this.currentPage;
