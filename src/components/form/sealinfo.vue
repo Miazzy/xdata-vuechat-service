@@ -294,6 +294,7 @@ export default {
         item(to, from) {}
     },
     methods: {
+
         deleteCategoryList(index) {
             try {
                 this.item.seal_category.splice(index, 1);
@@ -302,6 +303,7 @@ export default {
                 console.log(error);
             }
         },
+
         deleteCompanyList(index) {
             try {
                 this.item.company.splice(index, 1);
@@ -310,9 +312,11 @@ export default {
                 console.log(error);
             }
         },
+
         companyConfirm(data, key, value) {
 
         },
+
         async companySearch(data, key) {
 
             const companyAPI = `${window.BECONFIG['xmysqlAPI'].replace('gateway-xmysql','gateway-config')}/system.admin.config`;
@@ -359,9 +363,11 @@ export default {
             }
 
         },
+
         confirmCategory(data1, index, data2) { // checkbox确定,
             console.log(data1, data2, index)
         },
+
         // 企业微信登录处理函数
         async weworkLogin() {
             try {
@@ -370,40 +376,27 @@ export default {
                 console.log(error);
             }
         },
-        //点击显示或者隐藏菜单
+
+        // 点击显示或者隐藏菜单
         async headMenuToggle() {
             this.$refs.headMenuItem.toggle();
         },
-        //点击顶部搜索
+
+        // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                //刷新相应表单
-                this.queryTabList(this.tabname);
-                //显示搜索状态
-                vant.Toast('搜索...');
-                //等待一下
-                await Betools.tools.sleep(300);
+                this.queryTabList(this.tabname); //刷新相应表单
+                vant.Toast('搜索...'); //显示搜索状态
+                await Betools.tools.sleep(300); //等待一下
             }
-            //显示刷新消息
-            this.searchFlag = false;
+            this.searchFlag = false; //显示刷新消息
         },
+
         //点击右侧菜单
         async headDropMenu(value) {
             const val = this.dropMenuValue;
             switch (val) {
-                case 0: //只显示合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryFresh();
-                    break;
-                case 1: //只显示非合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryFresh();
-                    break;
                 case 2: //刷新数据
-                    this.dropMenuValue = this.dropMenuOldValue;
-                    await this.reduction();
-                    break;
-                case 3: //查询数据
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.reduction();
                     break;
@@ -411,16 +404,11 @@ export default {
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.reduction();
                     break;
-                case 5: //返回应用
-                    this.$router.push(`/app`);
-                    break;
-                case 6: //返回首页
-                    this.$router.push(`/explore`);
-                    break;
                 default:
                     console.log(`no operate. out of switch. `);
             }
         },
+        
         // 设置重置
         async reduction() {
             this.item = {
@@ -488,6 +476,7 @@ export default {
         async querySealMan() {
             await Betools.sealapply.querySealApplySealMan(this);
         },
+        //校验字段信息
         async validField(fieldName) {
 
             await Betools.tools.sleep(0);
@@ -561,12 +550,6 @@ export default {
             this.item.approveType = value;
             this.tag.showPicker = false;
             this.validField('approveType');
-        },
-        encodeURI(value) {
-            return window.encodeURIComponent(value);
-        },
-        getUrlParam(name) {
-            return Betools.tools.queryUrlString(name,'history');
         },
         //选中当前填报人
         async selectCreateUser(user, id) {
