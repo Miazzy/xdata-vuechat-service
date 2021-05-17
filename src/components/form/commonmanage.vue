@@ -164,6 +164,8 @@ export default {
       }
     },
     methods: {
+
+      // 导出表单数据
       exportAsExcel () {
         if(this.tableName == 'bs_goods_receive'){
           this.$refs.grid_00.exportTable('xlsx', true, '领用台账数据');
@@ -174,6 +176,7 @@ export default {
         }
       },
 
+      // 新增表单数据
       async onAdd(){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
@@ -196,10 +199,12 @@ export default {
         await this.queryTabList(0,0);
       },
 
+      // 删除表单数据
       async onDelete(records){
         console.log('delete');
       },
 
+      // 修改表单数据
       async onUpdate(records){
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
@@ -215,28 +220,29 @@ export default {
           await Betools.manage.patchTableData(this.tableName , item.id , elem);
         }
       },
+
+      // 查询用户信息
       async userStatus(){
         try {
-          let info = await Betools.storage.getStore('system_userinfo');
+          let userinfo = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
       },
+
       // 刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname , this.currentPage - 1);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname , this.currentPage - 1);  //刷新相应表单
+        await Betools.tools.sleep(300); //等待一下
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false; //设置加载状态
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -250,6 +256,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -263,39 +270,31 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '';
             this.searchFlag = false;
-            this.searchWord = '';
             await this.queryFresh();
             break;
           case 7: //导出表单
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.exportAsExcel();
             break;
           case 10: //办公用品预约
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.tableName = 'bs_goods_receive';
             this.queryTabList(0,0);
             break;
           case 20: //借用
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.tableName = 'bs_goods_borrow';
             this.queryTabList(0,0);
             break;
           case 30: //失物招领
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.tableName = 'bs_lost_property';
             this.queryTabList(0,0);
             break;
           case 1:
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.onAdd();
             break;
           default:
@@ -330,7 +329,7 @@ export default {
       async queryInfo(){
         this.queryTabList(this.tabname , 0);
       },
-      
+
       // 改变页码
       async changePage(){
         const page = this.currentPage;
