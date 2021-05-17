@@ -303,8 +303,6 @@ export default {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
 
-        debugger;
-
         if(tabname == 1){
           this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
