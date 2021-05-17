@@ -188,6 +188,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+      
       // 查询基础信息
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
