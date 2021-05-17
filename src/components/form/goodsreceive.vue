@@ -1,10 +1,6 @@
 <template>
-
   <keep-alive>
-
-  <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
-
     <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center" >
             <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -19,19 +15,10 @@
     </header>
 
     <section v-if="iswechat">
-
       <div class="weui-cells" style="margin-top:0px;">
-
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-          <van-notice-bar
-              v-show=" title!='' && title != null && typeof title != 'undefined' "
-              left-icon="volume-o"
-              color="#1989fa"
-              background="#ecf9ff"
-              :text="title"
-            />
+          <van-notice-bar v-show=" title!='' && title != null && typeof title != 'undefined' " left-icon="volume-o" color="#1989fa" background="#ecf9ff" :text="title" />
         </div>
-
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
@@ -39,7 +26,6 @@
             <van-col span="8"></van-col>
           </van-row>
         </div>
-
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
@@ -48,25 +34,16 @@
         <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
 
           <van-cell-group>
-
             <van-form >
-
               <van-cell-group style="margin-top:10px;position:relative;">
-
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <van-field v-show="item.serialid" clearable label="流水序号" v-model="item.serialid" placeholder="系统自动生成序号！" readonly />
                 <!-- 领用时间（HR需要确认/修改） -->
                 <van-field :readonly="true" :required="false" clearable label="领用时间" v-model="item.receive_time"  placeholder="请填写领用时间！" @blur="validField('receive_time')" :error-message="message.receive_time"  />
                 <!-- 领用类别（HR需要确认/修改） -->
                 <van-field :readonly="readonly" :required="false" clearable clickable label="领用类别" v-model="item.type"  placeholder="请填写领用类别！" @blur="validField('type')" @click="showTypePicker = true;"  :error-message="message.type"  />
                 <van-popup v-model="showTypePicker" round position="bottom">
-                  <van-picker
-                    show-toolbar
-                    :columns="typeColumns"
-                    @cancel="showTypePicker=false;"
-                    @confirm="onTypeConfirm"
-                  />
+                  <van-picker show-toolbar :columns="typeColumns" @cancel="showTypePicker=false;" @confirm="onTypeConfirm" />
                 </van-popup>
 
                 <!-- 物品名称（HR需要确认/修改） -->
@@ -416,8 +393,6 @@ export default {
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -440,10 +415,13 @@ export default {
       this.queryInfo();
     },
     methods: {
+
+      // 类型选择确认函数
       onTypeConfirm(value) {
         this.item.type = value;
         this.showTypePicker = false;
       },
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -452,35 +430,26 @@ export default {
           console.log(error);
         }
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
@@ -492,12 +461,6 @@ export default {
           case 4: //重置数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
@@ -576,6 +539,7 @@ export default {
         }
 
       },
+
       // 选中当前盖印人
       async selectSealUser(value){
         await Betools.tools.sleep(0);
@@ -586,6 +550,7 @@ export default {
         const user = this.userList.find((item,index) => {return id == item.id});
         this.item.user_admin_name = user.name;
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -607,6 +572,7 @@ export default {
               status: '',
             };
       },
+
       // 获取处理日志
       async queryProcessLog(){
 
@@ -636,6 +602,7 @@ export default {
           console.log(error);
         }
       },
+
       // 删除处理日志
       async deleteProcessLog(){
 
@@ -677,6 +644,7 @@ export default {
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
+
       // 字段必填有效验证
       validField(fieldName){
         //获取用户基础信息
@@ -700,7 +668,8 @@ export default {
 
         return Betools.tools.isNull(this.message[fieldName]);
       },
-      // 获取URL或者二维码信息
+
+      // 查询基础数据
       async queryInfo() {
 
         try {
@@ -755,7 +724,7 @@ export default {
 
       },
 
-      // 用户提交入职登记表函数
+      // 用户提交领用申请函数
       async handleApply() {
 
         //显示加载状态
