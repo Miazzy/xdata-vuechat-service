@@ -295,6 +295,7 @@ export default {
 
         //获取当前用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
+        const tableName = this.tname ;
 
         //获取最近6个月对应的日期
         var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
@@ -308,66 +309,16 @@ export default {
         }
 
         if(tabname == 1){
-          //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.initList = this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,in,已领取,已准备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.confirmList = this.handleList(tableName, '已领取,已准备', userinfo, searchSql);
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.doneList = this.handleList(tableName, '已完成', userinfo, searchSql);
         } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.rejectList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.rejectList = this.rejectList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.rejectList = this.handleList(tableName, '已驳回', userinfo, searchSql);
         } else if(tabname == '办公') {
           //获取最近6个月的已领取记录
-          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
 
           this.json_data_office.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -378,7 +329,7 @@ export default {
 
         } else if(tabname == '药品') {
           //获取最近6个月的已领取记录
-          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
 
           this.json_data_drug.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -389,7 +340,7 @@ export default {
 
         } else if(tabname == '防疫') {
           //获取最近6个月的已领取记录
-          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
 
           this.json_data_prevent.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
@@ -401,6 +352,21 @@ export default {
         }
 
       },
+
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 100){
+          const list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+          list.map((item , index) => {
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+          list = list.filter(item => {
+            return item.id == item.pid;
+          });
+          return list;
+      },
+
       async selectHContract(){
 
         //等待N毫秒
