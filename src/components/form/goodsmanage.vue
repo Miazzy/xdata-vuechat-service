@@ -208,55 +208,35 @@ export default {
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
 
-      // 查询Tab栏领用数据
+      // 查询Tab栏物品领用数据
       async queryTabList(tabname , page){
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-        //获取最近N个月对应的日期
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        //设置查询语句
-        let searchSql = '';
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
-        }
+        const tableName = this.tname;
+        const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let searchSql = '';  //设置查询语句
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql, 0, 1000);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
+          this.confirmList = await this.handleList(tableName, '已领取', userinfo, searchSql, 0, 1000);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql, 0, 1000);
         } else if(tabname == 4) {
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.rejectList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.rejectList = this.rejectList.filter(item => { return item.id == item.pid; });
+          this.rejectList =  await this.handleList(tableName, '已驳回', userinfo, searchSql, 0, 1000);
         } 
+      },
+
+      // 查询物品领用列表信息
+      async handleList(tableName, status = '' , userinfo, searchSql, page = 0, size = 1000){
+        let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+          item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
+          item.tel = '';
+          item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+          item.isDefault = true;
+        })
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
       },
 
       // 查询领用数据信息
