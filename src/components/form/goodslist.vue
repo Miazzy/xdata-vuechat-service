@@ -348,7 +348,7 @@ export default {
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
+          });
           list = list.filter(item => {
             return item.id == item.pid;
           });
