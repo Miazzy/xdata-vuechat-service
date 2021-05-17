@@ -47,12 +47,15 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
+          <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
+          <van-empty v-if="tabname == 2 && confirmList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已到访" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
+          <van-empty v-if="tabname == 3 && doneList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已作废" edit-disabled @select="selectHContract()" />
         </template>
       </div>
