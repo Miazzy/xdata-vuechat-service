@@ -1,10 +1,6 @@
 <template>
-
   <keep-alive>
-
-  <!--首页组件-->
   <div id="content" style="margin-top: 0px;" >
-
     <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -15,19 +11,10 @@
     </header>
 
     <section v-if="iswechat" >
-
       <div class="weui-cells" style="margin-top:0px;">
-
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-          <van-notice-bar
-              v-show=" title!='' && title != null && typeof title != 'undefined' "
-              left-icon="volume-o"
-              color="#1989fa"
-              background="#ecf9ff"
-              :text="title"
-            />
+          <van-notice-bar v-show=" title!='' && title != null && typeof title != 'undefined' " left-icon="volume-o" color="#1989fa" background="#ecf9ff" :text="title" />
         </div>
-
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
@@ -35,21 +22,16 @@
             <van-col span="8"></van-col>
           </van-row>
         </div>
-
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
         </div>
         <div class="weui-cells" style="margin-top:0px;margin-left:10px;padding-top:5px;padding-bottom:15px;border-bottom:0px solid #fefefe;">
-
           <van-cell-group>
-
             <van-form >
               <van-cell-group style="margin-top:10px;">
-
                 <van-cell value="基础信息" style="margin-left:0px;margin-left:-3px;font-size: 0.95rem;" />
-
                 <!-- 登记日期（系统自动生成） -->
                 <van-field clearable label="填报日期" v-model="item.create_time" placeholder="请输入入职登记日期" readonly />
                 <!-- 员工姓名（HR需要确认/修改） -->
@@ -64,26 +46,12 @@
                 <van-field :readonly="role === 'hr' ? false : readonly" clearable label="入职日期" v-model="item.join_time" placeholder="请输入入职日期！" @blur="validField('join_time')" :error-message="message.join_time" />
                 <!-- 电话号码（HR需要确认/修改） -->
                 <van-field :readonly="readonly" clearable label="电话号码" v-model="item.mobile" placeholder="请填写您的电话号码！" @blur="validField('mobile')" :error-message="message.mobile" v-show="role == 'hr' || role == 'front'"/>
-
                 <van-popup v-model="tag.showPickerJoinTime" round position="bottom">
-                  <van-datetime-picker
-                    type="date"
-                    @cancel="tag.showPickerJoinTime = false"
-                    @confirm="joinTimeConfirm"
-                    :min-date="new Date()"
-                    title="选择日期"
-                  />
+                  <van-datetime-picker type="date" @cancel="tag.showPickerJoinTime = false" @confirm="joinTimeConfirm" :min-date="new Date()" title="选择日期" />
                 </van-popup>
-
                 <van-popup v-model="tag.showPickerCommon" round position="bottom">
-                  <van-picker
-                    show-toolbar
-                    :columns="commonTypeColumns"
-                    @cancel="tag.showPickerCommon = false"
-                    @confirm="commonTypeConfirm"
-                  />
+                  <van-picker  show-toolbar :columns="commonTypeColumns" @cancel="tag.showPickerCommon = false" @confirm="commonTypeConfirm" />
                 </van-popup>
-
               </van-cell-group>
 
               <van-cell-group style="margin-top:10px;">
@@ -451,6 +419,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -459,6 +428,8 @@ export default {
           console.log(error);
         }
       },
+
+      // 保存文件信息
       async saveAsFile(file , name){
         try {
           window.open(file , '_blank');
@@ -471,6 +442,7 @@ export default {
           console.log(error);
         }
       },
+
       async downloadGP(file , res){
         const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
         await this.saveAsFile(this.downloadURL + this.item.files_gp , '电子证件照' + this.item.files_gp.split('/')[1]);
@@ -531,6 +503,7 @@ export default {
         await this.saveAsFile(this.downloadURL + this.item.files_bsxw , '博士学位证附件' + this.item.files_bsxw.split('/')[1]);
         vant.Toast.clear();
       },
+
       //查询归档人员
       async queryHRMan(){
         //获取盖章人信息
@@ -592,6 +565,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryAdminMan(){
         //获取盖章人信息
@@ -653,6 +627,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryFrontMan(){
         //获取盖章人信息
@@ -714,6 +689,7 @@ export default {
           console.log(error);
         }
       },
+
       //查询归档人员
       async queryMealMan(){
         //获取盖章人信息
@@ -775,7 +751,8 @@ export default {
           console.log(error);
         }
       },
-      //选中当前盖印人
+
+      //选中当前HR信息
       async selectHRUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.hr_id;
@@ -784,7 +761,8 @@ export default {
         this.item.hr_name = user.name;
         this.item.hr_id = id;
       },
-      //选中当前盖印人
+
+      //选中当前管理员信息
       async selectAdminUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.admin_id;
@@ -793,7 +771,8 @@ export default {
         this.item.admin_name = user.name;
         this.item.admin_id = id;
       },
-      //选中当前盖印人
+
+      //选中当前前台人员信息
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
@@ -802,7 +781,8 @@ export default {
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
-      //选中当前盖印人
+
+      //选中当前食堂人员信息
       async selectMealUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.meal_id;
@@ -811,18 +791,16 @@ export default {
         this.item.meal_name = user.name;
         this.item.meal_id = id;
       },
+
       validField(fieldName){
-        // 邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
-
+        const regMail = Betools.workconfig.system.config.regexp.mail;  // 邮箱验证正则表达式
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         if(fieldName.toLocaleLowerCase().includes('mail')) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
         }
-
         return Betools.tools.isNull(this.message[fieldName]);
       },
+
       afterRead(file) {
 
         file.status = 'uploading';
@@ -833,18 +811,21 @@ export default {
           file.message = '上传成功';
         }, 1000);
       },
+
       // 选择入职时间
       joinTimeConfirm(value){
         this.item.join_time = dayjs(value).format('YYYY-MM-DD');
         this.tag.showPickerJoinTime = false;
         this.validField('join_time');
       },
+
       // 选择是否
       commonTypeConfirm(value){
         this.item[this.currentKey] = value;
         this.tag.showPickerCommon = false;
         this.validField(value);
       },
+
       // 获取URL或者二维码信息
       async queryInfo() {
 
@@ -965,6 +946,7 @@ export default {
         }
 
       },
+
       // 查询用户信息
       async queryUserInfo(name , queryURL = '', resp = '', front = {id:''}){
         // 查询前台人员SQL
@@ -981,6 +963,7 @@ export default {
         // 返回查询结果
         return front;
       },
+
       // 驳回入职登记
       async handleDisagree() {
 
@@ -1000,6 +983,7 @@ export default {
         });
 
       },
+
       // 用户提交入职登记表函数
       async handleConfirm() {
 
@@ -1098,6 +1082,7 @@ export default {
         });
 
       },
+
       async handleFrontConfirm(){
 
         //系统编号
@@ -1122,6 +1107,7 @@ export default {
         });
 
       },
+
       async handleAdminConfirm(){
 
         //系统编号
@@ -1146,6 +1132,7 @@ export default {
         });
 
       },
+
       async handleMealConfirm(){
 
         //系统编号
@@ -1181,6 +1168,7 @@ export default {
         });
 
       },
+      
       async handleFinaly(){
 
         await Betools.tools.sleep(100);
