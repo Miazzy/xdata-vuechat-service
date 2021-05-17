@@ -13,13 +13,6 @@
                     <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
                     <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;" />
                     <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();">
-                        <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o">
-                            <template #title>
-                                <span class="custom-title">
-                                    <download-excel :data="json_data" :fields="json_fields" worksheet="访客台账" name="访客台账.xls">访客台账</download-excel>
-                                </span>
-                            </template>
-                        </van-cell>
                     </van-dropdown-item>
                 </van-dropdown-menu>
             </div>
@@ -152,20 +145,6 @@ export default {
             cstatus: { init: 5, confirm: 6, visit: 7, devisit: 8, invalid: 9, },
             isLoading: false,
             loading: false,
-            json_fields: {
-                '排序编号': 'serialid',
-                '登记时间': 'create_time',
-                '物品名称': 'name',
-                '物品数量': 'amount',
-                '领用类型': 'type',
-                '领用人员': 'receive_name',
-                '领用公司': 'company',
-                '领用部门': 'department',
-                '接待人员': 'user_admin_name',
-                '备注说明': 'remark',
-                '审批状态': 'status',
-            },
-            json_data: [],
             tablename: 'bs_visit_apply',
             tag: {
                 showOverlay:false,
