@@ -94,8 +94,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             isLoading:false,
             loading:false,
@@ -133,38 +131,26 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
@@ -174,37 +160,26 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuOldValue = this.searchWord = this.dropMenuValue = '', this.searchFlag = false;
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
-      async queryInfo(){
-        //强制渲染
-        this.$forceUpdate();
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1';
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
-      },
-      async queryTabList(tabname , page){
 
+      // 查询基础信息
+      async queryInfo(){
+        this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1'; //获取tabname
+        await this.queryTabList(this.tabname , 0);  //查询页面数据
+        this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
+      },
+
+      // 查询特定Tab栏信息
+      async queryTabList(tabname , page){
         //获取当前用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-        //获取最近6个月对应的日期
+        //获取最近N个月对应的日期
         var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         //设置查询语句
         var searchSql = '';
@@ -241,6 +216,7 @@ export default {
           this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
         } 
       },
+
       async selectHContract(){
 
         //查询当前用印信息
