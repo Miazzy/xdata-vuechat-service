@@ -121,9 +121,13 @@ export default {
       }
     },
     methods: {
+
+      // 导出表单
       exportAsExcel () {
           this.$refs.grid.exportTable('xlsx', true, '权限配置表单');
       },
+
+      // 添加表单数据
       async onAdd(){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
@@ -145,9 +149,13 @@ export default {
         await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
         await this.queryTabList(0,0);
       },
+
+      // 删除表单数据
       async onDelete(records){
         console.log('delete');
       },
+
+      // 更新表单数据
       async onUpdate(records){
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
@@ -163,50 +171,43 @@ export default {
           await Betools.manage.patchTableData(this.tableName , item.id , elem);
         }
       },
+
+      // 查询用户状态信息
       async userStatus(){
         try {
-          let info = await Betools.storage.getStore('system_userinfo');
+          const userinfo = await Betools.storage.getStore('system_userinfo');
         } catch (error) {
           console.log(error);
         }
       },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-      //刷新页面
+
+      // 刷新页面
       async queryFresh(){
-        //刷新相应表单
-        this.queryTabList(this.tabname , this.currentPage - 1);
-        //等待一下
-        await Betools.tools.sleep(300);
-        //显示刷新消息
-        vant.Toast('刷新成功');
-        //设置加载状态
-        this.isLoading = false;
+        this.queryTabList(this.tabname , this.currentPage - 1); //刷新相应表单
+        await Betools.tools.sleep(300); //等待一下
+        vant.Toast('刷新成功'); //显示刷新消息
+        this.isLoading = false;  //设置加载状态
       },
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0:
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryFresh();
@@ -216,34 +217,23 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '', this.searchFlag = false;
             await this.queryFresh();
             break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
-            break;
           case 7: //导出表单
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.exportAsExcel();
             break;
           case 1:
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
+            this.dropMenuValue = this.dropMenuOldValue = '';
             this.onAdd();
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
-      //点击Tab栏
+
+      // 点击Tab栏，查询Tab栏数据
       async queryTabList(tabname , page = 0){
 
         //获取当前用户信息
@@ -269,10 +259,14 @@ export default {
         });
         this.initContractList.sort();
       },
+
+      // 查询基础数据
       async queryInfo(){
         //查询列表数据
         this.queryTabList(this.tabname , 0);
       },
+
+      // 换页
       async changePage(){
         const page = this.currentPage;
         await this.queryTabList( this.tabname , page - 1 );
