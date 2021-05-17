@@ -34,8 +34,7 @@
           <van-search
             v-model="searchWord"
             show-action
-            placeholder="请输入搜索关键词"
-          >
+            placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
