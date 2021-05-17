@@ -53,6 +53,7 @@
 
             <div class="wechat-list">
                 <template v-show="tabname == 1 && !loading && !isLoading">
+                    <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
                     <div id="van-visitor-list">
                         <template v-show="tabname == 1 && !loading && !isLoading"  v-for="(item, index) in initList" >
                             <div v-show="tabname == 1 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
@@ -73,6 +74,7 @@
                     </div>
                 </template>
                 <template v-show="tabname == 2 && !loading && !isLoading">
+                    <van-empty v-if="tabname == 2 && confirmList.length == 0 " description="暂无数据" />
                     <template v-show="tabname == 2 && !loading && !isLoading"  v-for="(item, index) in confirmList" >
                         <div v-show="tabname == 2 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
                             <div class="van-cell van-cell--borderless">
@@ -89,6 +91,7 @@
                     </template>
                 </template>
                 <template v-show="tabname == 3 && !loading && !isLoading">
+                    <van-empty v-if="tabname == 3 && doneList.length == 0 " description="暂无数据" />
                     <template v-show="tabname == 3 && !loading && !isLoading"  v-for="(item, index) in doneList" >
                         <div v-show="tabname == 3 && !loading && !isLoading" :key="item.id" :index="index" class="van-address-item">
                             <div class="van-cell van-cell--borderless">
