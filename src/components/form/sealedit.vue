@@ -513,7 +513,7 @@ export default {
           console.log(error);
         }
       },
-      
+
       // 用户选择盖印人
       async querySealMan(){
 
@@ -578,6 +578,7 @@ export default {
         }
 
       },
+
       validField(fieldName){
         //邮箱验证正则表达式
         const regMail = Betools.workconfig.system.config.regexp.mail;
@@ -592,6 +593,7 @@ export default {
 
         return Betools.tools.isNull(this.message[fieldName]);
       },
+
       afterRead(file) {
 
         file.status = 'uploading';
@@ -621,19 +623,6 @@ export default {
         this.validField('approveType');
       },
 
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
-
-      getUrlParam(name) {
-        try {
-          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-          var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
-          if (r != null) return decodeURI(r[2]); return null; //返回参数值
-        } catch (error) {
-          console.log(error);
-        }
-      },
       // 选中当前填报人
       async selectCreateUser(value){
         await Betools.tools.sleep(0);
@@ -651,11 +640,11 @@ export default {
         } catch (error) {
           console.log(error);
         }
-
         //缓存特定属性
         this.cacheUserInfo();
 
       },
+
       //选中当前合同编号
       async selectHContract(value){
         await Betools.tools.sleep(0);
