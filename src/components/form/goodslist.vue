@@ -79,6 +79,7 @@
 </keep-alive>
 </template>
 <script>
+const commonJsonFieldsConfig = JSON.parse("{\"排序编号\":\"serialid\",\"登记时间\":\"create_time\",\"物品名称\":\"name\",\"物品数量\":\"amount\",\"领用类型\":\"type\",\"领用人员\":\"receive_name\",\"领用公司\":\"company\",\"领用部门\":\"department\",\"接待人员\":\"user_admin_name\",\"备注说明\":\"remark\",\"审批状态\":\"status\"}");
 export default {
     mixins: [window.mixin],
     data() {
@@ -111,52 +112,15 @@ export default {
             ],
             isLoading: false,
             loading: false,
-            json_fields_office: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_fields_drug: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
-            json_fields_prevent: {
-              '排序编号':'serialid',
-              '登记时间': 'create_time',
-              '物品名称':'name',
-              '物品数量':'amount',
-              '领用类型':'type',
-              '领用人员':'receive_name',
-              '领用公司':'company',
-              '领用部门':'department',
-              '接待人员':'user_admin_name',
-              '备注说明':'remark',
-              '审批状态': 'status',
-            },
+            json_fields_office: commonJsonFieldsConfig,
+            json_fields_drug: commonJsonFieldsConfig,
+            json_fields_prevent: commonJsonFieldsConfig,
             json_data_office: [],
             json_data_drug: [],
             json_data_prevent: [],
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
@@ -174,9 +138,6 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -198,69 +159,40 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryTabList(this.tabname , 0);
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryTabList(this.tabname , 0);
             break;
           case 3: //查询数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            this.searchFlag = true;
+            this.dropMenuValue = this.dropMenuOldValue, this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.searchWord = this.dropMenuValue = this.dropMenuOldValue = '', this.searchFlag = false;
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
         //获取tabname
         this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1';
-
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
-
         //查询页面数据
         this.queryTabList('办公' , 0);
-
         //获取返回页面
         this.back = Betools.tools.getUrlParam('back') || '/app';
-
       },
       async queryTabList(tabname , page = 0 ){
-
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname ;
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         let searchSql = ''; //设置查询语句
-
         //如果存在搜索关键字，则编写查询关键字的查询语句
         if(this.searchWord) {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
-
         if(tabname == 1){
           this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
