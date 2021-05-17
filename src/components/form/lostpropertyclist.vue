@@ -1,10 +1,7 @@
 <template>
-
 <keep-alive>
-
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
-
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -18,11 +15,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="导出台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="导出台账"
-                        name="失物招领台账.xls" >
+                      <download-excel :data="json_data" :fields="json_fields" worksheet="导出台账" name="失物招领台账.xls" >
                         导出台账
                       </download-excel>
                     </span>
@@ -32,13 +25,9 @@
             </van-dropdown-menu>
         </div>
     </header>
-     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
@@ -47,13 +36,11 @@
     </header>
 
     <section>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
         </template>
       </div>
-
     </section>
 
   </div>
@@ -186,71 +173,46 @@ export default {
 
       // 查询Tab栏列表数据
       async queryTabList(tabname = 1 , page){
-
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-
-        //设置查询语句
-        var searchSql = '';
-
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let searchSql = ''; //设置查询语句
         //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
-        }
-
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
+          //获取最近N个月的待用印记录
           this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.initList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
             item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.initList = this.initList.filter(item => { return item.id == item.pid; });
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
           this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已认领)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.confirmList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
             item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
           this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.doneList.map((item , index) => {
             item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
             item.tel = '';
             item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
           this.doneList = this.doneList.filter(item => {
             return item.id == item.pid;
           });
          } else if(tabname == '认领') {
            //获取最近6个月的已领取记录
-          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
+           this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
          }
-
       },
 
       // 跳转失物认领详情页面
