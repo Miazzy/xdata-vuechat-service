@@ -142,6 +142,7 @@ export default {
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -151,6 +152,7 @@ export default {
         }
         this.searchFlag = false; //显示刷新消息
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -170,12 +172,16 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
+      //查询基础信息
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0); //查询页面数据
         this.queryTabList('办公' , 0); //查询页面数据
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
+
+      //查询Tab栏下列表信息
       async queryTabList(tabname , page = 0 ){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname ;
@@ -200,6 +206,7 @@ export default {
         }
       },
 
+      //查询不同状态的领用数据
       async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 3000){
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
@@ -217,6 +224,7 @@ export default {
           return list;
       },
 
+      //查询导出数据
       async handleExList(tableName, type = '办公用品', userinfo, searchSql){
           const list = await Betools.manage.queryTableData(tableName , `_where=(type,in,${type})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_size=3000`);
           list.map((item) => {
@@ -228,12 +236,12 @@ export default {
           return list;
       },
 
+      //跳转详情页面函数
       async selectHContract(){
         await Betools.tools.sleep(0); //等待N毫秒
         const id = this.hContractID;  //查询当前用印信息
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
@@ -248,8 +256,8 @@ export default {
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
         }
-
       },
+      
     }
 }
 </script>
