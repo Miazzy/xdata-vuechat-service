@@ -1,10 +1,6 @@
 <template>
-
 <keep-alive>
-
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -19,22 +15,16 @@
             </van-dropdown-menu>
         </div>
     </header>
-     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
           </van-search>
         </div>
     </header>
-
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -51,7 +41,6 @@
           </div>
         </div>
       </div>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
@@ -70,9 +59,7 @@
           <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
-
     </section>
-
   </div>
 </keep-alive>
 </template>
