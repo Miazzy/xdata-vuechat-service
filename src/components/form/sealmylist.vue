@@ -190,63 +190,29 @@ export default {
       },
 
       // 点击Tab栏，查询Tab栏对应列表信息
-      async queryTabList(tabname){
-
-        //获取用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        //获取最近N个月对应的日期
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+      async queryTabList(tabname, tableName = 'bs_seal_regist'){
+        const userinfo = await Betools.storage.getStore('system_userinfo');  // 获取用户信息
         let sealTypeSql = '';
         let searchSql = '';
-
         if(this.sealType === 0) {
           sealTypeSql = `~and(seal_type,like,合同类)`;
         } else if(this.sealType === 1) {
           sealTypeSql = `~and(seal_type,like,非合同类)`;
         }
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
-        }
-
+        (this.searchWord) ? searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))` : null; //如果存在搜索关键字        
         if(tabname == 1){
-          
+          this.initContractList = await this.handleList(tableName , '待用印', userinfo, sealTypeSql, searchSql);
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
-          this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
-          this.sealContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          })
+          this.sealContractList = await this.handleList(tableName , '已用印,已领取,移交前台,财务归档,档案归档,已完成', userinfo, sealTypeSql, searchSql);
         } else if(tabname == 6){
-          //获取最近6个月的已归档记录
-          this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
-          this.failContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          })
+          this.failContractList = await this.handleList(tableName , '已退回', userinfo, sealTypeSql, searchSql);
         } else if(tabname == 7){
-          //获取最近6个月的已归档记录
-          this.endContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已作废,已测试)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
-          this.endContractList.map((item , index) => {
-            item.name = item.filename.slice(0,16) ,
-            item.tel = '';
-            item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-            item.isDefault = true;
-          })
+          this.endContractList = await this.handleList(tableName , '已作废,已测试', userinfo, sealTypeSql, searchSql);
         }
       },
 
-      async handleList(tableName = 'bs_seal_regist', status = '待用印', userinfo, sealTypeSql , searchSql){
+      // 查询用印记录数据
+      async handleList(tableName = 'bs_seal_regist', status = '待用印', userinfo, sealTypeSql = '' , searchSql = ''){
           const username = userinfo && userinfo.realname ? userinfo.realname.replace(/\(|\)/g,'_') : '' ;
           const list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_by,like,${username})${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
           list.map((item , index) => {
@@ -259,52 +225,14 @@ export default {
       },
 
       // 查询基础信息
-      async queryInfo(){
-
+      async queryInfo(tableName = 'bs_seal_regist'){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户信息
         this.tabname = Betools.storage.getStore('system_seal_mylist_tabname') || '1'; //获取tabname
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
-
-        //获取最近N个月的待用印记录
-        this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
-
-        this.initContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近N个月的已用印记录
-        this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取,移交前台,财务归档,档案归档,已完成)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
-
-        this.sealContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近N个月的已归档记录
-        this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
-
-        this.failContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
-        //获取最近N个月的已作废记录
-        this.endContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已作废,已测试)~and(create_by,eq,${userinfo.realname})~and(create_time,gt,${month})&_sort=-create_time&_p=0&_size=1000`);
-
-        this.endContractList.map((item , index) => {
-          item.name = item.filename.slice(0,16) ,
-          item.tel = '';
-          item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
-          item.isDefault = true;
-        })
-
+        this.initContractList = await this.handleList(tableName, '待用印', userinfo); //获取最近N个月的待用印记录
+        this.sealContractList = await this.handleList(tableName, '已用印,已领取,移交前台,财务归档,档案归档,已完成', userinfo); //获取最近N个月的已用印记录
+        this.failContractList = await this.handleList(tableName , '已退回', userinfo); //获取最近N个月的已归档记录
+        this.endContractList = await this.handleList(tableName , '已作废,已测试', userinfo); //获取最近N个月的已作废记录
       },
 
       //跳转用印界面详情
