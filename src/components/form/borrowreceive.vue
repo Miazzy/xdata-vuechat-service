@@ -1,10 +1,6 @@
 <template>
-
   <keep-alive>
-
-  <!--首页组件-->
   <div id="content" style="margin-top: 0px; overflow-x: hidden;" >
-
     <header id="wx-header" v-if="iswechat" style="overflow-x: hidden;" >
         <div class="center" >
             <router-link :to="back" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -21,17 +17,9 @@
     <section v-if="iswechat">
 
       <div class="weui-cells" style="margin-top:0px;">
-
         <div class="weui-cells" style="margin-top:0px;border-bottom:0px solid #fefefe;">
-          <van-notice-bar
-              v-show=" title!='' && title != null && typeof title != 'undefined' "
-              left-icon="volume-o"
-              color="#1989fa"
-              background="#ecf9ff"
-              :text="title"
-            />
+          <van-notice-bar v-show=" title!='' && title != null && typeof title != 'undefined' " left-icon="volume-o" color="#1989fa" background="#ecf9ff" :text="title" />
         </div>
-
         <div class="" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <van-row>
             <van-col span="8"></van-col>
@@ -39,7 +27,6 @@
             <van-col span="8"></van-col>
           </van-row>
         </div>
-
       </div>
 
       <div class="wechat-list" style="background-color:#fefefe;margin-top:0px;border-bottom:0px solid #fefefe;">
@@ -413,8 +400,6 @@ export default {
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -438,10 +423,13 @@ export default {
       this.queryInfo();
     },
     methods: {
+
+      // 选择Type类型
       onTypeConfirm(value) {
         this.item.type = value;
         this.showTypePicker = false;
       },
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -450,24 +438,23 @@ export default {
           console.log(error);
         }
       },
-      //点击显示或者隐藏菜单
+       
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -475,38 +462,26 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
             break;
-
           case 4: //重置数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
-      //用户选择盖印人
-      async querySealMan(){
 
+      // 用户选择盖印人
+      async querySealMan(){
         //获取盖章人信息
         const user_admin_name = this.item.user_admin_name;
-
         try {
           if(!!user_admin_name){
-
             //从用户表数据中获取填报人资料
             let user = await Betools.manage.queryUserByNameHRM(user_admin_name.trim());
-
             if(!!user){
-
               //如果是用户数组列表，则展示列表，让用户自己选择
               if(Array.isArray(user)){
-
                 try {
                   user.map((elem,index) => {
                     let company = elem.textfield1.split('||')[0];
@@ -515,18 +490,14 @@ export default {
                     department = department.slice(department.lastIndexOf('>')+1);
                     this.userList.push({id:elem.loginid , name:elem.lastname , tel:'' , address: company + "||" + elem.textfield1.split('||')[1] , company: company , department:department , mail: elem.email , isDefault: !index });
                   })
-
                   //获取盖印人姓名
                   this.item.user_admin_name = user[0].lastname;
                   //当前盖印人编号
                   this.item.userid = this.userid = user[0].loginid;
-
                 } catch (error) {
                   console.log(error);
                 }
-
               } else { //如果只有一个用户数据，则直接设置
-
                 try {
                   let company = user.textfield1.split('||')[0];
                   company = company.slice(company.lastIndexOf('>')+1);
@@ -541,9 +512,7 @@ export default {
                 } catch (error) {
                   console.log(error);
                 }
-
               }
-
               //遍历去重
               try {
                 this.userList = this.userList.filter((item,index) => {
@@ -554,25 +523,22 @@ export default {
               } catch (error) {
                 console.log(error);
               }
-
             }
           }
         } catch (error) {
           console.log(error);
         }
-
       },
-      //选中当前盖印人
+
+      // 选中当前盖印人
       async selectSealUser(value){
         await Betools.tools.sleep(0);
-
         const id = this.userid;
         this.item.userid = id;
-
         const user = this.userList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.user_admin_name = user.name;
+        this.item.user_admin_name = user.name;  //获取盖印人姓名
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -594,107 +560,75 @@ export default {
               status: '',
             };
       },
-      /**
-       * @function 获取处理日志
-       */
-      async queryProcessLog(){
 
+      // 获取处理日志
+      async queryProcessLog(){
         const id = Betools.tools.getUrlParam('id');
         const pid = Betools.tools.getUrlParam('pid');
-
         try {
           this.processLogList = await Betools.workflow.queryPRLogHistoryByDataID(id);
-
           //如果查询出出来记录，则将处理记录排序
           if(this.processLogList && this.processLogList.length > 0){
-
             this.processLogList.map(item => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm') });
             this.processLogList.sort();
-
             //获取最后一条处理记录，如果是已完成，或者已驳回，则删除待办记录
             const temp = this.processLogList[this.processLogList.length - 1];
-
             //检查状态并删除多余记录
             if((temp.action == '完成' && temp.action_opinion.includes('已完成')) || (temp.action == '确认' && temp.action_opinion.includes('已驳回')) ){
               await this.deleteProcessLog();
             }
-
           }
-
         } catch (error) {
           console.log(error);
         }
       },
-      async deleteProcessLog(){
 
+      // 删除流程日志数据
+      async deleteProcessLog(){
         const id = Betools.tools.getUrlParam('id');
         const pid = Betools.tools.getUrlParam('pid');
-
         //查询业务编号，如果不存在，则直接返回
         if(Betools.tools.isNull(id) || Betools.tools.isNull(pid)){
           return ;
         }
-
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //如果最后一条是已完成，或者已驳回，则删除待办记录 //查询当前所有待办记录
         let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
         //过滤出只关联当前流程的待办数据
         tlist = tlist.filter(item => {
           return item.id == id && item.pid == pid;
         });
-
         if(tlist.length > 0){
           //同时删除本条待办记录当前(印章管理员)
           await Betools.workflow.deleteViewProcessLog(tlist);
         }
-
       },
-      //选中当前盖印人
+
+      // 选中当前盖印人
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
+        this.item.front_name = user.name;  // 获取盖印人姓名
         this.item.front_id = id;
       },
 
+      // 校验字段有效性
       validField(fieldName){
-        //获取用户基础信息
-        const userinfo = Betools.storage.getStore('system_userinfo');
-
-        // 邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
-
+        const userinfo = Betools.storage.getStore('system_userinfo');  //获取用户基础信息
+        const regMail = Betools.workconfig.system.config.regexp.mail;  // 邮箱验证正则表达式
         if(fieldName.toLocaleLowerCase().includes('amount') && /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ) {
           this.message[fieldName] = /^\+?[1-9][0-9]*$/.test(this.item[fieldName]) ? '请填写借用数量及借用单位，注意单位！' : '';
           return Betools.tools.isNull(this.message[fieldName]);
         }
-
         if(fieldName.toLocaleLowerCase().includes('mail') && !regMail.test(this.item[fieldName])) {
           this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
           return Betools.tools.isNull(this.message[fieldName]);
         }
-
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
         Betools.storage.setStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}` , JSON.stringify(this.item) , 3600 * 2 );
-
         return Betools.tools.isNull(this.message[fieldName]);
-      },
-
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
       },
 
       // 选择入职时间
@@ -713,26 +647,15 @@ export default {
         this.tag.showPickerCommon = false;
       },
 
-      // 获取URL或者二维码信息
+      // 查询用户数据
       async queryInfo() {
-
         try {
-
           this.iswechat = Betools.tools.isWechat(); //查询当前是否微信端
           this.userinfo = await this.weworkLogin(); //查询当前登录用户
-
-          //查询上一页
-          this.back = Betools.tools.getUrlParam('back') || '/app';
-
-          //获取用户基础信息
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-
-          //获取缓存信息
-          const item = Betools.storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);
-
-          //根据URL参数查询物资类型
-          this.item.type = this.goodsborrowtype[Betools.tools.getUrlParam('type')];
-
+          this.back = Betools.tools.getUrlParam('back') || '/app';  //查询上一页
+          const userinfo = await Betools.storage.getStore('system_userinfo');  //获取用户基础信息
+          const item = Betools.storage.getStore(`system_${this.tablename}_item#${this.item.type}#@${userinfo.realname}`);  //获取缓存信息
+          this.item.type = this.goodsborrowtype[Betools.tools.getUrlParam('type')];  //根据URL参数查询物资类型
           //自动回显刚才填写的用户基础信息
           if(item){
             this.item.create_by = item.create_by || this.item.create_by;
@@ -752,7 +675,6 @@ export default {
             this.item.department = userinfo.department.name;
             this.item.company = userinfo.parent_company.name;
           }
-
           // 根据用户以前填写的物品管理员名称，编辑当前物品管理员名称
           const historyList = await Betools.query.queryGoodsAdmin(userinfo.username);
           if(historyList && historyList.length > 0){
@@ -761,11 +683,9 @@ export default {
             this.item.user_group_ids = historyList[0].user_group_ids;
             this.item.user_group_names = historyList[0].user_group_names;
           }
-
         } catch (error) {
           console.log(error);
         }
-
       },
 
       // 用户提交入职登记表函数
