@@ -1,10 +1,7 @@
 <template>
-
 <keep-alive>
-
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-
+  
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -18,12 +15,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="设备借用台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="设备借用台账"
-                        name="设备借用台账.xls"
-                      >
+                      <download-excel  :data="json_data" :fields="json_fields" worksheet="设备借用台账" name="设备借用台账.xls">
                         设备台账
                       </download-excel>
                     </span>
@@ -32,12 +24,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="传屏借用台账" icon="todo-list-o" >
                    <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data_box"
-                        :fields="json_fields_box"
-                        worksheet="传屏借用台账"
-                        name="传屏借用台账.xls"
-                      >
+                      <download-excel :data="json_data_box" :fields="json_fields_box" worksheet="传屏借用台账" name="传屏借用台账.xls">
                         传屏台账
                       </download-excel>
                     </span>
@@ -47,13 +34,10 @@
             </van-dropdown-menu>
         </div>
     </header>
-     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
+
+    <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词">
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
@@ -62,7 +46,6 @@
     </header>
 
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -79,7 +62,6 @@
           </div>
         </div>
       </div>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
@@ -98,7 +80,6 @@
           <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
-
     </section>
 
   </div>
@@ -136,8 +117,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             isLoading:false,
             loading:false,
@@ -190,26 +169,22 @@ export default {
       }
     },
     methods: {
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
+      
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -219,168 +194,99 @@ export default {
             await this.queryTabList(this.tabname , 0);
             break;
           case 3: //查询数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            this.searchFlag = true;
+            this.dropMenuValue = this.dropMenuOldValue, this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuOldValue = this.searchWord = this.dropMenuValue = '', this.searchFlag = false;
             await this.queryTabList(this.tabname , 0);
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
       async queryInfo(){
-
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
-
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-
-        //查询台账数据
-        await this.queryTabList('设备' , 0);
-        await this.queryTabList('传屏' , 0);
-
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
-
+        this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1'; //获取tabname
+        await this.queryTabList(this.tabname , 0); //查询页面数据
+        await this.queryTabList('设备' , 0); //查询台账数据
+        await this.queryTabList('传屏' , 0); //查询台账数据
+        this.back = Betools.tools.getUrlParam('back') || '/app'; //获取返回页面
       },
       async queryTabList(tabname , page){
-
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-
-        //设置查询语句
-        var searchSql = '';
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
-        }
-
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let searchSql = ''; //设置查询语句
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
           this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.initList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.initList = this.initList.filter(item => { return item.id == item.pid; });
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
           this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已借用)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.confirmList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
           this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已归还)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.doneList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
          } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
           this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.rejectList.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           })
-
-          this.rejectList = this.rejectList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.rejectList = this.rejectList.filter(item => { return item.id == item.pid; });
         } else if(tabname == '设备') {
-          //获取最近6个月的已领取记录
           this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,信息设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.json_data.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           });
-
         } else if(tabname == '传屏') {
-          //获取最近6个月的已领取记录
           this.json_data_box = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,传屏设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
           this.json_data_box.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
           });
-
         }
-
-
       },
+
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
         //查询当前用印信息
         const id = this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
         Betools.storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
-
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '2'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         } else if(this.tabname == '3' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
          } else if(this.tabname == '4' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/borrow?id=${id}&statustype=none&role=front&back=borrowlist`);
         }
-
       },
     }
 }
@@ -389,7 +295,6 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
     @import "../../assets/css/goodslist.css";
-
     #van-cell-export .van-cell__title span {
         float: left;
         transform:style(.8);
