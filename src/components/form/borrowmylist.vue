@@ -158,6 +158,7 @@ export default {
         }
       },
 
+      // 查询基础信息
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0);  //查询页面数据
@@ -166,6 +167,7 @@ export default {
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
 
+      // 查询Tab栏信息列表数据
       async queryTabList(tabname , page){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
@@ -183,6 +185,7 @@ export default {
         } 
       },
 
+      // 查询借用数据
       async handleList(tableName, status = '待处理', userinfo, searchSql = ''){
         let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id`);
         list.map((item) => {
@@ -195,6 +198,7 @@ export default {
         return list;
       },
 
+      // 跳转到借用详情页面
       async selectHContract(){
         const id = this.hContractID; //查询当前用印信息
         const list = this[this.tabmap[this.tabname]];
