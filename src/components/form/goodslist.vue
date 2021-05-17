@@ -291,22 +291,19 @@ export default {
         this.back = Betools.tools.getUrlParam('back') || '/app';
 
       },
-      async queryTabList(tabname , page){
+      async queryTabList(tabname , page = 0 ){
 
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname ;
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let searchSql = ''; //设置查询语句
 
-        //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-
-        //设置查询语句
-        var searchSql = '';
-
-        //如果存在搜索关键字
+        //如果存在搜索关键字，则编写查询关键字的查询语句
         if(this.searchWord) {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
+
+        debugger;
 
         if(tabname == 1){
           this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
@@ -317,84 +314,69 @@ export default {
         } else if(tabname == 4) {
           this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
         } else if(tabname == '办公') {
-          //获取最近6个月的已领取记录
           this.json_data_office = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,办公用品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-
           this.json_data_office.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-
+          });
         } else if(tabname == '药品') {
-          //获取最近6个月的已领取记录
           this.json_data_drug = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,药品)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-
           this.json_data_drug.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-
+          });
         } else if(tabname == '防疫') {
-          //获取最近6个月的已领取记录
           this.json_data_prevent = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,防疫物资)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_size=100`);
-
           this.json_data_prevent.map((item , index) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-
+          });
         }
-
       },
 
       async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 100){
-          if(tools.isNull(userinfo)){
+          if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }
+          debugger;
           let list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
-          list = list.filter(item => {
+          list.map((item)=>{
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
+          })
+          list = list.filter(item => {
             return item.id == item.pid;
           });
           return list;
       },
 
       async selectHContract(){
-
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
-        //查询当前用印信息
-        const id = this.hContractID;
+        await Betools.tools.sleep(0); //等待N毫秒
+        const id = this.hContractID;  //查询当前用印信息
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
 
         //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
         } else if(this.tabname == '2'){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
         } else if(this.tabname == '3' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
          } else if(this.tabname == '4' ){
           Betools.storage.setStore('system_goodsreceive_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
-          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`);
+          this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
         }
 
       },
