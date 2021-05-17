@@ -145,15 +145,11 @@ export default {
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
       //点击右侧菜单
       async headDropMenu(value){
@@ -175,14 +171,10 @@ export default {
         }
       },
       async queryInfo(){
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1';
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-        //查询页面数据
-        this.queryTabList('办公' , 0);
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
+        this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
+        await this.queryTabList(this.tabname , 0); //查询页面数据
+        this.queryTabList('办公' , 0); //查询页面数据
+        this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
       async queryTabList(tabname , page = 0 ){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
@@ -190,9 +182,7 @@ export default {
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         let searchSql = ''; //设置查询语句
         //如果存在搜索关键字，则编写查询关键字的查询语句
-        if(this.searchWord) {
-          searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
-        }
+        (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))` : null;
         if(tabname == 1){
           this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
