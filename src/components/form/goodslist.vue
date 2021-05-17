@@ -1,10 +1,7 @@
 <template>
-
 <keep-alive>
-
   <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -22,37 +19,8 @@
                         :data="json_data_office"
                         :fields="json_fields_office"
                         worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xls"
-                      >
+                        name="办公物品领用台账.xls" >
                         办公台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_drug"
-                        :fields="json_fields_drug"
-                        worksheet="药品领用台账"
-                        name="药品领用台账.xls"
-                      >
-                        药品台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_prevent"
-                        :fields="json_fields_prevent"
-                        worksheet="防疫物资领用台账"
-                        name="防疫物资领用台账.xls"
-                      >
-                        防疫台账
                       </download-excel>
                     </span>
                   </template>
@@ -76,7 +44,6 @@
     </header>
 
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -93,7 +60,6 @@
           </div>
         </div>
       </div>
-
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待处理" edit-disabled @select="selectHContract()" />
@@ -108,14 +74,11 @@
           <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
-
     </section>
 
   </div>
 </keep-alive>
-
 </template>
-
 <script>
 export default {
     mixins: [window.mixin],
@@ -149,8 +112,8 @@ export default {
               { text: '应用', value: 5 , icon: 'apps-o' },
               { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
-            isLoading:false,
-            loading:false,
+            isLoading: false,
+            loading: false,
             json_fields_office: {
               '排序编号':'serialid',
               '登记时间': 'create_time',
@@ -284,8 +247,6 @@ export default {
 
         //查询页面数据
         this.queryTabList('办公' , 0);
-        this.queryTabList('药品' , 0);
-        this.queryTabList('防疫' , 0);
 
         //获取返回页面
         this.back = Betools.tools.getUrlParam('back') || '/app';
@@ -312,11 +273,11 @@ export default {
         } else if(tabname == 4) {
           this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
         } else if(tabname == '办公') {
-          this.json_fields_office = this.handleExList(tableName, '办公用品', userinfo, searchSql);
+          this.json_fields_office = await this.handleExList(tableName, '办公用品', userinfo, searchSql);
         } else if(tabname == '药品') {
-          this.json_data_drug = this.handleExList(tableName, '药品', userinfo, searchSql);
+          this.json_data_drug = await this.handleExList(tableName, '药品', userinfo, searchSql);
         } else if(tabname == '防疫') {
-          this.json_data_prevent = this.handleExList(tableName, '防疫', userinfo, searchSql);
+          this.json_data_prevent = await this.handleExList(tableName, '防疫', userinfo, searchSql);
         }
       },
 
