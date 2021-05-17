@@ -81,15 +81,19 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
+          <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待确认" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
+          <van-empty v-if="tabname == 2 && confirmList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已确认" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
+          <van-empty v-if="tabname == 3 && doneList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
+          <van-empty v-if="tabname == 4 && rejectList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
         </template>
       </div>
