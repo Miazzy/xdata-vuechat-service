@@ -116,6 +116,7 @@ export default {
             initList:[],
             confirmList:[],
             doneList:[],
+            rejectList:[],
             hContractID:'',
             tname: 'bs_entry_job',
             tabmap:{
@@ -252,64 +253,47 @@ export default {
 
       // 查询基础信息
       async queryInfo(){
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
+        this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
         this.role = Betools.tools.getUrlParam('role') || 'front';
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1';
-        //如果角色不是HR，且tabname为1，则修改为2
-        if(this.role != 'hr' && (this.tabname == '1' || this.tabname == '4')){
+        this.tabname = Betools.storage.getStore('system_entryjob_list_tabname') || '1'; //获取tabname
+        if(this.role != 'hr' && (this.tabname == '1' || this.tabname == '4')){ //如果角色不是HR，且tabname为1，则修改为2
           this.tabname = '2';
         }
-        //如果角色不是HR，则导出功能，不能导出身份证号，银行卡号
-        if(this.role !== 'hr'){
+        if(this.role !== 'hr'){ //如果角色不是HR，则导出功能，不能导出身份证号，银行卡号
           delete this.json_fields.idcard;
           delete this.json_fields.bank_card;
         }
-        //查询员工信息列表
-        await this.queryTabList(this.tabname ,0);
-        //查询员工信息列表
-        await this.queryTabList('入职' ,0);
+        await this.queryTabList(this.tabname ,0);  //查询员工信息列表
+        await this.queryTabList('入职' ,0); //查询员工信息列表
       },
 
       // 查询Tab栏信息
       async queryTabList(tabname , page){
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');  //获取最近12个月对应的日期
+        const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))` : null;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待确认)~and(create_time,gt,${month})${searchSql}`);
-          this.initList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.initList = await this. handleList(tableName, '待确认', searchSql);
         } else if(tabname == 2) {
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已确认)~and(create_time,gt,${month})${searchSql}`);
-          this.confirmList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.confirmList = await this. handleList(tableName, '已确认', searchSql);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(create_time,gt,${month})${searchSql}`);
-          this.doneList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.doneList = await this. handleList(tableName, '已完成', searchSql);
         } else if(tabname == 4) {
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(create_time,gt,${month})${searchSql}`);
-          this.rejectList.map((item , index) => {
-            item.name = item.username + ' ' + item.mobile ,
-            item.tel = '';
-            item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` + ' HR:' + item.hr_name;
-            item.isDefault = true;
-          });
+          this.rejectList = await this. handleList(tableName, '已驳回', searchSql);
         } 
+      },
+
+      // 查询入职信息
+      async handleList(tableName , status = '待确认' , searchSql = ''){
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');  //获取最近12个月对应的日期
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_time,gt,${month})${searchSql}`);
+        list.map((item) => {
+          item.name = item.username + ' ' + item.mobile ,
+          item.tel = '';
+          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
+          item.isDefault = true;
+        });
+        return list;
       },
 
       // 跳转到相应员工入职详情页面
