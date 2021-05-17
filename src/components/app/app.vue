@@ -224,7 +224,7 @@
                         <div class="weui-cell_app_hd" @click="goodsBorrow('history');">
                             <img src="//cdn.jsdelivr.net/gh/Miazzy/yunwisdoms@r3.0.6/images/leave_04.png">
                             <div class="weui-cell_app_bd">
-                                预约历史
+                                领用历史
                             </div>
                         </div>
                     </van-col>

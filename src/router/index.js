@@ -378,7 +378,7 @@ const routes = [{
         }
     }, {
         path: '/app/goodsmylist',
-        name: "预约历史",
+        name: "领用历史",
         components: {
             "default": resolve => require(["../components/app/app.vue"], resolve),
             "subPage": resolve => require(["../components/form/goodsmylist.vue"], resolve)
