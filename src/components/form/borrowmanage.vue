@@ -294,7 +294,6 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
     @import "../../assets/css/goodslist.css";
-
     #van-cell-export .van-cell__title span {
         float: left;
         transform:style(.8);
