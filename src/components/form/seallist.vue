@@ -14,34 +14,6 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 0px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 42px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="用印台账"
-                        name="用印台账(合同类).xls"
-                      >
-                        合同台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出非合同" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_common"
-                        :fields="json_fields_common"
-                        worksheet="用印台账"
-                        name="用印台账(非合同类).xls"
-                      >
-                        非合同台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -237,21 +209,12 @@ export default {
 
       //查询用印列表信息
       async queryInfo(){
-
         const queryTabListInfo = this.queryTabList;
         this.searchWord = await Betools.storage.getStore('system_search_word_v1');
-
         this.tabname = (Betools.storage.getStore('system_seal_list_tabname') || '1') % 10 ; //获取tabname
         this.tabname = this.tabname >= 3 ? 6 : this.tabname <= 1 ? 1 : 2;
         const tabname = this.tabname ;
-
         queryTabListInfo(tabname, 0); //查询列表数据
-
-        Betools.tools.throttle(async () => {
-            queryTabListInfo('合同类',0); //查询合同类数据
-            queryTabListInfo('非合同类',0); //查询非合同类数据
-        }, 1000000 , 15000)();
-
       },
 
       //跳转到用印合同详情
