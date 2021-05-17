@@ -137,57 +137,19 @@ export default {
             rejectList: [],
             hContractID: '',
             tname: 'bs_visit_apply',
-            tabmap: {
-                '1': 'initList',
-                '2': 'confirmList',
-                '3': 'doneList',
-                '4': 'rejectList',
-            },
+            tabmap: { '1': 'initList', '2': 'confirmList', '3': 'doneList', '4': 'rejectList' },
             back: '/app/app_subvisitor',
             searchWord: '',
             searchFlag: false,
             dropMenuOldValue: '',
             dropMenuValue: '',
-            dropMenuOption: [{
-                    text: '刷新',
-                    value: 2,
-                    icon: 'replay'
-                },
-                {
-                    text: '搜索',
-                    value: 3,
-                    icon: 'search'
-                },
-                {
-                    text: '重置',
-                    value: 4,
-                    icon: 'aim'
-                },
-                {
-                    text: '应用',
-                    value: 5,
-                    icon: 'apps-o'
-                },
-                {
-                    text: '首页',
-                    value: 6,
-                    icon: 'wap-home-o'
-                },
+            dropMenuOption: [
+                { text: '刷新', value: 2, icon: 'replay' },
+                { text: '搜索', value: 3, icon: 'search' },
+                { text: '重置', value: 4, icon: 'aim' },
             ],
-            vstatus: {
-                init: '待处理',
-                confirm: '未到访',
-                visit: '已到访',
-                devisit: '已作废',
-                invalid: '已作废',
-            },
-            cstatus: {
-                init: 5,
-                confirm: 6,
-                visit: 7,
-                devisit: 8,
-                invalid: 9,
-            },
+            vstatus: { init: '待处理', confirm: '未到访', visit: '已到访', devisit: '已作废', invalid: '已作废' },
+            cstatus: { init: 5, confirm: 6, visit: 7, devisit: 8, invalid: 9, },
             isLoading: false,
             loading: false,
             json_fields: {
@@ -231,38 +193,26 @@ export default {
         }
     },
     methods: {
-        encodeURI(value) {
-            return window.encodeURIComponent(value);
-        },
-        //点击显示或者隐藏菜单
+        
+        // 点击显示或者隐藏菜单
         async headMenuToggle() {
             this.$refs.headMenuItem.toggle();
         },
-        //点击顶部搜索
+
+        // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                //刷新相应表单
-                this.queryTabList(this.tabname);
-                //显示搜索状态
-                vant.Toast('搜索...');
-                //等待一下
-                await Betools.tools.sleep(300);
+                this.queryTabList(this.tabname); //刷新相应表单
+                vant.Toast('搜索...'); //显示搜索状态
+                await Betools.tools.sleep(300); //等待一下
             }
-            //显示刷新消息
-            this.searchFlag = false;
+            this.searchFlag = false; //显示刷新消息
         },
-        //点击右侧菜单
+
+        // 点击右侧菜单
         async headDropMenu(value) {
             const val = this.dropMenuValue;
             switch (val) {
-                case 0: //只显示合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryTabList(this.tabname, 0);
-                    break;
-                case 1: //只显示非合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryTabList(this.tabname, 0);
-                    break;
                 case 2: //刷新数据
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.queryTabList(this.tabname, 0);
@@ -272,113 +222,76 @@ export default {
                     this.searchFlag = true;
                     break;
                 case 4: //重置数据
-                    this.dropMenuValue = '';
-                    this.dropMenuOldValue = '';
-                    this.searchFlag = false;
-                    this.searchWord = '';
+                    this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '', this.searchFlag = false;
                     await this.queryTabList(this.tabname, 0);
-                    break;
-                case 5: //返回应用
-                    this.$router.push(`/app`);
-                    break;
-                case 6: //返回首页
-                    this.$router.push(`/explore`);
                     break;
                 default:
                     console.log(`no operate. out of switch. `);
             }
         },
-        async queryInfo() {
-            //强制渲染
-            this.$forceUpdate();
-            //获取tabname
-            this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1';
-            //查询页面数据
-            await this.queryTabList(this.tabname, 0);
-            //获取返回页面
-            this.back = Betools.tools.getUrlParam('back') || '/app';
-        },
-        async queryTabList(tabname, page) {
 
-            //获取当前用户信息
-            const userinfo = await Betools.storage.getStore('system_userinfo');
-            //获取最近12个月对应的日期
-            var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-            const cstatus = this.cstatus;
-            //设置查询语句
-            var searchSql = '';
-            //如果存在搜索关键字
+        // 查询基础数据
+        async queryInfo() {
+            this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1'; //获取tabname
+            await this.queryTabList(this.tabname, 0);  //查询页面数据
+            this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
+        },
+
+        // 查询Tab栏列表数据
+        async queryTabList(tabname, page) {
+            const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
+            const tableName = this.tname;
+            let searchSql = ''; //设置查询语句
             if (this.searchWord) {
                 searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))`;
             }
             if (tabname == 1) {
-                this.initList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,init,confirm)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
-                this.initList.map((item, index) => {
-                    item.name = item.address;
-                    item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-                        item.tel = '';
-                    item.isDefault = true;
-                })
-                this.initList = this.initList.sort(function(a, b) { //callback
-                    const value = cstatus[a.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(a.create_time).format('YYYYMMDDHHmmss')));
-                    const value_ = cstatus[b.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(b.create_time).format('YYYYMMDDHHmmss')));
-                    console.log(`value:${value},value_:${value_}`);
-                    return value - value_;  //返回正数 ，b排列在a之前
-                });
-                this.initList = this.initList.filter(item => {
-                    return item.id == item.pid;
-                });
+                this.initList = await this.handleList(tableName , 'init,confirm' , userinfo, searchSql);
             } else if (tabname == 2) {
-                this.confirmList = await Betools.manage.queryTableData(this.tname, `_where=(status,eq,visit)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
-                this.confirmList.map((item, index) => {
-                    item.name = item.address;
-                    item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-                        item.tel = '';
-                    item.isDefault = true;
-                })
-                this.confirmList = this.confirmList.filter(item => {
-                    return item.id == item.pid;
-                });
+                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql);
             } else if (tabname == 3) {
-                this.doneList = await Betools.manage.queryTableData(this.tname, `_where=(status,in,devisit,invalid)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-create_time`);
-                this.doneList.map((item, index) => {
-                    item.name = item.address;
-                    item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`,
-                        item.tel = '';
-                    item.isDefault = true;
-                })
-                this.doneList = this.doneList.filter(item => {
-                    return item.id == item.pid;
-                });
+                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql);
             }
         },
+
+        // 查询Tab对应拜访信息
+        async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = ''){
+            const cstatus = this.cstatus;
+            let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=0&_size=1000`);
+            list.map((item, index) => {
+                item.name = item.address;
+                item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`;
+                item.tel = '';
+                item.isDefault = true;
+            })
+            list = list.sort(function(a, b) { //callback
+                const value = cstatus[a.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(a.create_time).format('YYYYMMDDHHmmss')));
+                const value_ = cstatus[b.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(b.create_time).format('YYYYMMDDHHmmss')));
+                return value - value_;  //返回正数 ，b排列在a之前
+            });
+            list = list.filter(item => { return item.id == item.pid; });
+            return list;
+        },
+
+        // 跳转访客页面详情
         async selectHContract(item) {
-
-            //查询当前用印信息
-            const id = item.id;
-
-            //根据当前状态，跳转到不同页面
+            const id = item.id; //查询当前用印信息
+            Betools.storage.setStore('system_visitorview_list_tabname', this.tabname);  //根据当前状态，跳转到不同页面
             if (this.tabname == '1') {
-                Betools.storage.setStore('system_visitorview_list_tabname', this.tabname);
-                //跳转到相应的用印界面
                 this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
             } else if (this.tabname == '2') {
-                Betools.storage.setStore('system_visitorview_list_tabname', this.tabname);
-                //跳转到相应的用印界面
                 this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
             } else if (this.tabname == '3') {
-                Betools.storage.setStore('system_visitorview_list_tabname', this.tabname);
-                //跳转到相应的用印界面
                 this.$router.push(`/app/visitorview?id=${id}&statustype=${item.status}&role=front&confirm=confirm&back=visitorlist`);
             }
-
         },
 
-        //显示遮罩
+        // 显示遮罩
         async showOverlayConfirm(action = 'cancel', done) {
             await Betools.manage.showOverlayConfirm(action, done, this.tag, this.block);
         },
 
+        // 执行确认到访操作
         async handleConfirm(element, key, value, visitType = '已到访') {
 
             if (element.status == 'init') {
