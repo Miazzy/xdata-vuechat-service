@@ -145,9 +145,7 @@ export default {
           console.log(error);
         }
       },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
+      
       //刷新页面
       async queryFresh(){
         //刷新相应表单
@@ -159,10 +157,12 @@ export default {
         //设置加载状态
         this.isLoading = false;
       },
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -176,6 +176,7 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -197,30 +198,22 @@ export default {
             this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '';
             this.searchFlag = false;
-            this.searchWord = '';
             await this.queryFresh();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);
         }
       },
+
       //点击Tab栏
       async queryTabList(tabname){
 
         //获取用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
 
-        //获取最近6个月对应的日期
+        //获取最近N个月对应的日期
         let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         let sealTypeSql = '';
         let searchSql = '';
