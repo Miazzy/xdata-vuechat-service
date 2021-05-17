@@ -15,11 +15,7 @@
     </header>
      <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词">
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
