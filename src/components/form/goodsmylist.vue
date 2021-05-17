@@ -10,6 +10,8 @@
             <van-dropdown-menu id="header-drop-menu" class="header-drop-menu" @change="headDropMenu();" z-index="100" style="position: absolute; width: 55px; height: auto; right: -15px; top: -3px; opacity: 1; background:#1b1b1b; ">
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
+              <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
+              </van-dropdown-item>
             </van-dropdown-menu>
         </div>
     </header>
@@ -91,8 +93,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             isLoading:false,
             loading:false,
@@ -155,7 +155,7 @@ export default {
     methods: {
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
-        this.$refs.headMenuItem.toggle();
+         this.$refs.headMenuItem.toggle();
       },
 
       // 点击顶部搜索
@@ -165,8 +165,7 @@ export default {
           vant.Toast('搜索...'); //显示搜索状态
           await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
 
       // 点击右侧菜单
