@@ -131,8 +131,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
               { text: '导出', value: 7 , icon: 'description' },
             ],
             menuCssValue:'',
@@ -175,6 +173,7 @@ export default {
           this.$refs.grid_02.exportTable('xlsx', true, '失物招领台账');
         }
       },
+      
       async onAdd(){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const temp = this.$refs.grid.$options.propsData.value;
@@ -196,9 +195,11 @@ export default {
         await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
         await this.queryTabList(0,0);
       },
+
       async onDelete(records){
         console.log('delete');
       },
+
       async onUpdate(records){
         const temp = this.$refs.grid.$options.propsData.value;
         if(records.length > 1){
@@ -220,9 +221,6 @@ export default {
         } catch (error) {
           console.log(error);
         }
-      },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
       },
       // 刷新页面
       async queryFresh(){
@@ -256,8 +254,6 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0:
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryFresh();
@@ -273,12 +269,6 @@ export default {
             this.searchFlag = false;
             this.searchWord = '';
             await this.queryFresh();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           case 7: //导出表单
             this.dropMenuValue = '';
