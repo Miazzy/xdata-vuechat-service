@@ -257,7 +257,7 @@ export default {
           this.$router.push(`/app/goodsview?id=${id}&statustype=${item.type}&role=front&back=goodslist`); //跳转到相应的用印界面
         }
       },
-      
+
     }
 }
 </script>
@@ -265,5 +265,4 @@ export default {
     @import "../../assets/css/explore.css";
     @import "../../assets/css/seallist.css";
     @import "../../assets/css/goodslist.css";
-
 </style>
