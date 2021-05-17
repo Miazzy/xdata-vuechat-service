@@ -210,11 +210,11 @@ export default {
         }
       },
 
-      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 100){
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 3000){
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }
-          let list = await Betools.manage.queryTableData(tableName , `_where=(status,eq,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+          let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
           list.map((item)=>{
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
@@ -228,7 +228,7 @@ export default {
       },
 
       async handleExList(tableName, type = '办公用品', userinfo, searchSql){
-          const list = await Betools.manage.queryTableData(tableName , `_where=(type,eq,${type})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_size=3000`);
+          const list = await Betools.manage.queryTableData(tableName , `_where=(type,in,${type})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_size=3000`);
           list.map((item) => {
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
