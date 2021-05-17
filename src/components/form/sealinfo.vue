@@ -408,7 +408,7 @@ export default {
                     console.log(`no operate. out of switch. `);
             }
         },
-        
+
         // 设置重置
         async reduction() {
             this.item = {
@@ -478,18 +478,12 @@ export default {
         },
         //校验字段信息
         async validField(fieldName) {
-
-            await Betools.tools.sleep(0);
-
             //邮箱验证正则表达式
             const regMail = Betools.workconfig.system.config.regexp.mail;
-
             this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
-
             if (fieldName == 'dealMail') {
                 this.message[fieldName] = regMail.test(this.item[fieldName]) ? '' : '请输入正确的邮箱地址！';
             }
-
             //修改合同列表时，切换编号名称
             if (fieldName == 'sealtype') {
                 //设置编号名称
