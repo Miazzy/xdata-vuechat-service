@@ -1,7 +1,7 @@
 <template>
 <keep-alive>
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd; overflow-x: hidden;" >
-  
+
     <header id="wx-header" v-show="!searchFlag" style="overflow-x: hidden;">
         <div class="center">
             <router-link :to="back" tag="div" class="iconfont icon-left">
@@ -170,12 +170,12 @@ export default {
     },
     methods: {
       
-      //点击显示或者隐藏菜单
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
 
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
           this.queryTabList(this.tabname); //刷新相应表单
@@ -185,7 +185,7 @@ export default {
         this.searchFlag = false; //显示刷新消息
       },
 
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -204,6 +204,8 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询基础信息
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0); //查询页面数据
@@ -211,66 +213,55 @@ export default {
         await this.queryTabList('传屏' , 0); //查询台账数据
         this.back = Betools.tools.getUrlParam('back') || '/app'; //获取返回页面
       },
+
+      // 查询Tab栏信息
       async queryTabList(tabname , page){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this.handleList(tableName , '待处理' , userinfo, searchSql);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已借用)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
+          this.confirmList = await this.handleList(tableName , '已借用' , userinfo, searchSql);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已归还)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
+          this.doneList = await this.handleList(tableName , '已归还' , userinfo, searchSql);
          } else if(tabname == 4) {
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.rejectList.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.rejectList = this.rejectList.filter(item => { return item.id == item.pid; });
+          this.rejectList = await this.handleList(tableName , '已驳回' , userinfo, searchSql);
         } else if(tabname == '设备') {
-          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,信息设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.json_data.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
+          this.json_data = await this.handleExList(tableName , '信息设备', userinfo, searchSql);
         } else if(tabname == '传屏') {
-          this.json_data_box = await Betools.manage.queryTableData(this.tname , `_where=(type,eq,传屏设备)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.json_data_box.map((item , index) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          });
+          this.json_data_box = await this.handleExList(tableName , '传屏设备', userinfo, searchSql);
         }
       },
 
+      // 查询借用信息列表数据
+      async handleList(tableName , status , userinfo, searchSql = '' , page = 0 , size = 1000){
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+          })
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
+      },
+
+      // 查询导出列表数据
+      async handleExList(tableName , type = '信息设备', userinfo, searchSql, page = 0 , size = 1000){
+        let list = await Betools.manage.queryTableData(tableName , `_where=(type,in,${type})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item , index) => {
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
+            item.tel = '';
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.isDefault = true;
+        });
+        return list;
+      },
+
+      // 执行跳转借用详情页面
       async selectHContract(){
         //查询当前用印信息
         const id = this.hContractID;
