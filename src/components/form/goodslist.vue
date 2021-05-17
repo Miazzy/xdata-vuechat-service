@@ -211,7 +211,7 @@ export default {
       },
 
       //查询不同状态的领用数据
-      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 1000){
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 150){
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }
