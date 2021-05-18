@@ -322,6 +322,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -330,13 +331,16 @@ export default {
           console.log(error);
         }
       },
+
+      // 校验字段有效性
       validField(fieldName){
-        //邮箱验证正则表达式
-        const regMail = Betools.workconfig.system.config.regexp.mail;
+        const regMail = Betools.workconfig.system.config.regexp.mail;  //邮箱验证正则表达式
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         Betools.storage.setStore('system_seal_item' , JSON.stringify(this.item) , 3600 * 2 );
         return Betools.tools.isNull(this.message[fieldName]);
       },
+
+      // 校验字段确认函数
       validFieldConfirm(fieldName){
         this.message[fieldName] = Betools.tools.isNull(this.item[fieldName]) ? this.valid[fieldName] : '';
         if(fieldName == 'dealMail'){
@@ -344,7 +348,8 @@ export default {
         }
         return Betools.tools.isNull(this.message[fieldName]);
       },
-       //选中当前合同编号
+
+      // 选中当前合同编号
       async selectHContract(value){
         await Betools.tools.sleep(0);
         const id = this.hContractID;
@@ -361,13 +366,13 @@ export default {
           this.item.contractId = `${id.split(`-${dayjs().format('YYYY')}-`)[0]}-${dayjs().format('YYYY')}-${no}`;
         }
       },
+
       // 获取合同编号
       async queryHContract(){
 
         let prefix = this.item.prefix = this.item.prefix.toUpperCase(); // 获取盖章人信息
 
-        // 如果contract_id存在，则从contract_id提取前缀
-        try {
+        try {  // 如果contract_id存在，则从contract_id提取前缀
           prefix = this.item.contractId && this.item.contractId.includes(`-${dayjs().format('YYYY')}-`) ? this.item.contractId.split(`-${dayjs().format('YYYY')}-`)[0].toUpperCase() : prefix ;
           prefix = this.item.contractId && this.item.contractId.includes(`[${dayjs().format('YYYY')}]`) ? this.item.contractId.split(`[${dayjs().format('YYYY')}]`)[0].toUpperCase() : prefix ;
         } catch (error) {
@@ -452,6 +457,7 @@ export default {
         }
 
       },
+
       //查询归档人员
       async queryArchiveMan(){
         //获取盖章人信息
@@ -520,6 +526,7 @@ export default {
           console.log(error);
         }
       },
+
       async queryFinanceArchiveMan(){
         //获取盖章人信息financeuserList
         const finance_name =  this.item.finance_name || this.item.finance;
@@ -596,6 +603,7 @@ export default {
           console.log(error);
         }
       },
+
       //用户选择前台接待
       async queryRecordArchiveMan(){
         //获取盖章人信息
@@ -673,7 +681,8 @@ export default {
           console.log(error);
         }
       },
-      //用户选择前台接待
+
+      // 用户选择前台接待
       async queryFrontMan(){
         //获取盖章人信息
         const front_name = this.item.front_name || this.item.front;
@@ -742,7 +751,8 @@ export default {
           console.log(error);
         }
       },
-      //用户选择盖印人
+
+      // 用户选择盖印人
       async querySealMan(){
 
         //获取盖章人信息
@@ -814,55 +824,48 @@ export default {
 
       },
 
-      //选中当前前台人
+      // 选中当前前台人员
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.fuserid;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.front_name = user.name;
-        //当前盖印人编号
-        this.item.front = id;
+        this.item.front_name = user.name;  //获取姓名
+        this.item.front = id;  //当前用户编号
       },
-      //选中当前前台人
+
+      // 选中当前财务归档人员
       async selectFinanceUser(value){
         await Betools.tools.sleep(0);
         const id = this.financeUserid;
         const user = this.financeuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
-        this.item.finance_name = user.name;
-        //当前盖印人编号
-        this.item.finance = id;
-        //设置归档组
-        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.finance_name = user.name; //获取姓名
+        this.item.finance = id; //当前用户编号
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;  //设置归档组
         this.item.archive = `${this.item.finance},${this.item.record}`;
       },
-      //选中当前档案人
+
+      // 选中当前档案人员
       async selectRecordUser(value){
         await Betools.tools.sleep(0);
         const id = this.recordUserid;
         const user = this.recorduserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
         this.item.record_name = user.name;
-        //当前盖印人编号
-        this.item.record = id;
-        //设置归档组
-        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;
+        this.item.record = id; //当前用户编号
+        this.item.archive_name = `${this.item.finance_name},${this.item.record_name}`;  //设置归档组
         this.item.archive = `${this.item.finance},${this.item.record}`;
       },
-      //选中当前盖印人
+
+      // 选中当前盖印人员
       async selectSealUser(value){
         await Betools.tools.sleep(0);
         const id = this.suserid;
         const user = this.suserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
         this.item.sealman = user.name;
-        this.item.seal = id;
-        //当前盖印人编号
-        this.sealuserid = id;
+        this.item.seal = id; //当前用户编号
+        this.sealuserid = id; //当前用户编号
       },
 
-      //选中当前归档人员
+      // 选中当前归档人员
       async selectArchiveUser(values){
         await Betools.tools.sleep(0);
         let ids = [];
@@ -877,17 +880,13 @@ export default {
         this.item.archive = ids.join(',');
       },
 
+      // 归档类型确认
       archiveTypeConfirm(value) {
         this.item.archiveType = value;
         this.tag.showPicker = false;
       },
 
-      getUrlParam(name) {
-          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-          var r = window.location.hash.substr(window.location.hash.indexOf('?') + 1).match(reg);  //匹配目标参数
-          if (r != null) return decodeURI(r[2]); return null; //返回参数值
-      },
-
+      // 查询基础信息
       async queryInfo(){
 
         try {
@@ -1056,6 +1055,8 @@ export default {
           console.log(error);
         }
       },
+
+      // 保存文件
       async saveAsFile(file , name){
         try {
           window.saveAs(file , name);
@@ -1063,9 +1064,8 @@ export default {
           console.log(error);
         }
       },
-      /**
-       * @function 检查用户状态
-       */
+
+      // 检查用户状态
       async userStatus(){
         try {
           let info = await Betools.storage.getStore('system_userinfo');
@@ -1078,9 +1078,8 @@ export default {
           console.log(error);
         }
       },
-      /**
-       * @function 获取处理日志
-       */
+
+      // 获取处理日志
       async queryProcessLog(){
 
         const id = Betools.tools.getUrlParam('id');
@@ -1110,6 +1109,8 @@ export default {
           console.log(error);
         }
       },
+
+      // 删除日志
       async deleteProcessLog(){
 
         const id = Betools.tools.getUrlParam('id');
@@ -1137,9 +1138,8 @@ export default {
         }
 
       },
-      /**
-       * @function 处理同意操作
-       */
+
+      // 执行同意操作
       async handleAgree(){
 
         this.validField('message');
@@ -1379,9 +1379,8 @@ export default {
         });
 
       },
-      /**
-       * @function 处理作废操作
-       */
+
+      // 执行作废操作
       async handleDisagree(){
 
         this.validField('message');
@@ -1531,6 +1530,7 @@ export default {
 
       },
 
+      // 执行Sending操作
       async handleSending(){
 
         var noname = '合同编号';
@@ -1612,9 +1612,8 @@ export default {
         await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
       },
-      /**
-       * @function 处理移交前台操作
-       */
+
+      // 处理移交确认操作
       async handleConfirm(){
 
         var noname = '合同编号';
@@ -1746,9 +1745,8 @@ export default {
         await Betools.workflow.deleteViewProcessLog(tlist);
 
       },
-      /**
-       * @function 处理归档操作
-       */
+
+      // 执行归档处理操作
       async handleArchive(){
 
         if(this.item.archiveType == '' || this.item.archiveType == null) {
@@ -1864,9 +1862,8 @@ export default {
         await Betools.workflow.approveViewProcessLog(prLogHisNode);
 
       },
-      /**
-       * @function 处理归档完成操作
-       */
+
+      // 执行归档处理完成操作
       async handleFinaly(){
 
         //获取用户信息
@@ -1952,9 +1949,7 @@ export default {
 
       },
 
-      /**
-       * @function 处理推送消息操作
-       */
+      // 执行推送消息操作
       async handleMessage(email , url){
 
         var noname = '合同编号';
