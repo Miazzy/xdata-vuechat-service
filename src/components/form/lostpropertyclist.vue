@@ -38,7 +38,7 @@
     <section>
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract" />
         </template>
       </div>
     </section>
@@ -216,12 +216,9 @@ export default {
       },
 
       // 跳转失物认领详情页面
-      async selectHContract(){
-        const id = this.hContractID;  //查询当前用印信息
-        const list = this[this.tabmap[this.tabname]];
-        const item = list.find((item,index) => {return id == item.id});
+      async selectHContract(elem){
+        const id = elem.id;
         Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
-        //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertyclist`);
         } else if(this.tabname == '2'){

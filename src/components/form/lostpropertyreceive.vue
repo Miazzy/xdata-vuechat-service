@@ -164,26 +164,21 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-
               lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
               lost_name:'', //失物名称
               lost_amount:'',//失物数量
-
               claim_name: '', //认领人员
               claim_time: '', //认领时间
               department:'', //部门名称
               company:'', //单位名称
               mobile: '', //联系电话
               description:'', //备注说明
-
               userid:'',
               user_group_ids:'',
               user_group_names:'',
               user_admin_name:'',
-
               address:'',
               zone_name:'',
-
               serialid: '', //序列编号
               status: '',
             },
@@ -208,8 +203,6 @@ export default {
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '重置', value: 4 , icon: 'aim' },
-              
-              
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -233,6 +226,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+      
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -241,23 +235,22 @@ export default {
           console.log(error);
         }
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname);  //刷新相应表单
+          vant.Toast('搜索...');   //显示搜索状态
+          await Betools.tools.sleep(300);  //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false;  //显示刷新消息
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -274,6 +267,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 用户选择物品管理员
       async queryAdminMan(){
 
@@ -367,6 +361,7 @@ export default {
         }
 
       },
+
       // 选中当前物品管理员
       async selectAdminMan(item, index){
         //获取物品管理员姓名
@@ -375,28 +370,23 @@ export default {
         if(!this.item.address || !this.item.zone_name){
           //选择物品管理员后，查询此物品管理员对应的区域及地址信息
           const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
-          //获取到物品管理员组信息
-          this.item.user_zone_name = this.item.address = response && response.length > 0 ? response[0].address : '';
+          this.item.user_zone_name = this.item.address = response && response.length > 0 ? response[0].address : ''; //获取到物品管理员组信息
           this.item.zone_name = response && response.length > 0 ? response[0].zonename : '';
         }
       },
+
       // 根据输入地址信息获取失物招领处地址信息
       async queryZoneName(){
 
         const address = this.item.address;  // 获取地址信息
-
         if(address.length <= 1){
           return;
         }
-
         try {
           if(!!address){
-
             // 获取地址列表信息
             let addressName = await Betools.manage.queryAddressByName(address.trim());
-
             if(!!addressName){
-
               if(Array.isArray(addressName)){
                 try {
                   addressName.map((elem,index) => { this.zoneList.push({id:elem.serialid , name:elem.zonename , tel:'' , address: elem.address , company: '' , department:'' , mail: elem.email , isDefault: !index }); });
@@ -423,19 +413,19 @@ export default {
               } catch (error) {
                 console.log(error);
               }
-
             }
           }
         } catch (error) {
           console.log(error);
         }
-
       },
+
       // 选中当前地址信息
       async selectZoneName(item,index){
         this.item.user_zone_name = this.item.address = item ? item.address : '';
         this.item.zone_name = item ? item.name : '';
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -443,22 +433,20 @@ export default {
               serialid:'',
               create_time: dayjs().format('YYYY-MM-DD'),
               create_by: '',
-
               lost_time: dayjs().format('YYYY-MM-DD'), //遗失时间
               lost_name:'', //失物名称
               lost_amount:'',//失物数量
-
               claim_name: '', //认领人员
               claim_time: '', //认领时间
               department:'', //部门名称
               company:'', //单位名称
               mobile: '', //联系电话
               description:'', //备注说明
-
               serialid: '', //序列编号
               status: '',
             };
       },
+
       // 获取处理日志
       async queryProcessLog(rid){
         const id = Betools.tools.getUrlParam('id') || rid;
@@ -470,6 +458,7 @@ export default {
           console.log(error);
         }
       },
+
       // 删除处理日志
       async deleteProcessLog(rid){
 
@@ -498,16 +487,17 @@ export default {
         }
 
       },
+
       // 选中当前盖印人
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
 
+      // 校验字段有效性
       validField(fieldName){
         //获取用户基础信息
         const userinfo = Betools.storage.getStore('system_userinfo');
@@ -531,17 +521,7 @@ export default {
         return Betools.tools.isNull(this.message[fieldName]);
       },
 
-      afterRead(file) {
-
-        file.status = 'uploading';
-        file.message = '上传中...';
-
-        setTimeout(() => {
-          file.status = 'failed';
-          file.message = '上传成功';
-        }, 1000);
-      },
-      // 获取URL或者二维码信息
+      // 查询基础信息
       async queryInfo() {
 
         try {

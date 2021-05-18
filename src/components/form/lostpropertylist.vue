@@ -138,7 +138,6 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
