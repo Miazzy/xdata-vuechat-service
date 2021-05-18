@@ -64,12 +64,15 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
+          <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading && role == 'front'">
+          <van-empty v-if="tabname == 2 && confirmList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已认领" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading && role == 'front'">
+          <van-empty v-if="tabname == 3 && doneList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
         </template>
       </div>
@@ -136,7 +139,6 @@ export default {
         }
     },
     activated() {
-
         this.queryInfo();
     },
     mounted() {
@@ -163,15 +165,11 @@ export default {
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname);  //刷新相应表单
+          vant.Toast('搜索...');  //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false;  //显示刷新消息
       },
 
       // 点击右侧菜单
@@ -197,69 +195,55 @@ export default {
         }
       },
 
+      // 查询基础信息
       async queryInfo(){
-
         //获取用户基础信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //获取tabname
         this.tabname = Betools.storage.getStore('system_lost_property_list_tabname') || '1';
-
         //查询直接所在工作组
         const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-
         //获取后端配置前端管理员组
         this.role = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? 'front' : 'common';
         //获取tabname
         this.tabname = resp && resp.length > 0 && resp[0].userlist.includes(userinfo.username) ? this.tabname: 1;
-
         //查询页面数据
         await this.queryTabList(this.tabname , 0);
-
         //查询台账数据
         this.queryTabList('认领' , 0);
-
         //获取返回页面
         this.back = Betools.tools.getUrlParam('back') || '/app';
-
       },
+
+      // 查询Tab栏对应的失物招领信息
       async queryTabList(tabname = 1 , page){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息     
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
-        //设置查询语句
-        let searchSql = '';
+        let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql, 0, 1000);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已认领)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
+          this.confirmList = await this.handleList(tableName, '已认领', userinfo, searchSql, 0, 1000);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => { return item.id == item.pid; });
-         } else if(tabname == '认领') {
-          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql, 0, 1000);
+        } else if(tabname == '认领') {
+          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=0&_size=10000`);
           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
-         }
+        }
+      },
+
+      // 查询失物招领列表信息
+      async handleList(tableName, status = '待处理', userinfo, searchSql, page = 0, size = 1000){
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+        list.map((item) => {
+          item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
+          item.tel = '';
+          item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
+          item.isDefault = true;
+        });
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
       },
 
       // 跳转到失物招领相应详情页面
