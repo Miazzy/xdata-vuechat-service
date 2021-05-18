@@ -49,11 +49,11 @@
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
         <template v-show="tabname == 2 && !loading && !isLoading">
             <van-empty v-if=" tabname == 2 && sealContractList.length == 0 " description="暂无数据" />
-            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
             <van-empty v-if=" tabname == 4 && frontContractList.length == 0 " description="暂无数据" />
-            <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
+            <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract" />
         </template>
         </van-pull-refresh>
       </div>
@@ -187,29 +187,16 @@ export default {
         }
       },
 
-      // 点击Tab栏
+      // 点击Tab栏，获取Tab栏列表数据
       async queryTabList(tabname , page){
-
-         //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        // 获取最近6个月对应的日期
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近N个月对应的日期
         let sealTypeSql = '~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)';
+        this.currentPage = page + 1;  // 设置当前页为第一页
         let searchSql = '';
-
-        // 设置当前页为第一页
-        this.currentPage = page + 1;
-
-        //如果存在搜索关键字
-        if(this.searchWord) {
-          searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))`;
-        }
-
+        (this.searchWord) ? searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))` : null ;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
           this.initContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,待用印)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.initContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -217,9 +204,7 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
           this.sealContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.sealContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -227,9 +212,7 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == 3){
-          //获取最近6个月的已领取记录
           this.receiveContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,已用印,已领取)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.receiveContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -237,9 +220,7 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == 4){
-          //获取最近6个月的已移交记录
           this.frontContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,移交前台,财务归档,档案归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.frontContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -247,9 +228,7 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == 5){
-          //获取最近6个月的已归档记录
           this.doneContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.doneContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -257,9 +236,7 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == 6){
-          //获取最近6个月的已归档记录
           this.failContractList = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,eq,已退回)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=0&_size=1000`);
-
           this.failContractList.map((item , index) => {
             item.name = item.filename.slice(0,16) ,
             item.tel = '';
@@ -267,8 +244,6 @@ export default {
             item.isDefault = true;
           })
         } else if(tabname == '合同类') {
-          // 获取最近6个月对应的日期
-          month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
           sealTypeSql = `~and(seal_type,like,合同类)`;
           const whereSQL = `_where=(status,in,移交前台,财务归档,档案归档,已归档,已完成)~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-serialid&_p=0&_size=10000`;
           this.json_data = await Betools.manage.queryTableData('bs_seal_regist', whereSQL);
