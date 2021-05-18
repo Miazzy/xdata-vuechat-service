@@ -174,45 +174,34 @@ export default {
       // 查询Tab栏列表数据
       async queryTabList(tabname = 1 , page){
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         //如果存在搜索关键字
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近N个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.initList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.initList = this.initList.filter(item => { return item.id == item.pid; });
+          this.initList = await this. handleList(tableName, '待处理', searchSql , 0 , 1000);
         } else if(tabname == 2){
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已认领)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.confirmList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.confirmList = this.confirmList.filter(item => { return item.id == item.pid; });
+          this.confirmList = await this. handleList(tableName, '已认领', searchSql , 0 , 1000);
         } else if(tabname == 3) {
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-          this.doneList.map((item , index) => {
-            item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
-         } else if(tabname == '认领') {
-           //获取最近6个月的已领取记录
-           this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(status,ne,已测试)~and(claim_name,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
-         }
+          this.doneList = await this. handleList(tableName, '已完成', searchSql , 0 , 1000);
+        } else if(tabname == '认领') {
+          this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(create_time,gt,${month})${searchSql}&_sort=-id&_p=0&_size=10000`);
+          this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
+        }
+      },
+
+      // 查询失物招领列表信息
+      async handleList(tableName, status = '待处理', searchSql = '', page = 0 , size = 1000){
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_time,gt,${month})${searchSql}&_sort=-id&_p=${page}&_size=${size}`); //获取最近N个月的待用印记录
+        list.map((item) => {
+          item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
+          item.tel = '';
+          item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
+          item.isDefault = true;
+        })
+        list = list.filter(item => { return item.id == item.pid; });
+        return list;
       },
 
       // 跳转失物认领详情页面
