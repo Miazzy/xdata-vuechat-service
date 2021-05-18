@@ -14,12 +14,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="移交台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="移交台账"
-                        name="移交台账(合同类).xls"
-                      >
+                      <download-excel :data="json_data" :fields="json_fields" worksheet="移交台账" name="移交台账(合同类).xls" >
                         移交台账
                       </download-excel>
                     </span>
@@ -29,14 +24,9 @@
             </van-dropdown-menu>
         </div>
     </header>
-
     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
@@ -45,7 +35,6 @@
     </header>
 
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(2);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
@@ -56,28 +45,23 @@
           </div>
         </div>
       </div>
-
       <div class="wechat-list">
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
         <template v-show="tabname == 2 && !loading && !isLoading">
+            <van-empty v-if=" tabname == 2 && sealContractList.length == 0 " description="暂无数据" />
             <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="sealContractList" default-tag-text="已用印" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
+            <van-empty v-if=" tabname == 4 && frontContractList.length == 0 " description="暂无数据" />
             <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
         </van-pull-refresh>
       </div>
-
     </section>
-
   </div>
 </keep-alive>
-
 </template>
-
 <script>
-
-
 export default {
     mixins: [window.mixin],
     data() {
@@ -153,15 +137,8 @@ export default {
       }
     },
     methods: {
-      async userStatus(){
-        try {
-          const userinfo = await Betools.storage.getStore('system_userinfo');
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      
-      //刷新页面
+
+      // 刷新页面
       async queryFresh(){
         this.queryTabList(this.tabname); //刷新相应表单
         await Betools.tools.sleep(300); //等待一下
@@ -169,26 +146,22 @@ export default {
         this.isLoading = false;  //设置加载状态
       },
 
-      //点击显示或者隐藏菜单
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
 
-      //点击顶部搜索
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
         this.searchFlag = false;
       },
 
-      //点击右侧菜单
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -214,7 +187,7 @@ export default {
         }
       },
 
-      //点击Tab栏
+      // 点击Tab栏
       async queryTabList(tabname , page){
 
          //获取当前用户信息
@@ -302,59 +275,34 @@ export default {
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
       },
+
+      // 查询基础信息
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;
+        this.tabname = Betools.storage.getStore('system_seal_front_list_tabname') || 2;  //获取tabname
         this.tabname = this.tabname > 6 ? 2 : this.tabname;
-
-        //查询列表数据
-        this.queryTabList(this.tabname , 0);
-
-        //查询合同类数据
-        this.queryTabList('合同类' , 0);
-
+        this.queryTabList(this.tabname , 0);  //查询列表数据
+        this.queryTabList('合同类' , 0);  //查询合同类数据
       },
-      async selectHContract(){
 
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
-        //查询当前用印信息
-        const id = this.hContractID;
+      // 跳转到相应详情页面
+      async selectHContract(elem){
+        const id = elem.id || this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
-
-        //根据当前状态，跳转到不同页面
+        Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
         if(this.tabname == '1'){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&back=sealfrontlist`);
         } else if(this.tabname == '2' && item.seal_type == '非合同类'){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealreceive?id=${id}&statustype=none&type=receive&back=sealfrontlist`);
         } else if(this.tabname == '2' || this.tabname == '3'){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=front&back=sealfrontlist`);
         } else if(this.tabname == '4' ){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '5' ){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         } else if(this.tabname == '6' ){
-          Betools.storage.setStore('system_seal_front_list_tabname' , this.tabname);
-          //跳转到相应的用印界面
           this.$router.push(`/app/sealview?id=${id}&statustype=none&type=done&back=sealfrontlist`);
         }
-
       },
     }
 }
