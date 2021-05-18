@@ -1,9 +1,6 @@
 <template>
-
 <keep-alive>
-  <!--首页组件-->
   <div id="seallist" style="margin-top: 0px; background: #fdfdfd;" >
-
     <header id="wx-header" class="header-menu" v-show="!searchFlag" style="overflow-x: hidden;" >
         <div class="center" style="position:relative;">
             <router-link to="/app" @click="$router.push(`/app`)" tag="div" class="iconfont icon-left">
@@ -17,12 +14,7 @@
                 <van-cell id="van-cell-export" class="van-cell-export" title="归档台账" icon="balance-list-o"  >
                   <template #title>
                     <span class="custom-title">
-                      <download-excel
-                        :data="json_data"
-                        :fields="json_fields"
-                        worksheet="归档台账"
-                        name="归档台账(合同类).xls"
-                      >
+                      <download-excel :data="json_data" :fields="json_fields" worksheet="归档台账" name="归档台账(合同类).xls" >
                         归档台账
                       </download-excel>
                     </span>
@@ -34,22 +26,15 @@
     </header>
     <header id="wx-header" class="header-search" v-show="!!searchFlag" style="padding:0px 0px 1px 0px; border-bottom:1px solid #cecece;">
        <div>
-          <van-search
-            v-model="searchWord"
-            show-action
-            placeholder="请输入搜索关键词"
-          >
+          <van-search v-model="searchWord" show-action placeholder="请输入搜索关键词" >
             <template #action>
               <div @click="headMenuSearch();" >搜索</div>
             </template>
           </van-search>
         </div>
     </header>
-
     <section>
-
       <div class="weui-cells" style="margin-top: 0px;">
-
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
           <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(4);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待归档
@@ -58,31 +43,22 @@
             已归档
           </div>
         </div>
-
       </div>
-
       <div class="wechat-list">
         <van-pull-refresh v-model="isLoading" @refresh="queryFresh(7)">
-
         <template v-show="tabname == 4 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="frontContractList" default-tag-text="已移交" edit-disabled @select="selectHContract()" />
         </template>
         <template v-show="tabname == 5 && !loading && !isLoading">
             <van-address-list style="min-height:500px;" v-show="tabname == 5 && !loading && !isLoading" v-model="hContractID" :list="doneContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
         </template>
-
         </van-pull-refresh>
       </div>
-
     </section>
-
   </div>
 </keep-alive>
-
 </template>
-
 <script>
-
 
 export default {
     mixins: [window.mixin],
@@ -116,8 +92,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              // { text: '财务归档', value: 10 , icon: 'logistics' },
-              // { text: '档案归档', value: 11 , icon: 'sign' },
             ],
             json_fields: {
               '排序编号':'serialid',
