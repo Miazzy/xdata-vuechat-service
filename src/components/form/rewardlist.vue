@@ -178,62 +178,34 @@ export default {
 
       // 查询Tab栏列表数据
       async queryTabList(tabname , page){
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-        //获取最近6个月对应的日期
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-        //设置查询语句
-        let searchSql = '';
-        //如果存在搜索关键字
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const tableName = this.tablename;
+        let searchSql = ''; //设置查询语句
         if(this.searchWord) {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
         if(tabname == 1){
-          //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.initList.map((item , index) => {
-            item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
+          this.initList = await this.handleList(tableName, '待审批', userinfo, searchSql, 0, 1000);
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,审批中)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.confirmList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
+          this.confirmList = await this.handleList(tableName, '审批中', userinfo, searchSql, 0, 1000);
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
-          this.doneList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,已完成)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.doneList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql, 0, 1000);
          } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,已驳回)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.rejectList.map((item , index) => {
-            item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql, 0, 1000);
         }
+      },
 
+       // 查询奖惩列表信息
+      async handleList(tableName , status = '待审批', userinfo, searchSql = '', page = 0 , size = 1000){
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id&_p=${page}&_size=${szie}`);
+        list.map((item , index) => {
+          item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
+          item.tel = '';
+          item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+          item.isDefault = true;
+        });
+        return list;
       },
 
       // 跳转到Reward详情页面
