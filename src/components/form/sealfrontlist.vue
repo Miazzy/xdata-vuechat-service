@@ -220,8 +220,8 @@ export default {
       async handleList(tableName = 'bs_seal_regist', status = '待用印', userinfo , searchSql = '' , page = 0 , size = 1000){
         const sealTypeSql = '~and(seal_type,like,合同类)~and(zone_name,eq,领地集团总部)';
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近N个月对应的日期
-        let list = await Betools.manage.queryTableData('bs_seal_regist' , `_where=(status,in,${status})~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=${size}`);
-        list.map((item , index) => {
+        let list = await Betools.manage.queryTableData(tableName || 'bs_seal_regist' , `_where=(status,in,${status})~and(create_time,gt,${month})~and(front,like,~${userinfo.username}~)${sealTypeSql}${searchSql}&_sort=-create_time&_p=${page}&_size=${size}`);
+        list.map((item) => {
           item.name = item.filename.slice(0,16) ,
           item.tel = '';
           item.address = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:'+ item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno ;
