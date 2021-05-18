@@ -185,64 +185,32 @@ export default {
         let searchSql = ''; //设置查询语句
         (this.searchWord) ?  searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          //获取最近6个月的待用印记录
-          this.initList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,待处理)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.initList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.initList = this.initList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
         } else if(tabname == 2){
-          //获取最近6个月的已用印记录
-          this.confirmList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已领取)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.confirmList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.confirmList = this.confirmList.filter(item => {
-            return item.id == item.pid;
-          });
-
+          this.confirmList = await this.handleList(tableName, '已领取,已准备,审批中,处理中', userinfo, searchSql);
         } else if(tabname == 3) {
-          //获取最近6个月的已领取记录
-          this.doneList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已完成)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
-
-          this.doneList.map((item , index) => {
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
-            item.isDefault = true;
-          })
-
-          this.doneList = this.doneList.filter(item => {
-            return item.id == item.pid;
-          });
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql);
         } else if(tabname == 4) {
-          //获取最近6个月的已领取记录
-          this.rejectList = await Betools.manage.queryTableData(this.tname , `_where=(status,eq,已驳回)~and(user_group_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
+        }
+      },
 
-          this.rejectList.map((item , index) => {
+      //查询不同状态的领用数据
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 150){
+          if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
+            return [];
+          }
+          let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+          list.map((item)=>{
             item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
             item.isDefault = true;
-          })
-
-          this.rejectList = this.rejectList.filter(item => {
+          });
+          list = list.filter(item => {
             return item.id == item.pid;
           });
-        } 
+          return list;
       },
 
       // 跳转到相应工程整改详情页面
