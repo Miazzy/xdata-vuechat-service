@@ -409,8 +409,6 @@ export default {
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '重置', value: 4 , icon: 'aim' },
-              
-              
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -433,10 +431,13 @@ export default {
       this.queryInfo();
     },
     methods: {
+
+      // 类型选择确认函数
       onTypeConfirm(value) {
         this.item.type = value;
         this.showTypePicker = false;
       },
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -445,32 +446,27 @@ export default {
           console.log(error);
         }
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...');  //显示搜索状态提示
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
           case 2: //刷新数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            await this.reduction();
-            break;
-          case 3: //查询数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
             break;
@@ -482,6 +478,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
       // 用户选择盖印人
       async querySealMan(){
 
@@ -555,6 +552,7 @@ export default {
         }
 
       },
+
       // 选中当前盖印人
       async selectSealUser(value){
         await Betools.tools.sleep(0);
@@ -565,6 +563,7 @@ export default {
         const user = this.userList.find((item,index) => {return id == item.id});
         this.item.user_admin_name = user.name;
       },
+
       // 设置重置
       async reduction(){
         this.item = {
@@ -586,7 +585,8 @@ export default {
               status: '',
             };
       },
-      // 获取处理日志
+
+      // 获取流程处理日志
       async queryProcessLog(){
 
         const id = Betools.tools.getUrlParam('id');
@@ -615,7 +615,8 @@ export default {
           console.log(error);
         }
       },
-      // 删除处理日志
+
+      // 删除流程处理日志
       async deleteProcessLog(){
 
         const id = Betools.tools.getUrlParam('id');
@@ -647,15 +648,15 @@ export default {
 
       },
 
-      // 选中当前盖印人
+      // 选中当前前台人员
       async selectFrontUser(value){
         await Betools.tools.sleep(0);
         const id = this.item.front_id;
         const user = this.fuserList.find((item,index) => {return id == item.id});
-        //获取盖印人姓名
         this.item.front_name = user.name;
         this.item.front_id = id;
       },
+
       // 字段必填有效验证
       validField(fieldName){
         //获取用户基础信息
@@ -679,7 +680,8 @@ export default {
 
         return Betools.tools.isNull(this.message[fieldName]);
       },
-      // 获取URL或者二维码信息
+
+      // 获取基础信息
       async queryInfo() {
 
         try {
@@ -725,7 +727,7 @@ export default {
 
       },
 
-      // 用户提交入职登记表函数
+      // 用户提交申请函数
       async handleApply() {
 
         //显示加载状态
