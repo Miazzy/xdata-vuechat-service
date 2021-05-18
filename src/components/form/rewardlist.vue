@@ -55,16 +55,16 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待审批" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待审批" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="审批中" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="审批中" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 4 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="rejectList" default-tag-text="已驳回" edit-disabled @select="selectHContract" />
         </template>
       </div>
 
@@ -132,24 +132,23 @@ export default {
       }
     },
     methods: {
-      //点击显示或者隐藏菜单
+
+      // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
-      //点击顶部搜索
+
+      // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300);  //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
-      //点击右侧菜单
+
+      // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
@@ -169,37 +168,26 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
+      // 查询基础数据
       async queryInfo(){
-
-        //强制渲染
-        this.$forceUpdate();
-
-        //获取tabname
-        this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1';
-
-        //查询页面数据
-        await this.queryTabList(this.tabname , 0);
-
-        //获取返回页面
-        this.back = Betools.tools.getUrlParam('back') || '/app';
-
+        this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1';  //获取tabname
+        await this.queryTabList(this.tabname , 0); //查询页面数据
+        this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
-      async queryTabList(tabname , page){
 
+      // 查询Tab栏列表数据
+      async queryTabList(tabname , page){
         //获取当前用户信息
         const userinfo = await Betools.storage.getStore('system_userinfo');
-
         //获取最近6个月对应的日期
-        var month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
-
+        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
         //设置查询语句
-        var searchSql = '';
-
+        let searchSql = '';
         //如果存在搜索关键字
         if(this.searchWord) {
           searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`;
         }
-
         if(tabname == 1){
           //获取最近6个月的待用印记录
           this.initList = await Betools.manage.queryTableData(this.tablename , `_where=(status,eq,待审批)~and(hr_admin_ids,like,~${userinfo.username}~)~and(create_time,gt,${month})${searchSql}&_sort=-id`);
@@ -247,32 +235,22 @@ export default {
         }
 
       },
-      async selectHContract(){
 
-        //等待N毫秒
-        await Betools.tools.sleep(0);
-
-        //查询当前用印信息
-        const id = this.hContractID;
+      // 跳转到Reward详情页面
+      async selectHContract(elem){
+        const id = elem.id || this.hContractID;
         const list = this[this.tabmap[this.tabname]];
         const item = list.find((item,index) => {return id == item.id});
         Betools.storage.setStore('system_goods_borrow_receive_list_tabname' , this.tabname);
-
-        //根据当前状态，跳转到不同页面
-        if(this.tabname == '1'){
-          //跳转到相应的用印界面
+        if(this.tabname == '1'){ //根据当前状态，跳转到不同页面
           this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         } else if(this.tabname == '2'){
-          //跳转到相应的用印界面
           this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         } else if(this.tabname == '3' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
          } else if(this.tabname == '4' ){
-          //跳转到相应的用印界面
           this.$router.push(`/app/reward?id=${id}&statustype=none&role=approve&back=rewardlist`);
         }
-
       },
     }
 }
