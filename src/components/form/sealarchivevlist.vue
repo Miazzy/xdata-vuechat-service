@@ -94,31 +94,10 @@ export default {
             searchFlag: false,
             dropMenuOldValue: '',
             dropMenuValue: '',
-            dropMenuOption: [{
-                    text: '刷新',
-                    value: 2,
-                    icon: 'replay'
-                },
-                {
-                    text: '搜索',
-                    value: 3,
-                    icon: 'search'
-                },
-                {
-                    text: '重置',
-                    value: 4,
-                    icon: 'aim'
-                },
-                {
-                    text: '应用',
-                    value: 5,
-                    icon: 'apps-o'
-                },
-                {
-                    text: '首页',
-                    value: 6,
-                    icon: 'wap-home-o'
-                },
+            dropMenuOption: [
+                { text: '刷新', value: 2, icon: 'replay' },
+                { text: '搜索', value: 3, icon: 'search' },
+                { text: '重置', value: 4, icon: 'aim' },
             ],
             menuCssValue: '',
             isLoading: false,
@@ -160,52 +139,34 @@ export default {
         }
     },
     methods: {
-        async userStatus() {
-            try {
-                const userinfo = await Betools.storage.getStore('system_userinfo');
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        encodeURI(value) {
-            return window.encodeURIComponent(value);
-        },
-        //刷新页面
+
+        // 刷新页面
         async queryFresh() {
             this.queryTabList(this.tabname); //刷新相应表单
             await Betools.tools.sleep(300); //等待一下
             vant.Toast('刷新成功'); //显示刷新消息
             this.isLoading = false; //设置加载状态
         },
-        //点击显示或者隐藏菜单
+
+        // 点击显示或者隐藏菜单
         async headMenuToggle() {
             this.$refs.headMenuItem.toggle();
         },
-        //点击顶部搜索
+
+        // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                //刷新相应表单
-                this.queryTabList(this.tabname);
-                //显示搜索状态
-                vant.Toast('搜索...');
-                //等待一下
-                await Betools.tools.sleep(300);
+                this.queryTabList(this.tabname); //刷新相应表单
+                vant.Toast('搜索...'); //显示搜索状态
+                await Betools.tools.sleep(300); //等待一下
             }
-            //显示刷新消息
-            this.searchFlag = false;
+            this.searchFlag = false; //显示刷新消息
         },
-        //点击右侧菜单
+
+        // 点击右侧菜单
         async headDropMenu(value) {
             const val = this.dropMenuValue;
             switch (val) {
-                case 0: //只显示合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryFresh();
-                    break;
-                case 1: //只显示非合同类信息
-                    this.dropMenuOldValue = this.sealType = val;
-                    await this.queryFresh();
-                    break;
                 case 2: //刷新数据
                     this.dropMenuValue = this.dropMenuOldValue;
                     await this.queryFresh();
@@ -215,24 +176,15 @@ export default {
                     this.searchFlag = true;
                     break;
                 case 4: //重置数据
-                    this.dropMenuValue = '';
-                    this.dropMenuOldValue = '';
-                    this.sealType = '';
-                    this.searchFlag = false;
-                    this.searchWord = '';
+                    this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '', this.searchFlag = false;
                     await this.queryFresh();
-                    break;
-                case 5: //返回应用
-                    this.$router.push(`/app`);
-                    break;
-                case 6: //返回首页
-                    this.$router.push(`/explore`);
                     break;
                 default:
                     console.log(`no operate. out of switch. `);
             }
         },
-        //点击Tab栏
+
+        // 点击Tab栏，查询Tab栏对应详情信息
         async queryTabList(tabname, page) {
             const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
             let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
@@ -251,11 +203,15 @@ export default {
                 item.isDefault = true;
             });
         },
+
+        // 查询基础信息
         async queryInfo() {
             this.$forceUpdate();
             this.tabname = Betools.storage.getStore('system_seal_archive_vlist_tabname') || '2';
             this.queryTabList(this.tabname, 0);
         },
+
+        // 跳转到详情页面
         async selectHContract(key,value,node) {
             console.log(`key:${JSON.stringify(key)},value:${value},node:${node}`);
             const id = this.initContractList[value].id;
