@@ -110,8 +110,6 @@ export default {
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '搜索', value: 3 , icon: 'search' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
               { text: '财务移交', value: 10 , icon: 'logistics' },
               { text: '档案移交', value: 11 , icon: 'sign' },
             ],
@@ -162,9 +160,7 @@ export default {
           console.log(error);
         }
       },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
+      
       //刷新页面
       async queryFresh(){
         this.queryTabList(this.tabname); //刷新相应表单
@@ -172,10 +168,12 @@ export default {
         vant.Toast('刷新成功'); //显示刷新消息
         this.isLoading = false;  //设置加载状态
       },
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       //点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
@@ -189,39 +187,21 @@ export default {
         //显示刷新消息
         this.searchFlag = false;
       },
+
       //点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
-          case 0: //只显示合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
-          case 1: //只显示非合同类信息
-            this.dropMenuOldValue = this.sealType = val;
-            await this.queryFresh();
-            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryFresh();
             break;
           case 3: //查询数据
-            this.dropMenuValue = this.dropMenuOldValue;
-            this.searchFlag = true;
+            this.dropMenuValue = this.dropMenuOldValue, this.searchFlag = true;
             break;
           case 4: //重置数据
-            this.dropMenuValue = '';
-            this.dropMenuOldValue = '';
-            this.sealType = '';
-            this.searchFlag = false;
-            this.searchWord = '';
+            this.dropMenuValue = this.dropMenuOldValue = this.sealType = this.searchWord = '', this.searchFlag = false;
             await this.queryFresh();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           case 10: //财务归档
             this.$router.push(`/app/sealfinance?transfer_type=finance`);
@@ -233,6 +213,7 @@ export default {
             console.log(`no operate. out of switch. `);
         }
       },
+
       //点击Tab栏
       async queryTabList(tabname , page){
 

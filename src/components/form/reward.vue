@@ -285,8 +285,6 @@ export default {
             dropMenuOption: [
               { text: '刷新', value: 2 , icon: 'replay' },
               { text: '重置', value: 4 , icon: 'aim' },
-              { text: '应用', value: 5 , icon: 'apps-o' },
-              { text: '首页', value: 6 , icon: 'wap-home-o' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -310,6 +308,7 @@ export default {
       this.queryInfo();
     },
     methods: {
+
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -318,6 +317,7 @@ export default {
           console.log(error);
         }
       },
+
       // 上传前检查上传文件信息
       beforeUpload($e){
         try {
@@ -333,6 +333,7 @@ export default {
           console.log(error);
         }
       },
+
       // 下载或保存文件
       async saveAsFile(file , name){
         try {
@@ -346,28 +347,29 @@ export default {
           console.log(error);
         }
       },
+
+      // 下载文件
       async download(name , file){
         const toast = vant.Toast.loading({duration: 0, forbidClick: true, message: '下载中...',});
         await this.saveAsFile(this.downloadURL + this.item[file] , name + ' ' + this.item[file].split('/')[1]);
         vant.Toast.clear();
       },
+
       // 点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
       },
+
       // 点击顶部搜索
       async headMenuSearch(){
         if(this.searchWord){
-          //刷新相应表单
-          this.queryTabList(this.tabname);
-          //显示搜索状态
-          vant.Toast('搜索...');
-          //等待一下
-          await Betools.tools.sleep(300);
+          this.queryTabList(this.tabname); //刷新相应表单
+          vant.Toast('搜索...'); //显示搜索状态
+          await Betools.tools.sleep(300); //等待一下
         }
-        //显示刷新消息
-        this.searchFlag = false;
+        this.searchFlag = false; //显示刷新消息
       },
+
       // 上传提示
       async toastUpload(flag){
         if(flag == 'start'){
@@ -376,6 +378,7 @@ export default {
           this.$toast.success('文件上传失败，请稍后重试！');
         }
       },
+
       // 点击右侧菜单
       async headDropMenu(value){
         const val = this.dropMenuValue;
@@ -387,12 +390,6 @@ export default {
           case 4: //重置数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.reduction();
-            break;
-          case 5: //返回应用
-            this.$router.push(`/app`);
-            break;
-          case 6: //返回首页
-            this.$router.push(`/explore`);
             break;
           default:
             console.log(`no operate. out of switch. `);

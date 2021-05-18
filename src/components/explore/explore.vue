@@ -367,9 +367,6 @@ export default {
       displayFoot() {
         $('.app-footer').css('display','block');
       },
-      encodeURI(value){
-        return window.encodeURIComponent(value);
-      },
       async clearLoginInfo(){
         try {
           let info = await Betools.storage.getStore('system_linfo');
