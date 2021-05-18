@@ -38,6 +38,7 @@
     <section>
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
+          <van-empty v-if="tabname == 1 && initList.length == 0 " description="暂无数据" />
           <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract" />
         </template>
       </div>
