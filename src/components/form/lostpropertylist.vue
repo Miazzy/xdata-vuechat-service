@@ -64,13 +64,13 @@
 
       <div class="wechat-list">
         <template v-show="tabname == 1 && !loading && !isLoading">
-          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 1 && !loading && !isLoading" v-model="hContractID" :list="initList" default-tag-text="待认领" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 2 && !loading && !isLoading && role == 'front'">
-          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已认领" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="confirmList" default-tag-text="已认领" edit-disabled @select="selectHContract" />
         </template>
         <template v-show="tabname == 3 && !loading && !isLoading && role == 'front'">
-          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract()" />
+          <van-address-list v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="doneList" default-tag-text="已完成" edit-disabled @select="selectHContract" />
         </template>
       </div>
 
@@ -285,22 +285,17 @@ export default {
 
       },
 
-
-      async selectHContract(){
-        //查询当前用印信息
-        const id = this.hContractID;
-        const list = this[this.tabmap[this.tabname]];
-        const item = list.find((item,index) => {return id == item.id});
+      // 跳转到不同的失物招领详情页面
+      async selectHContract(elem){
+        const id = elem.id ;
         Betools.storage.setStore('system_lost_property_list_tabname' , this.tabname);
-        //根据当前状态，跳转到不同页面
         if(this.tabname == '1'){
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=common&back=/app/lostpropertylist`);
         } else if(this.tabname == '2'){
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
         } else if(this.tabname == '3' ){
           this.$router.push(`/app/lostpropertyview?id=${id}&statustype=none&role=${this.role}&back=/app/lostpropertylist`);
-         }
-
+        }
       },
     }
 }
