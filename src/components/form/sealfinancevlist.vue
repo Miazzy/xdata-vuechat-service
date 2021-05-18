@@ -53,9 +53,9 @@
 
             <div class="wechat-list">
                 <van-pull-refresh v-model="isLoading" @refresh="queryFresh()">
-                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待归档" edit-disabled @select="selectHContract()" />
-                    <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract()" />
-                    <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已驳回" edit-disabled @select="selectHContract()" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待归档" edit-disabled @select="selectHContract" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract" />
+                    <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已驳回" edit-disabled @select="selectHContract" />
                 </van-pull-refresh>
             </div>
 
@@ -138,41 +138,31 @@ export default {
         }
     },
     methods: {
-        async userStatus() {
-            try {
-                const userinfo = await Betools.storage.getStore('system_userinfo');
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        encodeURI(value) {
-            return window.encodeURIComponent(value);
-        },
-        //刷新页面
+        
+        // 刷新页面
         async queryFresh() {
             this.queryTabList(this.tabname); //刷新相应表单
             await Betools.tools.sleep(300); //等待一下
             vant.Toast('刷新成功'); //显示刷新消息
             this.isLoading = false; //设置加载状态
         },
-        //点击显示或者隐藏菜单
+
+        // 点击显示或者隐藏菜单
         async headMenuToggle() {
             this.$refs.headMenuItem.toggle();
         },
-        //点击顶部搜索
+
+        // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                //刷新相应表单
-                this.queryTabList(this.tabname);
-                //显示搜索状态
-                vant.Toast('搜索...');
-                //等待一下
-                await Betools.tools.sleep(300);
+                this.queryTabList(this.tabname); //刷新相应表单
+                vant.Toast('搜索...'); //显示搜索状态
+                await Betools.tools.sleep(300); //等待一下
             }
-            //显示刷新消息
-            this.searchFlag = false;
+            this.searchFlag = false; //显示刷新消息
         },
-        //点击右侧菜单
+
+        // 点击右侧菜单
         async headDropMenu(value) {
             const val = this.dropMenuValue;
             switch (val) {
@@ -192,7 +182,8 @@ export default {
                     console.log(`no operate. out of switch. `);
             }
         },
-        //点击Tab栏
+
+        // 点击Tab栏，查询Tab栏对应详情信息
         async queryTabList(tabname, page) {
             const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
             let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
@@ -211,22 +202,20 @@ export default {
                 item.isDefault = true;
             });
         },
+
+
+        // 查询基础信息
         async queryInfo() {
-            //强制渲染
-            this.$forceUpdate();
             //获取tabname
             this.tabname = Betools.storage.getStore('system_seal_finance_vlist_tabname') || '2';
             //查询列表数据
             this.queryTabList(this.tabname, 0);
         },
-        async selectHContract() {
-            //等待N毫秒
-            await Betools.tools.sleep(0);
-            //查询当前用印信息
-            const id = this.hContractID;
-            //根据当前状态，跳转到不同页面
+
+        // 跳转到相应详情页面
+        async selectHContract(elem) {
+            const id = elem.id || this.hContractID ; 
             Betools.storage.setStore('system_seal_finance_vlist_tabname', this.tabname);
-            //跳转到相应的用印界面
             this.$router.push(`/app/sealfinanceview?id=${id}&statustype=none&back=/app/sealfinancevlist`);
         },
     }
