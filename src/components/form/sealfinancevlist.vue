@@ -53,6 +53,7 @@
 
             <div class="wechat-list">
                 <van-pull-refresh v-model="isLoading" @refresh="queryFresh()">
+                    <van-empty v-if=" (tabname == 2 || tabname == 3 || tabname == 4) && initContractList.length == 0 " description="暂无数据" />
                     <van-address-list style="min-height:500px;" v-show="tabname == 2 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="待归档" edit-disabled @select="selectHContract" />
                     <van-address-list style="min-height:500px;" v-show="tabname == 4 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已归档" edit-disabled @select="selectHContract" />
                     <van-address-list style="min-height:500px;" v-show="tabname == 3 && !loading && !isLoading" v-model="hContractID" :list="initContractList" default-tag-text="已驳回" edit-disabled @select="selectHContract" />
@@ -202,7 +203,6 @@ export default {
                 item.isDefault = true;
             });
         },
-
 
         // 查询基础信息
         async queryInfo() {
