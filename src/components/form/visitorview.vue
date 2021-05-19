@@ -113,7 +113,7 @@
 
                     </van-cell-group>
 
-                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  !(userinfo.realname == item.create_by || userinfo.realname.includes(item.create_by) ) ) || (item.status ==='已确认' && role == 'front' && (userinfo.realname != item.create_by || confirm=='confirm'))" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
+                    <div v-show="((item.status ==='待处理' || item.status ==='已确认' ) && role == 'front' &&  !(userinfo.realname == item.create_by || userinfo.realname.includes(item.create_by) ) ) || (item.status ==='已确认' && role == 'front' && ( !(userinfo.realname == item.create_by || userinfo.realname.includes(item.create_by) ) || confirm=='confirm'))" style="margin-top:30px;margin-left:0px;margin-right:10px;margin-bottom:10px;border-top:0px solid #efefef;">
                         <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" type="primary" block @click="handleConfirm('已到访');" style="border-radius: 10px 10px 10px 10px; text-align: center;float:right;width:97.5%;">确认到访</van-button>
                     </div>
 
@@ -546,9 +546,11 @@ export default {
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
             user_group_ids = user_group_ids + ',' + this.item.create_by;
+            const vflag = this.item.create_by == userinfo.realname || userinfo.realname.includes(this.item.create_by);
 
             //获取到用户列表数据
-            if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
+            if (!(vflag || !(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)))) {
+                this.showOverlayConfirm('cancel',()=>{});
                 return await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '您没有访客管理的审批权限，请联系管理员进行处理！',
@@ -679,16 +681,15 @@ export default {
             //获取到印章管理员组信息
             let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
             user_group_ids = user_group_ids + ',' + this.item.create_by;
-            const vflag = this.item.create_by == userinfo.realname;
+            const vflag = this.item.create_by == userinfo.realname || userinfo.realname.includes(this.item.create_by);
 
             //获取到用户列表数据
             if (!(vflag || !(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)))) {
                 this.showOverlayConfirm('cancel',()=>{});
-                await vant.Dialog.alert({
+                return await vant.Dialog.alert({
                     title: '温馨提示',
                     message: '您没有访客管理的审批权限，请联系管理员进行处理！',
                 });
-                return;
             }
 
             // 返回预览URL
