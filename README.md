@@ -110,4 +110,6 @@ MySQL自动序列 https://api.yunwisdom.club:30443/gateway/api/v2/mysql/serial/b
 ```ts
 spug监控网站：http://spug.yunwisdom.club:30080
 admin/Miazzy@163.com
+nacos配置注册中心 http://nacos.yunwisdom.club:30080/nacos
+nacos/nacos
 ```
