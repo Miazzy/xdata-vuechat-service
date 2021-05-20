@@ -106,3 +106,8 @@ XDATA刷新部门员工 https://api.yunwisdom.club:30443/gateway/api/v2/wework_s
 XDATA刷新部门员工 https://api.yunwisdom.club:30443/gateway/api/v2/wework_depart_user/2/1
 MySQL自动序列 https://api.yunwisdom.club:30443/gateway/api/v2/mysql/serial/bs_seal_regist/serialid/id
 ```
+
+```ts
+spug监控网站：http://spug.yunwisdom.club:30080
+admin/Miazzy@163.com
+```
