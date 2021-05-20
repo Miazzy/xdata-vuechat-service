@@ -89,3 +89,20 @@ update bs_seal_regist set seal_group_ids = 'yanggc,chenll,zhaozy1028' where seal
 update bs_seal_regist set zone_name = '领地集团总部' where zone_name is null and seal_group_ids like '%yanggc%';
 update bs_seal_regist set zone_name = '领悦物业总部' where zone_name is null and seal_group_ids like '%longcl%';
 ```
+
+```bash
+XDATA用印数据区域名称刷新 https://api.yunwisdom.club:30443/gateway/api/v2/mysql/updata_zonename
+XDATA同步考勤数据 https://api.yunwisdom.club:30443/gateway/api/v1/datasync_schedule_sign
+XDATA备份MySQL数据库 https://api.yunwisdom.club:30443/gateway/api/v3/mysql/backup
+XDATA同步HRMRESOURCE https://api.yunwisdom.club:30443/gateway/api/v1/datasync
+XDATA刷新部门员工(创达) https://api.yunwisdom.club:30443/gateway/api/v1_cd/wework_depart_user/2/1
+XDATA刷新部门(创达) https://api.yunwisdom.club:30443/gateway/api/v1_cd/wework_depart/1
+XDATA刷新部门(创达) https://api.yunwisdom.club:30443/gateway/api/v1_cd/wework_depart_list/1
+MySQL用印数据定时刷新 https://api.yunwisdom.club:30443/gateway/api/v2/mysql/serial/update_seal_info
+XDATA刷新用户 https://api.yunwisdom.club:30443/gateway/api/v3/employee
+XDATA刷新部门 https://api.yunwisdom.club:30443/gateway/api/v2/wework_depart_list/2
+XDATA刷新部门 https://api.yunwisdom.club:30443/gateway/api/v2/wework_depart/2
+XDATA刷新部门员工 https://api.yunwisdom.club:30443/gateway/api/v2/wework_sdepart_user/2/1
+XDATA刷新部门员工 https://api.yunwisdom.club:30443/gateway/api/v2/wework_depart_user/2/1
+MySQL自动序列 https://api.yunwisdom.club:30443/gateway/api/v2/mysql/serial/bs_seal_regist/serialid/id
+```
