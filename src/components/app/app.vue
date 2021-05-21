@@ -323,7 +323,7 @@ export default {
             officeIconToggle: false,
             sealIconToggle: false,
             imageTableName: 'bs_home_pictures',
-            images: Betools.storage.getStore('system_app_image'),
+            images: ['https://wechat.yunwisdom.club:30443/script/administrate.png','https://cdn.jsdelivr.net/gh/Miazzy/xdata-vuechat-service@v1.0.01/src/assets/images/home_top_app.png'],
             showNotice: false,
             role: 'view',
         }
@@ -491,16 +491,7 @@ export default {
                 this.role.includes('COMMON_AUTH_ADMIN') ? (this.$router.push(`/app/employeemanage?back=/app&type=${name}`)) : (vant.Toast('您没有员工管理的权限！'));
             } else if (name == 'visitors') { // 进行来访管理
                 this.$router.push(`/app/app_subvisitor?back=/app&type=${name}`);
-            } else if (name == 'visitor') { // 来访登记
-                const userinfo = await Betools.storage.getStore('system_userinfo');
-                if (userinfo) {
-                    const oaUserId = userinfo.systemuserinfo.id;
-                    const oaUserName = userinfo.systemuserinfo.username;
-                    const wxUserId = userinfo.userid;
-                    const url = 'http://offiice.leading-group.com:30002/visitor/#/?userId=' + oaUserId + '&wxUserId=' + wxUserId + '&oaUserName=' + oaUserName;
-                    window.open(url, '_blank')
-                }
-            }
+            } 
         },
 
         // 来访管理
