@@ -642,51 +642,38 @@ export default {
         }
 
         /************************  工作流程日志(开始)  ************************/
-
-        //查询直接所在工作组
-        //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
-
-        //获取后端配置前端管理员组
-        const front = user_group_ids;
-        const front_name = user_group_ids;
-
-        //查询当前所有待办记录
-        let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await Betools.workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '确认'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已驳回]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.approveViewProcessLog(prLogHisNode);
-
+        (async()=>{
+          let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);  //查询当前所有待办记录
+          tlist = tlist.filter(item => { return item.id == id && item.pid == pid; }); //过滤出只关联当前流程的待办数据
+          await Betools.workflow.deleteViewProcessLog(tlist); //同时删除本条待办记录当前(印章管理员)
+        })();
+        
+        (async()=>{
+          //记录操作日志
+          const prLogHisNode = {
+            id: Betools.tools.queryUniqueID(),
+            table_name: this.tablename,
+            main_value: id,
+            proponents: userinfo.username,
+            business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+            business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+            process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+            employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+            approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+            action         : '确认'    ,//varchar(100)  null comment '操作动作',
+            action_opinion : '审批领用申请[已驳回]',//text          null comment '操作意见',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+            functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+            process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+            business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+            content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+            process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+            relate_data       : '',//text          null comment '关联数据',
+            origin_data       : '',
+          }
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
+        })();
         /************************  工作流程日志(结束)  ************************/
 
         //设置状态
@@ -726,11 +713,10 @@ export default {
 
         //获取到用户列表数据
         if(Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username) ){
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
             title: '温馨提示',
             message: '您没有物品领用的审批权限，请联系管理员进行处理！',
           });
-          return;
         }
 
         // 返回预览URL
@@ -766,78 +752,63 @@ export default {
 
         /************************  工作流程日志(开始)  ************************/
 
-        //查询直接所在工作组
-        //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);
+        //获取后端配置前端管理员组 //查询直接所在工作组 //const resp = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , userinfo.username);  const front = user_group_ids; const front_name = user_group_ids;
+        (async() => {
+          let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000); //查询当前所有待办记录
+          tlist = tlist.filter(item => { return item.id == id && item.pid == pid; }); //过滤出只关联当前流程的待办数据
+          await Betools.workflow.deleteViewProcessLog(tlist); //同时删除本条待办记录当前(印章管理员)
+        })();
 
-        //获取后端配置前端管理员组
-        const front = user_group_ids;
-        const front_name = user_group_ids;
-
-        //查询当前所有待办记录
-        let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await Betools.workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '确认'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已领用]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: this.item.create_by,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : this.item.receive_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : this.item.create_by ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '经办人',//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已准备 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.taskViewProcessLog(prLogNode);
-
+        (async() => {
+          //记录操作日志
+          const prLogHisNode = {
+            id: Betools.tools.queryUniqueID(),
+            table_name: this.tablename,
+            main_value: id,
+            proponents: userinfo.username,
+            business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+            business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+            process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+            employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
+            approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
+            action         : '确认'    ,//varchar(100)  null comment '操作动作',
+            action_opinion : '审批领用申请[已领用]',//text          null comment '操作意见',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+            functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
+            process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+            business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+            content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
+            process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+            relate_data       : '',//text          null comment '关联数据',
+            origin_data       : '',
+          }
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
+          //同时推送一条待办记录给印章管理员
+          const prLogNode = {
+            id: Betools.tools.queryUniqueID(),
+            table_name: this.tablename,
+            main_value: id,
+            proponents: this.item.create_by,
+            business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
+            business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
+            process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
+            employee       : this.item.receive_name ,//varchar(1000) null comment '操作职员',
+            approve_user   : this.item.create_by ,//varchar(100)  null comment '审批人员',
+            action         : ''    ,//varchar(100)  null comment '操作动作',
+            action_opinion : '审批领用申请',//text          null comment '操作意见',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
+            functions_station : '经办人',//varchar(100)  null comment '职能岗位',
+            process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
+            business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
+            content           : `物品领用(${this.item.type}) ` + this.item.name + '#已准备 #经办人: ' + this.item.create_by,//text          null comment '业务内容',
+            process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
+            relate_data       : '',//text          null comment '关联数据',
+            origin_data       : '',
+          }
+          await Betools.workflow.taskViewProcessLog(prLogNode);
+        })();
         /************************  工作流程日志(结束)  ************************/
 
         //设置状态
@@ -869,7 +840,7 @@ export default {
         const id = this.item.id;
 
         //第一步 保存用户数据到数据库中
-        const elem = {   id,  status: '已完成',  }; // 待处理元素
+        const elem = { id, status: '已完成', }; // 待处理元素
 
         //第二步，向表单提交form对象数据
         const result = await Betools.manage.patchTableData(this.tablename , id , elem);
@@ -881,51 +852,23 @@ export default {
         }
 
         /************************  工作流程日志(开始)  ************************/
-
-        //查询当前所有待办记录
-        let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000);
-
-        //过滤出只关联当前流程的待办数据
-        tlist = tlist.filter(item => {
-          return item.id == id && item.pid == pid;
-        });
-
-        //同时删除本条待办记录当前(印章管理员)
-        await Betools.workflow.deleteViewProcessLog(tlist);
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '完成'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请[已完成]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.approveViewProcessLog(prLogHisNode);
-
+        (async() => {
+          let tlist = await Betools.task.queryProcessLogWaitSeal(userinfo.username , userinfo.realname , 0 , 1000); //查询当前所有待办记录
+          tlist = tlist.filter(item => { return item.id == id && item.pid == pid; }); //过滤出只关联当前流程的待办数据
+          await Betools.workflow.deleteViewProcessLog(tlist); //同时删除本条待办记录当前(印章管理员)
+        })();
+        (async() => {
+          const tdata = JSON.stringify(this.item);
+          const tdate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+          const prLogHisNode = { id: Betools.tools.queryUniqueID(), table_name: this.tablename, main_value: id, proponents: userinfo.username, business_data_id : id , business_code : '000000000' , process_name : '用印流程审批',  employee : userinfo.realname , approve_user : userinfo.username , action : '完成' ,  action_opinion : '审批领用申请[已完成]',  operate_time : tdate, functions_station : userinfo.position, process_station : '领用审批[物品领用]', business_data : tdata , content : `物品领用(${this.item.type}) ` + this.item.name + '#已完成 #经办人: ' + this.item.create_by , process_audit     : this.item.id + '##' + this.item.serialid , create_time : tdate, relate_data : '',  origin_data : '', };
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
+        })();
         /************************  工作流程日志(结束)  ************************/
 
         //设置状态
         this.loading = false;
-        this.status = elem.status;
+        this.status = this.item.status =  elem.status;
         this.readonly = true;
-        this.item.status = elem.status;
         this.role = 'view';
 
         //弹出确认提示
@@ -933,7 +876,6 @@ export default {
             title: '温馨提示',
             message: '已完成物品领用申请！',
           });
-
       }
     }
 }
