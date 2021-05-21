@@ -323,7 +323,7 @@ export default {
             officeIconToggle: false,
             sealIconToggle: false,
             imageTableName: 'bs_home_pictures',
-            images: ['https://wechat.yunwisdom.club:30443/script/administrate.png','https://cdn.jsdelivr.net/gh/Miazzy/xdata-vuechat-service@v1.0.01/src/assets/images/home_top_app.png'],
+            images: ['https://wechat.yunwisdom.club:30443/script/administrate.png'],
             showNotice: false,
             role: 'view',
         }
@@ -351,7 +351,7 @@ export default {
                     if(Betools.tools.isNull(userinfo)){
                         await Betools.tools.sleep(3500);
                     } 
-                    this.images = await Betools.query.queryHomeTopImage('APP');
+                    this.images = userinfo && userinfo.username && userinfo.username.includes('1028') ? await Betools.query.queryHomeTopImage('APP') : this.images;
                     console.log(`async draw home image ... `);
                 })();
                 (async() => {
