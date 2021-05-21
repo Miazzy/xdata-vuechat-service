@@ -245,16 +245,9 @@ export default {
             searchFlag: false,
             dropMenuOldValue: '',
             dropMenuValue: '',
-            dropMenuOption: [{
-                    text: '刷新',
-                    value: 2,
-                    icon: 'replay'
-                },
-                {
-                    text: '重置',
-                    value: 4,
-                    icon: 'aim'
-                },
+            dropMenuOption: [
+                { text: '刷新', value: 2, icon: 'replay' },
+                { text: '重置', value: 4, icon: 'aim' },
             ],
             statusType: Betools.workconfig.statusType,
             mailconfig: Betools.workconfig.mailconfig,
@@ -273,6 +266,8 @@ export default {
         this.queryInfo();
     },
     methods: {
+
+        // 时间确认函数
         async dateConfirm() {
             try {
                 this.item.time = dayjs(this.datetime).format('YYYY-MM-DD');
@@ -281,18 +276,14 @@ export default {
                 console.log(error);
             }
         },
+
+        // 判断前台接待人员信息
         async fileConfirm(value, index, resp) {
             try {
                 if (this.back == 'common' || this.role == 'visitor') {
-                    //弹出确认提示
-                    await vant.Dialog.alert({
-                        title: '温馨提示',
-                        message: '您好，无法修改到访地址！',
-                    });
+                    await vant.Dialog.alert({ title: '温馨提示', message: '您好，无法修改到访地址！', }); //弹出确认提示
                 } else {
-                    const item = this.fileColumns.find(item => {
-                        return item.name == value;
-                    })
+                    const item = this.fileColumns.find(item => { return item.name == value; });
                     this.item.userid = item.userid;
                     this.item.user_admin_name = item.username;
                     this.item.user_group_ids = item.userlist;
@@ -302,11 +293,14 @@ export default {
                 console.log(error);
             }
         },
+
+        // 判断时间类型
         async typedTimeConfirm(value, index, resp) {
             console.log(value + ' ' + resp);
             const transfer_type = resp == '上午' ? '上午' : '下午';
             this.item.dtime = transfer_type;
         },
+
         // 企业微信登录处理函数
         async weworkLogin() {
             try {
@@ -315,23 +309,22 @@ export default {
                 console.log(error);
             }
         },
+
         // 点击显示或者隐藏菜单
         async headMenuToggle() {
             this.$refs.headMenuItem.toggle();
         },
+
         // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                //刷新相应表单
-                this.queryTabList(this.tabname);
-                //显示搜索状态
-                vant.Toast('搜索...');
-                //等待一下
-                await Betools.tools.sleep(300);
+                this.queryTabList(this.tabname); //刷新相应表单
+                vant.Toast('搜索...'); //显示搜索状态
+                await Betools.tools.sleep(300); //等待一下
             }
-            //显示刷新消息
-            this.searchFlag = false;
+            this.searchFlag = false; //显示刷新消息
         },
+
         // 点击右侧菜单
         async headDropMenu(value) {
             const val = this.dropMenuValue;
@@ -352,6 +345,7 @@ export default {
                     console.log(`no operate. out of switch. `);
             }
         },
+
         // 查询来访地址
         async queryAddress() {
             if (!!this.item.address) {
@@ -392,6 +386,7 @@ export default {
                 }
             }
         },
+
         // 选择来访地址
         async selectAddress(name, value) {
             //选择来访地址后，接待人员被相应带出，来访地址和接待人员是关联的
@@ -401,6 +396,7 @@ export default {
             this.item.user_admin_name = name.reception_name;
             await this.queryUserName();
         },
+
         // 用户选择接待人员
         async queryCUserName() {
             const user_admin_name = this.item.create_by; //获取接待人员信息
@@ -454,6 +450,7 @@ export default {
                 }
             }
         },
+
         // 用户选择接待人员
         async queryUserName() {
             const user_admin_name = this.item.user_admin_name; //获取接待人员信息
@@ -493,12 +490,14 @@ export default {
                 }
             }
         },
+
         // 选中当前接待人员
         async selectCUserName(key, value, index) {
             this.item.create_by = key.name;
             this.item.position = key.position;
             console.log('key:' + JSON.stringify(key) + " value:" + value);
         },
+
         // 选中当前接待人员
         async selectUserName(value) {
             const id = this.userid;
@@ -508,6 +507,7 @@ export default {
             this.item.userid = id;
             this.item.user_admin_name = user.name;
         },
+
         // 设置重置
         async reduction() {
             this.item = {
@@ -534,6 +534,7 @@ export default {
                 status: '',
             };
         },
+
         // 获取处理日志
         async queryProcessLog() {
 
@@ -565,6 +566,7 @@ export default {
                 console.log(error);
             }
         },
+
         // 删除处理日志
         async deleteProcessLog() {
 
@@ -739,104 +741,69 @@ export default {
                 return !flag;
             });
 
+            //校验字段完整性
             if (invalidKey != '' && invalidKey != null) {
                 this.showOverlayConfirm('cancel',()=>{});
-                await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
-                });
-                return false;
+                return await vant.Dialog.alert({ title: '温馨提示', message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`, });
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_company)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入访客单位！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示', message: '请输入访客单位！', }); //弹出确认提示
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_name)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入访客姓名！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '请输入访客姓名！', });
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.visitor_mobile)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入访客电话！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '请输入访客电话！', }); //弹出确认提示
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.create_by)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入被访人员！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示', message: '请输入被访人员！', }); //弹出确认提示
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.mobile)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请输入被访人员联系电话！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '请输入被访人员联系电话！', });  //弹出确认提示
             }
 
             //未获取到来访单位数据
             if (Betools.tools.isNull(this.item.address)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '请选择来访地址！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示', message: '请选择来访地址！', }); //弹出确认提示
             }
 
             //验证访客电话号码是否正确
             if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(this.item.visitor_mobile)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '尊敬的用户您好，您输入的访客联系电话格式有误，请重新输入！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示', message: '尊敬的用户您好，您输入的访客联系电话格式有误，请重新输入！', }); //弹出确认提示
             }
 
             //预约时间必须大于当前时间
             if(curdate >= applydate){
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '尊敬的用户您好，您输入的预约时间不能小于当前时间！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示', message: '尊敬的用户您好，您输入的预约时间不能小于当前时间！',});  //弹出确认提示
             }
 
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
             const visited_user = this.visited_user;
+            if(visited_user.name.includes(this.item.create_by) && this.item.mobile != visited_user.mobile){
+                this.showOverlayConfirm('cancel',()=>{});
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码！', }); //弹出确认提示
+            }
             if ((this.item.mobile != visited_user.mobile) && (!ulist || ulist.length == 0)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                //弹出确认提示
-                return await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！',
-                });
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
             } else {
                 this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
