@@ -764,65 +764,53 @@ export default {
           return !flag;
         });
 
+        // 校验数据完整性
         if(invalidKey != '' && invalidKey != null){
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
             title: '温馨提示',
             message: `请确认内容是否填写完整，错误：${this.message[invalidKey]}！`,
           });
-          return false;
         }
 
         //如果物品数量只是整数，没有单位，则提示填入单位
         if(/^\+?[1-9][0-9]*$/.test(this.item.amount)){
-          //弹出确认提示
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
               title: '温馨提示',
               message: '请在领用数量处，填写领用数量及领用单位！',
             });
-          return;
         }
 
         //未获取到选择的物品
         if(Betools.tools.isNull(this.item.name) || Betools.tools.isNull(this.item.amount)){
-          //弹出确认提示
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
               title: '温馨提示',
               message: '请输入领用物品名称与数量！',
             });
-          return;
         }
 
         //未获取到选择的物品领用接待人员
         if(!Betools.tools.isNull(this.item.name) && (/[,|/| |\ |及|和|，|、]/g.test(this.item.name) || this.item.name.length > 12 ) ){
-          //弹出确认提示
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
               title: '温馨提示',
               message: '请分开输入多个领用物品（领用物品不能含有逗号、顿号、空格、‘及’等）！',
             });
-          return;
         }
 
         //未获取到选择的物品领用接待人员
         if(!Betools.tools.isNull(this.item.amount) && (/[,|/| |\ |及|和|，|、]/g.test(this.item.amount) || this.item.amount.length > 12 ) ){
-          //弹出确认提示
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
               title: '温馨提示',
               message: '请分开输入多个领用物品及其数量单位（领用物品及数量单位不能含有逗号、顿号、空格、‘及’等）！',
             });
-          return;
         }
 
         //未获取到选择的物品领用接待人员
         if(Betools.tools.isNull(this.item.userid)){
-          //弹出确认提示
-          await vant.Dialog.alert({
+          return await vant.Dialog.alert({
               title: '温馨提示',
               message: '请输入物品管理员并点击人员列表，选择物品领用管理员！',
             });
-          return;
         }
-
-        //校验所有填写的数量单位是否准确，如物品不能超过5个，笔记本不能超过2个 TODO
 
         //查询直接所在工作组
         const response = await Betools.query.queryRoleGroupList('COMMON_RECEIVE_BORROW' , this.item.userid);
@@ -892,7 +880,7 @@ export default {
             });
         }
 
-        //第二步，向表单提交form对象数据
+        //向表单提交form对象数据
         try {
           if(!Betools.tools.isNull(elem.name) && !Betools.tools.isNull(elem.amount)){
             const result = await Betools.manage.postTableData(this.tablename , elem);
@@ -955,59 +943,31 @@ export default {
         const front = user_group_ids;
         const front_name = user_group_names;
 
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogHisNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: userinfo.username,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : userinfo.realname ,//varchar(1000) null comment '操作职员',
-          approve_user   : userinfo.username ,//varchar(100)  null comment '审批人员',
-          action         : '发起'    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '发起领用申请[待处理]',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : userinfo.position,//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.approveViewProcessLog(prLogHisNode);
-
-        //同时推送一条待办记录给印章管理员
-
-        //记录 审批人 经办人 审批表单 表单编号 记录编号 操作(同意/驳回) 意见 内容 表单数据
-        const prLogNode = {
-          id: Betools.tools.queryUniqueID(),
-          table_name: this.tablename,
-          main_value: id,
-          proponents: front,
-          business_data_id : id ,//varchar(100)  null comment '业务数据主键值',
-          business_code  : '000000000' ,//varchar(100)  null comment '业务编号',
-          process_name   : '用印流程审批',//varchar(100)  null comment '流程名称',
-          employee       : front_name ,//varchar(1000) null comment '操作职员',
-          approve_user   : front ,//varchar(100)  null comment '审批人员',
-          action         : ''    ,//varchar(100)  null comment '操作动作',
-          action_opinion : '审批领用申请',//text          null comment '操作意见',
-          operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss')   ,//datetime      null comment '操作时间',
-          functions_station : '前台',//varchar(100)  null comment '职能岗位',
-          process_station   : '领用审批[物品领用]',//varchar(100)  null comment '流程岗位',
-          business_data     : JSON.stringify(this.item),//text          null comment '业务数据',
-          content           : `物品领用(${this.item.type}) ` + this.item.name + '#待处理 #经办人: ' + userinfo.username,//text          null comment '业务内容',
-          process_audit     : this.item.id + '##' + this.item.serialid ,//varchar(100)  null comment '流程编码',
-          create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),//datetime      null comment '创建日期',
-          relate_data       : '',//text          null comment '关联数据',
-          origin_data       : '',
-        }
-
-        await Betools.workflow.taskViewProcessLog(prLogNode);
+        (async() => {
+          const prLogHisNode = {
+            id: Betools.tools.queryUniqueID(),
+            table_name: this.tablename,
+            main_value: id,
+            proponents: userinfo.username,
+            business_data_id : id ,
+            business_code  : '000000000' ,
+            process_name   : '用印流程审批',
+            employee       : userinfo.realname ,
+            approve_user   : userinfo.username ,
+            action         : '发起'    , 
+            action_opinion : '发起领用申请[待处理]',
+            operate_time   : dayjs().format('YYYY-MM-DD HH:mm:ss') ,
+            functions_station : userinfo.position,
+            process_station   : '领用审批[物品领用]',
+            business_data     : JSON.stringify(this.item),
+            content           : `物品领用(${this.item.type}) ` + this.item.name + ' #经办人: ' + userinfo.username ,
+            process_audit     : this.item.id + '##' + this.item.serialid ,
+            create_time       : dayjs().format('YYYY-MM-DD HH:mm:ss'),  relate_data       : '',  origin_data       : '',
+          }
+          const prLogNode = JSON.parse(JSON.stringify(prLogHisNode)); prLogNode.id = Betools.tools.queryUniqueID(), prLogNode.proponents = prLogNode.approve_user = front, prLogNode.employee = front_name, prLogNode.action = '待办', prLogNode.action_opinion = '审批领用申请', prLogNode.functions_station = '前台';
+          await Betools.workflow.approveViewProcessLog(prLogHisNode);
+          await Betools.workflow.taskViewProcessLog(prLogNode);  //同时推送一条待办记录给印章管理员
+        })();
 
         /************************  工作流程日志(结束)  ************************/
 
@@ -1016,9 +976,11 @@ export default {
         this.status = elem.status;
         this.readonly = true;
 
-        //第三步 向物品管理员推送通知，已准备办公用品等
-        await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
-                .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+        //向物品管理员推送通知，已准备办公用品等
+        (async()=>{
+          await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/物品领用登记通知：员工‘${userinfo.realname}(${userinfo.username})’ 部门:‘${userinfo.department.name}’ 单位:‘${userinfo.parent_company.name}’ 序号:‘${value.serialid}’ 物品领用登记完毕，请确认！?rurl=${receiveURL}`)
+                  .set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+        })();
 
         //弹出确认提示
         await vant.Dialog.alert({
