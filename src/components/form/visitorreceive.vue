@@ -806,20 +806,16 @@ export default {
             let similarity = Betools.tools.similar(this.item.mobile.trim(),visited_user.mobile);
             if(visited_user.name.includes(this.item.create_by) &&  similarity < 0.80 ){
                 this.showOverlayConfirm('cancel',()=>{});
-                (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
                 const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile};
+                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客登记失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                this.item.mobile = '';
-                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码！', }); //弹出确认提示
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码，您可能输入错误部分数字，请认真检查！', }); //弹出确认提示
             }
             if ((similarity < 0.80) && (!ulist || ulist.length == 0)) {
                 this.showOverlayConfirm('cancel',()=>{});
-                (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
                 const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile};
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客登记失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                this.item.mobile = '';
+                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客校验失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
             } 
                 
