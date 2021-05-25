@@ -145,6 +145,7 @@ export default {
                 '99': '已驳回',
             },
             json_fields: {
+                'Index':'index',
                 '序号': 'serialid',
                 '登记时间': 'create_time',
                 '文件名称': 'filename',
