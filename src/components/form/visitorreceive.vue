@@ -821,6 +821,8 @@ export default {
                 this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
 
+            (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
+
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
 
