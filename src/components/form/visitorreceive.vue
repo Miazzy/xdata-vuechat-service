@@ -1081,7 +1081,7 @@ export default {
         },
 
         // 来访确认作废操作函数
-        async handleDisagree(visitType) {
+        async handleDisagree(visitType = '') {
             //显示加载状态
             this.loading = true;
 
@@ -1118,9 +1118,6 @@ export default {
 
             //显示加载状态
             await this.showOverlayConfirm('confirm',()=>{});
-
-            // 返回预览URL
-            const receiveURL = encodeURIComponent(`${window.BECONFIG.domain.replace('www','wechat')}/#/app/visitorview?id=${id}&statustype=office&role=receive`);
 
             //第一步 保存用户数据到数据库中
             const elem = {
