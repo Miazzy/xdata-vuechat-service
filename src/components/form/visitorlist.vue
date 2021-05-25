@@ -235,7 +235,7 @@ export default {
 
         // 查询Tab对应拜访信息
         async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = ''){
-            (Betools.tools.isNull(userinfo)) ? userinfo = { username:'' } : null;
+            (Betools.tools.isNull(userinfo) || typeof userinfo == 'string' ) ? userinfo = { username:'' } : null;
             const cstatus = this.cstatus;
             let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=0&_size=1000`);
             list.map((item, index) => {
@@ -289,9 +289,10 @@ export default {
             this.showOverlayConfirm('confirm', ()=>{}); //显示遮罩
             console.log(`key:`, key, ` value:`, value, ` element:`, element);
             const status = visitType == '已到访' ? 'visit' : 'confirm';
-            const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
-            const id = element.id; //表单ID
+            let userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+            let id = element.id; //表单ID
             let user_group_ids = '';
+            (Betools.tools.isNull(userinfo) || typeof userinfo == 'string' ) ? userinfo = { username:'' } : null;
 
             if(!Betools.tools.isNull(userinfo) && !Betools.tools.isNull(userinfo.username)){
                 const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', userinfo.username); //检查用户是否具有权限进行审批
