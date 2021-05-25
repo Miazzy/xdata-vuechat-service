@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
     build: {
         env: require('./prod.env'),
-        version: 'v1.1.x4',
+        version: 'v1.0.x1',
         index: path.resolve(__dirname, '../dist/index.html'),
         assetsRoot: path.resolve(__dirname, '../dist'),
         assetsSubDirectory: 'static',

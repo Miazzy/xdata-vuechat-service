@@ -229,9 +229,7 @@ export default {
                 });
                 return findex == index;
             });
-            this.flist.sort((a, b) => {
-                return a.timestamp - b.timestamp;
-            });
+            this.flist.sort((a, b) => { return a.timestamp - b.timestamp; });
             this.flist.map((item,index)=>{
                 if(Betools.tools.isNull(item.index)){
                     item.index = index + 1;
