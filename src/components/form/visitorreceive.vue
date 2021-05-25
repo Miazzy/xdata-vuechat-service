@@ -797,16 +797,19 @@ export default {
 
             const ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
             const visited_user = this.visited_user;
-            if(visited_user.name.includes(this.item.create_by) && this.item.mobile != visited_user.mobile){
+            const similarity = Betools.tools.similar(this.item.mobile.trim(),visited_user.mobile.trim());
+            if(visited_user.name.includes(this.item.create_by) &&  similarity < 0.70 ){
                 this.showOverlayConfirm('cancel',()=>{});
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码！', }); //弹出确认提示
             }
-            if ((this.item.mobile != visited_user.mobile) && (!ulist || ulist.length == 0)) {
+            if ((similarity < 0.70) && (!ulist || ulist.length == 0)) {
                 this.showOverlayConfirm('cancel',()=>{});
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
             } else {
                 this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
             }
+
+            debugger;
 
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
