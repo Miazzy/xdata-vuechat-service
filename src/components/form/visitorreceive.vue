@@ -820,19 +820,19 @@ export default {
             }
             let similarity = Betools.tools.similar(this.item.mobile.trim(),visited_user.mobile);
             if(visited_user.name.includes(this.item.create_by) &&  similarity < 0.80 ){
-                this.showOverlayConfirm('cancel',()=>{});
                 const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
-                const message = `访客${visitor_name}，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
+                const messageObj = { time, dtime, create_by, visitor_name, visitor_company, visitor_mobile , mobile: visited_user.mobile, write_mobile: mobile};
+                const message = `${visitor_company}的访客${visitor_name}(${visitor_mobile})，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/${message} 失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                this.showOverlayConfirm('cancel',()=>{});
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码，您可能输入错误部分数字，请认真检查！', }); //弹出确认提示
             }
             if ((similarity < 0.80) && (!ulist || ulist.length == 0)) {
-                this.showOverlayConfirm('cancel',()=>{});
                 const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
-                const message = `访客${visitor_name}，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
+                const messageObj = { time, dtime, create_by, visitor_name, visitor_company, visitor_mobile , mobile: visited_user.mobile, write_mobile: mobile};
+                const message = `${visitor_company}的访客${visitor_name}(${visitor_mobile})，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/${message} 失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                this.showOverlayConfirm('cancel',()=>{});
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
             } 
                 
