@@ -235,6 +235,7 @@ export default {
 
         // 查询Tab对应拜访信息
         async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = ''){
+            (Betools.tools.isNull(userinfo)) ? userinfo = { username:'' } : null;
             const cstatus = this.cstatus;
             let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=0&_size=1000`);
             list.map((item, index) => {
@@ -285,33 +286,21 @@ export default {
                 });
             }
 
-            //显示遮罩
-            this.showOverlayConfirm('confirm', ()=>{});
-
+            this.showOverlayConfirm('confirm', ()=>{}); //显示遮罩
             console.log(`key:`, key, ` value:`, value, ` element:`, element);
             const status = visitType == '已到访' ? 'visit' : 'confirm';
+            const userinfo = await Betools.storage.getStore('system_userinfo'); //获取用户基础信息
+            const id = element.id; //表单ID
+            let user_group_ids = '';
 
-            //获取用户基础信息
-            const userinfo = await Betools.storage.getStore('system_userinfo');
-
-            //表单ID
-            const id = element.id;
-
-            //检查用户是否具有权限进行审批
-            const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', userinfo.username);
-
-            //获取到印章管理员组信息
-            let user_group_ids = response && response.length > 0 ? response[0].userlist : '';
-            user_group_ids = user_group_ids + ',' + element.create_by;
-
-            //获取到用户列表数据
-            if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) {
-                this.showOverlayConfirm('cancel', ()=>{});
-                await vant.Dialog.alert({
-                    title: '温馨提示',
-                    message: '您没有访客管理的审批权限，请联系管理员进行处理！',
-                });
-                return;
+            if(!Betools.tools.isNull(userinfo) && !Betools.tools.isNull(userinfo.username)){
+                const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', userinfo.username); //检查用户是否具有权限进行审批
+                user_group_ids = response && response.length > 0 ? response[0].userlist : ''; //获取到印章管理员组信息
+                user_group_ids = user_group_ids + ',' + element.create_by;
+                if (Betools.tools.isNull(user_group_ids) || !user_group_ids.includes(userinfo.username)) { //获取到用户列表数据
+                    this.showOverlayConfirm('cancel', ()=>{});
+                    return await vant.Dialog.alert({ title: '温馨提示', message: '您没有访客管理的审批权限，请联系管理员进行处理！',});
+                }
             }
 
             // 返回预览URL
