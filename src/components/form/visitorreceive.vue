@@ -797,35 +797,6 @@ export default {
                 return await vant.Dialog.alert({ title: '温馨提示', message: '尊敬的用户您好，您输入的预约时间不能小于当前时间！',});  //弹出确认提示
             }
 
-            let ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
-            let visited_user = (!ulist || ulist.length == 0) ? this.visited_user : ulist[0];
-            if(Betools.tools.isNull(visited_user) || Betools.tools.isNull(visited_user.mobile)){
-                ulist = await Betools.manage.queryUserByNameVHRM(this.item.create_by);
-                visited_user = (!ulist || ulist.length == 0) ? this.visited_user : ulist[0];
-            }
-            let similarity = Betools.tools.similar(this.item.mobile.trim(),visited_user.mobile);
-            if(visited_user.name.includes(this.item.create_by) &&  similarity < 0.80 ){
-                this.showOverlayConfirm('cancel',()=>{});
-                const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客登记失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码，您可能输入错误部分数字，请认真检查！', }); //弹出确认提示
-            }
-            if ((similarity < 0.80) && (!ulist || ulist.length == 0)) {
-                this.showOverlayConfirm('cancel',()=>{});
-                const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
-                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
-                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客校验失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
-                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
-            } 
-                
-            try {
-                (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
-                this.item.department = `${ulist[0] && ulist[0].topname ? ulist[0].topname : '' }${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
-            } catch (error) {
-                console.error(error);
-            }
-
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
 
@@ -839,6 +810,37 @@ export default {
             if (Betools.tools.isNull(user_group_ids)) {
                 user_group_ids = this.item.userid;
                 user_group_names = this.item.user_admin_name;
+            }
+
+            let ulist = await Betools.manage.queryUserByNameAndMobile(this.item.create_by, this.item.mobile)
+            let visited_user = (!ulist || ulist.length == 0) ? this.visited_user : ulist[0];
+            if(Betools.tools.isNull(visited_user) || Betools.tools.isNull(visited_user.mobile)){
+                ulist = await Betools.manage.queryUserByNameVHRM(this.item.create_by);
+                visited_user = (!ulist || ulist.length == 0) ? this.visited_user : ulist[0];
+            }
+            let similarity = Betools.tools.similar(this.item.mobile.trim(),visited_user.mobile);
+            if(visited_user.name.includes(this.item.create_by) &&  similarity < 0.80 ){
+                this.showOverlayConfirm('cancel',()=>{});
+                const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
+                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
+                const message = `访客${visitor_name}，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/${message} 失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，请填写正确的员工电话号码，您可能输入错误部分数字，请认真检查！', }); //弹出确认提示
+            }
+            if ((similarity < 0.80) && (!ulist || ulist.length == 0)) {
+                this.showOverlayConfirm('cancel',()=>{});
+                const { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile} = this.item;
+                const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile: visited_user.mobile, write_mobile: mobile};
+                const message = `访客${visitor_name}，拜访${create_by}，拜访人电话：${visited_user.mobile}，但所填写电话为：${mobile}，可能电话号码不匹配，请拜访人仔细检查电话重新填写预约申请！`;
+                await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/${user_group_ids}/${message} 失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
+                return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
+            } 
+                
+            try {
+                (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
+                this.item.department = `${ulist[0] && ulist[0].topname ? ulist[0].topname : '' }${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
+            } catch (error) {
+                console.error(error);
             }
 
             //第一步 保存用户数据到数据库中
