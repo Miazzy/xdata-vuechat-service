@@ -632,7 +632,7 @@ export default {
             return Betools.tools.isNull(this.message[fieldName]);
         },
 
-        // 获取URL或者二维码信息
+        // 获取基础信息
         async queryInfo() {
 
             try {
@@ -924,6 +924,7 @@ export default {
             
         },
 
+        //提示预约申请成功
         async handleVisitApplyFinallyAlert(showOverlayConfirm, dialog = vant.Dialog,miliseconds = 3000){
             Betools.tools.throttle(async () => {
                 console.log(`throttle : 提交访客预约申请成功！`, );
