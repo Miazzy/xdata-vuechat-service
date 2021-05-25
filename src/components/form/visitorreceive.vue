@@ -819,11 +819,14 @@ export default {
                 const messageObj = { time, dtime, create_by, create_time, visitor_name, visitor_company, visitor_mobile, visitor_position, mobile};
                 await superagent.get(`${window.BECONFIG['restAPI']}/api/v1/weappms/18628391453/访客登记失败:${JSON.stringify(messageObj)}?rurl=${receiveURL}`).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json');
                 return await vant.Dialog.alert({ title: '温馨提示',  message: '尊敬的用户您好，未在系统中查询到此员工信息，请核对被访人员姓名或联系电话是否填写正确！', }); //弹出确认提示
-            } else {
-                this.item.department = `${ulist[0].topname}${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
+            } 
+                
+            try {
+                (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
+                this.item.department = `${ulist[0] && ulist[0].topname ? ulist[0].topname : '' }${!Betools.tools.isNull(ulist[0].departname) ? '>' : ''}${Betools.tools.deNull(ulist[0].departname)}`;
+            } catch (error) {
+                console.error(error);
             }
-
-            (similarity < 1.0) ? this.item.mobile = visited_user.mobile : null;
 
             //查询直接所在工作组
             const response = await Betools.query.queryRoleGroupList('COMMON_VISIT_AUTH', this.item.userid);
