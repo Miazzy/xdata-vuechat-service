@@ -172,7 +172,7 @@ export default {
             const month = dayjs().subtract(36, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
             const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99,100,200,300,1000)&_sort=-create_time&_p=0&_size=1000`); // 获取最近12个月的已用印记录
             clist.map((item, index) => {
-                item.title = item.filename.slice(0, 16);
+                item.title = item.serialid + " " + item.filename.slice(0, 16);
                 item.code = item.id;
                 item.tel = '';
                 item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
@@ -186,7 +186,7 @@ export default {
             const month = dayjs().subtract(36, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期
             data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and(${transfer_type}_status,in,0,99,100,200,300,1000)~and((contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
-                item.title = item.filename.slice(0, 16);
+                item.title = item.serialid + " " + item.filename.slice(0, 16);
                 item.code = item.id;
                 item.tel = '';
                 item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
@@ -224,6 +224,7 @@ export default {
                 this.item.type = item.type;
                 this.item.filename = item.filename;
                 this.item.flist = item.flist;
+                debugger;
                 this.item.remark = item.remark;
                 this.item.message = item.message;
                 this.item.status = item.status;

@@ -192,10 +192,10 @@ export default {
             const month = dayjs().subtract(36, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期 ~and(${transfer_type}_status,in,0,99,100,200,300,1000)
             const clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             clist.map((item, index) => {
-                item.title = item.filename.slice(0, 16);
+                item.title = item.serialid + " " + item.filename.slice(0, 16);
                 item.code = item.id;
                 item.tel = '';
-                item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                item.name = item.seal_type == '合同类' ? '序号:' + item.serialid + ' ' + item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                 item.isDefault = true;
             });
             this.fileColumns = clist;
@@ -207,10 +207,10 @@ export default {
             const month = dayjs().subtract(36, 'months').format('YYYY-MM-DD'); // 获取最近12个月对应的日期 ~and(${transfer_type}_status,in,0,99,100,200,300,1000)~and
             data = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,已用印,已领取,移交前台,档案归档,财务归档,已完成)~and(create_time,gt,${month})~and(seal_type,like,合同类)~and((company,like,~${key}~)~or(mobile,like,~${key}~)~or(sign_man,like,~${key}~)~or(seal_category,like,~${key}~)~or(seal_man,like,~${key}~)~or(id,like,~${key}~)~or(contract_id,like,~${key}~)~or(filename,like,~${key}~)~or(create_by,like,~${key}~)~or(serialid,like,~${key}~)~or(workno,like,~${key}~))&_sort=-create_time&_p=0&_size=20`); // 获取最近12个月的已用印记录
             data.map((item, index) => {
-                item.title = item.filename.slice(0, 16);
+                item.title = item.serialid + " " + item.filename.slice(0, 16);
                 item.code = item.id;
                 item.tel = '';
-                item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                item.name = item.seal_type == '合同类' ? '序号:' + item.serialid + ' ' + item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                 item.isDefault = true;
             });
             this.fileColumns = data;
@@ -261,10 +261,10 @@ export default {
             if (Betools.tools.isNull(clist) || clist.length == 0) { //~and(${transfer_type}_status,in,0,99,100,200,300,1000)
                 clist = await Betools.manage.queryTableData('bs_seal_regist', `_where=(status,in,${status})~and(create_time,gt,${month})~and(seal_type,like,${type})&_sort=-create_time&_p=${page}&_size=${size}`); // 获取最近12个月的已用印记录
                 clist.map((item, index) => {
-                    item.title = item.filename.slice(0, 16);
+                    item.title = item.serialid + " " + item.filename.slice(0, 16);
                     item.code = item.id;
                     item.tel = '';
-                    item.name = item.seal_type == '合同类' ? item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
+                    item.name = item.seal_type == '合同类' ? '序号:' + item.serialid + ' ' + item.create_by + ' ' + item.filename + ' 流程编号:' + item.workno + ' 合同编号:' + item.contract_id : item.create_by + ' ' + item.filename + ' 序号:' + item.serialid + ' 流程编号:' + item.workno;
                     item.isDefault = true;
                 });
                 Betools.storage.setStore(`system_seal_finance_contract_clist`, JSON.stringify(clist), 100);
