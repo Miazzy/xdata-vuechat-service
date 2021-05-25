@@ -65,6 +65,12 @@
                         <van-goods-action-button type="danger" text="同意" @click="handleAgree();" style="width:42%;float:right;" />
                     </div>
 
+                    <div v-show=" view == 'view' " id="van-finance-apply" style="margin:30px 0px 10px; border-top:0px solid #fcfcfc;">
+                        <download-excel :data="flist" :fields="json_fields" worksheet="归档台账" name="归档台账.xls" style="width:94.25%;font-size:14px;margin:0px 0px 0px 12px; height:42px; text-align: center; border-radius:10px;color:#fefefe;float:left;background: linear-gradient(to right,#ffd01e,#ff8917);">
+                            <div style="margin-top:12px;">导出</div>
+                        </download-excel>
+                    </div>
+
                     <van-loading v-show="loading" size="24px" vertical style="position: absolute; margin: 0px 40%; width: 20%; top: 42%;">加载中...</van-loading>
                     <div style="height:100px;"></div>
                 </div>
@@ -137,6 +143,26 @@ export default {
                 '100': '待归档',
                 '200': '已归档',
                 '99': '已驳回',
+            },
+            json_fields: {
+                '序号': 'serialid',
+                '登记时间': 'create_time',
+                '文件名称': 'filename',
+                '数量': 'count',
+                '经办部门': 'deal_depart',
+                '经办人员': 'deal_manager',
+                '用印公司': 'company',
+                '合同编号': 'contract_id',
+                '签收人员': 'sign_man',
+                '审批类型': 'approve_type',
+                '关联流程': 'workno',
+                '用印类型': 'seal_type',
+                '印章类型': 'seal_category',
+                '排序类型': 'order_type',
+                '盖章人员': 'seal_man',
+                '用印状态': 'status',
+                '合作方': 'partner',
+                '备注信息': 'message',
             },
             fileColumns: [],
             flist: [],

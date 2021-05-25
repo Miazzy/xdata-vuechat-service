@@ -20,10 +20,15 @@
             </van-cell>
             <van-checkbox-group v-model="checkboxValue" @change="change" ref="checkboxGroup" style="min-height:150px;">
                 <van-cell-group>
-                    <van-cell :style="option.margin" v-for="(item, index) in columns" clickable :key="item[option.value]" :title="item[option.label]" @click="toggle(index)">
-                        <div v-if="item[option.title]">{{item[option.title]}}</div>
+                    <van-cell v-show="(item.status_ != 'invalid') " :style="option.margin" v-for="(item, index) in columns" clickable :key="item[option.value]" :title="item[option.label]" >
+                        <div v-show="item[option.title] && (item.status_ != 'invalid') ">
+                            <van-icon name="cross" @click="checkboxClick_(item,index);" />
+                            {{item[option.title]}}
+                        </div>
                         <template #right-icon>
-                            <van-checkbox :name="item[option.value]" ref="checkboxes" @click="checkboxClick(item,index);"/>
+                            <div @click="toggle(index)" style="margin-top:15px;" >
+                                <van-checkbox :name="item[option.value]" ref="checkboxes" @click="checkboxClick(item,index);"/>
+                            </div>
                         </template>
                     </van-cell>
                 </van-cell-group>
@@ -104,7 +109,10 @@ export default {
         },
         checkboxClick(item , index){
             item.timestamp = new Date().getTime();
-            console.log(JSON.stringify(item));
+        },
+        checkboxClick_(item , index){
+            item.status_ = 'invalid';
+            this.columns = this.columns.filter(item => { return item.status_ != 'invalid' });
         },
         onConfirm() { //确定
             this.resultValue = this.checkboxValue
