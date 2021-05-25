@@ -231,7 +231,13 @@ export default {
             });
             this.flist.sort((a, b) => {
                 return a.timestamp - b.timestamp;
-            })
+            });
+            this.flist.map((item,index)=>{
+                if(Betools.tools.isNull(item.index)){
+                    item.index = index + 1;
+                    item.name = item.index + ' ' + item.name;
+                }
+            });
         },
         /** 确认选择合同文件 */
         async vuserConfirm(data, value, index) {
