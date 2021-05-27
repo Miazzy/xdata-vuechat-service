@@ -298,7 +298,7 @@ export default {
         list.map((item , index) => {
           item.name = item.username + ' ' + item.mobile ,
           item.tel = '';
-          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${item.join_time.slice(0,10)}` +  ' HR:' + item.hr_name;
+          item.address = item.position + ' ' + item.greatdiploma + ` 时间:${dayjs(item.join_time).format('YYYY-MM-DD')}` +  ' HR:' + item.hr_name;
           item.isDefault = true;
         });
         return list;

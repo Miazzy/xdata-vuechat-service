@@ -207,7 +207,7 @@ export default {
           this.initList.map((item , index) => {
             item.name = item.reward_type + '申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
           })
 
@@ -218,7 +218,7 @@ export default {
           this.confirmList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
           })
 
@@ -229,7 +229,7 @@ export default {
           this.doneList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
           })
 
@@ -240,7 +240,7 @@ export default {
           this.rejectList.map((item , index) => {
             item.name = item.reward_type + '奖罚申请: ' + item.title + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.apply_realname + ' ' + item.content + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
           })
 

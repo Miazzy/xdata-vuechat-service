@@ -191,7 +191,7 @@ export default {
         list.map((item) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
             item.tel = '';
-            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${item.create_time.slice(0,10)}`;
+            item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
         })
         list = list.filter(item => { return item.id == item.pid; });

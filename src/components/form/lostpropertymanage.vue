@@ -239,7 +239,7 @@ export default {
         list.map((item) => {
           item.name = '物品: ' + item.lost_name + ` #${item.serialid}`,
           item.tel = '';
-          item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${item.create_time.slice(0,10)}`;
+          item.address = '物品:' + item.lost_name + (item.description ? ' 备注:' + item.description : '') + (item.address ? ` 地址：${item.address}` : '') + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
           item.isDefault = true;
         });
         list = list.filter(item => { return item.id == item.pid; });
