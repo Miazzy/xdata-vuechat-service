@@ -149,7 +149,7 @@
               <van-steps direction="vertical" :active="processLogList.length - 1">
                 <template v-for="value in processLogList">
                   <van-step :key="value.id">
-                    <h3>{{ value.action + ' ' + value.employee + ' ' + value.action_opinion }}</h3>
+                    <h3>{{ deNull(value.action,'') + ' ' + deNull(value.employee,deNull(value.action,'')=='发起'?item.create_by:'') + ' ' + deNull(value.action_opinion,'') }}</h3>
                     <p>{{ value.create_time }}</p>
                   </van-step>
                 </template>
@@ -263,6 +263,7 @@ export default {
             back:'/app',
             hContractID:'',
             item:{
+              create_by:'',
               createtime: dayjs().format('YYYY-MM-DD'),
               serialid:'',
               filename:'',
@@ -338,6 +339,8 @@ export default {
       this.queryInfo();
     },
     methods: {
+      isNull:Betools.tools.isNull,
+      deNull:Betools.tools.deNull,
       // 企业微信登录处理函数
       async weworkLogin(){
         try {
@@ -931,6 +934,7 @@ export default {
           this.item = {
               id: that.item.id,
               serialid: value.serialid,
+              create_by: value.create_by,
               createtime: value.create_time ? dayjs(value.create_time).format('YYYY-MM-DD HH:mm:ss') : '',
               filename: value.filename,
               count: value.count,
@@ -1058,7 +1062,6 @@ export default {
             } catch (error) {
               console.log(error);
             }
-
           }
 
           //如果合同编号存在
