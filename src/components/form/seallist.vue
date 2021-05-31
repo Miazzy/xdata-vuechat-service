@@ -83,7 +83,7 @@
 </keep-alive>
 </template>
 <script>
-const limiter = new Betools.limiter.getLimiterInstance({ tokensPerInterval: 1, interval: 15000 , fireImmediately:true });
+const limiter = new Betools.limiter.getLimiterInstance({ tokensPerInterval: 1, interval: 3000 , fireImmediately:true });
 
 export default {
     mixins: [window.mixin],
