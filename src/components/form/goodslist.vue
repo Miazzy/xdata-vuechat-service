@@ -13,17 +13,6 @@
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
                 <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel
-                        :data="json_data_office"
-                        :fields="json_fields_office"
-                        worksheet="办公物品领用台账"
-                        name="办公物品领用台账.xls" >
-                        办公台账
-                      </download-excel>
-                    </span>
-                  </template>
                 </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
@@ -45,16 +34,16 @@
     <section>
       <div class="weui-cells" style="margin-top: 0px;">
         <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="queryTabList(1 , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             待处理
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="queryTabList(2 , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已准备
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="queryTabList(3 , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已完成
           </div>
-          <div class="weui-cell__bd weui-cell_tab" @click="tabname = 4 ; queryTabList(tabname , 0);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+          <div class="weui-cell__bd weui-cell_tab" @click="queryTabList(4 , 0);" :style="tabname == 4 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
             已驳回
           </div>
         </div>
@@ -97,7 +86,7 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_goods_receive',
+            tname: 'v_goods_receive',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
@@ -181,15 +170,15 @@ export default {
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0); //查询页面数据
-        this.queryTabList('办公' , 0); //查询页面数据
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
+        // this.queryTabList('办公用品' , 0); //查询页面数据
       },
 
       //查询Tab栏下列表信息
-      async queryTabList(tabname , page = 0 ){
+      async queryTabList(tabname){
+        this.tabname = tabname;
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname ;
-        const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         let searchSql = ''; //设置查询语句
         //如果存在搜索关键字，则编写查询关键字的查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))` : null;
@@ -201,30 +190,23 @@ export default {
           this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql);
         } else if(tabname == 4) {
           this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
-        } else if(tabname == '办公') {
-          this.json_fields_office = await this.handleExList(tableName, '办公用品', userinfo, searchSql);
-        } else if(tabname == '药品') {
-          this.json_data_drug = await this.handleExList(tableName, '药品', userinfo, searchSql);
-        } else if(tabname == '防疫') {
-          this.json_data_prevent = await this.handleExList(tableName, '防疫', userinfo, searchSql);
+        } else if(tabname == '办公用品' || tabname == '药品' || tabname == '防疫') {
+          this.json_data_drug = await this.handleExList(tableName, tabname, userinfo, searchSql);
         }
       },
 
       //查询不同状态的领用数据
-      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 150){
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 50){
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }
           let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
+          console.log(`query handle list:`, list.length);
           list.map((item)=>{
-            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
+            item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`, item.tel = '', item.isDefault = true;
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
-            item.isDefault = true;
           });
-          list = list.filter(item => {
-            return item.id == item.pid;
-          });
+          list = list.filter(item => { return item.id == item.pid; });
           return list;
       },
 

@@ -77,7 +77,7 @@ export default {
             doneList:[],
             rejectList:[],
             hContractID:'',
-            tname: 'bs_goods_receive',
+            tname: 'v_goods_receive',
             tabmap:{
               '1': 'initList',
               '2': 'confirmList',
