@@ -194,7 +194,7 @@ export default {
             switch (val) {
                 case 2: //刷新数据
                     this.dropMenuValue = this.dropMenuOldValue;
-                    await this.queryTabList(this.tabname, 0);
+                    await this.queryTabList(this.tabname);
                     break;
                 case 3: //查询数据
                     this.dropMenuValue = this.dropMenuOldValue;
@@ -202,7 +202,7 @@ export default {
                     break;
                 case 4: //重置数据
                     this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '', this.searchFlag = false;
-                    await this.queryTabList(this.tabname, 0);
+                    await this.queryTabList(this.tabname);
                     break;
                 default:
                     console.log(`no operate. out of switch. `);
@@ -212,8 +212,9 @@ export default {
         // 查询基础数据
         async queryInfo() {
             this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1'; //获取tabname
-            await this.queryTabList(this.tabname, 0);  //查询页面数据
             this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
+            this.queryTabList(this.tabname);  //查询页面数据
+            setInterval(()=>{ this.queryTabList(1); } , 100 * 1000);
         },
 
         // 查询Tab栏列表数据
@@ -227,15 +228,18 @@ export default {
             if (tabname == 1) {
                 this.initList = await this.handleList(tableName , 'init,confirm' , userinfo, searchSql , 0 , 100);
             } else if (tabname == 2) {
-                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql , 0 , 20);
+                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql , 0 , 10);
             } else if (tabname == 3) {
-                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 20);
+                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 10);
             }
         },
 
         // 查询Tab对应拜访信息
         async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = '' , page = 0 , size = 1000){
-            let list = await Betools.query.queryVisitList(tableName , status , userinfo , searchSql , page , size);
+            const key = JSON.stringify([...arguments]);
+            const args = JSON.parse(key);
+            const list = await Betools.query.cacheQueryList(Betools.query.queryVisitList, args);
+            console.log(`visit list cache key:`, key);
             return list;
         },
 
@@ -374,13 +378,13 @@ export default {
             setTimeout(async()=>{
                 await Betools.manage.patchTableData(this.tablename, id, elem);
                 console.log(`refresh query table list one ... `);
-                await this.queryTabList(this.tabname, 0);
+                await this.queryTabList(this.tabname);
                 await Betools.tools.sleep(1500);
                 console.log(`refresh query table list two ... `);
-                await this.queryTabList(this.tabname, 0);
+                await this.queryTabList(this.tabname);
                 await Betools.tools.sleep(3000);
                 console.log(`refresh query table list three ... `);
-                await this.queryTabList(this.tabname, 0);
+                await this.queryTabList(this.tabname);
             },500);
 
             //等待500ms
