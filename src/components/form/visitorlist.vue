@@ -214,7 +214,7 @@ export default {
             this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1'; //获取tabname
             this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
             this.queryTabList(this.tabname);  //查询页面数据
-            setInterval(()=>{ this.queryTabList(1); } , 100 * 1000);
+            setInterval(()=>{ this.queryTabList(1); } , 15 * 1000);
         },
 
         // 查询Tab栏列表数据
