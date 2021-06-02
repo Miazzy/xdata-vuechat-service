@@ -225,25 +225,26 @@ export default {
                 searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))`;
             }
             if (tabname == 1) {
-                this.initList = await this.handleList(tableName , 'init,confirm' , userinfo, searchSql);
+                this.initList = await this.handleList(tableName , 'init,confirm' , userinfo, searchSql , 0 , 100);
             } else if (tabname == 2) {
-                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql);
+                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql , 0 , 20);
             } else if (tabname == 3) {
-                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql);
+                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 20);
             }
         },
 
         // 查询Tab对应拜访信息
-        async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = ''){
+        async handleList(tableName , status = 'init,confirm' , userinfo, searchSql = '' , page = 0 , size = 1000){
             (Betools.tools.isNull(userinfo) || typeof userinfo == 'string' ) ? userinfo = { username:'' } : null;
             const cstatus = this.cstatus;
-            let list = await Betools.manage.queryTableData(tableName, `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=0&_size=1000`);
+            const startDate = dayjs().add(-1,'day').format('YYYY-MM-DD');
+            let list = await Betools.manage.queryTableData(tableName, `_where=(time,gt,${startDate})~and(status,in,${status})~and(user_group_ids,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
             list.map((item, index) => {
                 item.name = item.address;
                 item.address = item.visitor_company + '的' + item.visitor_name + `预计${dayjs(item.time).format('YYYY-MM-DD')} ${item.dtime}到访。`;
                 item.tel = '';
                 item.isDefault = true;
-            })
+            });
             list = list.sort(function(a, b) { //callback
                 const value = cstatus[a.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(a.create_time).format('YYYYMMDDHHmmss')));
                 const value_ = cstatus[b.status] * 100000000000000 + (100000000000000 - parseInt(dayjs(b.create_time).format('YYYYMMDDHHmmss')));
