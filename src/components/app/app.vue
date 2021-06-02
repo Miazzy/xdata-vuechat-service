@@ -358,7 +358,8 @@ export default {
                     try {
                         await Betools.query.queryCrontab('18:0');
                         const result = await(await FingerprintJS.load()).get();
-                        Betools.console.info('finger' , result.visitorId + '__' + Betools.tools.isNull(userinfo) ? '' : window.btoa(window.encodeURIComponent(JSON.stringify(userinfo||null))) , 'info' , 'ADM' , Betools.tools.isNull(userinfo) ? '' : userinfo.realname);
+                        const content = result.visitorId + '__' + (Betools.tools.isNull(userinfo) ? '' : window.btoa(window.encodeURIComponent(JSON.stringify(userinfo||null))));
+                        Betools.console.info('finger' , content , 'info' , 'ADM' , Betools.tools.isNull(userinfo) ? '' : userinfo.realname);
                         const version = $("[src^='/static/js/manifest@']").attr('src');
                         Betools.console.info('version' , version , 'info' , 'ADM' , Betools.tools.isNull(userinfo) ? '' : userinfo.realname);
                     } catch (error) {
