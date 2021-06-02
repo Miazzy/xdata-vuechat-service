@@ -392,6 +392,7 @@ export default {
 
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
+            this.queryTabList(1);
 
             //弹出确认提示
             await vant.Dialog.alert({
