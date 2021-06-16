@@ -188,6 +188,7 @@ export default {
 
       //点击Tab栏
       async queryTabList(tabname , page = 0 , whereSQL = '',  resp = ''){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
         const response = await Betools.sealapply.querySealApplyTabList(tabname, page, whereSQL, resp, this.searchWord , this.sealType);
         this.initContractList = response.initContractList;
         this.sealContractList = response.sealContractList;
@@ -197,7 +198,7 @@ export default {
         this.totalpages = response.resp.size;
         this.currentPage = page + 1; //设置当前页为第一页
         Betools.storage.setStore('system_seal_list_tabname' , tabname);
-        this.refreshTabList();
+        vant.Toast.clear();
       },
 
       async refreshTabList() {
