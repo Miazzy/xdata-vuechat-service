@@ -233,7 +233,7 @@ export default {
             } else if (tabname == 2) {
                 this.confirmList = await this.handleList(tableName , `visit,${random}` , userinfo, searchSql , 0 , 10);
             } else if (tabname == 3) {
-                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 10);
+                this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 5);
             }
 
             view == 'view' ? (vant.Toast.clear()) : null ;

@@ -163,7 +163,7 @@ export default {
 
       // 查询特定Tab栏信息
       async queryTabList(tabname , page){
-        
+
         vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
 
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
@@ -172,18 +172,18 @@ export default {
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))` : null ;
         if(tabname == 1){
-          this.initList = await this.handleList(tableName , 'init,confirm', userinfo, searchSql);
+          this.initList = await this.handleList(tableName , 'init,confirm', userinfo, searchSql, 0, 20);
         } else if(tabname == 2){
-          this.confirmList = await this.handleList(tableName , 'visit', userinfo, searchSql);
+          this.confirmList = await this.handleList(tableName , 'visit', userinfo, searchSql, 0, 20);
         } else if(tabname == 3) {
-          this.doneList = await this.handleList(tableName , 'devisit,invalid', userinfo, searchSql);
+          this.doneList = await this.handleList(tableName , 'devisit,invalid', userinfo, searchSql, 0, 20);
         } 
 
         vant.Toast.clear();
       },
 
       //查询Tab栏列表数据
-      async handleList(tableName = '', status = 'init,confirm', userinfo, searchSql = '' , page = 0 , size = 1000){
+      async handleList(tableName = '', status = 'init,confirm', userinfo, searchSql = '' , page = 0 , size = 20){
         let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(employee,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
         list.map((item , index) => {
             item.name = item.create_by + ' ' + item.department ;
