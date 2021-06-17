@@ -208,6 +208,10 @@ export default {
       async headDropMenu(value){
         const val = this.dropMenuValue;
         switch (val) {
+          case 1:
+            this.dropMenuValue = this.dropMenuOldValue = '';
+            this.onAdd();
+            break;
           case 2: //刷新数据
             this.dropMenuValue = this.dropMenuOldValue;
             await this.queryFresh();
@@ -224,10 +228,6 @@ export default {
             this.dropMenuValue = this.dropMenuOldValue = '';
             this.exportAsExcel();
             break;
-          case 1:
-            this.dropMenuValue = this.dropMenuOldValue = '';
-            this.onAdd();
-            break;
           default:
             console.log(`no operate. out of switch. `);
         }
@@ -235,29 +235,25 @@ export default {
 
       // 点击Tab栏，查询Tab栏数据
       async queryTabList(tabname , page = 0){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
 
-        //获取当前用户信息
-        const userinfo = await Betools.storage.getStore('system_userinfo');
-
-        // 获取最近6个月对应的日期
-        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
+        const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近N个月对应的日期
         let searchSql = '';
-
-        // 设置当前页为第一页
-        this.currentPage = page + 1;
+        this.currentPage = page + 1; // 设置当前页为第一页
 
         //如果存在搜索关键字
         if(this.searchWord) {
           searchSql = `~and((serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(platename,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(groupname,like,~${this.searchWord}~)~or(zonename,like,~${this.searchWord}~)~or(teamname,like,~${this.searchWord}~)~or(userlist,like,~${this.searchWord}~)~or(enuserlist,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~))`;
         }
         await superagent.get(Betools.workconfig.queryAPI.tableSerialAPI.replace('{table_name}', this.tableName)).set('xid', Betools.tools.queryUniqueID()).set('accept', 'json'); //发送自动设置排序号请求
-        const whereSQL = `_where=(status,eq,valid)~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
+        const whereSQL = `_where=(status,in,valid)~and(create_time,gt,${month})${searchSql}&_sort=-create_time&_p=${page}&_size=1000`;
         this.initContractList = await Betools.manage.queryTableData(this.tableName , whereSQL);
         this.totalpages = await Betools.manage.queryTableDataCount(this.tableName , whereSQL);
-        this.initContractList.map((item , index) => {
-          item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-        });
+        this.initContractList.map((item , index) => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss'); });
         this.initContractList.sort();
+
+        vant.Toast.clear();
       },
 
       // 查询基础数据
