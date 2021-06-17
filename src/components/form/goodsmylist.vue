@@ -198,23 +198,28 @@ export default {
 
       // 查询Tab栏数据
       async queryTabList(tabname , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const random = Math.floor(Math.random()*1000);
         const tableName = this.tname;
         let searchSql = '';  //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await this.handleList(tableName , '待处理', userinfo , searchSql);
+          this.initList = await this.handleList(tableName , `待处理,${random}`, userinfo , searchSql , 0 , 20);
         } else if(tabname == 2){
-          this.confirmList = await this.handleList(tableName , '已领取,已准备', userinfo , searchSql);
+          this.confirmList = await this.handleList(tableName , `已领取,已准备,${random}`, userinfo , searchSql, 0 ,20);
         } else if(tabname == 3) {
-          this.doneList = await this.handleList(tableName , '已完成', userinfo , searchSql);
+          this.doneList = await this.handleList(tableName , '已完成', userinfo , searchSql, 0 , 20);
         } else if(tabname == 4) {
-          this.rejectList = await this.handleList(tableName , '已驳回', userinfo , searchSql);
+          this.rejectList = await this.handleList(tableName , '已驳回', userinfo , searchSql,0 , 20);
         } 
+
+        vant.Toast.clear();
       },
 
       // 查询物品领用数据
-      async handleList(tableName , status = '待处理', userinfo , searchSql, page = 0 , size = 1000){
+      async handleList(tableName , status = '待处理', userinfo , searchSql, page = 0 , size = 100){
         let list = await Betools.manage.queryTableData(this.tname , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
         list.map((item , index) => {
           item.name = item.type + '领用: ' + item.name + ` #${item.serialid}`,

@@ -180,6 +180,9 @@ export default {
 
       // 点击Tab栏,查询Tab栏列表数据
       async queryTabList(tabname){
+        
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');   //获取最近N个月对应的日期
         const tableName = this.tableName || 'bs_seal_regist';
@@ -195,6 +198,8 @@ export default {
           this.json_data = await Betools.manage.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
+
+        vant.Toast.clear();
       },
 
        // 查询用印登记列表数据

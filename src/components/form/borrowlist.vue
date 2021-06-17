@@ -12,24 +12,6 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="设备借用台账" icon="balance-list-o"  >
-                  <template #title>
-                    <span class="custom-title">
-                      <download-excel  :data="json_data" :fields="json_fields" worksheet="设备借用台账" name="设备借用台账.xls">
-                        设备台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
-                <van-cell id="van-cell-export" class="van-cell-export" title="传屏借用台账" icon="todo-list-o" >
-                   <template #title>
-                    <span class="custom-title">
-                      <download-excel :data="json_data_box" :fields="json_fields_box" worksheet="传屏借用台账" name="传屏借用台账.xls">
-                        传屏台账
-                      </download-excel>
-                    </span>
-                  </template>
-                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -209,35 +191,34 @@ export default {
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0); //查询页面数据
-        await this.queryTabList('设备' , 0); //查询台账数据
-        await this.queryTabList('传屏' , 0); //查询台账数据
         this.back = Betools.tools.getUrlParam('back') || '/app'; //获取返回页面
       },
 
       // 查询Tab栏信息
       async queryTabList(tabname , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
+        const random = Math.floor(Math.random()*1000);
         const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await this.handleList(tableName , '待处理' , userinfo, searchSql);
+          this.initList = await this.handleList(tableName , `待处理,${random}` , userinfo, searchSql, 0 , 20);
         } else if(tabname == 2){
-          this.confirmList = await this.handleList(tableName , '已借用' , userinfo, searchSql);
+          this.confirmList = await this.handleList(tableName , `已借用,${random}` , userinfo, searchSql, 0 , 20 );
         } else if(tabname == 3) {
-          this.doneList = await this.handleList(tableName , '已归还' , userinfo, searchSql);
+          this.doneList = await this.handleList(tableName , '已归还' , userinfo, searchSql , 0 , 10);
          } else if(tabname == 4) {
-          this.rejectList = await this.handleList(tableName , '已驳回' , userinfo, searchSql);
-        } else if(tabname == '设备') {
-          this.json_data = await this.handleExList(tableName , '信息设备', userinfo, searchSql);
-        } else if(tabname == '传屏') {
-          this.json_data_box = await this.handleExList(tableName , '传屏设备', userinfo, searchSql);
-        }
+          this.rejectList = await this.handleList(tableName , '已驳回' , userinfo, searchSql, 0 , 10);
+        } 
+
+        vant.Toast.clear();
       },
 
       // 查询借用信息列表数据
-      async handleList(tableName , status , userinfo, searchSql = '' , page = 0 , size = 1000){
+      async handleList(tableName , status , userinfo, searchSql = '' , page = 0 , size = 20){
         let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(user_group_ids,like,~${userinfo.username}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
         list.map((item , index) => {
             item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,

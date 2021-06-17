@@ -162,35 +162,37 @@ export default {
       async queryInfo(){
         this.tabname = Betools.storage.getStore('system_goods_borrow_receive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0);  //查询页面数据
-        await this.queryTabList('设备' , 0);  //查询台账数据
-        await this.queryTabList('传屏' , 0);  //查询台账数据
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
       },
 
       // 查询Tab栏信息列表数据
       async queryTabList(tabname , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
+        const random = Math.floor(Math.random()*1000);
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;
         if(tabname == 1){
-          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
+          this.initList = await this.handleList(tableName, `待处理,${random}`, userinfo, searchSql, 0, 10);
         } else if(tabname == 2){
-          this.confirmList = await this.handleList(tableName, '已借用', userinfo, searchSql);
+          this.confirmList = await this.handleList(tableName, `已借用,${random}`, userinfo, searchSql, 0, 10);
         } else if(tabname == 3) {
-          this.doneList = await this.handleList(tableName, '已归还', userinfo, searchSql);
-         } else if(tabname == 4) {
-          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
+          this.doneList = await this.handleList(tableName, `已归还,${random}`, userinfo, searchSql, 0, 10);
+        } else if(tabname == 4) {
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql, 0, 10);
         } 
+
+        vant.Toast.clear();
       },
 
       // 查询借用数据
-      async handleList(tableName, status = '待处理', userinfo, searchSql = ''){
-        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id`);
+      async handleList(tableName, status = '待处理', userinfo, searchSql = '', page = 0 , size = 20){
+        let list = await Betools.manage.queryTableData(tableName , `_where=(status,in,${status})~and(create_by,like,~${userinfo.username.replace(/\(|\)/g,'_')}~)${searchSql}&_sort=-id&_p=${page}&_size=${size}`);
         list.map((item) => {
-            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`,
-            item.tel = '';
+            item.name = item.type + '借用: ' + item.name + ` #${item.serialid}`, item.tel = '';
             item.address = item.receive_name + ' ' + item.company + ' ' + item.department + ` 时间:${dayjs(item.create_time).format('YYYY-MM-DD')}`;
             item.isDefault = true;
         })

@@ -32,13 +32,13 @@
 
             <div class="weui-cells" style="margin-top: 0px;">
                 <div class="weui-cell weui-cell_access" id="scanCell" style="padding: 8px 10px 4px 10px;">
-                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 0);" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 1 ; queryTabList(tabname , 'view');" :style="tabname == 1 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
                         待处理
                     </div>
-                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 0);" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 2 ; queryTabList(tabname , 'view');" :style="tabname == 2 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
                         已到访
                     </div>
-                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 0);" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
+                    <div class="weui-cell__bd weui-cell_tab" @click="tabname = 3 ; queryTabList(tabname , 'view');" :style="tabname == 3 ? `border-bottom: 2px solid #fe5050;font-weight:600;` : `border-bottom: 0px solid #329ff0;` ">
                         已作废
                     </div>
                 </div>
@@ -181,7 +181,7 @@ export default {
         // 点击顶部搜索
         async headMenuSearch() {
             if (this.searchWord) {
-                this.queryTabList(this.tabname); //刷新相应表单
+                this.queryTabList(this.tabname, 'view'); //刷新相应表单
                 vant.Toast('搜索...'); //显示搜索状态
                 await Betools.tools.sleep(300); //等待一下
             }
@@ -194,7 +194,7 @@ export default {
             switch (val) {
                 case 2: //刷新数据
                     this.dropMenuValue = this.dropMenuOldValue;
-                    await this.queryTabList(this.tabname);
+                    await this.queryTabList(this.tabname, 'view');
                     break;
                 case 3: //查询数据
                     this.dropMenuValue = this.dropMenuOldValue;
@@ -202,7 +202,7 @@ export default {
                     break;
                 case 4: //重置数据
                     this.dropMenuValue = this.dropMenuOldValue = this.searchWord = '', this.searchFlag = false;
-                    await this.queryTabList(this.tabname);
+                    await this.queryTabList(this.tabname, 'view');
                     break;
                 default:
                     console.log(`no operate. out of switch. `);
@@ -213,12 +213,15 @@ export default {
         async queryInfo() {
             this.tabname = Betools.storage.getStore('system_visitorview_list_tabname') || '1'; //获取tabname
             this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
-            this.queryTabList(this.tabname);  //查询页面数据
-            setInterval(()=>{ this.queryTabList(1); } , 15 * 1000);
+            this.queryTabList(this.tabname, 'view');  //查询页面数据
+            setInterval(()=>{ this.queryTabList(1 , 'none'); } , 15 * 1000);
         },
 
         // 查询Tab栏列表数据
-        async queryTabList(tabname, page) {
+        async queryTabList(tabname, view = 'view') {
+            view == 'view' ? (vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', })):null;
+
+            const random = Math.floor(Math.random()*1000);
             const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
             const tableName = this.tname;
             let searchSql = ''; //设置查询语句
@@ -226,12 +229,14 @@ export default {
                 searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(create_time,like,~${this.searchWord}~)~or(employee,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(address,like,~${this.searchWord}~)~or(visitor_name,like,~${this.searchWord}~)~or(visitor_company,like,~${this.searchWord}~)~or(visitor_mobile,like,~${this.searchWord}~)~or(visitor_position,like,~${this.searchWord}~)~or(time,like,~${this.searchWord}~)~or(dtime,like,~${this.searchWord}~)~or(zone,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(user_admin_name,like,~${this.searchWord}~))`;
             }
             if (tabname == 1) {
-                this.initList = await this.handleList(tableName , 'init,confirm' , userinfo, searchSql , 0 , 100);
+                this.initList = await this.handleList(tableName , `init,confirm,${random}` , userinfo, searchSql , 0 , 50);
             } else if (tabname == 2) {
-                this.confirmList = await this.handleList(tableName , 'visit' , userinfo, searchSql , 0 , 10);
+                this.confirmList = await this.handleList(tableName , `visit,${random}` , userinfo, searchSql , 0 , 10);
             } else if (tabname == 3) {
                 this.doneList = await this.handleList(tableName , 'devisit,invalid' , userinfo, searchSql, 0, 10);
             }
+
+            view == 'view' ? (vant.Toast.clear()) : null ;
         },
 
         // 查询Tab对应拜访信息
@@ -378,13 +383,13 @@ export default {
             setTimeout(async()=>{
                 await Betools.manage.patchTableData(this.tablename, id, elem);
                 console.log(`refresh query table list one ... `);
-                await this.queryTabList(this.tabname);
+                await this.queryTabList(this.tabname,'none');
                 await Betools.tools.sleep(1500);
                 console.log(`refresh query table list two ... `);
-                await this.queryTabList(this.tabname);
+                await this.queryTabList(this.tabname,'none');
                 await Betools.tools.sleep(3000);
                 console.log(`refresh query table list three ... `);
-                await this.queryTabList(this.tabname);
+                await this.queryTabList(this.tabname,'none');
             },500);
 
             //等待500ms
@@ -392,7 +397,7 @@ export default {
 
             //隐藏遮罩
             this.showOverlayConfirm('cancel', ()=>{});
-            this.queryTabList(1);
+            this.queryTabList(1,'none');
 
             //弹出确认提示
             await vant.Dialog.alert({

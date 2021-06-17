@@ -12,8 +12,6 @@
               <van-icon name="weapp-nav" size="1.3rem" @click="headMenuToggle" style="position: absolute; width: 40px; height: auto; right: 12px; top: 16px; opacity: 1; background:#1b1b1b;z-index:10000; " />
               <van-icon name="search" size="1.3rem" @click="searchFlag = true;" style="position: absolute; width: 40px; height: auto; right: 54px; top: 17px; opacity: 1; background:#1b1b1b;z-index:10000;"  />
               <van-dropdown-item v-model="dropMenuValue" ref="headMenuItem" :options="dropMenuOption" @change="headDropMenu();" >
-                <van-cell id="van-cell-export" class="van-cell-export" title="导出合同" icon="balance-list-o"  >
-                </van-cell>
               </van-dropdown-item>
             </van-dropdown-menu>
         </div>
@@ -131,6 +129,7 @@ export default {
       }
     },
     methods: {
+
       //点击显示或者隐藏菜单
       async headMenuToggle(){
         this.$refs.headMenuItem.toggle();
@@ -171,32 +170,34 @@ export default {
         this.tabname = Betools.storage.getStore('system_goodsreceive_list_tabname') || '1'; //获取tabname
         await this.queryTabList(this.tabname , 0); //查询页面数据
         this.back = Betools.tools.getUrlParam('back') || '/app';  //获取返回页面
-        // this.queryTabList('办公用品' , 0); //查询页面数据
       },
 
       //查询Tab栏下列表信息
       async queryTabList(tabname){
         this.tabname = tabname;
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+        const random = Math.floor(Math.random()*1000);
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname ;
         let searchSql = ''; //设置查询语句
+
         //如果存在搜索关键字，则编写查询关键字的查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))` : null;
         if(tabname == 1){
-          this.initList = await this.handleList(tableName, '待处理', userinfo, searchSql);
+          this.initList = await this.handleList(tableName, `待处理,${random}`, userinfo, searchSql , 0 , 100);
         } else if(tabname == 2){
-          this.confirmList = await this.handleList(tableName, '已领取,已准备', userinfo, searchSql);
+          this.confirmList = await this.handleList(tableName, `已领取,已准备,${random}`, userinfo, searchSql , 0 , 100);
         } else if(tabname == 3) {
-          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql);
+          this.doneList = await this.handleList(tableName, '已完成', userinfo, searchSql , 0 , 10);
         } else if(tabname == 4) {
-          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
-        } else if(tabname == '办公用品' || tabname == '药品' || tabname == '防疫') {
-          this.json_data_drug = await this.handleExList(tableName, tabname, userinfo, searchSql);
-        }
+          this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql , 0 , 10);
+        } 
+
+        vant.Toast.clear();
       },
 
       //查询不同状态的领用数据
-      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 50){
+      async handleList(tableName , status = '待处理', userinfo, searchSql , page = 0 , size = 20){
           if(Betools.tools.isNull(userinfo) || Betools.tools.isNull(userinfo.username)){
             return [];
           }

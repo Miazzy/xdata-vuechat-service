@@ -190,12 +190,15 @@ export default {
 
       // 点击Tab栏，获取Tab栏列表数据
       async queryTabList(tabname , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); // 获取最近N个月对应的日期
         const tableName = this.tableName || 'bs_seal_regist';
         this.currentPage = page + 1;  // 设置当前页为第一页
         let searchSql = '';
         (this.searchWord) ? searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))` : null ;
+        
         if(tabname == 1){
           this.initContractList = await this.handleList(tableName, '待用印', userinfo, searchSql, 0 , 1000);
         } else if(tabname == 2){
@@ -214,6 +217,8 @@ export default {
           this.json_data = await Betools.manage.queryTableData('bs_seal_regist', whereSQL);
           this.json_data.sort((n1,n2)=>{return n2.serialid - n2.serialid});
         }
+        
+        vant.Toast.clear();
       },
 
       // 查询用印登记列表数据

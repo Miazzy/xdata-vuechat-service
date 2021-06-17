@@ -186,6 +186,9 @@ export default {
 
         // 点击Tab栏，查询Tab栏对应详情信息
         async queryTabList(tabname, page) {
+            
+            vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
             const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
             let month = dayjs().subtract(12, 'months').format('YYYY-MM-DD');
             let sealTypeSql = '';
@@ -202,6 +205,8 @@ export default {
                 item.address = item.type + ' ' + item.create_name + ' ' + item.filenamelist.slice(0, 64) + '...' + ' 序号:' + item.serialid;
                 item.isDefault = true;
             });
+
+            vant.Toast.clear();
         },
 
         // 查询基础信息

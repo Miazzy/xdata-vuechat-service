@@ -180,6 +180,8 @@ export default {
 
       // 查询Tab栏对应列表详情信息
       async queryTabList(tabname , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         let searchSql = ''; //设置查询语句
@@ -193,6 +195,8 @@ export default {
         } else if(tabname == 4) {
           this.rejectList = await this.handleList(tableName, '已驳回', userinfo, searchSql);
         }
+
+        vant.Toast.clear();
       },
 
       //查询不同状态的领用数据

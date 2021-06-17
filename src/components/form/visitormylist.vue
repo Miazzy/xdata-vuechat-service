@@ -163,6 +163,9 @@ export default {
 
       // 查询特定Tab栏信息
       async queryTabList(tabname , page){
+        
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
         const tableName = this.tname ;
@@ -175,6 +178,8 @@ export default {
         } else if(tabname == 3) {
           this.doneList = await this.handleList(tableName , 'devisit,invalid', userinfo, searchSql);
         } 
+
+        vant.Toast.clear();
       },
 
       //查询Tab栏列表数据

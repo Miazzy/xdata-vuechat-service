@@ -195,15 +195,17 @@ export default {
 
       // 点击Tab栏，查询Tab栏对应列表信息
       async queryTabList(tabname, tableName = 'bs_seal_regist'){
+
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo');  // 获取用户信息
+        
         let sealTypeSql = '';
         let searchSql = '';
-        if(this.sealType === 0) {
-          sealTypeSql = `~and(seal_type,like,合同类)`;
-        } else if(this.sealType === 1) {
-          sealTypeSql = `~and(seal_type,like,非合同类)`;
-        }
+        
+        (this.sealType == 0) ? (sealTypeSql = `~and(seal_type,like,合同类)`) : (sealTypeSql = `~and(seal_type,like,非合同类)`);
         (this.searchWord) ? searchSql = `~and((filename,like,~${this.searchWord}~)~or(serialid,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(workno,like,~${this.searchWord}~)~or(contract_id,like,~${this.searchWord}~)~or(seal_man,like,~${this.searchWord}~)~or(sign_man,like,~${this.searchWord}~)~or(front_name,like,~${this.searchWord}~)~or(archive_name,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(deal_depart,like,~${this.searchWord}~)~or(approve_type,like,~${this.searchWord}~))` : null; //如果存在搜索关键字        
+        
         if(tabname == 1){
           this.initContractList = await this.handleList(tableName , '待用印', userinfo, sealTypeSql, searchSql);
         } else if(tabname == 2){
@@ -213,6 +215,8 @@ export default {
         } else if(tabname == 7){
           this.endContractList = await this.handleList(tableName , '已作废,已测试', userinfo, sealTypeSql, searchSql);
         }
+
+        vant.Toast.clear();
       },
 
       // 查询用印记录数据

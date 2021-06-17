@@ -174,6 +174,8 @@ export default {
 
       // 查询Tab栏列表数据
       async queryTabList(tabname = 1 , page){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const tableName = this.tname;
         let searchSql = ''; //设置查询语句
@@ -189,6 +191,8 @@ export default {
           this.json_data = await Betools.manage.queryTableData(this.tname , `_where=(create_time,gt,${month})${searchSql}&_sort=-id&_p=0&_size=10000`);
           this.json_data.sort((n1,n2)=>{ return n1.serialid - n2.serialid});
         }
+
+        vant.Toast.clear();
       },
 
       // 查询失物招领列表信息

@@ -269,6 +269,9 @@ export default {
 
       // 查询Tab栏信息
       async queryTabList(tabname , page){
+
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
         const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((username,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(position,like,~${this.searchWord}~)~or(hr_name,like,~${this.searchWord}~)~or(bank_card,like,~${this.searchWord}~)~or(mobile,like,~${this.searchWord}~)~or(idcard,like,~${this.searchWord}~))` : null;
@@ -281,6 +284,8 @@ export default {
         } else if(tabname == 4) {
           this.rejectList = await this. handleList(tableName, '已驳回', searchSql);
         } 
+
+        vant.Toast.clear();
       },
 
       // 查询入职信息
