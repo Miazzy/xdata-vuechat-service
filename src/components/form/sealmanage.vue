@@ -261,7 +261,9 @@ export default {
       },
 
       async queryInfo(typeName, searchWord, statusType){
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
         this.json_data = await Betools.sealapply.queryTabSealApplyTypeList(typeName, searchWord , statusType); //查询合同类数据
+        vant.Toast.clear();
       },
 
       async queryTabList(page = 0 , whereSQL = '',  resp = ''){
