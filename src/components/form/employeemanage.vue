@@ -211,15 +211,16 @@ export default {
 
       //点击Tab栏，查询Tab栏列表数据
       async queryTabList(tabname , page = 0){
-        // 设置当前页为第一页
-        this.currentPage = page + 1;
+        vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', });
+
+        this.currentPage = page + 1; // 设置当前页为第一页
         const whereSQL = `_sort=-id&_p=${page}&_size=10000`;
         this.initContractList = await Betools.manage.queryTableData(this.tableName , whereSQL);
         this.totalpages = await Betools.manage.queryTableDataCount(this.tableName , whereSQL);
-        this.initContractList.map((item , index) => {
-          item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss');
-        });
+        this.initContractList.map((item , index) => { item.create_time = dayjs(item.create_time).format('YYYY-MM-DD HH:mm:ss'); });
         this.initContractList.sort();
+
+        vant.Toast.clear();
       },
 
       // 查询基础数据
