@@ -200,7 +200,7 @@ export default {
 
         const userinfo = await Betools.storage.getStore('system_userinfo'); //获取当前用户信息
         const month = dayjs().subtract(12, 'months').format('YYYY-MM-DD'); //获取最近N个月对应的日期
-        const random = Math.floor(Math.random()*1000);
+        const random = Math.floor(Math.random()*1000000);
         const tableName = this.tname;
         let searchSql = ''; //设置查询语句
         (this.searchWord) ? searchSql = `~and((name,like,~${this.searchWord}~)~or(create_by,like,~${this.searchWord}~)~or(department,like,~${this.searchWord}~)~or(receive_name,like,~${this.searchWord}~)~or(type,like,~${this.searchWord}~)~or(company,like,~${this.searchWord}~)~or(approve_name,like,~${this.searchWord}~))`:null;

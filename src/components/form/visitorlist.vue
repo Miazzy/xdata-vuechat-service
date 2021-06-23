@@ -221,7 +221,7 @@ export default {
         async queryTabList(tabname, view = 'view') {
             view == 'view' ? (vant.Toast.loading({ duration: 0,  forbidClick: true,  message: '刷新中...', })):null;
 
-            const random = Math.floor(Math.random()*1000);
+            const random = Math.floor(Math.random()*1000000);
             const userinfo = await Betools.storage.getStore('system_userinfo');  //获取当前用户信息
             const tableName = this.tname;
             let searchSql = ''; //设置查询语句
